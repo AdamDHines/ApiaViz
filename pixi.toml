@@ -16,10 +16,10 @@ get_tinyimg = {cmd = "git lfs install && git clone https://huggingface.co/datase
 get_model = {cmd = "git lfs install && git clone https://huggingface.co/AdamHines/ApiaVizVisionModule ./apiaviz/models/"}
 
 # Training
-train = {cmd = "pixi run python main.py --mode train --module vision --epoch 100 --train_samples 100000 --lr 3e-3 --batch_size 256"}
+train = {cmd = "pixi run python main.py --mode train --dataset tiny}
 
 # Evaluation
-eval= {cmd = "pixi run python main.py --mode eval --module vision --eval_samples 5000 --eval_batch_size 256"}
+eval= {cmd = "pixi run python main.py --mode eval}
 
 [dependencies]
 python = "*"
@@ -32,6 +32,7 @@ imageio = "*"
 matplotlib-base = "*" 
 scikit-learn = "*"
 pandas = "*"
+pyarrow = "*"
 
 [feature.cuda]
 platforms = ["linux-64"]
