@@ -108,6 +108,15 @@ def nt_xent(z1, z2, T: float = 0.07) -> torch.Tensor:
 
 # ────────── Visualization functions ────────── 
 
+"""
+Comprehensive evaluation and visualization tool for insect-vision neural networks.
+
+Requirements:
+- scikit-learn >= 0.20.0 (for trustworthiness metric)
+- matplotlib
+- opencv-python (cv2)
+- scipy
+"""
 class ModelEvaluator:
     """Comprehensive evaluation and visualization tool for insect-vision neural networks."""
     
@@ -148,24 +157,31 @@ class ModelEvaluator:
                 self.gradients[name] = output[0].detach()
             return hook
         
-        # Register hooks for each layer
-        layers = {
-            'opsin': self.model.opsin if hasattr(self.model, 'opsin') else None,
-            'lamina': self.model.lamina if hasattr(self.model, 'lamina') else None,
-            'med_c': self.model.med_c if hasattr(self.model, 'med_c') else None,
-            'med_a': self.model.med_a if hasattr(self.model, 'med_a') else None,
-            'lobula': self.model.lobula if hasattr(self.model, 'lobula') else None,
-            'asot': self.model.asot if hasattr(self.model, 'asot') else None,
-            'aiot': self.model.aiot if hasattr(self.model, 'aiot') else None,
-            'lot': self.model.lot if hasattr(self.model, 'lot') else None,
+        # Register hooks for each layer - check if they exist in the model
+        layer_mapping = {
+            'opsin': 'opsin',
+            'lamina': 'lamina', 
+            'med_c': 'med_c',
+            'med_a': 'med_a',
+            'lobula': 'lobula',
+            'asot': 'asot',
+            'aiot': 'aiot',
+            'lot': 'lot',
         }
         
-        for name, layer in layers.items():
-            if layer is not None:
-                h = layer.register_forward_hook(get_activation(name))
-                self.hooks.append(h)
-                h = layer.register_backward_hook(get_gradient(name))
-                self.hooks.append(h)
+        for name, attr_name in layer_mapping.items():
+            if hasattr(self.model, attr_name):
+                layer = getattr(self.model, attr_name)
+                # Handle Sequential layers
+                if isinstance(layer, nn.Sequential):
+                    # Register hook on the whole sequential
+                    h = layer.register_forward_hook(get_activation(name))
+                    self.hooks.append(h)
+                else:
+                    h = layer.register_forward_hook(get_activation(name))
+                    self.hooks.append(h)
+                    h = layer.register_backward_hook(get_gradient(name))
+                    self.hooks.append(h)
     
     def remove_hooks(self):
         """Remove all registered hooks."""
@@ -179,8 +195,8 @@ class ModelEvaluator:
     
     def get_saliency_map(self, input_tensor: torch.Tensor, target_neuron: Optional[int] = None) -> torch.Tensor:
         """Compute gradient-based saliency map."""
-        input_tensor = input_tensor.to(self.device).requires_grad_(True)
-        
+        input_tensor.requires_grad_()
+
         # Forward pass
         output = self.model(input_tensor)
         
@@ -193,8 +209,9 @@ class ModelEvaluator:
         # Backward pass
         self.model.zero_grad()
         target.backward(retain_graph=True)
-        
-        return input_tensor.grad.data.abs()
+
+        saliency = input_tensor.grad.data.abs()
+        return saliency
     
     def guided_backpropagation(self, input_tensor: torch.Tensor, target_class: Optional[int] = None) -> torch.Tensor:
         """Guided backpropagation for cleaner gradients."""
@@ -299,9 +316,16 @@ class ModelEvaluator:
     # ============== Visualization Methods ==============
     
     def create_heatmap_overlay(self, image: np.ndarray, heatmap: Union[torch.Tensor, np.ndarray], 
-                             alpha: float = 0.6, colormap: str = 'jet', 
+                             alpha: float = 0.6, colormap: str = 'bwr', 
                              blur_sigma: float = 1.5, threshold: float = 0.3) -> np.ndarray:
         """Create a beautiful heatmap overlay with advanced blending."""
+        # Handle different input image formats
+        if len(image.shape) == 4:  # Batch dimension (B, C, H, W)
+            image = image[0]  # Take first image
+        
+        if len(image.shape) == 3 and image.shape[0] in [1, 2, 3, 4]:  # (C, H, W)
+            image = np.transpose(image, (1, 2, 0))  # Convert to (H, W, C)
+        
         # Process heatmap
         if isinstance(heatmap, torch.Tensor):
             heatmap = heatmap.squeeze().detach().cpu().numpy()
@@ -345,8 +369,25 @@ class ModelEvaluator:
     
     def plot_attention_summary(self, input_tensor: torch.Tensor, input_image: np.ndarray, 
                               save_path: Optional[str] = None) -> plt.Figure:
-        """Create a comprehensive attention summary with multiple techniques."""
+        """
+        Create a comprehensive attention summary with multiple techniques.
+        
+        Args:
+            input_tensor: Input tensor for gradient computation (B, C, H, W) or (C, H, W)
+            input_image: Numpy array for display. Can be (C, H, W) or (H, W, C) format
+            save_path: Optional path to save the figure
+            
+        Returns:
+            matplotlib Figure object
+        """
         fig = plt.figure(figsize=(20, 12))
+        
+        # Handle different input image formats
+        if len(input_image.shape) == 4:  # Batch dimension (B, C, H, W)
+            input_image = input_image[0]  # Take first image
+        
+        if len(input_image.shape) == 3 and input_image.shape[0] in [1, 2, 3, 4]:  # (C, H, W)
+            input_image = np.transpose(input_image, (1, 2, 0))  # Convert to (H, W, C)
         
         # Prepare display image
         if input_image.shape[2] == 2:
@@ -365,7 +406,7 @@ class ModelEvaluator:
         # 2. Standard gradient
         standard_grad = self.get_saliency_map(input_tensor.clone())
         ax2 = plt.subplot(2, 4, 2)
-        overlay = self.create_heatmap_overlay(input_image, standard_grad[0])
+        overlay = self.create_heatmap_overlay(input_image, standard_grad[0], colormap='bwr')
         ax2.imshow(overlay)
         ax2.set_title('Standard Gradient', fontsize=14, fontweight='bold')
         ax2.axis('off')
@@ -373,7 +414,7 @@ class ModelEvaluator:
         # 3. Guided backprop
         guided_grad = self.guided_backpropagation(input_tensor.clone())
         ax3 = plt.subplot(2, 4, 3)
-        overlay = self.create_heatmap_overlay(input_image, guided_grad[0].abs())
+        overlay = self.create_heatmap_overlay(input_image, guided_grad[0].abs(), colormap='bwr')
         ax3.imshow(overlay)
         ax3.set_title('Guided Backpropagation', fontsize=14, fontweight='bold')
         ax3.axis('off')
@@ -381,7 +422,7 @@ class ModelEvaluator:
         # 4. SmoothGrad
         smooth_grad = self.smooth_grad(input_tensor.clone())
         ax4 = plt.subplot(2, 4, 4)
-        overlay = self.create_heatmap_overlay(input_image, smooth_grad[0].abs())
+        overlay = self.create_heatmap_overlay(input_image, smooth_grad[0].abs(), colormap='bwr')
         ax4.imshow(overlay)
         ax4.set_title('SmoothGrad', fontsize=14, fontweight='bold')
         ax4.axis('off')
@@ -389,7 +430,7 @@ class ModelEvaluator:
         # 5. Multi-scale attention
         multi_scale = self.multi_scale_attention(input_tensor.clone())
         ax5 = plt.subplot(2, 4, 5)
-        overlay = self.create_heatmap_overlay(input_image, multi_scale[0].abs())
+        overlay = self.create_heatmap_overlay(input_image, multi_scale[0].abs(), colormap='bwr')
         ax5.imshow(overlay)
         ax5.set_title('Multi-Scale Attention', fontsize=14, fontweight='bold')
         ax5.axis('off')
@@ -397,19 +438,20 @@ class ModelEvaluator:
         # 6. Integrated gradients
         int_grads = self.integrated_gradients(input_tensor.clone())
         ax6 = plt.subplot(2, 4, 6)
-        overlay = self.create_heatmap_overlay(input_image, int_grads[0].abs())
+        overlay = self.create_heatmap_overlay(input_image, int_grads[0].abs(), colormap='bwr')
         ax6.imshow(overlay)
         ax6.set_title('Integrated Gradients', fontsize=14, fontweight='bold')
         ax6.axis('off')
         
-        # 7. Combined attention
-        combined = 0.25 * standard_grad[0].abs() + \
-                  0.25 * guided_grad[0].abs() + \
-                  0.25 * smooth_grad[0].abs() + \
-                  0.25 * int_grads[0].abs()
+        # 7. Combined attention (weighted average)
+        combined = 0.3 * standard_grad[0].abs() + \
+                  0.3 * guided_grad[0].abs() + \
+                  0.2 * smooth_grad[0].abs() + \
+                  0.2 * multi_scale[0].abs()
         
         ax7 = plt.subplot(2, 4, 7)
-        overlay = self.create_heatmap_overlay(input_image, combined, alpha=0.7, blur_sigma=2.0)
+        overlay = self.create_heatmap_overlay(input_image, combined, alpha=0.7, 
+                                            colormap='bwr', blur_sigma=2.0)
         ax7.imshow(overlay)
         ax7.set_title('Combined Attention', fontsize=14, fontweight='bold')
         ax7.axis('off')
@@ -425,7 +467,7 @@ class ModelEvaluator:
         Y_down = Y[::step, ::step]
         Z_down = attention_2d[::step, ::step]
         
-        surf = ax8.plot_surface(X_down, Y_down, Z_down, cmap='jet', 
+        surf = ax8.plot_surface(X_down, Y_down, Z_down, cmap='bwr', 
                                linewidth=0, antialiased=True, alpha=0.8)
         ax8.set_title('3D Attention Surface', fontsize=14, fontweight='bold')
         ax8.set_xlabel('X')
@@ -436,6 +478,9 @@ class ModelEvaluator:
         plt.tight_layout()
         
         if save_path:
+            # Handle relative paths by prepending output_dir
+            if not Path(save_path).is_absolute():
+                save_path = self.output_dir / save_path
             plt.savefig(save_path, dpi=300, bbox_inches='tight')
         
         return fig
@@ -449,8 +494,19 @@ class ModelEvaluator:
         output = self.model(input_tensor.to(self.device))
         output = F.normalize(output, dim=1)
         
+        # Extract KC output early for use in multiple plots
+        kc_output = output[0].detach().cpu().numpy()
+        active_kc = np.where(kc_output > 0)[0]
+        
         # Create figure
         fig = plt.figure(figsize=(20, 16))
+        
+        # Handle different input image formats
+        if len(input_image.shape) == 4:  # Batch dimension (B, C, H, W)
+            input_image = input_image[0]  # Take first image
+        
+        if len(input_image.shape) == 3 and input_image.shape[0] in [1, 2, 3, 4]:  # (C, H, W)
+            input_image = np.transpose(input_image, (1, 2, 0))  # Convert to (H, W, C)
         
         # Prepare display image
         if input_image.shape[2] == 2:
@@ -460,19 +516,24 @@ class ModelEvaluator:
         else:
             display_img = input_image
         
+        # 1. Original image
+        ax1 = plt.subplot(4, 5, 1)
+        ax1.imshow(display_img)
+        ax1.set_title('Input Image\n(Green & Blue channels)', fontsize=12, fontweight='bold')
+        ax1.axis('off')
+        
         # Plot layer activations
         layer_configs = [
-            ('opsin', 1, 'Opsin Response', 'viridis'),
-            ('lamina', 2, 'Lamina', 'plasma'),
-            ('med_c', 3, 'Medulla Chromatic', 'inferno'),
-            ('med_a', 4, 'Medulla Achromatic', 'magma'),
-            ('lobula', 5, 'Lobula', 'cividis'),
+            ('opsin', 4, 'Opsin Response\n(Photoreceptor)', 'bwr'),
+            ('lamina', 5, 'Lamina\n(Local Motion/Contrast)', 'bwr'),
+            ('med_c', 9, 'Medulla Chromatic\n(Color Processing)', 'bwr'),
+            ('med_a', 10, 'Medulla Achromatic\n(Luminance Edges)', 'bwr'),
+            ('lobula', 14, 'Lobula\n(Feature Integration)', 'bwr'),
         ]
         
-        subplot_idx = 1
-        for layer_name, _, title, cmap in layer_configs:
+        for layer_name, position, title, cmap in layer_configs:
             if layer_name in self.activations:
-                ax = plt.subplot(4, 5, subplot_idx)
+                ax = plt.subplot(4, 5, position)
                 act = self.activations[layer_name]
                 
                 # Handle different activation shapes
@@ -485,10 +546,70 @@ class ModelEvaluator:
                 ax.imshow(overlay)
                 ax.set_title(title, fontsize=10, fontweight='bold')
                 ax.axis('off')
-                subplot_idx += 1
+        
+        # 2. Gradient saliency  
+        ax_grad = plt.subplot(4, 5, 2)
+        with torch.enable_grad():
+            saliency = self.get_saliency_map(input_tensor.clone())
+        overlay = self.create_heatmap_overlay(input_image, saliency[0], colormap='bwr')
+        ax_grad.imshow(overlay)
+        ax_grad.set_title('Gradient Saliency', fontsize=12, fontweight='bold')
+        ax_grad.axis('off')
+        
+        # 3. Combined attention visualization
+        if 'lobula' in self.activations:
+            ax_combined = plt.subplot(4, 5, 3)
+            lobula_act = self.activations['lobula'][0].mean(dim=0).cpu().numpy()
+            saliency_np = saliency[0].mean(dim=0).cpu().numpy()
+            
+            # Normalize both
+            lobula_norm = (lobula_act - lobula_act.min()) / (lobula_act.max() - lobula_act.min() + 1e-8)
+            saliency_norm = (saliency_np - saliency_np.min()) / (saliency_np.max() - saliency_np.min() + 1e-8)
+            
+            # Combined attention
+            combined_attention = 0.4 * saliency_norm + 0.6 * lobula_norm
+            overlay = self.create_heatmap_overlay(input_image, combined_attention, 
+                                                colormap='bwr', alpha=0.7, blur_sigma=2.0)
+            ax_combined.imshow(overlay)
+            ax_combined.set_title('Combined Attention', fontsize=12, fontweight='bold')
+            ax_combined.axis('off')
+        
+        for layer_name, position, title, cmap in layer_configs:
+            if layer_name in self.activations:
+                ax = plt.subplot(4, 5, position)
+                act = self.activations[layer_name]
+                
+                # Handle different activation shapes
+                if len(act.shape) == 4:  # Conv layer
+                    attention = act[0].mean(dim=0, keepdim=True)
+                else:
+                    attention = act[0].unsqueeze(0)
+                
+                overlay = self.create_heatmap_overlay(input_image, attention, colormap=cmap)
+                ax.imshow(overlay)
+                ax.set_title(title, fontsize=10, fontweight='bold')
+                ax.axis('off')
+        
+        # VPN pathway responses (if present)
+        vpn_layers = ['asot', 'aiot', 'lot']
+        vpn_titles = ['ASOT Pathway\n(Anterior Superior)', 
+                      'AIOT Pathway\n(Anterior Inferior)', 
+                      'LOT Pathway\n(Lateral)']
+        
+        for i, (layer, title) in enumerate(zip(vpn_layers, vpn_titles)):
+            if layer in self.activations:
+                ax = plt.subplot(4, 5, 6 + i)
+                act = self.activations[layer][0]
+                # These are after global pooling, so visualize as heatmap
+                response = act.mean(dim=0, keepdim=True)
+                overlay = self.create_heatmap_overlay(input_image, response, 
+                                                    colormap='bwr', alpha=0.8)
+                ax.imshow(overlay)
+                ax.set_title(title, fontsize=10, fontweight='bold')
+                ax.axis('off')
         
         # Feature importance across layers
-        ax_feat = plt.subplot(4, 2, 7)
+        ax_feat = plt.subplot(4, 5, 13)
         layer_names = ['Opsin', 'Lamina', 'Med-C', 'Med-A', 'Lobula']
         importances = []
         
@@ -498,31 +619,74 @@ class ModelEvaluator:
                 importance = act.abs().mean().item()
                 importances.append(importance)
         
-        ax_feat.bar(layer_names[:len(importances)], importances, 
-                   color=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'])
-        ax_feat.set_title('Layer-wise Feature Importance', fontsize=12, fontweight='bold')
-        ax_feat.set_xlabel('Layer')
-        ax_feat.set_ylabel('Mean Activation')
-        ax_feat.grid(True, alpha=0.3)
+        if importances:
+            ax_feat.bar(layer_names[:len(importances)], importances, 
+                       color=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'])
+            ax_feat.set_title('Layer-wise Feature Importance', fontsize=12, fontweight='bold')
+            ax_feat.set_xlabel('Layer')
+            ax_feat.set_ylabel('Mean Activation')
+            ax_feat.grid(True, alpha=0.3)
+        else:
+            ax_feat.text(0.5, 0.5, 'No Layer Data', ha='center', va='center', transform=ax_feat.transAxes)
+            ax_feat.axis('off')
+        
+        # Sparse KC histogram
+        ax_hist = plt.subplot(4, 5, 15)
+        if len(kc_output[kc_output > 0]) > 0:
+            ax_hist.hist(kc_output[kc_output > 0], bins=30, color='darkred', alpha=0.7, edgecolor='black')
+            ax_hist.set_title('Active Kenyon Cell Distribution', fontsize=12, fontweight='bold')
+            ax_hist.set_xlabel('Activation Value')
+            ax_hist.set_ylabel('Count')
+            ax_hist.grid(True, alpha=0.3)
+        else:
+            ax_hist.text(0.5, 0.5, 'No Active KCs', ha='center', va='center', transform=ax_hist.transAxes)
+            ax_hist.set_title('Active Kenyon Cell Distribution', fontsize=12, fontweight='bold')
+            ax_hist.axis('off')
         
         # KC activation pattern
-        ax_kc = plt.subplot(4, 2, 8)
-        kc_output = output[0].detach().cpu().numpy()
-        active_kc = np.where(kc_output > 0)[0]
+        ax_kc = plt.subplot(4, 5, 11)
         
         # Create 2D representation
         kc_dim = len(kc_output)
         grid_size = int(np.ceil(np.sqrt(kc_dim)))
         kc_grid = kc_output.reshape(-1, 1).repeat(10, axis=1).reshape(grid_size, -1)[:grid_size, :grid_size]
         
-        im = ax_kc.imshow(kc_grid, cmap='hot', interpolation='nearest')
-        ax_kc.set_title(f'Kenyon Cells ({len(active_kc)}/{kc_dim} active)', fontsize=10, fontweight='bold')
+        im = ax_kc.imshow(kc_grid, cmap='bwr', interpolation='nearest')
+        ax_kc.set_title(f'Kenyon Cells\n({len(active_kc)} active / {kc_dim} total)', 
+                       fontsize=10, fontweight='bold')
         ax_kc.axis('off')
+        
+        # Add a 3D visualization of attention
+        ax_3d = plt.subplot(4, 5, 17, projection='3d')
+        if 'lobula' in self.activations:
+            attention_2d = self.activations['lobula'][0].mean(dim=0).cpu().numpy()
+            h, w = attention_2d.shape
+            X, Y = np.meshgrid(np.arange(w), np.arange(h))
+            
+            # Downsample for cleaner visualization
+            step = max(1, min(h, w) // 20)
+            X_down = X[::step, ::step]
+            Y_down = Y[::step, ::step]
+            Z_down = attention_2d[::step, ::step]
+            
+            # Normalize Z values
+            Z_down = (Z_down - Z_down.min()) / (Z_down.max() - Z_down.min() + 1e-8)
+            
+            surf = ax_3d.plot_surface(X_down, Y_down, Z_down, cmap='bwr', 
+                                    linewidth=0, antialiased=True, alpha=0.8)
+            ax_3d.set_title('3D Attention Surface', fontsize=10, fontweight='bold')
+            ax_3d.set_xlabel('X', fontsize=8)
+            ax_3d.set_ylabel('Y', fontsize=8)
+            ax_3d.set_zlabel('Activation', fontsize=8)
+            ax_3d.view_init(elev=30, azim=45)
         
         plt.suptitle('Neural Network Layer Analysis', fontsize=16, fontweight='bold')
         plt.tight_layout()
         
         if save_path:
+            # Handle relative paths by prepending output_dir
+            if not Path(save_path).is_absolute():
+                save_path = self.output_dir / save_path
             plt.savefig(save_path, dpi=300, bbox_inches='tight')
         
         self.remove_hooks()
@@ -574,6 +738,9 @@ class ModelEvaluator:
         ax.set_ylabel('Sample Index')
         
         if save_path:
+            # Handle relative paths by prepending output_dir
+            if not Path(save_path).is_absolute():
+                save_path = self.output_dir / save_path
             plt.savefig(save_path, dpi=300, bbox_inches='tight')
         
         return fig
@@ -606,6 +773,9 @@ class ModelEvaluator:
         plt.tight_layout()
         
         if save_path:
+            # Handle relative paths by prepending output_dir
+            if not Path(save_path).is_absolute():
+                save_path = self.output_dir / save_path
             plt.savefig(save_path, dpi=300, bbox_inches='tight')
         
         return fig
@@ -647,9 +817,59 @@ class ModelEvaluator:
         plt.tight_layout()
         
         if save_path:
+            # Handle relative paths by prepending output_dir
+            if not Path(save_path).is_absolute():
+                save_path = self.output_dir / save_path
             plt.savefig(save_path, dpi=300, bbox_inches='tight')
         
         return fig
+    
+    def visualize_sample(self, input_tensor: torch.Tensor, input_image: Optional[np.ndarray] = None,
+                        sample_name: str = "sample") -> Dict[str, plt.Figure]:
+        """
+        Convenient method to visualize a single sample with all techniques.
+        
+        Args:
+            input_tensor: Input tensor (B, C, H, W) or (C, H, W)
+            input_image: Optional numpy array for display. If None, will use input_tensor
+            sample_name: Name prefix for saving files
+            
+        Returns:
+            Dictionary of figure objects
+        """
+        # Ensure batch dimension and gradient computation
+        if len(input_tensor.shape) == 3:
+            input_tensor = input_tensor.unsqueeze(0)
+        
+        # Clone tensor to avoid modifying original
+        input_tensor = input_tensor.clone().to(self.device).requires_grad_(True)
+        
+        # Convert to numpy for display if not provided
+        if input_image is None:
+            input_image = input_tensor[0].cpu().numpy()
+        
+        # Ensure tensor is on device
+        input_tensor = input_tensor.to(self.device)
+        
+        figures = {}
+        
+        # Attention summary
+        fig1 = self.plot_attention_summary(
+            input_tensor, 
+            input_image,
+            save_path=f'{sample_name}_attention_summary.png'
+        )
+        figures['attention_summary'] = fig1
+        
+        # Layer analysis
+        fig2 = self.plot_layer_analysis(
+            input_tensor,
+            input_image,
+            save_path=f'{sample_name}_layer_analysis.png'
+        )
+        figures['layer_analysis'] = fig2
+        
+        return figures
     
     # ============== Batch Processing Methods ==============
     
@@ -665,33 +885,31 @@ class ModelEvaluator:
         for idx in range(min(n_samples, imgs.shape[0])):
             print(f"Processing sample {idx + 1}/{n_samples}...")
             
-            # Get single image
+            # Get single image with batch dimension
             img_tensor = imgs[idx:idx+1].to(self.device)
             
-            # Denormalize for visualization
-            img_display = self.denormalize_image(imgs[idx])
-            img_numpy = img_display.permute(1, 2, 0).numpy()
+            # Get numpy array (C, H, W) format - the methods will handle conversion
+            img_numpy = imgs[idx].cpu().numpy()
             
             # Generate visualizations
             try:
-                # Attention summary
-                fig1 = self.plot_attention_summary(
-                    img_tensor, img_numpy,
-                    save_path=str(self.output_dir / f'attention_summary_sample_{idx+1}.png') if save_individual else None
+                # Use the convenient visualize_sample method
+                figures = self.visualize_sample(
+                    img_tensor,
+                    img_numpy,
+                    sample_name=f'sample_{idx+1}'
                 )
-                plt.close(fig1)
                 
-                # Layer analysis
-                fig2 = self.plot_layer_analysis(
-                    img_tensor, img_numpy,
-                    save_path=str(self.output_dir / f'layer_analysis_sample_{idx+1}.png') if save_individual else None
-                )
-                plt.close(fig2)
+                # Close figures to free memory
+                for fig in figures.values():
+                    plt.close(fig)
                 
                 print(f"  ✓ Sample {idx + 1} completed")
                 
             except Exception as e:
                 print(f"  ✗ Error with sample {idx + 1}: {str(e)}")
+                import traceback
+                traceback.print_exc()
                 continue
         
         print(f"\nVisualizations saved to: {self.output_dir}")
@@ -729,9 +947,10 @@ class ModelEvaluator:
         print("-" * 30)
         
         # Cosine similarity
+        sorted_features = features[np.argsort(labels)]
         fig_cos = self.plot_cosine_similarity_matrix(
-            features[:100],  # Limit for visibility
-            save_path=str(self.output_dir / 'cosine_similarity.png')
+            sorted_features,  # Limit for visibility
+            save_path='cosine_similarity.png'
         )
         plt.close(fig_cos)
         print("   ✓ Cosine similarity matrix")
@@ -739,7 +958,7 @@ class ModelEvaluator:
         # t-SNE
         fig_tsne = self.plot_tsne(
             features, labels,
-            save_path=str(self.output_dir / 'tsne_visualization.png')
+            save_path='tsne_visualization.png'
         )
         plt.close(fig_tsne)
         print("   ✓ t-SNE visualization")
@@ -747,7 +966,7 @@ class ModelEvaluator:
         # Top-k features
         fig_topk = self.plot_top_k_features(
             features, labels,
-            save_path=str(self.output_dir / 'top_k_features.png')
+            save_path='top_k_features.png'
         )
         plt.close(fig_topk)
         print("   ✓ Top-k feature analysis")

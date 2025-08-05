@@ -86,7 +86,7 @@ class FacePatchDataset(Dataset):
         return patch, label
     
 class FlowerPatchDataset(Dataset):
-    def __init__(self, root='./apianet/dataset/flowers', patch=350, patches_per_file=3000):
+    def __init__(self, root='./apiaviz/dataset/natural-scences', patch=75, patches_per_file=3000):
         self.patch = patch
         self.imgs  = []   # list of (tensor, label)
         self.names = []
@@ -94,7 +94,7 @@ class FlowerPatchDataset(Dataset):
 
         t_img = transforms.ToTensor()
         root  = Path(root)
-        for sub in ['summer', 'fall', 'spring']:
+        for sub in ['lavender', 'goldenrod', 'sunflower']:
             for fp in sorted((root/sub).glob('*.*')):
                 img = Image.open(fp).convert('RGB')
                 self.imgs.append((t_img(img), len(self.names)))

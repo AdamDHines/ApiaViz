@@ -31,9 +31,9 @@ class EvalVision:
         # ---------------------------------------------------------------
         #  Model
         # ---------------------------------------------------------------
-        state_dict = torch.load("./apianet/models/VisionModel.pth", map_location=self.device, weights_only=True)
+        state_dict = torch.load("./apiaviz/models/VisionModel.pth", map_location=self.device, weights_only=True)
         self.model = VisionModule().to(self.device)
-        self.model.load_state_dict(state_dict['encoder'], strict=False)
+        self.model.load_state_dict(state_dict)
         self.model.eval()
 
         # ---------------------------------------------------------------
@@ -55,7 +55,7 @@ class EvalVision:
                 green_pct_high=self.green_pct_high,
                 green_pct_low=self.green_pct_low
             )
-        elif self.eval_dataset == "flowers":
+        elif self.eval_dataset == "natural-scenes":
             self.dataset = FlowerPatchDataset(patches_per_file=self.eval_samples)
         elif self.eval_dataset == "faces":
             self.dataset = FacePatchDataset("./apiaviz/dataset/faces/", patches_per_file=self.eval_samples)
@@ -87,3 +87,7 @@ class EvalVision:
 
         feats = np.concatenate(feats)
         labs = np.concatenate(labs)
+
+        # The evaluator will handle the format conversion automatically
+        self.evaluator.run_full_evaluation(self.loader, feats, labs
+        )

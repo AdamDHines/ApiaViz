@@ -56,7 +56,7 @@ def parse_args():
                         help='Learning rate for training')
     
     # Evaluation parameters
-    parser.add_argument('--eval_samples', type=int, default=1000,
+    parser.add_argument('--eval_samples', type=int, default=50,
                         help='Number of samples to use for evaluation')
     parser.add_argument('--eval_batch_size', type=int, default=256,
                         help='Batch size for evaluation')
@@ -68,7 +68,7 @@ def parse_args():
                         help="synthetic = VisionDataset,  tiny = Tiny-ImageNet (100k real images)")
     
     # Evaluation dataset parameters
-    parser.add_argument("--eval_dataset", default="faces", choices=["synthetic", "faces", "flowers"],
+    parser.add_argument("--eval_dataset", default="natural-scenes", choices=["synthetic", "faces", "natural-scenes"],
                         help="evaluation dataset to use")
     parser.add_argument('--green_pct_high', type=int, default=90,
                         help='Percentage of green in the dataset (for synthetic dataset)')

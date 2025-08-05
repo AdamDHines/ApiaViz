@@ -216,6 +216,7 @@ __marimo__/
 *.parquet
 
 # Project directories
+apiaviz/dataset/natural-scences/
 apiaviz/dataset/tiny-imagenet/
 apiaviz/models/
 .vscode/
