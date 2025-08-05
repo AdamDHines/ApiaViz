@@ -124,8 +124,10 @@ class TrainVision(nn.Module):
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark     = False
         model = VisionModule(training=True).to(self.device)
-
-        ckpt = f"./apianet/models/VisionModel_untrained.pth"
+        # check if models folder exists, if not create it
+        if not self.models_dir.exists():
+            self.models_dir.mkdir(parents=True, exist_ok=True)
+        ckpt = f"./apiaviz/models/VisionModel_untrained.pth"
         torch.save(model.state_dict(), ckpt)
         model.train()
 

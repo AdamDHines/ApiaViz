@@ -50,7 +50,7 @@ def parse_args():
                         help='Number of epochs to train modules')
     parser.add_argument('--train_samples', type=int, default=100_000,
                         help='Number of training samples to use')
-    parser.add_argument('--batch_size', type=int, default=256,
+    parser.add_argument('--batch_size', type=int, default=128,
                         help='Batch size for training')
     parser.add_argument('--lr', type=float, default=1e-5,
                         help='Learning rate for training')
