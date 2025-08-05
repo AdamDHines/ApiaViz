@@ -1,0 +1,59 @@
+[project]
+name = "apiaviz"
+version = "0.0.1"
+description = "Modelling of honeybee vision"
+authors = ["TBD"]
+channels = ["conda-forge", "pytorch"]
+platforms = ["linux-64", "osx-arm64", "win-64"]
+preview = ["pixi-build"]
+
+[environments]
+cuda = ["cuda"]
+
+[tasks]
+# Datasets and models
+get_tinyimg = {cmd = "git lfs install && git clone https://huggingface.co/datasets/zh-plus/tiny-imagenet ./apiaviz/dataset/tiny-imagenet && pixi run python ./apiaviz/dataset/format_dataset.py -p './apiaviz/dataset/tiny-imagenet/data/train-00000-of-00001-1359597a978bc4fa.parquet' -o './apiaviz/dataset/tiny-imagenet/train' && pixi run python ./apiaviz/dataset/format_dataset.py -p './apiaviz/dataset/tiny-imagenet/data/valid-00000-of-00001-70d52db3c749a935.parquet' -o './apiaviz/dataset/tiny-imagenet/val'"}
+get_model = {cmd = "git lfs install && git clone https://huggingface.co/AdamHines/ApiaVizVisionModule ./apiaviz/models/"}
+
+# Training
+train = {cmd = "pixi run python main.py --mode train --module vision --epoch 100 --train_samples 100000 --lr 3e-3 --batch_size 256"}
+
+# Evaluation
+eval= {cmd = "pixi run python main.py --mode eval --module vision --eval_samples 5000 --eval_batch_size 256"}
+
+[dependencies]
+python = "*"
+numpy = "==1.26.4,<2"
+pytorch = "*"
+torchvision = "*"
+tqdm = "*"
+opencv = "*"
+imageio = "*"
+matplotlib-base = "*" 
+scikit-learn = "*"
+pandas = "*"
+
+[feature.cuda]
+platforms = ["linux-64"]
+system-requirements = {cuda = "12"}
+
+[feature.cuda.dependencies]
+cuda-version = "12.*"
+pytorch-gpu = "*"
+cuda-cudart-dev = "*"
+cuda-crt = "*"
+cudnn = "*"
+libcusparse-dev = "*"
+cuda-driver-dev = "*"
+cuda-nvcc = "*"
+cuda-nvrtc-dev = "*"
+cuda-nvtx-dev = "*"
+cuda-nvml-dev = "*"
+cuda-profiler-api = "*"
+cusparselt = "*"
+libcublas-dev = "*"
+libcudss-dev = "*"
+libcufile-dev = "*"
+libcufft-dev = "*"
+libcurand-dev = "*"
+libcusolver-dev = "*"

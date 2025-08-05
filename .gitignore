@@ -205,3 +205,17 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project files
+*.pth
+*.png
+*.JPEG
+*.jpg
+*.npy
+*.DS_Store
+*.parquet
+
+# Project directories
+apiaviz/dataset/tiny-imagenet/
+apiaviz/models/
+.vscode/
