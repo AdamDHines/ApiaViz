@@ -16,7 +16,7 @@ get_tinyimg = {cmd = "git lfs install && git clone https://huggingface.co/datase
 get_model = {cmd = "git lfs install && git clone https://huggingface.co/AdamHines/ApiaVizVisionModule ./apiaviz/models/"}
 
 # Training
-train = {cmd = "pixi run python main.py --mode train --dataset tiny"}
+train = {cmd = "pixi run python main.py --mode train --train_dataset tiny"}
 
 # Evaluation
 eval= {cmd = "pixi run python main.py --mode eval"}
