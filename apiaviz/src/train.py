@@ -21,7 +21,7 @@ from tqdm import tqdm
 from pathlib import Path
 from torchvision import transforms
 from torch.utils.data import DataLoader
-from apiaviz.src.modules import VisionModule
+from apiaviz.src.modules import VisionModule, SNNVisionModule
 from apiaviz.dataset.datagen import SyntheticDataset, TinyImageNetPairDataset
 
 # Set multiprocessing start method to 'spawn' for compatibility on macOS
@@ -33,15 +33,21 @@ class TrainVision(nn.Module):
     def __init__(self, args):
         super().__init__()
 
-        # expose argparse.Namespace → attributes
         for k in vars(args):
             setattr(self, k, getattr(args, k))
 
-        self.models_dir = Path(self.models_dir)          # <─ comes from args
+        self.models_dir = Path(self.models_dir)
         self.models_dir.mkdir(parents=True, exist_ok=True)
-        self.model_path = self.models_dir / self.vision_model
+        self.model_path = Path(f"{self.models_dir}/{self.vision_model}.pth")
 
-        # device selection
+        # SNN-SPECIFIC: Add num_steps hyperparameter
+        # This will be passed to the SNN model's forward pass.
+        if self.snn:
+            # A good starting point is between 10 and 50 steps.
+            self.num_steps = getattr(args, 'num_steps', 25) 
+            print(f"SNN Training enabled with num_steps = {self.num_steps}")
+
+        # device selection (no changes needed here)
         if torch.cuda.is_available():
             self.device = torch.device("cuda")
         elif torch.backends.mps.is_available():
@@ -49,14 +55,11 @@ class TrainVision(nn.Module):
         else:
             self.device = torch.device("cpu")
 
-        # info / warnings
         if self.device.type == "cpu":
-            print('')
-            print("========================== WARNING ========================")
-            print(".       Training on CPU will be extremely slow. ")
-            print(".     Please use a CUDA-enabled GPU or HPC if available.")
-            print("  =======================================================  ")
-            print('')
+            print("\n========================== WARNING ========================\n"
+                  ".       Training on CPU will be extremely slow. \n"
+                  ".     Please use a CUDA-enabled GPU or HPC if available.\n"
+                  "  =======================================================  \n")
 
     def select_GB(self, chw: torch.Tensor) -> torch.Tensor:
         """Return the G & B channels from a 3-channel tensor."""
@@ -73,91 +76,107 @@ class TrainVision(nn.Module):
                 print("Invalid input. Exiting training."); return
             print("Continuing training and overwriting existing model.")
 
-        # --- AUGMENTATION PIPELINE ------------------------------------------------
+        # --- AUGMENTATION PIPELINE (no changes needed) -----------------------------
         aug = transforms.Compose([
-            # 1. Geometric augmentations - these operate on PIL images.
             transforms.RandomResizedCrop(64, (0.7, 1.0)),
             transforms.RandomHorizontalFlip(),
-            # Fix the rotation by filling with a neutral gray (128) instead of black (0).
-            transforms.RandomRotation(10, fill=128), 
-            
-            # 2. Color/Pixel augmentations - also best on PIL images.
+            transforms.RandomRotation(10, fill=128),
             transforms.ColorJitter(hue=.2, saturation=.3, brightness=.3, contrast=.3),
-            # Apply blur HERE, before converting to a tensor. The PIL backend handles edges better.
             transforms.GaussianBlur(3, sigma=(.1,2.)),
-
-            # 3. Conversion to Tensor and Channel Selection.
             transforms.ToTensor(),
             transforms.Lambda(self.select_GB),
-            avf.MaybeGray2Ch(0.5),
-            
-            # 4. Normalization - ALWAYS LAST.
+            # avf.MaybeGray2Ch(0.5), # Assuming this function exists
             transforms.Normalize([0.5, 0.5], [0.5, 0.5]),
         ])
 
-        # dataset returns (v1, v2)
-        if self.train_dataset == "tiny":
-            ds_root = "./apiaviz/dataset/tiny-imagenet/train"
-            train_ds = TinyImageNetPairDataset(ds_root, transform=aug)
-        else:  # synthetic
-            train_ds = SyntheticDataset(num_samples=self.train_samples,
-                                    image_transform=aug,
-                                    green_pct=self.green_pct)
-            
-        if self.device.type == "mps":
-            train_dl = DataLoader(train_ds, batch_size=self.batch_size,
-                        shuffle=True, num_workers=0, pin_memory=False)
+        ds_root = "./apiaviz/dataset/tiny-imagenet/train"
+        if self.snn:
+            # SNN mode: pass snn_mode=True and num_steps to the dataset
+            train_ds = TinyImageNetPairDataset(ds_root, 
+                                            transform=aug, 
+                                            snn_mode=True, 
+                                            num_steps=self.num_steps)
         else:
-            train_dl = DataLoader(train_ds, batch_size=self.batch_size,
-                                shuffle=True, num_workers=4, pin_memory=True)
+            # ANN mode: standard instantiation
+            train_ds = TinyImageNetPairDataset(ds_root, 
+                                            transform=aug, 
+                                            snn_mode=False)
+            
+        train_dl = DataLoader(train_ds, batch_size=self.batch_size)
 
-        # model & optimiser
-        seed = secrets.randbits(32)        # e.g. 3857281742
-
-        # 2. seed every RNG you rely on
+        # --- MODEL, SEEDING, and OPTIMIZER (minor changes) -------------------------
+        seed = secrets.randbits(32)
         torch.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
         np.random.seed(seed)
         random.seed(seed)
-
-        # 3. (optional) make cudnn deterministic
         torch.backends.cudnn.deterministic = True
-        torch.backends.cudnn.benchmark     = False
-        model = VisionModule(training=True).to(self.device)
-        # check if models folder exists, if not create it
+        torch.backends.cudnn.benchmark = False
+
+        if self.snn:
+            # Pass any necessary SNN-specific args here
+            model = SNNVisionModule().to(self.device)
+        else:
+            model = VisionModule().to(self.device)
+
         if not self.models_dir.exists():
             self.models_dir.mkdir(parents=True, exist_ok=True)
-        ckpt = f"./apiaviz/models/VisionModel_untrained.pth"
+        
+        # This saving logic is fine.
+        ckpt = f"./apiaviz/models/{self.vision_model}_untrained.pth"
         torch.save(model.state_dict(), ckpt)
         model.train()
 
-        opt   = torch.optim.Adam(model.parameters(), lr=self.lr)
-        sched = torch.optim.lr_scheduler.CosineAnnealingLR(
-                    opt, T_max=self.epochs  # begin decay after warm-up
-                )
-
+        opt = torch.optim.Adam(model.parameters(), lr=self.lr)
+        sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=self.epochs)
         best_loss = float("inf")
 
+        # --- CORE TRAINING LOOP (key modifications here) --------------------------
         for epoch in range(self.epochs):
             running, processed = 0.0, 0
-
-            pbar = tqdm(train_dl,
-                        desc=f"Epoch {epoch+1}/{self.epochs}",
-                        unit="batch")
+            pbar = tqdm(train_dl, desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch")
 
             for v1, v2 in pbar:
                 v1, v2 = v1.to(self.device), v2.to(self.device)
-                h1, h2 = F.normalize(model(v1), dim=1), F.normalize(model(v2), dim=1)
 
+                if self.snn:
+                    # SNN-SPECIFIC FORWARD PASS
+                    # 1. Pass the input and the number of time steps to the model.
+                    # The output will be spikes over time: (num_steps, batch_size, features)
+                    v1 = v1.permute(1, 0, 2, 3, 4)
+                    v2 = v2.permute(1, 0, 2, 3, 4)
+                    spk_h1 = model(v1, num_steps=self.num_steps)
+                    spk_h2 = model(v2, num_steps=self.num_steps)
+
+                    # 2. Decode the spike train into a feature vector (Rate Coding).
+                    # We sum the spikes over the time dimension to get a spike count.
+                    # This count serves as the feature representation for the loss function.
+                    # The shape becomes (batch_size, features), which is what our loss expects.
+                    h1 = spk_h1.sum(dim=0)
+                    h2 = spk_h2.sum(dim=0)
+                    
+                    # 3. Normalize the spike counts.
+                    h1 = F.normalize(h1, dim=1)
+                    h2 = F.normalize(h2, dim=1)
+
+                else:
+                    # Original ANN forward pass
+                    h1 = F.normalize(model(v1), dim=1)
+                    h2 = F.normalize(model(v2), dim=1)
+                
+                # The loss calculation remains the same, as we've prepared `h1` and `h2`
                 loss = avf.nt_xent(h1, h2)
 
+                # The backward pass and optimization step are also the same.
+                # For the SNN, this is where Backpropagation Through Time (BPTT) happens.
+                # PyTorch handles the gradient flow back through all `num_steps`.
                 opt.zero_grad()
                 loss.backward()
                 opt.step()
 
-                # ---- stats ----
+                # ---- stats (no changes needed) ----
                 bs = v1.size(0)
-                running   += loss.item() * bs
+                running += loss.item() * bs
                 processed += bs
                 pbar.set_postfix(
                     curr_loss=f"{running/processed:.4f}",
@@ -165,13 +184,12 @@ class TrainVision(nn.Module):
                 )
 
             sched.step()
-
             epoch_loss = running / processed
 
-            # ---- checkpoint ----
+            # ---- checkpoint (no changes needed) ----
             if epoch_loss < best_loss:
                 best_loss = epoch_loss
-                torch.save(model.state_dict(), f"{self.models_dir}/{self.vision_model}")
+                torch.save(model.state_dict(), str(self.model_path))
                 print(f"[Epoch {epoch+1}]  ↳ new best {best_loss:.4f} → {self.model_path}")
 
         print(f"Training complete. Best loss {best_loss:.4f} → {self.model_path}")

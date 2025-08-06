@@ -42,8 +42,14 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Args for default configuration")
 
     # Training or evaluation mode
-    parser.add_argument('--mode', type=str, default='eval', choices=['train', 'eval'],
+    parser.add_argument('--mode', type=str, default='train', choices=['train', 'eval'],
                         help='Mode to run: training or evaluation network')
+    
+    # Artificial or spiking mode
+    parser.add_argument('--snn', action='store_true',
+                        help='Use artificial neural network (default)')
+    parser.add_argument('--num_steps', type=int, default=100,
+                        help='Number of time steps for SNN simulation (default: 100)')
     
     # Training parameters
     parser.add_argument('--epochs', type=int, default=100,
@@ -71,7 +77,6 @@ def parse_args():
     parser.add_argument('--ind_plots', type=str, default='batch',
                         choices=['ind', 'batch'], help='Plots over individual or batch samples')
     
-    
     # Training dataset parameters
     parser.add_argument("--train_dataset", default="tiny", choices=["synthetic", "tiny"],
                         help="synthetic = VisionDataset,  tiny = Tiny-ImageNet (100k real images)")
@@ -85,12 +90,12 @@ def parse_args():
                         help='Percentage low of green in the dataset (for synthetic dataset)')
     
     # Model names
-    parser.add_argument('--vision_model', type=str, default='VisionModel.pth',
+    parser.add_argument('--vision_model', type=str, default='VisionModel',
                         help='Name of the vision model for saving/loading')
     
     # Output base configuration
     args = parser.parse_args()
-
+    args.snn = True
     # Run the user-chosen mode
     if args.mode == 'train':
         apianet_train(args)

@@ -14,37 +14,77 @@ from torch.utils.data import Dataset
 class KeepGB(torch.nn.Module):
     def forward(self, t):
         return t[1:3]          # keep G & B channels
+    
+class StaticToSpike(torch.nn.Module):
+    """
+    Custom transform to convert a static image tensor into a spike train using
+    Poisson-like encoding.
+    """
+    def __init__(self, num_steps: int):
+        super().__init__()
+        self.num_steps = num_steps
+
+    def forward(self, img_tensor: torch.Tensor) -> torch.Tensor:
+        """
+        Takes a tensor of shape [C, H, W] and returns a spike train
+        of shape [T, C, H, W].
+        """
+        # Un-normalize from [-1, 1] back to [0, 1] for probability comparison
+        img_tensor_prob = (img_tensor + 1.0) / 2.0
+        
+        # Generate spikes based on pixel probability
+        rand_stack = torch.rand(self.num_steps, *img_tensor_prob.shape, device=img_tensor.device)
+        spike_train = (rand_stack < img_tensor_prob).float()
+        
+        return spike_train
 
 class TinyImageNetPairDataset(Dataset):
     """
-    Returns two independent augmentations of the *same* Tiny-ImageNet image,
-    ready for SimCLR-style contrastive learning.
-
-    Each item:  (view_1, view_2)   where view_i == transform(original_img)
+    Returns two independent augmentations of the *same* Tiny-ImageNet image.
+    Can be configured to output static tensors (for ANNs) or spike trains (for SNNs).
     """
-    def __init__(self, root, transform):
-        self.root      = Path(root)
-        self.transform = transform
+    def __init__(self, root: str, transform: transforms.Compose, snn_mode: bool = False, num_steps: int = 25):
+        self.root = Path(root)
+        self.snn_mode = snn_mode
+        
+        # Store the base augmentation pipeline (the Compose object)
+        self.base_transform = transform
+        
+        # If in SNN mode, create the spike transform instance. Otherwise, it's None.
+        self.spike_transform = StaticToSpike(num_steps) if snn_mode else None
 
-        # tiny-imagenet-200/train/<wnid>/images/*.JPEG
-        self.images = []
-        self.images.extend(self.root.glob("*.jpg"))
-
+        # The rest of the __init__ remains the same
+        self.images = sorted(list(self.root.glob("**/*.jpg"))) # More robust glob
+        print(len(self.images), "images found in", self.root)
         if len(self.images) == 0:
-            raise RuntimeError(f"No JPEGs found in {self.root}")
-
+            raise RuntimeError(f"No JPEGs found in {self.root} or its subdirectories")
         random.shuffle(self.images)
 
     def __len__(self) -> int:
-        return len(self.images)      # 100 000 for Tiny-ImageNet train split
+        return len(self.images)
 
     def __getitem__(self, idx: int):
         img_path = self.images[idx]
-        img = Image.open(img_path).convert("RGB")  # Tiny-IN files are RGB
+        try:
+            img = Image.open(img_path).convert("RGB")
+        except Exception:
+            # Handle corrupted images by loading a random one instead
+            return self.__getitem__(random.randint(0, len(self) - 1))
 
-        # two stochastic views
-        v1 = self.transform(img)
-        v2 = self.transform(img)
+        # --- Apply transforms sequentially ---
+        
+        # First, apply the base augmentations (flips, crops, color jitters, etc.)
+        v1_static = self.base_transform(img)
+        v2_static = self.base_transform(img)
+
+        # Second, if in SNN mode, apply the spiking transform to the static tensors
+        if self.snn_mode and self.spike_transform is not None:
+            v1 = self.spike_transform(v1_static)
+            v2 = self.spike_transform(v2_static)
+        else:
+            v1 = v1_static
+            v2 = v2_static
+            
         return v1, v2
 
 class FacePatchDataset(Dataset):

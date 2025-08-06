@@ -65,6 +65,56 @@ class AdaptiveKWTA(nn.Module):
         
         return x * mask
     
+class SNNAdaptiveKWTA(nn.Module):
+    """
+    Spiking-aware Adaptive K-Winners-Take-All layer.
+    
+    This version includes the CORRECTED Straight-Through Estimator to ensure
+    the gradient path is not broken.
+    """
+    def __init__(self, sparsity=0.05, momentum=0.9, reset_mechanism="subtract"):
+        super().__init__()
+        self.sparsity = sparsity
+        self.momentum = momentum
+        self.reset_mechanism = reset_mechanism
+        
+        self.register_buffer('running_mean', None)
+        self.register_buffer('thresholds', torch.tensor(1.0))
+
+    def forward(self, mem, time_step=0):
+        if self.running_mean is None:
+            self.running_mean = torch.zeros(mem.size(1), device=mem.device)
+            self.thresholds = torch.ones(mem.size(1), device=mem.device)
+
+        mem_adjusted = mem / (self.thresholds.unsqueeze(0) if self.thresholds.dim() > 0 else self.thresholds)
+        
+        k = max(1, int(self.sparsity * mem.size(1)))
+        
+        # --- FORWARD PASS: Generate hard, non-differentiable spikes ---
+        with torch.no_grad(): # Explicitly no_grad for clarity, topk is non-diff anyway
+             _, idx = torch.topk(mem_adjusted, k, dim=1)
+        spk_hard = torch.zeros_like(mem_adjusted).scatter_(1, idx, 1.0)
+        
+        # --- BACKWARD PASS: Create the surrogate gradient path ---
+        # This is the crucial, corrected line.
+        # It ensures the forward pass uses `spk_hard`, but the backward pass
+        # computes gradients as if the operation was just `mem_adjusted`.
+        spk = (spk_hard - mem_adjusted).detach() + mem_adjusted
+        
+        # --- Update running statistics (no gradient needed here) ---
+        with torch.no_grad():
+            batch_mean = spk_hard.float().mean(dim=0) # Use the real spikes for stats
+            self.running_mean = self.momentum * self.running_mean + (1 - self.momentum) * batch_mean
+            self.thresholds = 1.0 + 2.0 * (self.running_mean - self.sparsity).clamp(min=0)
+
+        # --- Reset membrane potential of neurons that fired ---
+        if self.reset_mechanism == "subtract":
+            mem_after_spike = mem - (spk_hard * self.thresholds.unsqueeze(0))
+        else: # "zero"
+            mem_after_spike = mem * (1 - spk_hard)
+            
+        return spk, mem_after_spike
+    
 def k_wta(x, pct=.05):
     k = max(1, int(pct * x.size(1)))
     topk, idx = torch.topk(x, k, dim=1)

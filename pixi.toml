@@ -9,6 +9,7 @@ preview = ["pixi-build"]
 
 [environments]
 cuda = ["cuda"]
+spiking = ["spiking"]
 
 [tasks]
 # Datasets and models
@@ -58,3 +59,6 @@ libcufile-dev = "*"
 libcufft-dev = "*"
 libcurand-dev = "*"
 libcusolver-dev = "*"
+
+[feature.spiking.dependencies]
+snntorch = "*"
