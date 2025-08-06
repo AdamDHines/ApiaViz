@@ -57,6 +57,9 @@ class FacePatchDataset(Dataset):
         root  = Path(root)
         for sub in ['female', 'male']:
             for fp in sorted((root/sub).glob('*.*')):
+                # ignore .DS_Store files on macOS
+                if fp.name.startswith('.DS_Store'):
+                    continue
                 img = Image.open(fp).convert('L')
                 self.imgs.append((t_img(img), len(self.names)))
                 self.names.append(fp.stem)
@@ -86,38 +89,68 @@ class FacePatchDataset(Dataset):
         return patch, label
     
 class FlowerPatchDataset(Dataset):
-    def __init__(self, root='./apiaviz/dataset/natural-scences', patch=75, patches_per_file=3000):
+    def __init__(self, root='./apiaviz/dataset/natural-scenes', patch=75, patches_per_file=3000):
         self.patch = patch
-        self.imgs  = []   # list of (tensor, label)
-        self.names = []
-        self.tensors = []
-
-        t_img = transforms.ToTensor()
-        root  = Path(root)
-        for sub in ['lavender', 'goldenrod', 'sunflower']:
-            for fp in sorted((root/sub).glob('*.*')):
-                img = Image.open(fp).convert('RGB')
-                self.imgs.append((t_img(img), len(self.names)))
-                self.names.append(fp.stem)
-                self.tensors.append(t_img(img))  # store tensors for cropping
-
-        if not self.imgs:
-            raise RuntimeError("No images found under female/ or male/")
-
         self.per_file = patches_per_file
-        self.total    = self.per_file * len(self.imgs)
+        
+        # This list will hold tuples of (tensor, class_label)
+        self.source_images = []
+        
+        # This dictionary will map folder names to integer labels
+        self.class_names = ['summer', 'spring', 'fall']
+        self.class_to_idx = {name: i for i, name in enumerate(self.class_names)}
+        
+        t_img = transforms.ToTensor()
+        root_path = Path(root)
 
-    def __len__(self): return self.total
+        print("Loading dataset...")
+        # Iterate through the defined classes to assign consistent labels
+        for class_name, class_idx in self.class_to_idx.items():
+            class_dir = root_path / class_name
+            if not class_dir.exists():
+                print(f"Warning: Directory not found: {class_dir}")
+                continue
+            
+            # Find all image files in the class directory
+            image_files = [fp for fp in sorted(class_dir.glob('*.*')) if not fp.name.startswith('.')]
+            print(f"Found {len(image_files)} images in '{class_name}' (Label: {class_idx})")
+
+            for fp in image_files:
+                try:
+                    img = Image.open(fp).convert('RGB')
+                    # Store the full image tensor along with its correct class label
+                    self.source_images.append((t_img(img), class_idx))
+                except Exception as e:
+                    print(f"Warning: Could not load image {fp}. Error: {e}")
+
+        if not self.source_images:
+            raise RuntimeError(f"No images found under the specified root: {root}")
+
+        # The total number of patches is the number of source images * patches per image
+        self.total = self.per_file * len(self.source_images)
+        print(f"Dataset loaded. Total source images: {len(self.source_images)}. Total patches: {self.total}.")
+
+    def __len__(self):
+        return self.total
 
     def __getitem__(self, idx):
-        fidx = idx // self.per_file
-        img = self.tensors[fidx]              # 3×H×W, range 0-1
-        _, H, W = img.shape
+        # Determine which source image to use based on the index
+        source_idx = idx // self.per_file
+        
+        # Retrieve the full image tensor and its correct class label
+        img_tensor, label = self.source_images[source_idx]
+        
+        # Perform the random crop on the full image
+        _, H, W = img_tensor.shape
         y0 = random.randint(0, H - self.patch)
         x0 = random.randint(0, W - self.patch)
-        crop = img[:, y0:y0+self.patch, x0:x0+self.patch]   # 3×75×75
-        crop = crop[1:3]    # keep G & B, drop R
-        return crop, fidx   # label = file index
+        crop = img_tensor[:, y0:y0+self.patch, x0:x0+self.patch]
+        
+        # Keep only the Green and Blue channels
+        crop_gb = crop[1:3]
+        
+        # Return the cropped patch and the correct folder-level label
+        return crop_gb, label
 
 class SyntheticDataset(Dataset):
     """

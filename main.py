@@ -54,14 +54,23 @@ def parse_args():
                         help='Batch size for training')
     parser.add_argument('--lr', type=float, default=1e-5,
                         help='Learning rate for training')
+    parser.add_argument('--models_dir', type=str, default='./apiaviz/models/',
+                        help='Directory to save and load models')
     
     # Evaluation parameters
-    parser.add_argument('--eval_samples', type=int, default=50,
+    parser.add_argument('--eval_samples', type=int, default=1,
                         help='Number of samples to use for evaluation')
-    parser.add_argument('--eval_batch_size', type=int, default=256,
+    parser.add_argument('--eval_batch_size', type=int, default=7,
                         help='Batch size for evaluation')
     parser.add_argument('--outdir', type=str, default='./apiaviz/output/',
                         help='Directory to save evaluation results')
+    parser.add_argument('--n_eval_plots', type=int, default=3,
+                        help='Number of evaluation plots to generate')
+    parser.add_argument('--eval_plot_random', action='store_true',
+                        help='Use random sampling for evaluation plots')
+    parser.add_argument('--ind_plots', type=str, default='batch',
+                        choices=['ind', 'batch'], help='Plots over individual or batch samples')
+    
     
     # Training dataset parameters
     parser.add_argument("--train_dataset", default="tiny", choices=["synthetic", "tiny"],
@@ -74,10 +83,6 @@ def parse_args():
                         help='Percentage of green in the dataset (for synthetic dataset)')
     parser.add_argument('--green_pct_low', type=int, default=10,
                         help='Percentage low of green in the dataset (for synthetic dataset)')
-    
-    # Directory paths
-    parser.add_argument('--models_dir', type=str, default='./apiaviz/models/',
-                        help='Directory to save and load models')
     
     # Model names
     parser.add_argument('--vision_model', type=str, default='VisionModel.pth',

@@ -1,6 +1,5 @@
 # Imports
-import torch
-import operator
+import os, torch, operator
 
 import numpy as np
 import apiaviz.src.functional as avf
@@ -31,9 +30,9 @@ class EvalVision:
         # ---------------------------------------------------------------
         #  Model
         # ---------------------------------------------------------------
-        state_dict = torch.load("./apiaviz/models/VisionModel.pth", map_location=self.device, weights_only=True)
+        state_dict = torch.load(os.path.join(self.models_dir, self.vision_model), map_location=self.device, weights_only=True)
         self.model = VisionModule().to(self.device)
-        self.model.load_state_dict(state_dict)
+        self.model.load_state_dict(state_dict, strict=False)
         self.model.eval()
 
         # ---------------------------------------------------------------
@@ -64,18 +63,18 @@ class EvalVision:
         
         if self.device.type == "mps":
             self.loader = DataLoader(self.dataset,
-                            batch_size=self.batch_size,
+                            batch_size=self.eval_batch_size,
                             shuffle=False,
                             num_workers=0)
         else:
             self.loader = DataLoader(self.dataset,
-                                    batch_size=self.batch_size,
+                                    batch_size=self.eval_batch_size,
                                     shuffle=False,
                                     num_workers=4,
                                     pin_memory=True)
             
         # define evaluator
-        self.evaluator = avf.ModelEvaluator(self.model, self.device)
+        self.evaluator = avf.ModelEvaluator(self.model, self.device, output_dir=self.outdir)
     
     def eval(self):
         feats, labs = [], []
@@ -87,7 +86,11 @@ class EvalVision:
 
         feats = np.concatenate(feats)
         labs = np.concatenate(labs)
-
+        
         # The evaluator will handle the format conversion automatically
-        self.evaluator.run_full_evaluation(self.loader, feats, labs
+        self.evaluator.run_full_evaluation(self.loader, 
+                                           feats, 
+                                           labs, 
+                                           n_visualization_samples=self.n_eval_plots, 
+                                           use_random_sampling=self.eval_plot_random
         )

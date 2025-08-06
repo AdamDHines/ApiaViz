@@ -171,7 +171,7 @@ class TrainVision(nn.Module):
             # ---- checkpoint ----
             if epoch_loss < best_loss:
                 best_loss = epoch_loss
-                torch.save(model.state_dict(), f"{self.models_dir}/VisionModel.pth")
+                torch.save(model.state_dict(), f"{self.models_dir}/{self.vision_model}")
                 print(f"[Epoch {epoch+1}]  ↳ new best {best_loss:.4f} → {self.model_path}")
 
         print(f"Training complete. Best loss {best_loss:.4f} → {self.model_path}")
