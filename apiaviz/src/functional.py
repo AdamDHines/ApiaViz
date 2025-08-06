@@ -22,6 +22,17 @@ from sklearn.metrics import silhouette_score, adjusted_rand_score
 import warnings
 warnings.filterwarnings('ignore')
 
+# ────────── Augmentation helpers ──────────
+
+class MaybeGray2Ch:                          # 50 % colour-drop
+    def __init__(self, p: float = 0.5):
+        self.p = p
+    def __call__(self, gb: torch.Tensor) -> torch.Tensor:
+        if random.random() < self.p:
+            g = gb.mean(0, keepdim=True)
+            return torch.cat([g, g], dim=0)
+        return gb
+
 # ────────── k-Winner Takes All functions ──────────
 class AdaptiveKWTA(nn.Module):
     def __init__(self, sparsity=0.05, momentum=0.9):
@@ -61,17 +72,6 @@ def k_wta(x, pct=.05):
     y = x * mask        # forward: hard sparsity
     # backward: pretend mask is constant
     return (y - x).detach() + x
-
-# ────────── Augmentation helpers ──────────
-
-class MaybeGray2Ch:                          # 50 % colour-drop
-    def __init__(self, p: float = 0.5):
-        self.p = p
-    def __call__(self, gb: torch.Tensor) -> torch.Tensor:
-        if random.random() < self.p:
-            g = gb.mean(0, keepdim=True)
-            return torch.cat([g, g], dim=0)
-        return gb
 
 # ────────── Sparse linear function ──────────
 
