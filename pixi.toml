@@ -9,7 +9,6 @@ preview = ["pixi-build"]
 
 [environments]
 cuda = ["cuda"]
-spiking = ["spiking"]
 
 [tasks]
 # Datasets and models
@@ -34,6 +33,7 @@ matplotlib-base = "*"
 scikit-learn = "*"
 pandas = "*"
 pyarrow = "*"
+snntorch = "*"
 
 [feature.cuda]
 platforms = ["linux-64"]
@@ -59,6 +59,3 @@ libcufile-dev = "*"
 libcufft-dev = "*"
 libcurand-dev = "*"
 libcusolver-dev = "*"
-
-[feature.spiking.dependencies]
-snntorch = "*"

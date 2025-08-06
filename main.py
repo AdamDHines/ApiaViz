@@ -50,6 +50,8 @@ def parse_args():
                         help='Use artificial neural network (default)')
     parser.add_argument('--num_steps', type=int, default=100,
                         help='Number of time steps for SNN simulation (default: 100)')
+    parser.add_argument('--patch_size', type=int, default=28,  
+                        help='Size of the input patches (default: 28x28)')
     
     # Training parameters
     parser.add_argument('--epochs', type=int, default=100,

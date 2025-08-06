@@ -5,6 +5,7 @@ import torch
 import random
 
 import numpy as np
+import torch.nn as nn
 
 from pathlib import Path
 from PIL import Image, ImageDraw
@@ -15,47 +16,82 @@ class KeepGB(torch.nn.Module):
     def forward(self, t):
         return t[1:3]          # keep G & B channels
     
-class StaticToSpike(torch.nn.Module):
+class ScanningSpikeEncoder(nn.Module):
     """
-    Custom transform to convert a static image tensor into a spike train using
-    Poisson-like encoding.
+    Transforms a static image into a spike train by scanning a small patch across
+    the image over time. At each time step, a random patch is selected, and
+    a spike frame is generated from it using Poisson-like encoding.
+
+    Args:
+        num_steps (int): The number of time steps (T).
+        patch_size (int): The height and width of the scanning patch.
+        full_image_size (int): The height and width of the original input image.
     """
-    def __init__(self, num_steps: int):
+    def __init__(self, num_steps: int, patch_size: int, full_image_size: int):
         super().__init__()
         self.num_steps = num_steps
+        self.patch_size = patch_size
+        self.full_image_size = full_image_size
 
     def forward(self, img_tensor: torch.Tensor) -> torch.Tensor:
         """
-        Takes a tensor of shape [C, H, W] and returns a spike train
-        of shape [T, C, H, W].
+        Takes a static tensor [C, H, W] (e.g., [2, 64, 64]) and returns
+        a spike train [T, C, patch_H, patch_W] (e.g., [50, 2, 28, 28]).
         """
-        # Un-normalize from [-1, 1] back to [0, 1] for probability comparison
-        img_tensor_prob = (img_tensor + 1.0) / 2.0
-        
-        # Generate spikes based on pixel probability
-        rand_stack = torch.rand(self.num_steps, *img_tensor_prob.shape, device=img_tensor.device)
-        spike_train = (rand_stack < img_tensor_prob).float()
-        
-        return spike_train
+        # Ensure the input image is the expected size
+        if img_tensor.shape[1] != self.full_image_size or img_tensor.shape[2] != self.full_image_size:
+            # This can happen if RandomResizedCrop produces a different size.
+            # We can resize it here to be safe.
+            img_tensor = transforms.functional.resize(img_tensor, [self.full_image_size, self.full_image_size])
+
+        # --- Un-normalize the image from [-1, 1] back to [0, 1] for probability ---
+        prob_img = (img_tensor + 1.0) / 2.0
+
+        # --- Generate random top-left coordinates for the patch at each time step ---
+        max_coord = self.full_image_size - self.patch_size
+        # Generate T random x and y coordinates
+        rand_x = torch.randint(0, max_coord + 1, (self.num_steps,), device=img_tensor.device)
+        rand_y = torch.randint(0, max_coord + 1, (self.num_steps,), device=img_tensor.device)
+
+        spike_frames = []
+        for t in range(self.num_steps):
+            # Get the coordinates for this time step
+            x, y = rand_x[t], rand_y[t]
+            
+            # Extract the patch from the probability-scaled full image
+            patch_prob = prob_img[:, y : y + self.patch_size, x : x + self.patch_size]
+            
+            # Generate a single spike frame from the patch's intensities
+            # This is the rasterization step you envisioned
+            spike_frame = (torch.rand_like(patch_prob) < patch_prob).float()
+            spike_frames.append(spike_frame)
+            
+        # Stack the individual frames along the time dimension
+        return torch.stack(spike_frames, dim=0)
 
 class TinyImageNetPairDataset(Dataset):
     """
-    Returns two independent augmentations of the *same* Tiny-ImageNet image.
-    Can be configured to output static tensors (for ANNs) or spike trains (for SNNs).
+    Returns two independent augmentations of the same Tiny-ImageNet image.
+    In SNN mode, uses a scanning patch to create a memory-efficient spike train.
     """
-    def __init__(self, root: str, transform: transforms.Compose, snn_mode: bool = False, num_steps: int = 25):
+    def __init__(self, root: str, transform: transforms.Compose, 
+                 snn_mode: bool = False, num_steps: int = 50, 
+                 patch_size: int = 28, full_image_size: int = 64): # Add new args
+        
         self.root = Path(root)
         self.snn_mode = snn_mode
-        
-        # Store the base augmentation pipeline (the Compose object)
         self.base_transform = transform
         
-        # If in SNN mode, create the spike transform instance. Otherwise, it's None.
-        self.spike_transform = StaticToSpike(num_steps) if snn_mode else None
+        # In SNN mode, instantiate our new scanning encoder.
+        self.spike_transform = None
+        if snn_mode:
+            self.spike_transform = ScanningSpikeEncoder(
+                num_steps=num_steps,
+                patch_size=patch_size,
+                full_image_size=full_image_size
+            )
 
-        # The rest of the __init__ remains the same
-        self.images = sorted(list(self.root.glob("**/*.jpg"))) # More robust glob
-        print(len(self.images), "images found in", self.root)
+        self.images = sorted(list(self.root.glob("**/*.jpg")))
         if len(self.images) == 0:
             raise RuntimeError(f"No JPEGs found in {self.root} or its subdirectories")
         random.shuffle(self.images)
@@ -64,20 +100,18 @@ class TinyImageNetPairDataset(Dataset):
         return len(self.images)
 
     def __getitem__(self, idx: int):
+        # ... (loading logic is the same) ...
         img_path = self.images[idx]
         try:
             img = Image.open(img_path).convert("RGB")
         except Exception:
-            # Handle corrupted images by loading a random one instead
             return self.__getitem__(random.randint(0, len(self) - 1))
 
-        # --- Apply transforms sequentially ---
-        
-        # First, apply the base augmentations (flips, crops, color jitters, etc.)
+        # Apply base augmentations to get the full-sized static views
         v1_static = self.base_transform(img)
         v2_static = self.base_transform(img)
 
-        # Second, if in SNN mode, apply the spiking transform to the static tensors
+        # If in SNN mode, apply the scanning spike transform
         if self.snn_mode and self.spike_transform is not None:
             v1 = self.spike_transform(v1_static)
             v2 = self.spike_transform(v2_static)

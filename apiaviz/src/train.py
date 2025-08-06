@@ -77,6 +77,7 @@ class TrainVision(nn.Module):
             print("Continuing training and overwriting existing model.")
 
         # --- AUGMENTATION PIPELINE (no changes needed) -----------------------------
+        self.full_image_size = 64 
         aug = transforms.Compose([
             transforms.RandomResizedCrop(64, (0.7, 1.0)),
             transforms.RandomHorizontalFlip(),
@@ -95,7 +96,9 @@ class TrainVision(nn.Module):
             train_ds = TinyImageNetPairDataset(ds_root, 
                                             transform=aug, 
                                             snn_mode=True, 
-                                            num_steps=self.num_steps)
+                                            num_steps=self.num_steps,
+                                            patch_size=self.patch_size,
+                                            full_image_size=self.full_image_size)
         else:
             # ANN mode: standard instantiation
             train_ds = TinyImageNetPairDataset(ds_root, 
