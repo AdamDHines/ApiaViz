@@ -93,12 +93,16 @@ class TrainVision(nn.Module):
         ds_root = "./apiaviz/dataset/tiny-imagenet/train"
         if self.snn:
             # SNN mode: pass snn_mode=True and num_steps to the dataset
-            train_ds = TinyImageNetPairDataset(ds_root, 
-                                            transform=aug, 
-                                            snn_mode=True, 
-                                            num_steps=self.num_steps,
-                                            patch_size=self.patch_size,
-                                            full_image_size=self.full_image_size)
+            train_ds = TinyImageNetPairDataset(
+                ds_root, 
+                transform=aug, 
+                snn_mode=True, 
+                num_steps=self.num_steps,
+                patch_size=getattr(self, 'patch_size', 28),
+                full_image_size=64, # Or get this from config
+                scan_method=getattr(self, 'scan_method', 'saccade'),
+                scan_waypoints=getattr(self, 'scan_waypoints', 5)
+            )
         else:
             # ANN mode: standard instantiation
             train_ds = TinyImageNetPairDataset(ds_root, 

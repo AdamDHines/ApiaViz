@@ -52,6 +52,11 @@ def parse_args():
                         help='Number of time steps for SNN simulation (default: 100)')
     parser.add_argument('--patch_size', type=int, default=28,  
                         help='Size of the input patches (default: 28x28)')
+    parser.add_argument('--scan-method', type=str, default='saccade',
+                    choices=['saccade', 'lissajous'],
+                    help='Method for generating the scan path in SNN mode.')
+    parser.add_argument('--scan-waypoints', type=int, default=5,
+                        help='Number of waypoints for the saccade scan method.')
     
     # Training parameters
     parser.add_argument('--epochs', type=int, default=100,

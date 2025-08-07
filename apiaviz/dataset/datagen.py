@@ -16,81 +16,79 @@ class KeepGB(torch.nn.Module):
     def forward(self, t):
         return t[1:3]          # keep G & B channels
     
-class ScanningSpikeEncoder(nn.Module):
+def generate_smooth_scan_path(num_steps: int, max_coord: int, method: str = 'saccade', num_waypoints: int = 5) -> tuple[torch.Tensor, torch.Tensor]:
     """
-    Transforms a static image into a spike train by scanning a small patch across
-    the image over time. At each time step, a random patch is selected, and
-    a spike frame is generated from it using Poisson-like encoding.
+    Generates a 2D smooth scanning path for an image patch.
+
+    This function creates a path that is guaranteed to have `num_steps` length,
+    preventing index errors.
 
     Args:
-        num_steps (int): The number of time steps (T).
-        patch_size (int): The height and width of the scanning patch.
-        full_image_size (int): The height and width of the original input image.
+        num_steps (int): The total number of steps in the path.
+        max_coord (int): The maximum coordinate for the path (image_size - patch_size).
+        method (str): The algorithm to use. Options: 'saccade', 'lissajous'.
+        num_waypoints (int): Number of waypoints for the 'saccade' method.
+
+    Returns:
+        A tuple containing (x_coords, y_coords) tensors for the path.
     """
-    def __init__(self, num_steps: int, patch_size: int, full_image_size: int):
-        super().__init__()
-        self.num_steps = num_steps
-        self.patch_size = patch_size
-        self.full_image_size = full_image_size
+    if method == 'saccade':
+        # Define random waypoints and the timeline points where they occur
+        waypoints_x = np.random.randint(0, max_coord + 1, num_waypoints)
+        waypoints_y = np.random.randint(0, max_coord + 1, num_waypoints)
+        control_points = np.linspace(0, num_steps - 1, num_waypoints)
+        
+        # Define the full timeline for which we need coordinates
+        full_timeline = np.arange(num_steps)
+        
+        # Interpolate between waypoints to find the path at each step
+        path_x = np.interp(full_timeline, control_points, waypoints_x)
+        path_y = np.interp(full_timeline, control_points, waypoints_y)
+        
+        return torch.from_numpy(path_x.astype(np.int32)), torch.from_numpy(path_y.astype(np.int32))
 
-    def forward(self, img_tensor: torch.Tensor) -> torch.Tensor:
-        """
-        Takes a static tensor [C, H, W] (e.g., [2, 64, 64]) and returns
-        a spike train [T, C, patch_H, patch_W] (e.g., [50, 2, 28, 28]).
-        """
-        # Ensure the input image is the expected size
-        if img_tensor.shape[1] != self.full_image_size or img_tensor.shape[2] != self.full_image_size:
-            # This can happen if RandomResizedCrop produces a different size.
-            # We can resize it here to be safe.
-            img_tensor = transforms.functional.resize(img_tensor, [self.full_image_size, self.full_image_size])
-
-        # --- Un-normalize the image from [-1, 1] back to [0, 1] for probability ---
-        prob_img = (img_tensor + 1.0) / 2.0
-
-        # --- Generate random top-left coordinates for the patch at each time step ---
-        max_coord = self.full_image_size - self.patch_size
-        # Generate T random x and y coordinates
-        rand_x = torch.randint(0, max_coord + 1, (self.num_steps,), device=img_tensor.device)
-        rand_y = torch.randint(0, max_coord + 1, (self.num_steps,), device=img_tensor.device)
-
-        spike_frames = []
-        for t in range(self.num_steps):
-            # Get the coordinates for this time step
-            x, y = rand_x[t], rand_y[t]
-            
-            # Extract the patch from the probability-scaled full image
-            patch_prob = prob_img[:, y : y + self.patch_size, x : x + self.patch_size]
-            
-            # Generate a single spike frame from the patch's intensities
-            # This is the rasterization step you envisioned
-            spike_frame = (torch.rand_like(patch_prob) < patch_prob).float()
-            spike_frames.append(spike_frame)
-            
-        # Stack the individual frames along the time dimension
-        return torch.stack(spike_frames, dim=0)
+    elif method == 'lissajous':
+        center = max_coord / 2.0
+        freq_x, freq_y = np.random.uniform(1.0, 3.0, 2)
+        phase = np.random.uniform(0, np.pi)
+        t = torch.linspace(0, 2 * np.pi, num_steps)
+        x = torch.sin(freq_x * t + phase)
+        y = torch.cos(freq_y * t)
+        path_x = ((x * center) + center).to(torch.int32)
+        path_y = ((y * center) + center).to(torch.int32)
+        return path_x, path_y
+        
+    else:
+        raise ValueError(f"Unknown scan_method '{method}'. Use 'saccade' or 'lissajous'.")
 
 class TinyImageNetPairDataset(Dataset):
     """
     Returns two independent augmentations of the same Tiny-ImageNet image.
-    In SNN mode, uses a scanning patch to create a memory-efficient spike train.
+    
+    In SNN mode, this class generates two temporally-linked spike trains by
+    applying a single, shared, smooth scanning path to both augmented views.
+    This is suitable for contrastive learning frameworks like SimCLR.
     """
     def __init__(self, root: str, transform: transforms.Compose, 
-                 snn_mode: bool = False, num_steps: int = 50, 
-                 patch_size: int = 28, full_image_size: int = 64): # Add new args
+                 snn_mode: bool = False, 
+                 num_steps: int = 50, 
+                 patch_size: int = 28, 
+                 full_image_size: int = 64,
+                 scan_method: str = 'saccade',
+                 scan_waypoints: int = 5):
         
+        super().__init__()
         self.root = Path(root)
-        self.snn_mode = snn_mode
         self.base_transform = transform
-        
-        # In SNN mode, instantiate our new scanning encoder.
-        self.spike_transform = None
-        if snn_mode:
-            self.spike_transform = ScanningSpikeEncoder(
-                num_steps=num_steps,
-                patch_size=patch_size,
-                full_image_size=full_image_size
-            )
+        self.snn_mode = snn_mode
 
+        if self.snn_mode:
+            self.num_steps = num_steps
+            self.patch_size = patch_size
+            self.full_image_size = full_image_size
+            self.scan_method = scan_method
+            self.scan_waypoints = scan_waypoints
+        
         self.images = sorted(list(self.root.glob("**/*.jpg")))
         if len(self.images) == 0:
             raise RuntimeError(f"No JPEGs found in {self.root} or its subdirectories")
@@ -99,23 +97,46 @@ class TinyImageNetPairDataset(Dataset):
     def __len__(self) -> int:
         return len(self.images)
 
+    def _create_spike_train(self, static_tensor: torch.Tensor, path: tuple) -> torch.Tensor:
+        """Generates a spike train from a static tensor using a pre-defined path."""
+        shared_x, shared_y = path
+        prob_img = (static_tensor + 1.0) / 2.0
+        
+        spike_frames = []
+        for t in range(self.num_steps):
+            x, y = shared_x[t], shared_y[t]
+            patch_prob = prob_img[:, y : y + self.patch_size, x : x + self.patch_size]
+            spike_frame = (torch.rand_like(patch_prob) < patch_prob).float()
+            spike_frames.append(spike_frame)
+            
+        return torch.stack(spike_frames, dim=0)
+
     def __getitem__(self, idx: int):
-        # ... (loading logic is the same) ...
         img_path = self.images[idx]
         try:
             img = Image.open(img_path).convert("RGB")
         except Exception:
             return self.__getitem__(random.randint(0, len(self) - 1))
 
-        # Apply base augmentations to get the full-sized static views
+        # Create two different augmented views of the same image
         v1_static = self.base_transform(img)
         v2_static = self.base_transform(img)
 
-        # If in SNN mode, apply the scanning spike transform
-        if self.snn_mode and self.spike_transform is not None:
-            v1 = self.spike_transform(v1_static)
-            v2 = self.spike_transform(v2_static)
+        if self.snn_mode:
+            # Generate one shared, smooth scanning path
+            max_coord = self.full_image_size - self.patch_size
+            shared_path = generate_smooth_scan_path(
+                num_steps=self.num_steps,
+                max_coord=max_coord,
+                method=self.scan_method,
+                num_waypoints=self.scan_waypoints
+            )
+
+            # Apply the same path to both augmented views to create linked spike trains
+            v1 = self._create_spike_train(v1_static, shared_path)
+            v2 = self._create_spike_train(v2_static, shared_path)
         else:
+            # In ANN mode, just return the static augmented tensors
             v1 = v1_static
             v2 = v2_static
             
