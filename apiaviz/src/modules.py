@@ -122,19 +122,19 @@ class SNNVisionModule(nn.Module):
         # ───── Lamina (early local motion + contrast detection) ─────
         self.lamina = nn.Conv2d(lam_ch, lam_ch, 3, padding=1, padding_mode="reflect", groups=lam_ch, bias=True)
         self.lamina_norm = nn.GroupNorm(num_groups=1, num_channels=lam_ch)
-        self.lamina_lif = snn.Leaky(beta=beta, init_hidden=False)
+        self.lamina_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.1)
 
         # ───── Medulla: Color & Achromatic Pathways ─────
         self.med_c = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect", groups=2)
         self.med_a = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect")
         self.med_n = nn.GroupNorm(12, 60)
-        self.medulla_lif = snn.Leaky(beta=beta, init_hidden=False)
+        self.medulla_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.1)
 
         # ───── Lobula (higher-order feature integration) ─────
         # We replace the nn.Sequential and ReLU with a Conv layer and a separate Leaky neuron
         self.lobula_conv = nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect")
         self.lobula_norm = nn.GroupNorm(num_groups=1, num_channels=128)
-        self.lobula_lif = snn.Leaky(beta=beta, init_hidden=False)
+        self.lobula_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.1)
 
         # ───── VPN layers: distinct feature projections ─────
         self.asot = nn.Conv2d(48, vpn_ch, 1)
@@ -151,7 +151,7 @@ class SNNVisionModule(nn.Module):
             self.kc_sparsity = SNNAdaptiveKWTA(sparsity=0.05)
         else:
             # Default to a standard Leaky neuron if not using adaptive k-WTA
-            self.kc_sparsity = snn.Leaky(beta=beta, init_hidden=False)
+            self.kc_sparsity = snn.Leaky(beta=beta, init_hidden=False, threshold=0.8)
             
         self._initialize_weights()
 

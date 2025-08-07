@@ -184,7 +184,7 @@ class FacePatchDataset(Dataset):
         return patch, label
     
 class FlowerPatchDataset(Dataset):
-    def __init__(self, root='./apiaviz/dataset/natural-scenes', patch=75, patches_per_file=3000):
+    def __init__(self, root='./apiaviz/dataset/natural-scenes', patch=350, patches_per_file=3000):
         self.patch = patch
         self.per_file = patches_per_file
         
