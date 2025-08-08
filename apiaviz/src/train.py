@@ -78,17 +78,29 @@ class TrainVision(nn.Module):
 
         # --- AUGMENTATION PIPELINE (no changes needed) -----------------------------
         self.full_image_size = 64 
-        aug = transforms.Compose([
-            transforms.RandomResizedCrop(64, (0.7, 1.0)),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomRotation(10, fill=128),
-            transforms.ColorJitter(hue=.2, saturation=.3, brightness=.3, contrast=.3),
-            transforms.GaussianBlur(3, sigma=(.1,2.)),
-            transforms.ToTensor(),
-            transforms.Lambda(self.select_GB),
-            # avf.MaybeGray2Ch(0.5), # Assuming this function exists
-            transforms.Normalize([0.5, 0.5], [0.5, 0.5]),
-        ])
+        if self.snn:
+            aug = transforms.Compose([
+                transforms.RandomResizedCrop(64, (0.7, 1.0)),
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomRotation(10, fill=128),
+                transforms.ColorJitter(hue=.2, saturation=.3, brightness=.3, contrast=.3),
+                transforms.GaussianBlur(3, sigma=(.1,2.)),
+                transforms.ToTensor(),
+                transforms.Lambda(self.select_GB),                    # 2ch
+                # no Normalize here
+            ])
+        else:
+            aug = transforms.Compose([
+                transforms.RandomResizedCrop(64, (0.7, 1.0)),
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomRotation(10, fill=128),
+                transforms.ColorJitter(hue=.2, saturation=.3, brightness=.3, contrast=.3),
+                transforms.GaussianBlur(3, sigma=(.1,2.)),
+                transforms.ToTensor(),
+                transforms.Lambda(self.select_GB),
+                # avf.MaybeGray2Ch(0.5), # Assuming this function exists
+                transforms.Normalize([0.5, 0.5], [0.5, 0.5]),
+            ])
 
         ds_root = "./apiaviz/dataset/tiny-imagenet/train"
         if self.snn:
@@ -134,7 +146,7 @@ class TrainVision(nn.Module):
         torch.save(model.state_dict(), ckpt)
         model.train()
 
-        opt = torch.optim.Adam(model.parameters(), lr=self.lr)
+        opt = torch.optim.AdamW(model.parameters(), lr=self.lr, weight_decay=1e-4)
         sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=self.epochs)
         best_loss = float("inf")
 
@@ -142,10 +154,10 @@ class TrainVision(nn.Module):
         for epoch in range(self.epochs):
             running, processed = 0.0, 0
             pbar = tqdm(train_dl, desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch")
-
+            scaler = torch.amp.GradScaler()
             for v1, v2 in pbar:
                 v1, v2 = v1.to(self.device), v2.to(self.device)
-
+                opt.zero_grad(set_to_none=True)
                 if self.snn:
                     # SNN-SPECIFIC FORWARD PASS
                     # 1. Pass the input and the number of time steps to the model.
@@ -159,8 +171,8 @@ class TrainVision(nn.Module):
                     # We sum the spikes over the time dimension to get a spike count.
                     # This count serves as the feature representation for the loss function.
                     # The shape becomes (batch_size, features), which is what our loss expects.
-                    h1 = spk_h1.sum(dim=0)
-                    h2 = spk_h2.sum(dim=0)
+                    h1 = spk_h1.mean(dim=0)
+                    h2 = spk_h2.mean(dim=0)
                     
                     # 3. Normalize the spike counts.
                     h1 = F.normalize(h1, dim=1)
@@ -177,9 +189,11 @@ class TrainVision(nn.Module):
                 # The backward pass and optimization step are also the same.
                 # For the SNN, this is where Backpropagation Through Time (BPTT) happens.
                 # PyTorch handles the gradient flow back through all `num_steps`.
-                opt.zero_grad()
-                loss.backward()
-                opt.step()
+                scaler.scale(loss).backward()
+                scaler.unscale_(opt)
+                torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+                scaler.step(opt)
+                scaler.update()
 
                 # ---- stats (no changes needed) ----
                 bs = v1.size(0)

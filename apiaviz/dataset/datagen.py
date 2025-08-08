@@ -6,6 +6,7 @@ import random
 
 import numpy as np
 import torch.nn as nn
+import torch.nn.functional as F
 
 from pathlib import Path
 from PIL import Image, ImageDraw
@@ -75,12 +76,16 @@ class TinyImageNetPairDataset(Dataset):
                  patch_size: int = 28, 
                  full_image_size: int = 64,
                  scan_method: str = 'saccade',
-                 scan_waypoints: int = 5):
+                 scan_waypoints: int = 5,
+                 periphery_every_k: int = 5,
+                periphery_pool: int = 28):
         
         super().__init__()
         self.root = Path(root)
         self.base_transform = transform
         self.snn_mode = snn_mode
+        self.periphery_every_k = periphery_every_k
+        self.periphery_pool = periphery_pool
 
         if self.snn_mode:
             self.num_steps = num_steps
@@ -96,20 +101,27 @@ class TinyImageNetPairDataset(Dataset):
 
     def __len__(self) -> int:
         return len(self.images)
+    
+    def bernoulli_spikes(self, x, rate_scale=1.0):
+        # x ∈ [0,1]; optional scale controls average firing
+        p = (x * rate_scale).clamp_(0, 1)
+        return (torch.rand_like(p) < p).float()
 
     def _create_spike_train(self, static_tensor: torch.Tensor, path: tuple) -> torch.Tensor:
         """Generates a spike train from a static tensor using a pre-defined path."""
         shared_x, shared_y = path
-        prob_img = (static_tensor + 1.0) / 2.0
-        
-        spike_frames = []
+        prob_img = static_tensor.clamp(0,1)
+
+        periph = F.adaptive_avg_pool2d(prob_img, self.periphery_pool)  # (2,28,28)
+        frames = []
         for t in range(self.num_steps):
-            x, y = shared_x[t], shared_y[t]
-            patch_prob = prob_img[:, y : y + self.patch_size, x : x + self.patch_size]
-            spike_frame = (torch.rand_like(patch_prob) < patch_prob).float()
-            spike_frames.append(spike_frame)
-            
-        return torch.stack(spike_frames, dim=0)
+            if self.periphery_every_k and (t % self.periphery_every_k == 0):
+                patch_prob = periph
+            else:
+                x, y = shared_x[t], shared_y[t]
+                patch_prob = prob_img[:, y:y+self.patch_size, x:x+self.patch_size]
+            frames.append(self.bernoulli_spikes(patch_prob))
+        return torch.stack(frames, dim=0)  # (T, C, 28, 28)
 
     def __getitem__(self, idx: int):
         img_path = self.images[idx]
@@ -133,8 +145,11 @@ class TinyImageNetPairDataset(Dataset):
             )
 
             # Apply the same path to both augmented views to create linked spike trains
+            dx = torch.randint(-2, 3, (1,)).item()
+            path_v2 = (torch.roll(shared_path[0], dx), torch.roll(shared_path[1], dx))
+
             v1 = self._create_spike_train(v1_static, shared_path)
-            v2 = self._create_spike_train(v2_static, shared_path)
+            v2 = self._create_spike_train(v2_static, path_v2)
         else:
             # In ANN mode, just return the static augmented tensors
             v1 = v1_static

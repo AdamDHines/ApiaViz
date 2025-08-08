@@ -118,7 +118,7 @@ class SNNVisionModule(nn.Module):
         # --- Opsin (now with a dedicated spiking layer) ---
         self.opsin = nn.Conv2d(2, 6, 1, groups=2, bias=True)
         # ### NEW ### - Add a LIF neuron for the Opsin stage
-        self.opsin_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.2)
+        # self.opsin_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.2)
 
         # --- Lamina ---
         self.lamina = nn.Conv2d(lam_ch, lam_ch, 3, padding=1, padding_mode="reflect", groups=lam_ch, bias=True)
@@ -128,28 +128,28 @@ class SNNVisionModule(nn.Module):
         # --- Medulla Pathways ---
         self.med_c = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect", groups=2)
         self.med_a = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect")
-        self.med_c_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.5)
-        self.med_a_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.5)
+        self.med_c_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.3)
+        self.med_a_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.3)
         
         # --- Lobula ---
         self.lobula_conv = nn.Conv2d(5 * lam_ch, 128, 5, padding=2, padding_mode="reflect")
         self.lobula_norm = nn.GroupNorm(num_groups=1, num_channels=128)
-        self.lobula_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.8)
+        self.lobula_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.5)
 
         # --- VPN Pathways ---
         self.asot = nn.Conv2d(48, vpn_ch, 1)
         self.aiot = nn.Conv2d(48, vpn_ch, 1)
         self.lot  = nn.Conv2d(32, vpn_ch, 1)
-        self.asot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.6)
-        self.aiot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.6)
-        self.lot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.6)
+        self.asot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.4)
+        self.aiot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.4)
+        self.lot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.4)
 
         # --- Mushroom Body ---
         self.kc_p = SparseLinear(3 * vpn_ch, kc_dim)
         if use_adaptive_kwta:
             self.kc_sparsity = SNNAdaptiveKWTA(sparsity=0.05)
         else:
-            self.kc_sparsity = snn.Leaky(beta=beta, init_hidden=False, threshold=1.0)
+            self.kc_sparsity = snn.Leaky(beta=beta, init_hidden=False, threshold=0.7)
             
         self._initialize_weights()
 
@@ -187,11 +187,13 @@ class SNNVisionModule(nn.Module):
             # 1. Opsin (now a full synapse + neuron stage)
             opsin_cur = self.opsin(spk_in_step)
             # ### NEW ### - Convert current to spikes
-            spk_opsin, opsin_mem = self.opsin_lif(opsin_cur, opsin_mem)
+            # spk_opsin, opsin_mem = self.opsin_lif(opsin_cur, opsin_mem)
             
             # 2. Lamina
             # ### MODIFIED ### - Input is now Opsin spikes, not current
-            lam_cur_in = torch.cat([spk_opsin, -spk_opsin], 1)
+            opsin_on  = F.relu(opsin_cur)
+            opsin_off = F.relu(-opsin_cur)
+            lam_cur_in = torch.cat([opsin_on, opsin_off], 1) 
             lam_cur = self.lamina_norm(self.lamina(lam_cur_in))
             spk_lam, lam_mem = self.lamina_lif(lam_cur, lam_mem)
 
@@ -199,7 +201,11 @@ class SNNVisionModule(nn.Module):
             med_c_cur = self.med_c(spk_lam)
             spk_med_c, med_c_mem = self.med_c_lif(med_c_cur, med_c_mem)
             
-            med_a_cur = self.med_a(spk_lam.mean(1, keepdim=True).expand(-1, 12, -1, -1))
+            ach_cur = lam_cur_in[:, :6] - lam_cur_in[:, 6:]     # ON − OFF (B,6,H,W)
+            ach_cur = ach_cur.mean(1, keepdim=True)             # (B,1,H,W)
+            ach_cur = ach_cur.expand(-1, 12, -1, -1)            # match channels if you want 12
+
+            med_a_cur = self.med_a(ach_cur)   
             spk_med_a, med_a_mem = self.med_a_lif(med_a_cur, med_a_mem)
 
             # 4. Lobula
