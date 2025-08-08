@@ -184,7 +184,7 @@ class FacePatchDataset(Dataset):
         return patch, label
     
 class FlowerPatchDataset(Dataset):
-    def __init__(self, root='./apiaviz/dataset/natural-scenes', patch=350, patches_per_file=3000):
+    def __init__(self, root='./apiaviz/dataset/natural-scenes', patch=75, patches_per_file=3000):
         self.patch = patch
         self.per_file = patches_per_file
         
@@ -192,7 +192,71 @@ class FlowerPatchDataset(Dataset):
         self.source_images = []
         
         # This dictionary will map folder names to integer labels
-        self.class_names = ['summer', 'spring', 'fall']
+        self.class_names = ['lavender','goldenrod','sunflower']
+        self.class_to_idx = {name: i for i, name in enumerate(self.class_names)}
+        
+        t_img = transforms.ToTensor()
+        root_path = Path(root)
+
+        print("Loading dataset...")
+        # Iterate through the defined classes to assign consistent labels
+        for class_name, class_idx in self.class_to_idx.items():
+            class_dir = root_path / class_name
+            if not class_dir.exists():
+                print(f"Warning: Directory not found: {class_dir}")
+                continue
+            
+            # Find all image files in the class directory
+            image_files = [fp for fp in sorted(class_dir.glob('*.*')) if not fp.name.startswith('.')]
+            print(f"Found {len(image_files)} images in '{class_name}' (Label: {class_idx})")
+
+            for fp in image_files:
+                try:
+                    img = Image.open(fp).convert('RGB')
+                    # Store the full image tensor along with its correct class label
+                    self.source_images.append((t_img(img), class_idx))
+                except Exception as e:
+                    print(f"Warning: Could not load image {fp}. Error: {e}")
+
+        if not self.source_images:
+            raise RuntimeError(f"No images found under the specified root: {root}")
+
+        # The total number of patches is the number of source images * patches per image
+        self.total = self.per_file * len(self.source_images)
+        print(f"Dataset loaded. Total source images: {len(self.source_images)}. Total patches: {self.total}.")
+
+    def __len__(self):
+        return self.total
+
+    def __getitem__(self, idx):
+        # Determine which source image to use based on the index
+        source_idx = idx // self.per_file
+        
+        # Retrieve the full image tensor and its correct class label
+        img_tensor, label = self.source_images[source_idx]
+        
+        # Perform the random crop on the full image
+        _, H, W = img_tensor.shape
+        y0 = random.randint(0, H - self.patch)
+        x0 = random.randint(0, W - self.patch)
+        crop = img_tensor[:, y0:y0+self.patch, x0:x0+self.patch]
+        
+        # Keep only the Green and Blue channels
+        crop_gb = crop[1:3]
+        
+        # Return the cropped patch and the correct folder-level label
+        return crop_gb, label
+    
+class VarietyDataset(Dataset):
+    def __init__(self, root='./apiaviz/dataset/variety', patch=64, patches_per_file=3000):
+        self.patch = patch
+        self.per_file = patches_per_file
+        
+        # This list will hold tuples of (tensor, class_label)
+        self.source_images = []
+        
+        # This dictionary will map folder names to integer labels
+        self.class_names = ['ball', 'car', 'goldfish', 'bird', 'fruit', 'roads']
         self.class_to_idx = {name: i for i, name in enumerate(self.class_names)}
         
         t_img = transforms.ToTensor()

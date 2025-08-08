@@ -89,7 +89,7 @@ def parse_args():
                         help="synthetic = VisionDataset,  tiny = Tiny-ImageNet (100k real images)")
     
     # Evaluation dataset parameters
-    parser.add_argument("--eval_dataset", default="natural-scenes", choices=["synthetic", "faces", "natural-scenes"],
+    parser.add_argument("--eval_dataset", default="natural-scenes", choices=["synthetic", "faces", "natural-scenes", "variety"],
                         help="evaluation dataset to use")
     parser.add_argument('--green_pct_high', type=int, default=90,
                         help='Percentage of green in the dataset (for synthetic dataset)')

@@ -12,7 +12,8 @@ from apiaviz.src.modules import VisionModule, SNNVisionModule
 from apiaviz.dataset.datagen import (
     BalancedEvalVisionDataset,
     FlowerPatchDataset,
-    FacePatchDataset
+    FacePatchDataset,
+    VarietyDataset
 )
 
 import apiaviz.src.functional as avf
@@ -95,6 +96,8 @@ class EvalVision:
             )
         elif self.eval_dataset == "natural-scenes":
             self.dataset = FlowerPatchDataset(patches_per_file=self.eval_samples)
+        elif self.eval_dataset == "variety":
+            self.dataset = VarietyDataset(patches_per_file=self.eval_samples)
         elif self.eval_dataset == "faces":
             self.dataset = FacePatchDataset("./apiaviz/dataset/faces/", patches_per_file=self.eval_samples)
         else:

@@ -303,9 +303,9 @@ class ModelEvaluator:
                 ax.text(0.5, 0.5, 'Layer Not Found', ha='center', va='center')
             ax.axis('off')
         if self.snn:
-            plot_layer(axes[0, 1], 'lamina_lif', 'Lamina Spikes (Summed)'); plot_layer(axes[0, 2], 'medulla_lif', 'Medulla Spikes (Summed)'); plot_layer(axes[1, 0], 'lobula_lif', 'Lobula Spikes (Summed)', cmap='jet'); axes[1, 1].axis('off'); axes[1, 1].set_title("N/A for SNN"); axes[1, 2].axis('off'); axes[1, 2].set_title("N/A for SNN")
+            plot_layer(axes[0, 1], 'lamina_lif', 'Lamina Spikes (Summed)'); plot_layer(axes[0, 2], 'medulla_lif', 'Medulla Spikes (Summed)'); plot_layer(axes[1, 0], 'lobula_lif', 'Lobula Spikes (Summed)', cmap='bwr'); axes[1, 1].axis('off'); axes[1, 1].set_title("N/A for SNN"); axes[1, 2].axis('off'); axes[1, 2].set_title("N/A for SNN")
         else:
-            plot_layer(axes[0, 1], 'opsin', 'Opsin Response'); plot_layer(axes[0, 2], 'lamina', 'Lamina Response'); plot_layer(axes[1, 0], 'med_c', 'Medulla Chromatic'); plot_layer(axes[1, 1], 'med_a', 'Medulla Achromatic'); plot_layer(axes[1, 2], 'lobula', 'Lobula Response', cmap='jet')
+            plot_layer(axes[0, 1], 'opsin', 'Opsin Response'); plot_layer(axes[0, 2], 'lamina', 'Lamina Response'); plot_layer(axes[1, 0], 'med_c', 'Medulla Chromatic'); plot_layer(axes[1, 1], 'med_a', 'Medulla Achromatic'); plot_layer(axes[1, 2], 'lobula', 'Lobula Response', cmap='bwr')
         ax = axes[2, 0]; kc_output = kc_output_sparse[0].cpu().numpy(); active_indices = np.where(kc_output > 0)[0]; grid_size = int(np.ceil(np.sqrt(len(kc_output)))); kc_grid = np.zeros((grid_size, grid_size)); kc_grid.flat[:len(kc_output)] = kc_output; ax.imshow(kc_grid, cmap='bwr', interpolation='nearest'); ax.set_title(f'Kenyon Cells\n({len(active_indices)}/{len(kc_output)} active)', fontsize=16, fontweight='bold'); ax.axis('off');
         axes[2, 1].axis('off'); axes[2, 2].axis('off'); plt.tight_layout(rect=[0, 0.03, 1, 0.96])
         if save_path:
