@@ -113,39 +113,33 @@ class SNNVisionModule(nn.Module):
     def __init__(self, kc_dim=1024, lam_ch=12, vpn_ch=64, use_adaptive_kwta=False, beta=0.9):
         super().__init__()
         
-        self.beta = beta # Leak rate for all Leaky neurons
+        self.beta = beta
 
-        # --- Opsin (Input Current Generation) ---
+        # --- Opsin (now with a dedicated spiking layer) ---
         self.opsin = nn.Conv2d(2, 6, 1, groups=2, bias=True)
+        # ### NEW ### - Add a LIF neuron for the Opsin stage
+        self.opsin_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.2)
 
         # --- Lamina ---
         self.lamina = nn.Conv2d(lam_ch, lam_ch, 3, padding=1, padding_mode="reflect", groups=lam_ch, bias=True)
         self.lamina_norm = nn.GroupNorm(num_groups=1, num_channels=lam_ch)
         self.lamina_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.1)
 
-        # --- Medulla Pathways (now with individual LIFs) ---
+        # --- Medulla Pathways ---
         self.med_c = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect", groups=2)
         self.med_a = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect")
-        # Add LIF neurons for each pathway
         self.med_c_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.5)
         self.med_a_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.5)
         
-        # With separate LIFs, the single Medulla normalizer and LIF are no longer needed.
-        # self.med_n = nn.GroupNorm(12, 60)
-        # self.medulla_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.5)
-
         # --- Lobula ---
-        # Input channels must now match the concatenated output of Lamina, Med_C, and Med_A spikes
-        # lam_ch + 2*lam_ch + 2*lam_ch = 5 * lam_ch = 60
         self.lobula_conv = nn.Conv2d(5 * lam_ch, 128, 5, padding=2, padding_mode="reflect")
         self.lobula_norm = nn.GroupNorm(num_groups=1, num_channels=128)
         self.lobula_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.8)
 
-        # --- VPN Pathways (now with individual LIFs) ---
+        # --- VPN Pathways ---
         self.asot = nn.Conv2d(48, vpn_ch, 1)
         self.aiot = nn.Conv2d(48, vpn_ch, 1)
         self.lot  = nn.Conv2d(32, vpn_ch, 1)
-        # Add LIF neurons for each VPN pathway
         self.asot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.6)
         self.aiot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.6)
         self.lot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.6)
@@ -171,7 +165,8 @@ class SNNVisionModule(nn.Module):
     def forward(self, x, num_steps):
         batch_size = x.size(1)
         
-        # Initialize all membrane potentials
+        # ### NEW ### - Initialize membrane for the new opsin LIF layer
+        opsin_mem = self.opsin_lif.init_leaky()
         lam_mem = self.lamina_lif.init_leaky()
         med_c_mem = self.med_c_lif.init_leaky()
         med_a_mem = self.med_a_lif.init_leaky()
@@ -188,26 +183,31 @@ class SNNVisionModule(nn.Module):
         kc_spk_rec = []
         for step in range(num_steps):
             spk_in_step = x[step]
+
+            # 1. Opsin (now a full synapse + neuron stage)
             opsin_cur = self.opsin(spk_in_step)
+            # ### NEW ### - Convert current to spikes
+            spk_opsin, opsin_mem = self.opsin_lif(opsin_cur, opsin_mem)
             
             # 2. Lamina
-            lam_cur_in = torch.cat([opsin_cur, -opsin_cur], 1)
+            # ### MODIFIED ### - Input is now Opsin spikes, not current
+            lam_cur_in = torch.cat([spk_opsin, -spk_opsin], 1)
             lam_cur = self.lamina_norm(self.lamina(lam_cur_in))
             spk_lam, lam_mem = self.lamina_lif(lam_cur, lam_mem)
 
-            # 3. Medulla (Now fully spiking)
+            # 3. Medulla
             med_c_cur = self.med_c(spk_lam)
             spk_med_c, med_c_mem = self.med_c_lif(med_c_cur, med_c_mem)
             
             med_a_cur = self.med_a(spk_lam.mean(1, keepdim=True).expand(-1, 12, -1, -1))
             spk_med_a, med_a_mem = self.med_a_lif(med_a_cur, med_a_mem)
 
-            # 4. Lobula (Input is now a concatenation of three spike trains)
+            # 4. Lobula
             lob_in_spikes = torch.cat([spk_lam, spk_med_c, spk_med_a], 1)
             lob_cur = self.lobula_norm(self.lobula_conv(lob_in_spikes))
             spk_lob, lob_mem = self.lobula_lif(lob_cur, lob_mem)
             
-            # 5. VPN pathways (Now fully spiking)
+            # 5. VPN pathways
             asot_cur = self.asot(spk_lob[:, :48])
             spk_asot, asot_mem = self.asot_lif(asot_cur, asot_mem)
             
@@ -217,10 +217,7 @@ class SNNVisionModule(nn.Module):
             lot_cur = self.lot(spk_lob[:, 96:])
             spk_lot, lot_mem = self.lot_lif(lot_cur, lot_mem)
             
-            # Pool the VPN spikes
-            vpn_spk_pooled = torch.cat([
-                self._gp(spk_asot), self._gp(spk_aiot), self._gp(spk_lot)
-            ], dim=1)
+            vpn_spk_pooled = torch.cat([self._gp(spk_asot), self._gp(spk_aiot), self._gp(spk_lot)], dim=1)
 
             # 6. Kenyon Cells
             kc_cur = self.kc_p(vpn_spk_pooled)
