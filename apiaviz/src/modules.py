@@ -166,7 +166,7 @@ class SNNVisionModule(nn.Module):
         batch_size = x.size(1)
         
         # ### NEW ### - Initialize membrane for the new opsin LIF layer
-        opsin_mem = self.opsin_lif.init_leaky()
+        # opsin_mem = self.opsin_lif.init_leaky()
         lam_mem = self.lamina_lif.init_leaky()
         med_c_mem = self.med_c_lif.init_leaky()
         med_a_mem = self.med_a_lif.init_leaky()

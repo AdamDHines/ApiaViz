@@ -102,7 +102,7 @@ def parse_args():
     
     # Output base configuration
     args = parser.parse_args()
-    args.snn = True
+    
     # Run the user-chosen mode
     if args.mode == 'train':
         apianet_train(args)
