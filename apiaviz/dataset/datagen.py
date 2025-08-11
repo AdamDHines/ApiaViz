@@ -16,51 +16,6 @@ from torch.utils.data import Dataset
 class KeepGB(torch.nn.Module):
     def forward(self, t):
         return t[1:3]          # keep G & B channels
-    
-def generate_smooth_scan_path(num_steps: int, max_coord: int, method: str = 'saccade', num_waypoints: int = 5) -> tuple[torch.Tensor, torch.Tensor]:
-    """
-    Generates a 2D smooth scanning path for an image patch.
-
-    This function creates a path that is guaranteed to have `num_steps` length,
-    preventing index errors.
-
-    Args:
-        num_steps (int): The total number of steps in the path.
-        max_coord (int): The maximum coordinate for the path (image_size - patch_size).
-        method (str): The algorithm to use. Options: 'saccade', 'lissajous'.
-        num_waypoints (int): Number of waypoints for the 'saccade' method.
-
-    Returns:
-        A tuple containing (x_coords, y_coords) tensors for the path.
-    """
-    if method == 'saccade':
-        # Define random waypoints and the timeline points where they occur
-        waypoints_x = np.random.randint(0, max_coord + 1, num_waypoints)
-        waypoints_y = np.random.randint(0, max_coord + 1, num_waypoints)
-        control_points = np.linspace(0, num_steps - 1, num_waypoints)
-        
-        # Define the full timeline for which we need coordinates
-        full_timeline = np.arange(num_steps)
-        
-        # Interpolate between waypoints to find the path at each step
-        path_x = np.interp(full_timeline, control_points, waypoints_x)
-        path_y = np.interp(full_timeline, control_points, waypoints_y)
-        
-        return torch.from_numpy(path_x.astype(np.int32)), torch.from_numpy(path_y.astype(np.int32))
-
-    elif method == 'lissajous':
-        center = max_coord / 2.0
-        freq_x, freq_y = np.random.uniform(1.0, 3.0, 2)
-        phase = np.random.uniform(0, np.pi)
-        t = torch.linspace(0, 2 * np.pi, num_steps)
-        x = torch.sin(freq_x * t + phase)
-        y = torch.cos(freq_y * t)
-        path_x = ((x * center) + center).to(torch.int32)
-        path_y = ((y * center) + center).to(torch.int32)
-        return path_x, path_y
-        
-    else:
-        raise ValueError(f"Unknown scan_method '{method}'. Use 'saccade' or 'lissajous'.")
 
 class TinyImageNetPairDataset(Dataset):
     """
@@ -72,27 +27,15 @@ class TinyImageNetPairDataset(Dataset):
     """
     def __init__(self, root: str, transform: transforms.Compose, 
                  snn_mode: bool = False, 
-                 num_steps: int = 50, 
-                 patch_size: int = 28, 
-                 full_image_size: int = 64,
-                 scan_method: str = 'saccade',
-                 scan_waypoints: int = 5,
-                 periphery_every_k: int = 5,
-                periphery_pool: int = 28):
+                 num_steps: int = 50):
         
         super().__init__()
         self.root = Path(root)
         self.base_transform = transform
         self.snn_mode = snn_mode
-        self.periphery_every_k = periphery_every_k
-        self.periphery_pool = periphery_pool
 
         if self.snn_mode:
             self.num_steps = num_steps
-            self.patch_size = patch_size
-            self.full_image_size = full_image_size
-            self.scan_method = scan_method
-            self.scan_waypoints = scan_waypoints
         
         self.images = sorted(list(self.root.glob("**/*.jpg")))
         if len(self.images) == 0:
@@ -102,26 +45,17 @@ class TinyImageNetPairDataset(Dataset):
     def __len__(self) -> int:
         return len(self.images)
     
-    def bernoulli_spikes(self, x, rate_scale=1.0):
+    def bernoulli_spikes(self, x, rate_scale=1.5):
         # x ∈ [0,1]; optional scale controls average firing
         p = (x * rate_scale).clamp_(0, 1)
         return (torch.rand_like(p) < p).float()
 
-    def _create_spike_train(self, static_tensor: torch.Tensor, path: tuple) -> torch.Tensor:
+    def _create_spike_train(self, static_tensor) -> torch.Tensor:
         """Generates a spike train from a static tensor using a pre-defined path."""
-        shared_x, shared_y = path
-        prob_img = static_tensor.clamp(0,1)
-
-        periph = F.adaptive_avg_pool2d(prob_img, self.periphery_pool)  # (2,28,28)
         frames = []
-        for t in range(self.num_steps):
-            if self.periphery_every_k and (t % self.periphery_every_k == 0):
-                patch_prob = periph
-            else:
-                x, y = shared_x[t], shared_y[t]
-                patch_prob = prob_img[:, y:y+self.patch_size, x:x+self.patch_size]
-            frames.append(self.bernoulli_spikes(patch_prob))
-        return torch.stack(frames, dim=0)  # (T, C, 28, 28)
+        for _ in range(self.num_steps):
+            frames.append(self.bernoulli_spikes(static_tensor))
+        return torch.stack(frames, dim=0)
 
     def __getitem__(self, idx: int):
         img_path = self.images[idx]
@@ -135,21 +69,8 @@ class TinyImageNetPairDataset(Dataset):
         v2_static = self.base_transform(img)
 
         if self.snn_mode:
-            # Generate one shared, smooth scanning path
-            max_coord = self.full_image_size - self.patch_size
-            shared_path = generate_smooth_scan_path(
-                num_steps=self.num_steps,
-                max_coord=max_coord,
-                method=self.scan_method,
-                num_waypoints=self.scan_waypoints
-            )
-
-            # Apply the same path to both augmented views to create linked spike trains
-            dx = torch.randint(-2, 3, (1,)).item()
-            path_v2 = (torch.roll(shared_path[0], dx), torch.roll(shared_path[1], dx))
-
-            v1 = self._create_spike_train(v1_static, shared_path)
-            v2 = self._create_spike_train(v2_static, path_v2)
+            v1 = self._create_spike_train(v1_static)
+            v2 = self._create_spike_train(v2_static)
         else:
             # In ANN mode, just return the static augmented tensors
             v1 = v1_static
@@ -271,7 +192,7 @@ class VarietyDataset(Dataset):
         self.source_images = []
         
         # This dictionary will map folder names to integer labels
-        self.class_names = ['ball', 'car', 'goldfish', 'bird', 'fruit', 'roads']
+        self.class_names = ['ball', 'car', 'goldfish1', 'goldfish2', 'bird', 'fruit', 'roads']
         self.class_to_idx = {name: i for i, name in enumerate(self.class_names)}
         
         t_img = transforms.ToTensor()

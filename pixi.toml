@@ -17,6 +17,7 @@ get_model = {cmd = "git lfs install && git clone https://huggingface.co/AdamHine
 
 # Training
 train = {cmd = "pixi run python main.py --mode train --train_dataset tiny"}
+train_snn = {cmd = "pixi run python main.py --mode train --train_dataset tiny --snn --lr 3e-3"}
 
 # Evaluation
 eval= {cmd = "pixi run python main.py --mode eval"}

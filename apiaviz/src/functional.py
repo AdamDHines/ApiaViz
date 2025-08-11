@@ -19,8 +19,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import silhouette_score, adjusted_rand_score
 
-from apiaviz.dataset.datagen import generate_smooth_scan_path
-
 import warnings
 warnings.filterwarnings('ignore')
 

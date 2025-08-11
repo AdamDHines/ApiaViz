@@ -108,12 +108,8 @@ class TrainVision(nn.Module):
             train_ds = TinyImageNetPairDataset(
                 ds_root, 
                 transform=aug, 
-                snn_mode=True, 
-                num_steps=self.num_steps,
-                patch_size=getattr(self, 'patch_size', 28),
-                full_image_size=64, # Or get this from config
-                scan_method=getattr(self, 'scan_method', 'saccade'),
-                scan_waypoints=getattr(self, 'scan_waypoints', 5)
+                snn_mode=True,
+                num_steps=self.num_steps
             )
         else:
             # ANN mode: standard instantiation
