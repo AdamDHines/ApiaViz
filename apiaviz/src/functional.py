@@ -183,6 +183,7 @@ class ModelEvaluator:
         
         self.activations = {}
         self.hooks = []
+        self.num_steps = 25
 
         # --- SNN-specific state is set ONCE at initialization ---
         self.snn = snn_params is not None
@@ -190,6 +191,11 @@ class ModelEvaluator:
             print("[Evaluator] SNN mode enabled.")
             self.snn_params = snn_params
             self.full_image_size = snn_params.get('full_image_size', 64)
+
+    def bernoulli_spikes(self, x, rate_scale=1.5):
+        # x ∈ [0,1]; optional scale controls average firing
+        p = (x * rate_scale).clamp_(0, 1)
+        return (torch.rand_like(p) < p).float()
     
     def register_hooks(self, layer_names: List[str]):
         """Register forward hooks. For SNNs, this hook will SUM spikes over time."""
@@ -217,24 +223,12 @@ class ModelEvaluator:
     def _convert_static_to_spiking_single(self, static_tensor: torch.Tensor):
         """Helper to convert a single static image tensor into a spike train for analysis."""
         if static_tensor.dim() == 3: static_tensor = static_tensor.unsqueeze(0)
-        
-        resize_transform = transforms.Resize((self.full_image_size, self.full_image_size), antialias=True)
-        norm_transform = transforms.Normalize([0.5, 0.5], [0.5, 0.5])
-        
-        processed_tensor = norm_transform(resize_transform(static_tensor.to(self.device)))
-        prob_tensor = (processed_tensor + 1.0) / 2.0
-        
-        max_coord = self.full_image_size - self.snn_params['patch_size']
-        path_x, path_y = generate_smooth_scan_path(
-            self.snn_params['num_steps'], max_coord, self.snn_params['scan_method'], self.snn_params['scan_waypoints']
-        )
-        path_x, path_y = path_x.to(self.device), path_y.to(self.device)
-
-        frames = [
-            (torch.rand_like(prob_tensor[:, :, y:y+self.snn_params['patch_size'], x:x+self.snn_params['patch_size']]) < prob_tensor[:, :, y:y+self.snn_params['patch_size'], x:x+self.snn_params['patch_size']]).float()
-            for x, y in zip(path_x, path_y)
-        ]
+        static_tensor = static_tensor.to(self.device)
+        frames = []
+        for _ in range(self.num_steps):
+            frames.append(self.bernoulli_spikes(static_tensor))
         spiking_batch = torch.stack(frames, dim=1)
+
         return spiking_batch.permute(1, 0, 2, 3, 4)
 
     def create_heatmap_overlay(self, image: np.ndarray, heatmap: Union[torch.Tensor, np.ndarray], 

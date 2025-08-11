@@ -11,6 +11,8 @@ classes:
 import torch
 import random
 import secrets
+# MOD: Import the time module to track epoch duration
+import time
 
 import numpy as np
 import torch.nn as nn
@@ -38,7 +40,11 @@ class TrainVision(nn.Module):
 
         self.models_dir = Path(self.models_dir)
         self.models_dir.mkdir(parents=True, exist_ok=True)
+        # MOD: Modified model path to be more descriptive for the *best* model
         self.model_path = Path(f"{self.models_dir}/{self.vision_model}.pth")
+        
+        # MOD: Define path for the training log file
+        self.log_path = self.models_dir / "training_log.txt"
 
         # SNN-SPECIFIC: Add num_steps hyperparameter
         # This will be passed to the SNN model's forward pass.
@@ -68,13 +74,18 @@ class TrainVision(nn.Module):
     # ────────── main training loop ──────────
     def train(self):
         if self.model_path.exists():
-            print(f"Model already exists at {self.model_path}. Overwrite? ((y)/n)")
+            print(f"A model directory already exists at {self.models_dir}. Overwrite? ((y)/n)")
             ans = input().strip().lower()
             if ans == "n":
                 print("Exiting training."); return
             if ans not in ("", "y"):
                 print("Invalid input. Exiting training."); return
-            print("Continuing training and overwriting existing model.")
+            print("Continuing training and overwriting existing models and logs.")
+
+        # MOD: Initialize the log file with headers
+        with open(self.log_path, 'w') as f:
+            f.write(f"Training Log for {self.vision_model}\n")
+            f.write("="*40 + "\n")
 
         # --- AUGMENTATION PIPELINE (no changes needed) -----------------------------
         self.full_image_size = 64 
@@ -148,6 +159,9 @@ class TrainVision(nn.Module):
 
         # --- CORE TRAINING LOOP (key modifications here) --------------------------
         for epoch in range(self.epochs):
+            # MOD: Record the start time of the epoch
+            epoch_start_time = time.time()
+            
             running, processed = 0.0, 0
             pbar = tqdm(train_dl, desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch")
             scaler = torch.amp.GradScaler()
@@ -202,11 +216,30 @@ class TrainVision(nn.Module):
 
             sched.step()
             epoch_loss = running / processed
+            
+            # MOD: Calculate epoch duration
+            epoch_end_time = time.time()
+            epoch_duration = epoch_end_time - epoch_start_time
 
-            # ---- checkpoint (no changes needed) ----
+            # MOD: Log epoch stats to the text file
+            with open(self.log_path, 'a') as f:
+                log_entry = (f"Epoch: {epoch+1:03d} | "
+                             f"Loss: {epoch_loss:.4f} | "
+                             f"Duration: {epoch_duration:.2f}s\n")
+                f.write(log_entry)
+            
+            # MOD: Define a unique path for the model of this specific epoch
+            epoch_model_path = self.models_dir / f"{self.vision_model}_epoch_{epoch+1}.pth"
+            torch.save(model.state_dict(), str(epoch_model_path))
+
+            # ---- checkpoint (modified to save best model separately) ----
             if epoch_loss < best_loss:
                 best_loss = epoch_loss
                 torch.save(model.state_dict(), str(self.model_path))
-                print(f"[Epoch {epoch+1}]  ↳ new best {best_loss:.4f} → {self.model_path}")
+                print(f"\n[Epoch {epoch+1}] ↳ New best loss {best_loss:.4f} → {self.model_path}")
+            else:
+                # MOD: Print a confirmation for the per-epoch model save
+                print(f"\n[Epoch {epoch+1}] ↳ Epoch model saved → {epoch_model_path}")
 
-        print(f"Training complete. Best loss {best_loss:.4f} → {self.model_path}")
+
+        print(f"\nTraining complete. Best loss {best_loss:.4f} → {self.model_path}")

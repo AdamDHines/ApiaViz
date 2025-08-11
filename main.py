@@ -42,7 +42,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Args for default configuration")
 
     # Training or evaluation mode
-    parser.add_argument('--mode', type=str, default='train', choices=['train', 'eval'],
+    parser.add_argument('--mode', type=str, default='eval', choices=['train', 'eval'],
                         help='Mode to run: training or evaluation network')
     
     # Artificial or spiking mode

@@ -128,7 +128,7 @@ class FlowerPatchDataset(Dataset):
         self.source_images = []
         
         # This dictionary will map folder names to integer labels
-        self.class_names = ['lavender','goldenrod','sunflower']
+        self.class_names = ['lavender-s','goldenrod-s','sunflower-s']
         self.class_to_idx = {name: i for i, name in enumerate(self.class_names)}
         
         t_img = transforms.ToTensor()
