@@ -120,7 +120,7 @@ class FacePatchDataset(Dataset):
         return patch, label
     
 class FlowerPatchDataset(Dataset):
-    def __init__(self, root='./apiaviz/dataset/natural-scenes', patch=75, patches_per_file=3000):
+    def __init__(self, root='./apiaviz/dataset/natural-scenes', patch=360, patches_per_file=3000):
         self.patch = patch
         self.per_file = patches_per_file
         
@@ -128,7 +128,7 @@ class FlowerPatchDataset(Dataset):
         self.source_images = []
         
         # This dictionary will map folder names to integer labels
-        self.class_names = ['lavender-s','goldenrod-s','sunflower-s']
+        self.class_names = ['summer','fall','spring']
         self.class_to_idx = {name: i for i, name in enumerate(self.class_names)}
         
         t_img = transforms.ToTensor()

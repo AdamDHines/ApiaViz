@@ -97,8 +97,8 @@ class TrainVision(nn.Module):
                 transforms.ColorJitter(hue=.2, saturation=.3, brightness=.3, contrast=.3),
                 transforms.GaussianBlur(3, sigma=(.1,2.)),
                 transforms.ToTensor(),
-                transforms.Lambda(self.select_GB),                    # 2ch
-                # no Normalize here
+                transforms.Lambda(self.select_GB),              
+                avf.MaybeGray2Ch(0.5)
             ])
         else:
             aug = transforms.Compose([
@@ -109,7 +109,7 @@ class TrainVision(nn.Module):
                 transforms.GaussianBlur(3, sigma=(.1,2.)),
                 transforms.ToTensor(),
                 transforms.Lambda(self.select_GB),
-                # avf.MaybeGray2Ch(0.5), # Assuming this function exists
+                avf.MaybeGray2Ch(0.5),
                 transforms.Normalize([0.5, 0.5], [0.5, 0.5]),
             ])
 
@@ -169,7 +169,6 @@ class TrainVision(nn.Module):
                 v1, v2 = v1.to(self.device), v2.to(self.device)
                 opt.zero_grad(set_to_none=True)
                 if self.snn:
-                    # SNN-SPECIFIC FORWARD PASS
                     # 1. Pass the input and the number of time steps to the model.
                     # The output will be spikes over time: (num_steps, batch_size, features)
                     v1 = v1.permute(1, 0, 2, 3, 4)
@@ -178,9 +177,6 @@ class TrainVision(nn.Module):
                     spk_h2 = model(v2, num_steps=self.num_steps)
 
                     # 2. Decode the spike train into a feature vector (Rate Coding).
-                    # We sum the spikes over the time dimension to get a spike count.
-                    # This count serves as the feature representation for the loss function.
-                    # The shape becomes (batch_size, features), which is what our loss expects.
                     h1 = spk_h1.mean(dim=0)
                     h2 = spk_h2.mean(dim=0)
                     

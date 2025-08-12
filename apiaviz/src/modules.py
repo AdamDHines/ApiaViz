@@ -12,31 +12,43 @@ class VisionModule(nn.Module):
         super().__init__()
         self.training = training
         # ───── Retina to Photoreceptor (Opsin response) ─────
+        # Two input channels (green, blue), processed independently into 6 channels
         self.opsin = nn.Conv2d(2, 6, 1, groups=2, bias=True)
 
         # ───── Lamina (early local motion + contrast detection) ─────
+        # Depthwise convolution – each lamina channel processes its own input
         self.lamina = nn.Conv2d(lam_ch, lam_ch, 3, padding=1, padding_mode="reflect", groups=lam_ch, bias=True)
-        # Replaced GroupNorm with LayerNorm
-        self.lamina_norm = nn.LayerNorm(lam_ch)
 
         # ───── Medulla: Color & Achromatic Pathways ─────
+        # Chromatic pathway (grouped for green/blue separation)
         self.med_c = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect", groups=2)
+        # Achromatic pathway (e.g. luminance-based edge detection)
         self.med_a = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect")
-        # Replaced GroupNorm with LayerNorm. This changes the normalization strategy from grouped to full.
-        self.med_n = nn.LayerNorm(60) # 2*lam_ch + 2*lam_ch + lam_ch assuming concatenation from med_c and med_a
+        # Normalization over feature groups (approximates lateral inhibition)
+        self.med_n = nn.GroupNorm(12, 60)
 
         # ───── Lobula (higher-order feature integration) ─────
-        self.lobula = nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect")
-        # Replaced GroupNorm with LayerNorm
-        self.lobula_norm = nn.LayerNorm(128)
+        self.lobula = nn.Sequential(
+            nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect"),
+            nn.ReLU()
+        )
 
         # ───── VPN layers: distinct feature projections ─────
+        # These correspond to three pathways:
+        #   ASOT = anterior superior optic tract
+        #   AIOT = anterior inferior optic tract
+        #   LOT  = lateral optic tract
         self.asot = nn.Conv2d(48, vpn_ch, 1)
         self.aiot = nn.Conv2d(48, vpn_ch, 1)
         self.lot  = nn.Conv2d(32, vpn_ch, 1)
 
         # ───── Mushroom Body (Kenyon Cell projection) ─────
+        # Sparse, high-dimensional representation using learned sparse weights
         self.kc_p = SparseLinear(3 * vpn_ch, kc_dim)
+
+        # LayerNorm for lobula
+        self.lobula_norm = nn.GroupNorm(num_groups=1, num_channels=128)
+        self.lamina_norm = nn.GroupNorm(num_groups=1, num_channels=lam_ch)
 
         # Choose sparsity mechanism
         if use_adaptive_kwta:
@@ -65,9 +77,7 @@ class VisionModule(nn.Module):
         # Lamina: apply spatial filtering
         lam = self.lamina(torch.cat([p, -p], 1))
         # Apply LayerNorm: Permute from (N, C, H, W) to (N, H, W, C) and back
-        lam = lam.permute(0, 2, 3, 1)
         lam = self.lamina_norm(lam)
-        lam = lam.permute(0, 3, 1, 2)
         lam = F.leaky_relu(lam, 0.1)
 
         # Medulla: combine chromatic and achromatic processing
@@ -76,17 +86,13 @@ class VisionModule(nn.Module):
                             self.med_a(lam.mean(1, keepdim=True).expand_as(lam))], 1)
 
         # Apply LayerNorm to Medulla features
-        med = med_raw.permute(0, 2, 3, 1)
-        med = self.med_n(med)
-        med = med.permute(0, 3, 1, 2)
+        med = self.med_n(med_raw)
         med = F.leaky_relu(med, 0.1) 
 
         # Lobula: integrate complex features
         lob = self.lobula(med)
         # Apply LayerNorm to Lobula features
-        lob = lob.permute(0, 2, 3, 1)
         lob = self.lobula_norm(lob)
-        lob = lob.permute(0, 3, 1, 2)
         lob = F.leaky_relu(lob, 0.1)
 
         # Extract three different VPN pathway features
@@ -111,24 +117,33 @@ class SNNVisionModule(nn.Module):
         self.lam_ch = lam_ch
 
         # ───── Retina to Photoreceptor (Opsin response) ─────
-        # This layer outputs a current, not spikes.
         self.opsin = nn.Conv2d(2, 6, 1, groups=2, bias=True)
 
         # ───── Lamina (early local motion + contrast detection) ─────
         self.lamina = nn.Conv2d(lam_ch, lam_ch, 3, padding=1, padding_mode="reflect", groups=lam_ch, bias=True)
-        self.lamina_norm = nn.LayerNorm(lam_ch)
+        self.lamina_norm = nn.GroupNorm(num_groups=1, num_channels=lam_ch)
         self.lamina_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.1)
 
         # ───── Medulla: Color & Achromatic Pathways ─────
         self.med_c = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect", groups=2)
         self.med_a = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect")
-        # A single normalization and LIF layer for the combined medulla input
-        self.med_n = nn.LayerNorm(5 * lam_ch) # lam + med_c + med_a = 12 + 24 + 24 = 60
+        
+        # FIX: Input to medulla LIF is only from med_c and med_a currents.
+        medulla_channels = 4 * lam_ch # 2*lam_ch + 2*lam_ch = 24 + 24 = 48
+        
+        # FIX: Use multiple groups to preserve the original model's architectural intent.
+        # This preserves distinct feature pathways, which a single group would merge.
+        # 8 groups for 48 channels (6 ch/group) is analogous to 12 groups for 60 channels.
+        self.med_n = nn.GroupNorm(num_groups=8, num_channels=medulla_channels)
         self.med_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.5)
 
         # ───── Lobula (higher-order feature integration) ─────
-        self.lobula_conv = nn.Conv2d(5 * lam_ch, 128, 5, padding=2, padding_mode="reflect")
-        self.lobula_norm = nn.LayerNorm(128)
+        # FIX: The input channel count must match the output of the medulla layer.
+        self.lobula_conv = nn.Sequential(
+            nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect"),
+            nn.ReLU()
+        )
+        self.lobula_norm = nn.GroupNorm(num_groups=1, num_channels=128)
         self.lobula_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.5)
 
         # ───── VPN layers: distinct feature projections ─────
@@ -157,7 +172,7 @@ class SNNVisionModule(nn.Module):
                     nn.init.constant_(m.bias, 0.01)
 
     def _gp(self, f_spikes):
-        # Global average pooling over spatial dimensions
+        """Global average pooling helper."""
         return F.adaptive_avg_pool2d(f_spikes, 1).flatten(1)
 
     def forward(self, x, num_steps):
@@ -170,7 +185,8 @@ class SNNVisionModule(nn.Module):
         lot_mem = self.lot_lif.init_leaky()
 
         if isinstance(self.kc_sparsity, SNNAdaptiveKWTA):
-            kc_mem = torch.zeros(x.size(1), self.kc_p.linear.out_features, device=x.device)
+             # Custom init for stateful adaptive layer
+            kc_mem = torch.zeros(x.shape[1], self.kc_p.linear.out_features, device=x.device)
         else:
             kc_mem = self.kc_sparsity.init_leaky()
 
@@ -184,28 +200,23 @@ class SNNVisionModule(nn.Module):
             # 2. Lamina: ON/OFF channels, Conv, Norm, Spikes
             lam_in = torch.cat([opsin_cur, -opsin_cur], 1)
             lam_cur = self.lamina(lam_in)
-            # Apply LayerNorm on current: Permute (N,C,H,W)->(N,H,W,C), normalize, permute back
-            lam_cur_permuted = lam_cur.permute(0, 2, 3, 1)
-            lam_norm_cur = self.lamina_norm(lam_cur_permuted).permute(0, 3, 1, 2)
+            # FIX: Cleaned up unnecessary variables. GroupNorm doesn't need permutation.
+            lam_norm_cur = self.lamina_norm(lam_cur)
             spk_lam, lam_mem = self.lamina_lif(lam_norm_cur, lam_mem)
 
-            # 3. Medulla: Process spikes from Lamina, combine, Norm, Spikes
-            # Generate currents from the two medulla pathways using lamina spikes
+            # 3. Medulla: Process spikes from Lamina, combine currents, Norm, Spikes
             med_c_cur = self.med_c(spk_lam)
             ach_in = spk_lam.mean(1, keepdim=True).expand_as(spk_lam)
             med_a_cur = self.med_a(ach_in)
-            # Concatenate lamina spikes and pathway currents to form the input, matching the ANN
-            med_raw_cur = torch.cat([spk_lam, med_c_cur, med_a_cur], 1)
-            # Apply LayerNorm on the combined current
-            med_raw_cur_permuted = med_raw_cur.permute(0, 2, 3, 1)
-            med_norm_cur = self.med_n(med_raw_cur_permuted).permute(0, 3, 1, 2)
+
+            med_raw_cur = torch.cat([med_c_cur, med_a_cur], 1)
+            
+            med_norm_cur = self.med_n(med_raw_cur)
             spk_med, med_mem = self.med_lif(med_norm_cur, med_mem)
 
             # 4. Lobula: Conv on Medulla spikes, Norm, Spikes
             lob_cur = self.lobula_conv(spk_med)
-            # Apply LayerNorm on current
-            lob_cur_permuted = lob_cur.permute(0, 2, 3, 1)
-            lob_norm_cur = self.lobula_norm(lob_cur_permuted).permute(0, 3, 1, 2)
+            lob_norm_cur = self.lobula_norm(lob_cur)
             spk_lob, lob_mem = self.lobula_lif(lob_norm_cur, lob_mem)
 
             # 5. VPN pathways: Process slices of Lobula spikes
@@ -223,7 +234,6 @@ class SNNVisionModule(nn.Module):
             # 6. Kenyon Cells: Sparse projection and spiking
             kc_cur = self.kc_p(vpn_spk_pooled)
             if isinstance(self.kc_sparsity, SNNAdaptiveKWTA):
-                # SNNAdaptiveKWTA handles its own membrane update
                 spk_kc, kc_mem = self.kc_sparsity(kc_mem + kc_cur, time_step=step)
             else:
                 spk_kc, kc_mem = self.kc_sparsity(kc_cur, kc_mem)
