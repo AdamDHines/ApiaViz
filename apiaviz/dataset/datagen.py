@@ -1,21 +1,18 @@
 # Imports
+import os
 import cv2
 import math
 import torch
 import random
 
 import numpy as np
-import torch.nn as nn
-import torch.nn.functional as F
 
 from pathlib import Path
+from enum import Enum, auto
 from PIL import Image, ImageDraw
 from torchvision import transforms
 from torch.utils.data import Dataset
-
-class KeepGB(torch.nn.Module):
-    def forward(self, t):
-        return t[1:3]          # keep G & B channels
+from apiaviz.src.functional import generate_smooth_scan_path
 
 class TinyImageNetPairDataset(Dataset):
     """
@@ -78,174 +75,151 @@ class TinyImageNetPairDataset(Dataset):
             
         return v1, v2
 
-class FacePatchDataset(Dataset):
-    def __init__(self, root, patch=75, patches_per_file=3000):
-        self.patch = patch
-        self.imgs  = []   # list of (tensor, label)
-        self.names = []
+class DataMode(Enum):
+    """Defines the operating mode for the dataset."""
+    STATIC_FULL = auto()      # Returns a single, full-size static image.
+    STATIC_PATCH = auto()     # Returns a single, random static patch from an image.
+    SCANNING_PATCH = auto()   # Returns a time-series of patches scanning across an image.
 
-        t_img = transforms.ToTensor()
-        root  = Path(root)
-        for sub in ['female', 'male']:
-            for fp in sorted((root/sub).glob('*.*')):
-                # ignore .DS_Store files on macOS
-                if fp.name.startswith('.DS_Store'):
-                    continue
-                img = Image.open(fp).convert('L')
-                self.imgs.append((t_img(img), len(self.names)))
-                self.names.append(fp.stem)
+class InsectVisionDataset(Dataset):
+    """
+    A unified dataset for loading insect vision data in various formats.
 
-        if not self.imgs:
-            raise RuntimeError("No images found under female/ or male/")
+    This class can operate in three modes, configurable via the `mode` parameter:
+    1.  STATIC_FULL:    Yields the entire source image, resized if necessary.
+    2.  STATIC_PATCH:   Yields a single random patch from a source image.
+    3.  SCANNING_PATCH: Yields a time-series of patches that form a smooth
+                        scan path across the source image.
+    """
+    def __init__(self, root, dataset, mode = DataMode, patch_size = None, samples_per_image = 100, num_steps = None):
+        """
+        Args:
+            root (str): The root directory of the dataset.
+            mode (DataMode): The operating mode (STATIC_FULL, STATIC_PATCH, or SCANNING_PATCH).
+            patch_size (Optional[int]): The size (height and width) of the patches.
+                                        Required for STATIC_PATCH and SCANNING_PATCH modes.
+            samples_per_image (int): How many samples (patches or scan paths) to generate
+                                     per source image. Not used in STATIC_FULL mode.
+            num_steps (Optional[int]): The number of steps in a scanning time-series.
+                                       Required for SCANNING_PATCH mode.
+        """
+        combined_root = os.path.join(root, dataset)
+        self.root = Path(combined_root)
+        self.dataset = dataset
+        self.mode = mode
+        self.patch_size = patch_size
+        self.samples_per_image = samples_per_image
+        self.num_steps = num_steps
 
-        self.per_file = patches_per_file
-        self.total    = self.per_file * len(self.imgs)
+        # --- Validate mode-specific arguments ---
+        if self.mode in [DataMode.STATIC_PATCH, DataMode.SCANNING_PATCH]:
+            if self.patch_size is None:
+                raise ValueError("`patch_size` must be provided for patch-based modes.")
+        if self.mode == DataMode.SCANNING_PATCH:
+            if self.num_steps is None:
+                raise ValueError("`num_steps` must be provided for SCANNING_PATCH mode.")
 
-    def __len__(self): return self.total
-
-    def __getitem__(self, idx):
-        img_t, label = self.imgs[idx // self.per_file]
-        _, H, W = img_t.shape
-        cx, cy  = W/2, H/2
-        max_r   = 0.7 * min(W, H) / 2
-
-        for _ in range(1000):
-            x0 = random.randint(0, W - self.patch)
-            y0 = random.randint(0, H - self.patch)
-            if math.hypot(x0+self.patch/2 - cx, y0+self.patch/2 - cy) <= max_r:
-                break
-
-        patch = img_t[:, y0:y0+self.patch, x0:x0+self.patch]
-        patch = patch.repeat(2,1,1)  # duplicate channel → 2×75×75
-        return patch, label
-    
-class FlowerPatchDataset(Dataset):
-    def __init__(self, root='./apiaviz/dataset/natural-scenes', patch=360, patches_per_file=3000):
-        self.patch = patch
-        self.per_file = patches_per_file
-        
-        # This list will hold tuples of (tensor, class_label)
+        # --- Load image paths and class names ---
         self.source_images = []
-        
-        # This dictionary will map folder names to integer labels
-        self.class_names = ['summer','fall','spring']
+        if self.dataset == "flowers":
+            self.class_names = ['lavender-resized', 'sunflower-resized', 'rose-resized']
+        else:
+            self.class_names = ['goldfish1','goldfish2','ball','roads','car','fruit','bird']
         self.class_to_idx = {name: i for i, name in enumerate(self.class_names)}
-        
-        t_img = transforms.ToTensor()
-        root_path = Path(root)
+        self.to_tensor = transforms.ToTensor()
 
         print("Loading dataset...")
-        # Iterate through the defined classes to assign consistent labels
         for class_name, class_idx in self.class_to_idx.items():
-            class_dir = root_path / class_name
-            if not class_dir.exists():
+            class_dir = self.root / class_name
+            print(class_dir)
+            if not class_dir.is_dir():
                 print(f"Warning: Directory not found: {class_dir}")
                 continue
             
-            # Find all image files in the class directory
-            image_files = [fp for fp in sorted(class_dir.glob('*.*')) if not fp.name.startswith('.')]
-            print(f"Found {len(image_files)} images in '{class_name}' (Label: {class_idx})")
-
-            for fp in image_files:
+            for fp in sorted(class_dir.glob('*.*')):
+                if fp.name.startswith('.'): continue
                 try:
+                    # Keep images as PIL objects to save memory, convert to tensor on the fly
                     img = Image.open(fp).convert('RGB')
-                    # Store the full image tensor along with its correct class label
-                    self.source_images.append((t_img(img), class_idx))
+                    self.source_images.append((img, class_idx))
                 except Exception as e:
                     print(f"Warning: Could not load image {fp}. Error: {e}")
 
         if not self.source_images:
-            raise RuntimeError(f"No images found under the specified root: {root}")
+            raise RuntimeError(f"No images found under the specified root: {self.root}")
 
-        # The total number of patches is the number of source images * patches per image
-        self.total = self.per_file * len(self.source_images)
-        print(f"Dataset loaded. Total source images: {len(self.source_images)}. Total patches: {self.total}.")
+        print(f"Dataset loaded. Total source images: {len(self.source_images)}.")
 
     def __len__(self):
-        return self.total
+        """Returns the total number of samples in the dataset."""
+        if self.mode == DataMode.STATIC_FULL:
+            return len(self.source_images)
+        else:
+            return len(self.source_images) * self.samples_per_image
 
     def __getitem__(self, idx):
-        # Determine which source image to use based on the index
-        source_idx = idx // self.per_file
-        
-        # Retrieve the full image tensor and its correct class label
-        img_tensor, label = self.source_images[source_idx]
-        
-        # Perform the random crop on the full image
-        _, H, W = img_tensor.shape
-        y0 = random.randint(0, H - self.patch)
-        x0 = random.randint(0, W - self.patch)
-        crop = img_tensor[:, y0:y0+self.patch, x0:x0+self.patch]
-        
-        # Keep only the Green and Blue channels
-        crop_gb = crop[1:3]
-        
-        # Return the cropped patch and the correct folder-level label
-        return crop_gb, label
-    
-class VarietyDataset(Dataset):
-    def __init__(self, root='./apiaviz/dataset/variety', patch=64, patches_per_file=3000):
-        self.patch = patch
-        self.per_file = patches_per_file
-        
-        # This list will hold tuples of (tensor, class_label)
-        self.source_images = []
-        
-        # This dictionary will map folder names to integer labels
-        self.class_names = ['ball', 'car', 'goldfish1', 'goldfish2', 'bird', 'fruit', 'roads']
-        self.class_to_idx = {name: i for i, name in enumerate(self.class_names)}
-        
-        t_img = transforms.ToTensor()
-        root_path = Path(root)
+        """
+        Returns a single data sample, formatted consistently across all modes.
 
-        print("Loading dataset...")
-        # Iterate through the defined classes to assign consistent labels
-        for class_name, class_idx in self.class_to_idx.items():
-            class_dir = root_path / class_name
-            if not class_dir.exists():
-                print(f"Warning: Directory not found: {class_dir}")
-                continue
+        Returns:
+            Tuple[torch.Tensor, int, torch.Tensor, list]: A tuple containing:
+            - input_tensor: The data to be fed into the model (full image, patch, or time-series).
+            - label: The integer class label.
+            - source_image: The original full-resolution source image (as a tensor).
+            - scan_path: A tuple of (path_x, path_y) for scanning mode, otherwise an empty list.
+        """
+        # Determine which source image to use
+        if self.mode == DataMode.STATIC_FULL:
+            source_idx = idx
+        else:
+            source_idx = idx // self.samples_per_image
+
+        source_img_pil, label = self.source_images[source_idx]
+        source_img_tensor = self.to_tensor(source_img_pil)
+        
+        # --- Mode-specific logic ---
+
+        if self.mode == DataMode.STATIC_FULL:
+            # The input is the full image itself (GB channels only)
+            input_tensor = source_img_tensor[1:3]
+            scan_path = []
+            return input_tensor, label, source_img_tensor, scan_path
+
+        if self.mode == DataMode.STATIC_PATCH:
+            _, H, W = source_img_tensor.shape
+            max_y = H - self.patch_size
+            max_x = W - self.patch_size
             
-            # Find all image files in the class directory
-            image_files = [fp for fp in sorted(class_dir.glob('*.*')) if not fp.name.startswith('.')]
-            print(f"Found {len(image_files)} images in '{class_name}' (Label: {class_idx})")
+            # Generate a single random crop
+            y0 = random.randint(0, max_y)
+            x0 = random.randint(0, max_x)
+            patch = source_img_tensor[:, y0:y0 + self.patch_size, x0:x0 + self.patch_size]
+            
+            # Input is the patch (GB channels)
+            input_tensor = patch[1:3]
+            scan_path = []
+            return input_tensor, label, source_img_tensor, scan_path
 
-            for fp in image_files:
-                try:
-                    img = Image.open(fp).convert('RGB')
-                    # Store the full image tensor along with its correct class label
-                    self.source_images.append((t_img(img), class_idx))
-                except Exception as e:
-                    print(f"Warning: Could not load image {fp}. Error: {e}")
-
-        if not self.source_images:
-            raise RuntimeError(f"No images found under the specified root: {root}")
-
-        # The total number of patches is the number of source images * patches per image
-        self.total = self.per_file * len(self.source_images)
-        print(f"Dataset loaded. Total source images: {len(self.source_images)}. Total patches: {self.total}.")
-
-    def __len__(self):
-        return self.total
-
-    def __getitem__(self, idx):
-        # Determine which source image to use based on the index
-        source_idx = idx // self.per_file
-        
-        # Retrieve the full image tensor and its correct class label
-        img_tensor, label = self.source_images[source_idx]
-        
-        # Perform the random crop on the full image
-        _, H, W = img_tensor.shape
-        y0 = random.randint(0, H - self.patch)
-        x0 = random.randint(0, W - self.patch)
-        crop = img_tensor[:, y0:y0+self.patch, x0:x0+self.patch]
-        
-        # Keep only the Green and Blue channels
-        crop_gb = crop[1:3]
-        
-        # Return the cropped patch and the correct folder-level label
-        return crop_gb, label
+        if self.mode == DataMode.SCANNING_PATCH:
+            _, H, W = source_img_tensor.shape
+            max_y = H - self.patch_size
+            max_x = W - self.patch_size
+            
+            # Generate a smooth path for the patch
+            path_x, path_y = generate_smooth_scan_path(self.num_steps, max_x, max_y)
+            
+            patches = []
+            for i in range(self.num_steps):
+                y0, x0 = path_y[i], path_x[i]
+                crop = source_img_tensor[:, y0:y0 + self.patch_size, x0:x0 + self.patch_size]
+                patches.append(crop[1:3]) # Keep only Green and Blue channels
+            
+            # Input is the stacked time-series of patches
+            input_tensor = torch.stack(patches)
+            scan_path = (path_x, path_y)
+            return input_tensor, label, source_img_tensor, scan_path
+            
+        raise NotImplementedError(f"Mode {self.mode} is not implemented.")
 
 class SyntheticDataset(Dataset):
     """

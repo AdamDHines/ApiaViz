@@ -13,11 +13,11 @@ class VisionModule(nn.Module):
         self.training = training
         # ───── Retina to Photoreceptor (Opsin response) ─────
         # Two input channels (green, blue), processed independently into 6 channels
-        self.opsin = nn.Conv2d(2, 6, 1, groups=2, bias=True)
+        self.opsin = nn.Conv2d(2, 6, 1, groups=2, bias=False)
 
         # ───── Lamina (early local motion + contrast detection) ─────
         # Depthwise convolution – each lamina channel processes its own input
-        self.lamina = nn.Conv2d(lam_ch, lam_ch, 3, padding=1, padding_mode="reflect", groups=lam_ch, bias=True)
+        self.lamina = nn.Conv2d(lam_ch, lam_ch, 3, padding=1, padding_mode="reflect", groups=lam_ch, bias=False)
 
         # ───── Medulla: Color & Achromatic Pathways ─────
         # Chromatic pathway (grouped for green/blue separation)
@@ -76,7 +76,6 @@ class VisionModule(nn.Module):
 
         # Lamina: apply spatial filtering
         lam = self.lamina(torch.cat([p, -p], 1))
-        # Apply LayerNorm: Permute from (N, C, H, W) to (N, H, W, C) and back
         lam = self.lamina_norm(lam)
         lam = F.leaky_relu(lam, 0.1)
 
@@ -84,14 +83,11 @@ class VisionModule(nn.Module):
         med_raw = torch.cat([lam,
                             self.med_c(lam),
                             self.med_a(lam.mean(1, keepdim=True).expand_as(lam))], 1)
-
-        # Apply LayerNorm to Medulla features
         med = self.med_n(med_raw)
         med = F.leaky_relu(med, 0.1) 
 
         # Lobula: integrate complex features
         lob = self.lobula(med)
-        # Apply LayerNorm to Lobula features
         lob = self.lobula_norm(lob)
         lob = F.leaky_relu(lob, 0.1)
 
@@ -101,7 +97,6 @@ class VisionModule(nn.Module):
             self._gp(self.aiot(lob[:, 48:96])),
             self._gp(self.lot(lob[:, 96:]))
         ], dim=1)
-
         kc_raw = self.kc_p(vpn)
         
         # Apply adaptive sparsity
@@ -118,6 +113,7 @@ class SNNVisionModule(nn.Module):
 
         # ───── Retina to Photoreceptor (Opsin response) ─────
         self.opsin = nn.Conv2d(2, 6, 1, groups=2, bias=True)
+        self.opsin_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.01)
 
         # ───── Lamina (early local motion + contrast detection) ─────
         self.lamina = nn.Conv2d(lam_ch, lam_ch, 3, padding=1, padding_mode="reflect", groups=lam_ch, bias=True)
@@ -128,38 +124,34 @@ class SNNVisionModule(nn.Module):
         self.med_c = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect", groups=2)
         self.med_a = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect")
         
-        # FIX: Input to medulla LIF is only from med_c and med_a currents.
-        medulla_channels = 4 * lam_ch # 2*lam_ch + 2*lam_ch = 24 + 24 = 48
-        
-        # FIX: Use multiple groups to preserve the original model's architectural intent.
         # This preserves distinct feature pathways, which a single group would merge.
         # 8 groups for 48 channels (6 ch/group) is analogous to 12 groups for 60 channels.
-        self.med_n = nn.GroupNorm(num_groups=8, num_channels=medulla_channels)
+        self.med_n = nn.GroupNorm(12, 48)
         self.med_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.5)
 
         # ───── Lobula (higher-order feature integration) ─────
         # FIX: The input channel count must match the output of the medulla layer.
         self.lobula_conv = nn.Sequential(
-            nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect"),
+            nn.Conv2d(48, 128, 5, padding=2, padding_mode="reflect"),
             nn.ReLU()
         )
         self.lobula_norm = nn.GroupNorm(num_groups=1, num_channels=128)
-        self.lobula_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.5)
+        self.lobula_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.75)
 
         # ───── VPN layers: distinct feature projections ─────
         self.asot = nn.Conv2d(48, vpn_ch, 1)
         self.aiot = nn.Conv2d(48, vpn_ch, 1)
         self.lot  = nn.Conv2d(32, vpn_ch, 1)
-        self.asot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.4)
-        self.aiot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.4)
-        self.lot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.4)
+        self.asot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.9)
+        self.aiot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.9)
+        self.lot_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.9)
 
         # ───── Mushroom Body (Kenyon Cell projection) ─────
         self.kc_p = SparseLinear(3 * vpn_ch, kc_dim)
         if use_adaptive_kwta:
             self.kc_sparsity = SNNAdaptiveKWTA(sparsity=0.05, beta=beta)
         else:
-            self.kc_sparsity = snn.Leaky(beta=beta, init_hidden=False, threshold=0.7)
+            self.kc_sparsity = snn.Leaky(beta=beta, init_hidden=False, threshold=1.0)
 
         self._initialize_weights()
 
@@ -177,6 +169,7 @@ class SNNVisionModule(nn.Module):
 
     def forward(self, x, num_steps):
         # Initialize membrane potentials for all LIF layers
+        opsin_mem = self.opsin_lif.init_leaky()
         lam_mem = self.lamina_lif.init_leaky()
         med_mem = self.med_lif.init_leaky()
         lob_mem = self.lobula_lif.init_leaky()
@@ -196,9 +189,10 @@ class SNNVisionModule(nn.Module):
 
             # 1. Opsin Current Generation
             opsin_cur = self.opsin(spk_in_step)
+            spk_opsin, opsin_mem = self.opsin_lif(opsin_cur, opsin_mem)
 
             # 2. Lamina: ON/OFF channels, Conv, Norm, Spikes
-            lam_in = torch.cat([opsin_cur, -opsin_cur], 1)
+            lam_in = torch.cat([spk_opsin, -spk_opsin], 1)
             lam_cur = self.lamina(lam_in)
             # FIX: Cleaned up unnecessary variables. GroupNorm doesn't need permutation.
             lam_norm_cur = self.lamina_norm(lam_cur)

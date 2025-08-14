@@ -1,18 +1,5 @@
-'''
-This script consists of the training classes for the ApiaNet system.
-
-classes:
-    - TrainVision: Trains the VisionModule using the visual synthetic dataset and module to inform flight behaviors to attractive and aversive stimuli.
-    - TrainGustatory: Trains the GustatoryModule using the gustatory synthetic dataset and module to inform flight behaviors to attractive and aversive stimuli.
-    - TrainMotor: Trains the MotorModule using the gustatory synthetic dataset and module to inform flight behaviors to attractive and aversive stimuli.
-'''
-
 # Imports
-import torch
-import random
-import secrets
-# MOD: Import the time module to track epoch duration
-import time
+import torch, random, secrets, time
 
 import numpy as np
 import torch.nn as nn
@@ -23,8 +10,8 @@ from tqdm import tqdm
 from pathlib import Path
 from torchvision import transforms
 from torch.utils.data import DataLoader
+from apiaviz.dataset.datagen import TinyImageNetPairDataset
 from apiaviz.src.modules import VisionModule, SNNVisionModule
-from apiaviz.dataset.datagen import SyntheticDataset, TinyImageNetPairDataset
 
 # Set multiprocessing start method to 'spawn' for compatibility on macOS
 import multiprocessing as mp
@@ -40,13 +27,11 @@ class TrainVision(nn.Module):
 
         self.models_dir = Path(self.models_dir)
         self.models_dir.mkdir(parents=True, exist_ok=True)
-        # MOD: Modified model path to be more descriptive for the *best* model
         self.model_path = Path(f"{self.models_dir}/{self.vision_model}.pth")
         
-        # MOD: Define path for the training log file
+        # Define path for the training log file
         self.log_path = self.models_dir / "training_log.txt"
 
-        # SNN-SPECIFIC: Add num_steps hyperparameter
         # This will be passed to the SNN model's forward pass.
         if self.snn:
             # A good starting point is between 10 and 50 steps.
