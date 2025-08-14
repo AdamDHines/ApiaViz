@@ -10,7 +10,7 @@ from pathlib import Path
 from matplotlib import cm
 from typing import Optional
 from sklearn.cluster import KMeans
-from matplotlib.colors import Normalize
+import matplotlib.colors as mcolors
 from typing import Optional, List, Dict, Union
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.manifold import TSNE, trustworthiness
@@ -23,7 +23,6 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # ────────── Augmentation helpers ──────────
-
 class MaybeGray2Ch:                          # 50 % colour-drop
     def __init__(self, p: float = 0.5):
         self.p = p
@@ -32,6 +31,24 @@ class MaybeGray2Ch:                          # 50 % colour-drop
             g = gb.mean(0, keepdim=True)
             return torch.cat([g, g], dim=0)
         return gb
+    
+def absolute_threshold_sparsity(x, threshold=0.25):
+    # Creates a mask where activation is above the threshold
+    mask = (x > threshold).float()
+    return x * mask
+
+def generate_smooth_scan_path(num_steps: int, max_coord: int, num_waypoints: int = 5) -> tuple[torch.Tensor, torch.Tensor]:
+    """
+    Generates a 2D smooth scanning path. This version guarantees the correct output length.
+    """
+    waypoints_x = np.random.randint(0, max_coord + 1, num_waypoints)
+    waypoints_y = np.random.randint(0, max_coord + 1, num_waypoints)
+    control_points = np.linspace(0, num_steps - 1, num_waypoints)
+    full_timeline = np.arange(num_steps)
+    path_x = np.interp(full_timeline, control_points, waypoints_x)
+    path_y = np.interp(full_timeline, control_points, waypoints_y)
+
+    return torch.from_numpy(path_x.astype(np.int32)), torch.from_numpy(path_y.astype(np.int32))
 
 # ────────── k-Winner Takes All functions ──────────
 class AdaptiveKWTA(nn.Module):
@@ -65,6 +82,56 @@ class AdaptiveKWTA(nn.Module):
         
         return x * mask
     
+class SNNAdaptiveKWTA(nn.Module):
+    """
+    Spiking-aware Adaptive K-Winners-Take-All layer.
+    
+    This version includes the CORRECTED Straight-Through Estimator to ensure
+    the gradient path is not broken.
+    """
+    def __init__(self, sparsity=0.05, momentum=0.9, reset_mechanism="reset"):
+        super().__init__()
+        self.sparsity = sparsity
+        self.momentum = momentum
+        self.reset_mechanism = reset_mechanism
+        
+        self.register_buffer('running_mean', None)
+        self.register_buffer('thresholds', torch.tensor(1.0))
+
+    def forward(self, mem, time_step=0):
+        if self.running_mean is None:
+            self.running_mean = torch.zeros(mem.size(1), device=mem.device)
+            self.thresholds = torch.ones(mem.size(1), device=mem.device)
+
+        mem_adjusted = mem / (self.thresholds.unsqueeze(0) if self.thresholds.dim() > 0 else self.thresholds)
+        
+        k = max(1, int(self.sparsity * mem.size(1)))
+        
+        # --- FORWARD PASS: Generate hard, non-differentiable spikes ---
+        with torch.no_grad(): # Explicitly no_grad for clarity, topk is non-diff anyway
+             _, idx = torch.topk(mem_adjusted, k, dim=1)
+        spk_hard = torch.zeros_like(mem_adjusted).scatter_(1, idx, 1.0)
+        
+        # --- BACKWARD PASS: Create the surrogate gradient path ---
+        # This is the crucial, corrected line.
+        # It ensures the forward pass uses `spk_hard`, but the backward pass
+        # computes gradients as if the operation was just `mem_adjusted`.
+        spk = (spk_hard - mem_adjusted).detach() + mem_adjusted
+        
+        # --- Update running statistics (no gradient needed here) ---
+        with torch.no_grad():
+            batch_mean = spk_hard.float().mean(dim=0) # Use the real spikes for stats
+            self.running_mean = self.momentum * self.running_mean + (1 - self.momentum) * batch_mean
+            self.thresholds = 1.0 + 2.0 * (self.running_mean - self.sparsity).clamp(min=0)
+
+        # --- Reset membrane potential of neurons that fired ---
+        if self.reset_mechanism == "subtract":
+            mem_after_spike = mem - (spk_hard * self.thresholds.unsqueeze(0))
+        else: # "zero"
+            mem_after_spike = mem * (1 - spk_hard)
+            
+        return spk, mem_after_spike
+    
 def k_wta(x, pct=.05):
     k = max(1, int(pct * x.size(1)))
     topk, idx = torch.topk(x, k, dim=1)
@@ -74,7 +141,6 @@ def k_wta(x, pct=.05):
     return (y - x).detach() + x
 
 # ────────── Sparse linear function ──────────
-
 class SparseLinear(nn.Module):
     def __init__(self, in_f, out_f, fan_in=7, bias=False):
         super().__init__()
@@ -94,7 +160,6 @@ class SparseLinear(nn.Module):
         return F.linear(x, w, self.bias)
 
 # ────────── Learning rule ────────── 
-    
 @staticmethod
 def nt_xent(z1, z2, T: float = 0.07) -> torch.Tensor:
     """NT-Xent loss (SimCLR)"""
@@ -107,334 +172,526 @@ def nt_xent(z1, z2, T: float = 0.07) -> torch.Tensor:
     return -sim.log_softmax(dim=1)[torch.arange(2 * B), pos].mean()
 
 # ────────── Visualization functions ────────── 
-
-"""
-Comprehensive evaluation and visualization tool for insect-vision neural networks.
-
-Requirements:
-- scikit-learn >= 0.20.0 (for trustworthiness metric)
-- matplotlib
-- opencv-python (cv2)
-- scipy
-"""
 class ModelEvaluator:
-    """A comprehensive tool for evaluating and visualizing insect-vision neural networks."""
-    
-    def __init__(self, model: nn.Module, device: str = 'cuda', output_dir: Optional[Path] = None):
+    """
+    A comprehensive and refactored tool for evaluating and visualizing
+    insect-vision neural networks.
+
+    This class handles both Artificial Neural Networks (ANNs) and Spiking
+    Neural Networks (SNNs). It also distinguishes between two data modes:
+    - 'static': Processing single, static images or patches.
+    - 'scanning': Processing a time-series of patches that scan across a larger image.
+    """
+
+    def __init__(self, model: nn.Module, device: str = 'cuda', output_dir: Optional[Path] = None, snn_params: Optional[Dict] = None):
+        """Initializes the evaluator."""
         self.model = model
         self.device = device
         self.model.to(device)
         self.model.eval()
-        
+
         self.output_dir = output_dir or Path('./apiaviz/evaluation_outputs')
         self.output_dir.mkdir(exist_ok=True)
-        
+
         self.activations = {}
         self.hooks = []
         
-    # ============== Hook Management ==============
-    
+        self.snn = snn_params is not None
+        self.snn_params = snn_params or {}
+        self.num_steps = self.snn_params.get('num_steps', 25)
+        if self.snn:
+            print("[Evaluator] SNN mode enabled.")
+
+        self.is_scanning = False
+
+    def bernoulli_spikes(self, x: torch.Tensor, rate_scale: float = 1.5) -> torch.Tensor:
+        """Converts a rate-coded tensor to Bernoulli spikes."""
+        p = (x * rate_scale).clamp(0, 1)
+        return (torch.rand_like(p) < p).float()
+
     def register_hooks(self, layer_names: List[str]):
-        """Register forward hooks for specified layers."""
+        """
+        Registers forward hooks to capture layer activations.
+        - For SNNs, it sums spike activations over time.
+        - For scanning ANNs, it captures the activation of each patch individually.
+        - For static ANNs, it captures the single activation map.
+        """
         self.remove_hooks()
-        def get_activation(name):
+
+        def get_activation(name: str):
             def hook(model, input, output):
-                self.activations[name] = output.detach()
+                act = (output[0] if isinstance(output, tuple) else output).detach()
+                
+                if self.snn:
+                    # Sum spike activations for SNNs
+                    if name not in self.activations:
+                        self.activations[name] = act.clone()
+                    else:
+                        self.activations[name] += act
+                elif self.is_scanning:
+                    # For ANN scanning, append each patch's activation to a list
+                    if name not in self.activations:
+                        self.activations[name] = []
+                    self.activations[name].append(act)
+                else:
+                    # For static ANN, just store the single activation map
+                    self.activations[name] = act
             return hook
-        
+
         for name in layer_names:
-            if hasattr(self.model, name):
+            try:
                 layer = getattr(self.model, name)
                 h = layer.register_forward_hook(get_activation(name))
                 self.hooks.append(h)
-    
+            except AttributeError:
+                print(f"Warning: Layer '{name}' not found in model. Skipping hook.")
+
     def remove_hooks(self):
-        """Remove all registered hooks."""
+        """Removes all registered hooks."""
         for hook in self.hooks:
             hook.remove()
         self.hooks = []
         self.activations = {}
 
-    # ============== Core Visualization Methods ==============
-    
-    def create_heatmap_overlay(self, image: np.ndarray, heatmap: Union[torch.Tensor, np.ndarray], 
-                             alpha: float = 0.7, colormap: str = 'bwr') -> np.ndarray:
-        """Creates a simple heatmap overlay."""
+    def _convert_static_to_spiking_single(self, static_tensor: torch.Tensor) -> torch.Tensor:
+        """Helper to convert a single static image tensor into a spike train for SNNs."""
+        if static_tensor.dim() == 3:
+            static_tensor = static_tensor.unsqueeze(0)
+        static_tensor = static_tensor.to(self.device)
+        
+        frames = [self.bernoulli_spikes(static_tensor) for _ in range(self.num_steps)]
+        spiking_batch = torch.stack(frames, dim=1)
+
+        return spiking_batch.permute(1, 0, 2, 3, 4)
+
+    def _prepare_image_for_display(self, image: Union[np.ndarray, torch.Tensor]) -> np.ndarray:
+        """Standardizes an image into a displayable RGB numpy array [0,1]."""
         if isinstance(image, torch.Tensor):
-             image = image.cpu().numpy()
-        if len(image.shape) == 4: image = image[0]
-        if image.shape[0] in [1, 2, 3]: image = np.transpose(image, (1, 2, 0))
-        if image.max() > 1: image = image / 255.0
-            
-        if isinstance(heatmap, torch.Tensor):
-            heatmap = heatmap.squeeze().detach().cpu().numpy()
-        
-        if len(heatmap.shape) == 3: heatmap = heatmap.mean(axis=0)
-        
-        heatmap = (heatmap - heatmap.min()) / (heatmap.max() - heatmap.min() + 1e-8)
+            image = image.cpu().numpy()
+        if len(image.shape) == 4:
+            image = image[0]
+        if image.shape[0] in [1, 2, 3]:
+            image = np.transpose(image, (1, 2, 0))
+        if image.max() > 1.0:
+            image = image / 255.0
         
         h, w = image.shape[:2]
-        heatmap_resized = cv2.resize(heatmap, (w, h), interpolation=cv2.INTER_CUBIC)
-        heatmap_smooth = cv2.GaussianBlur(heatmap_resized, (9, 9), 0)
+        if len(image.shape) == 2 or image.shape[2] == 1:
+            return np.stack([image.squeeze()] * 3, axis=-1)
+        if image.shape[2] == 2:
+            rgb_image = np.zeros((h, w, 3), dtype=np.float32)
+            rgb_image[:, :, 1] = image[:, :, 0]
+            rgb_image[:, :, 2] = image[:, :, 1]
+            return rgb_image
+            
+        return image.astype(np.float32)
+
+    def create_static_heatmap_overlay(self, image: np.ndarray, heatmap: torch.Tensor, alpha: float = 0.6, colormap: str = 'jet') -> np.ndarray:
+        """Overlays a single heatmap on a background image, resizing to fit."""
+        heatmap_np = heatmap.squeeze().detach().cpu().numpy()
         
+        if len(heatmap_np.shape) == 3:
+            heatmap_np = heatmap_np.mean(axis=0)
+            
+        heatmap_norm = (heatmap_np - heatmap_np.min()) / (heatmap_np.max() - heatmap_np.min() + 1e-8)
+
+        h, w = image.shape[:2]
+        heatmap_resized = cv2.resize(heatmap_norm, (w, h), interpolation=cv2.INTER_CUBIC)
         cmap = cm.get_cmap(colormap)
-        heatmap_colored = cmap(heatmap_smooth)[:, :, :3]
+        heatmap_colored = cmap(heatmap_resized)[:, :, :3]
         
-        if len(image.shape) == 2:
-            image_rgb = np.stack([image] * 3, axis=-1)
-        elif image.shape[2] == 2:
-            image_rgb = np.zeros((h, w, 3))
-            image_rgb[:, :, 1] = image[:, :, 0]
-            image_rgb[:, :, 2] = image[:, :, 1]
-        else:
-            image_rgb = image
-        
-        overlay = alpha * heatmap_colored + (1 - alpha) * image_rgb
+        overlay = alpha * heatmap_colored + (1 - alpha) * image
         return np.clip(overlay, 0, 1)
 
-    def plot_full_layer_analysis(self, input_tensor: torch.Tensor, input_image: np.ndarray, 
-                                sample_idx: int = 0, label: Optional[float] = None, 
-                                save_path: Optional[str] = None) -> plt.Figure:
-        """Creates a comprehensive 3x3 grid showing activations from all key network layers."""
-        self.model.eval()
+    def create_scanning_heatmap_overlay(self, background_image: np.ndarray, patch_activations: List[torch.Tensor], scan_path, patch_size: int, colormap: str = 'jet') -> np.ndarray:
+        """
+        Generates an overlay by placing individual, transparent heatmaps for each patch
+        activation along its scan path on the full background image.
+
+        Only positive activations are shown. Zero or negative activations are transparent.
+        """
+        path_x, path_y = scan_path
+        h, w, _ = background_image.shape
         
-        layers_to_hook = ['opsin', 'lamina', 'med_c', 'med_a', 'lobula']
+        # Create a transparent RGBA canvas to "paint" the heatmaps on
+        heatmap_canvas = np.zeros((h, w, 4), dtype=np.float32)
+        
+        cmap = cm.get_cmap(colormap)
+
+        for i, patch_act in enumerate(patch_activations):
+            # Process the activation for this patch
+            act = patch_act.squeeze().cpu().numpy()
+            if len(act.shape) == 3:
+                act = act.mean(axis=0)
+            
+            # --- Key change: Only plot positive activations ---
+            act[act < 0] = 0
+            
+            # Skip if there are no positive activations in this patch
+            max_val = act.max()
+            if max_val <= 1e-8:
+                continue
+                
+            # Normalize only the positive values to [0, 1]
+            act_norm = act / max_val
+            
+            # Apply colormap to get RGBA values
+            colored_heatmap = cmap(act_norm)
+            
+            # --- Key change: Make zero values transparent ---
+            colored_heatmap[act_norm == 0, 3] = 0.0 # Set alpha channel to 0
+            
+            # Get patch coordinates
+            x0, y0 = int(path_x[i]), int(path_y[i])
+            y1, x1 = y0 + patch_size, x0 + patch_size
+            
+            # Ensure the patch fits within the canvas bounds
+            if y1 > h or x1 > w: continue
+                
+            # "Paint" this patch's heatmap onto the canvas
+            heatmap_canvas[y0:y1, x0:x1] = colored_heatmap
+
+        # Blend the heatmap canvas over the background image
+        background_rgba = np.concatenate([background_image, np.ones((h, w, 1), dtype=np.float32)], axis=-1)
+        
+        # Alpha compositing formula: a*A + b*B*(1-a)
+        overlay_alpha = heatmap_canvas[:, :, 3:]
+        overlay_rgb = heatmap_canvas[:, :, :3]
+        
+        final_image = overlay_rgb + background_image[:,:,:3] * (1 - overlay_alpha)
+
+        return np.clip(final_image, 0, 1)
+
+
+    def plot_full_layer_analysis(self, input_tensor: torch.Tensor, display_image: np.ndarray,
+                                 sample_idx: int = 0, label: Optional[float] = None,
+                                 scan_path = None, save_path: Optional[str] = None) -> plt.Figure:
+        """
+        Creates a comprehensive grid showing activations from key network layers.
+        This function now correctly handles all static and scanning data visualizations.
+        """
+        self.model.eval()
+        self.activations = {}
+
+        # --- Prepare Model Input & Determine Layers ---
+        # (This part of the logic remains the same as your last working version)
+        if self.snn:
+            layers_to_hook = ['opsin_lif', 'lamina_lif', 'med_lif', 'lobula_lif', 'asot_lif', 'aiot_lif', 'lot_lif']
+            model_input = input_tensor.unsqueeze(1).to(self.device) if self.is_scanning else self._convert_static_to_spiking_single(input_tensor)
+        else:
+            layers_to_hook = ['opsin', 'lamina', 'med_c', 'med_a', 'lobula']
+            model_input = input_tensor.to(self.device)
+
         self.register_hooks(layers_to_hook)
         
+        # --- Model Forward Pass ---
         with torch.no_grad():
-            kc_output_sparse = self.model(input_tensor)
+            if self.snn:
+                output = self.model(model_input, num_steps=self.num_steps)
+                kc_output_sparse = output.sum(dim=0)
+            elif not self.is_scanning:
+                kc_output_sparse = self.model(model_input.unsqueeze(0))
+            else: # ANN Scanning
+                outputs = [self.model(model_input[t].unsqueeze(0)) for t in range(model_input.shape[0])]
+                kc_output_sparse = torch.mean(torch.cat(outputs, dim=0), dim=0, keepdim=True)
         
+        # --- Plotting ---
         fig, axes = plt.subplots(3, 3, figsize=(18, 18))
-        fig.suptitle(f'Full Layer-by-Layer Analysis (Sample Index: {sample_idx})', fontsize=20, fontweight='bold')
+        fig.suptitle(f'Full Layer Analysis (Sample: {sample_idx}, SNN: {self.snn}, Scanning: {self.is_scanning})', fontsize=20, fontweight='bold')
         
-        display_img_hwc = input_image
-        if len(display_img_hwc.shape) == 3 and display_img_hwc.shape[0] in [1, 2, 3]:
-            display_img_hwc = np.transpose(display_img_hwc, (1, 2, 0))
-
-        rgb_display = np.zeros((display_img_hwc.shape[0], display_img_hwc.shape[1], 3))
-        if display_img_hwc.shape[2] == 2:
-            rgb_display[:, :, 1] = display_img_hwc[:, :, 0]
-            rgb_display[:, :, 2] = display_img_hwc[:, :, 1]
-        else:
-            rgb_display = display_img_hwc
-
+        display_img_rgb = self._prepare_image_for_display(display_image)
+        
+        # Plot Input Image
         ax = axes[0, 0]
-        ax.imshow(rgb_display)
-        title = 'Input Image'
-        if label is not None: title += f'\nLabel: {label:.2f}'
-        ax.set_title(title, fontsize=16, fontweight='bold')
+        ax.imshow(display_img_rgb)
+        title_text = 'Input Image' if not self.is_scanning else 'Full Scene'
+        if label is not None: title_text += f'\nLabel: {label:.2f}'
+        ax.set_title(title_text, fontsize=16, fontweight='bold')
         ax.axis('off')
-        
-        def plot_layer(ax, layer_name, title_text, cmap='bwr'):
+
+        def plot_layer(ax, layer_name, title_text, cmap='jet'):
+            ax.axis('off')
             if layer_name in self.activations:
-                activation = self.activations[layer_name][0]
-                overlay = self.create_heatmap_overlay(rgb_display, activation, colormap=cmap)
+                # --- CHOOSE VISUALIZATION STRATEGY ---
+                if self.is_scanning and not self.snn:
+                    # New path for ANN scanning: use the list of activations
+                    patch_activations = self.activations[layer_name]
+                    patch_size = model_input.shape[2] # Get H from (T, C, H, W)
+                    overlay = self.create_scanning_heatmap_overlay(
+                        display_img_rgb, patch_activations, scan_path, patch_size, colormap=cmap
+                    )
+                else:
+                    # Old path for Static ANN and all SNNs (which use averaged maps)
+                    activation = self.activations[layer_name]
+                    if self.snn: # For SNN, activation is summed; avg for display
+                        activation = activation / self.num_steps
+                    overlay = self.create_static_heatmap_overlay(display_img_rgb, activation[0], colormap=cmap)
+
                 ax.imshow(overlay)
                 ax.set_title(title_text, fontsize=16, fontweight='bold')
-            else:
-                ax.text(0.5, 0.5, 'Layer Not Found', ha='center', va='center')
-            ax.axis('off')
 
-        plot_layer(axes[0, 1], 'opsin', 'Opsin Response')
-        plot_layer(axes[0, 2], 'lamina', 'Lamina Response')
-        plot_layer(axes[1, 0], 'med_c', 'Medulla Chromatic')
-        plot_layer(axes[1, 1], 'med_a', 'Medulla Achromatic')
-        plot_layer(axes[1, 2], 'lobula', 'Lobula Response', cmap='jet')
+                # Create a colorbar representing the colormap scale
+                norm = mcolors.Normalize(vmin=0, vmax=1) # Normalized from 0 to 1
+                mappable = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
+                fig.colorbar(mappable, ax=ax, shrink=0.75, aspect=20, label="Normalized Activation")
+            else:
+                ax.text(0.5, 0.5, 'Layer Not Found', ha='center', va='center', color='red')
+
+        # --- Map layers to plot locations ---
+        if self.snn:
+            plot_layer(axes[0, 1], 'opsin_lif', 'Opsin (Avg. Spikes)')
+            plot_layer(axes[0, 2], 'lamina_lif', 'Lamina (Avg. Spikes)')
+            plot_layer(axes[1, 0], 'med_lif', 'Medulla (Avg. Spikes)')
+            plot_layer(axes[1, 1], 'lobula_lif', 'Lobula (Avg. Spikes)')
+            plot_layer(axes[1, 2], 'asot_lif', 'ASOT (Avg. Spikes)')
+            plot_layer(axes[2, 0], 'aiot_lif', 'AIOT (Avg. Spikes)')
+        else: # ANN
+            plot_layer(axes[0, 1], 'opsin', 'Opsin Response')
+            plot_layer(axes[0, 2], 'lamina', 'Lamina Response')
+            plot_layer(axes[1, 0], 'med_c', 'Medulla Chromatic')
+            plot_layer(axes[1, 1], 'med_a', 'Medulla Achromatic')
+            plot_layer(axes[1, 2], 'lobula', 'Lobula Response')
+
         
-        ax = axes[2, 0]
+        # Plot Kenyon Cell Output
+        ax = axes[2, 2]
         kc_output = kc_output_sparse[0].cpu().numpy()
         active_indices = np.where(kc_output > 0)[0]
         grid_size = int(np.ceil(np.sqrt(len(kc_output))))
         kc_grid = np.zeros((grid_size, grid_size))
         kc_grid.flat[:len(kc_output)] = kc_output
-        ax.imshow(kc_grid, cmap='bwr', interpolation='nearest')
+        ax.imshow(kc_grid, cmap='jet', interpolation='nearest')
         ax.set_title(f'Kenyon Cells\n({len(active_indices)}/{len(kc_output)} active)', fontsize=16, fontweight='bold')
         ax.axis('off')
         
+        # Clean up unused axes
         axes[2, 1].axis('off')
-        axes[2, 2].axis('off')
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.96])
-        
         if save_path:
-            if not Path(save_path).is_absolute():
-                save_path = self.output_dir / save_path
-            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            full_save_path = Path(save_path)
+            if not full_save_path.is_absolute():
+                full_save_path = self.output_dir / save_path
+            plt.savefig(full_save_path, dpi=300, bbox_inches='tight')
         
         self.remove_hooks()
         return fig
 
-    # ============== Quantitative Methods (UPDATED Cosine Similarity) ==============
-    
     def evaluate_representations(self, features: np.ndarray, labels: np.ndarray, test_size: float = 0.2) -> Dict[str, float]:
+        """Performs a quantitative evaluation of feature representations."""
         results = {}
-        X_tr, X_te, y_tr, y_te = train_test_split(
-            features, labels, test_size=test_size, stratify=labels, random_state=42)
         
+        # Ensure there are enough samples for the split
+        if len(np.unique(labels)) > 1 and all(np.bincount(labels) > 1):
+             X_tr, X_te, y_tr, y_te = train_test_split(
+                features, labels, test_size=test_size, stratify=labels, random_state=42
+             )
+        else: # Cannot stratify, use entire dataset for testing
+            X_tr, X_te, y_tr, y_te = features, features, labels, labels
+        
+        # 1. K-Nearest Neighbors Classifier
         knn = KNeighborsClassifier(n_neighbors=5, metric="cosine")
         knn.fit(X_tr, y_tr)
         results['knn_accuracy'] = knn.score(X_te, y_te) * 100
-        
+
+        # 2. Linear Probe (Logistic Regression)
         probe = LogisticRegression(max_iter=1000, solver="saga", n_jobs=-1, random_state=42)
         probe.fit(X_tr, y_tr)
         results['linear_probe_accuracy'] = probe.score(X_te, y_te) * 100
-        
-        results['silhouette_score'] = silhouette_score(features, labels)
-        
-        km = KMeans(n_clusters=len(np.unique(labels)), n_init='auto', random_state=42).fit(features)
-        results['adjusted_rand_index'] = adjusted_rand_score(labels, km.labels_)
+
+        # 3. Silhouette Score for clustering quality
+        # Requires more than 1 label and less than n_samples-1 labels
+        if len(np.unique(labels)) > 1 and len(np.unique(labels)) < len(features):
+            results['silhouette_score'] = silhouette_score(features, labels, metric='cosine')
+        else:
+            results['silhouette_score'] = 0.0
+
+        # 4. K-Means Clustering + Adjusted Rand Index
+        if len(np.unique(labels)) > 1:
+            km = KMeans(n_clusters=len(np.unique(labels)), n_init='auto', random_state=42).fit(features)
+            results['adjusted_rand_index'] = adjusted_rand_score(labels, km.labels_)
+        else:
+            results['adjusted_rand_index'] = 0.0
+
         return results
 
-    def plot_class_similarity_matrix(self, features: np.ndarray, labels: np.ndarray, 
-                                     class_names: Optional[List[str]] = None, 
-                                     save_path: Optional[str] = None) -> plt.Figure:
-        """
-        ### NEW AND IMPROVED ###
-        Calculates and plots the cosine similarity between the MEAN feature vectors of each class.
-        """
-        unique_labels = np.unique(labels)
+    def plot_class_similarity_matrix(self, features: np.ndarray, labels: np.ndarray, class_names: Optional[List[str]] = None, save_path: Optional[str] = None) -> plt.Figure:
+        """Plots the cosine similarity between mean feature vectors of each class."""
+        unique_labels = sorted(np.unique(labels))
         
-        # Calculate the mean feature vector for each class
+        # Calculate mean feature vector for each class
         mean_features = np.array([features[labels == l].mean(axis=0) for l in unique_labels])
         
-        # Compute cosine similarity on the mean feature vectors
+        # Compute cosine similarity between these mean vectors
         cos_sim = cosine_similarity(mean_features)
         
+        # Setup plot
         fig, ax = plt.subplots(figsize=(10, 8))
         im = ax.imshow(cos_sim, cmap='viridis', vmin=0, vmax=1)
         
-        # Use provided class names or default to label numbers
+        # Configure ticks and labels
         if class_names is None:
             class_names = [f"Class {l}" for l in unique_labels]
         
-        # Set ticks and labels
         ax.set_xticks(np.arange(len(class_names)))
         ax.set_yticks(np.arange(len(class_names)))
         ax.set_xticklabels(class_names, rotation=45, ha="right")
         ax.set_yticklabels(class_names)
         
-        # Annotate heatmap with similarity values
+        # Add text annotations
         for i in range(len(class_names)):
             for j in range(len(class_names)):
                 text_color = "w" if cos_sim[i, j] < 0.5 else "k"
-                ax.text(j, i, f"{cos_sim[i, j]:.2f}",
-                       ha="center", va="center", color=text_color, fontsize=12)
+                ax.text(j, i, f"{cos_sim[i, j]:.2f}", ha="center", va="center", color=text_color, fontsize=12)
         
+        # Final touches
         plt.colorbar(im, label='Cosine Similarity')
         ax.set_title('Mean Feature Cosine Similarity per Class', fontsize=16, fontweight='bold')
-        
         plt.tight_layout()
-        if save_path:
-            if not Path(save_path).is_absolute(): save_path = self.output_dir / save_path
-            plt.savefig(save_path, dpi=300, bbox_inches='tight')
         
+        if save_path:
+            full_save_path = Path(save_path)
+            if not full_save_path.is_absolute():
+                 full_save_path = self.output_dir / save_path
+            plt.savefig(full_save_path, dpi=300, bbox_inches='tight')
+            
         return fig
 
     def plot_tsne(self, features: np.ndarray, labels: np.ndarray, perplexity: int = 30, save_path: Optional[str] = None) -> plt.Figure:
-        tsne = TSNE(n_components=2, perplexity=perplexity, init="pca", random_state=42)
-        tsne_features = tsne.fit_transform(features)
-        trust = trustworthiness(features, tsne_features, n_neighbors=10)
-        
+        """Generates and plots a t-SNE visualization of the features."""
         n_classes = len(np.unique(labels))
+        if len(features) <= perplexity:
+            print(f"Warning: Perplexity ({perplexity}) is too high for the number of samples ({len(features)}). Skipping t-SNE plot.")
+            return plt.figure() # Return an empty figure
+
+        # 1. Run t-SNE
+        tsne = TSNE(n_components=2, perplexity=perplexity, init="pca", random_state=42, metric='cosine')
+        tsne_features = tsne.fit_transform(features)
+        
+        # 2. Calculate Trustworthiness
+        trust = trustworthiness(features, tsne_features, n_neighbors=10, metric='cosine')
+        
+        # 3. Setup plot
+        fig, ax = plt.subplots(figsize=(12, 8))
         colors = plt.cm.tab20(np.linspace(0, 1, n_classes))
         
-        fig, ax = plt.subplots(figsize=(10, 8))
+        # 4. Scatter plot for each class
         for i in range(n_classes):
-            mask = labels == i
-            ax.scatter(tsne_features[mask, 0], tsne_features[mask, 1], c=[colors[i]], label=f'Class {i}', alpha=0.7, s=50)
-        
+            class_mask = (labels == i)
+            ax.scatter(tsne_features[class_mask, 0], tsne_features[class_mask, 1],
+                       c=[colors[i]], label=f'Class {i}', alpha=0.8, s=50)
+                       
+        # 5. Final touches
         ax.set_title(f't-SNE Visualization (Trustworthiness: {trust:.3f})', fontsize=14, fontweight='bold')
-        ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+        ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left')
         ax.axis('off')
-        plt.tight_layout()
+        plt.tight_layout(rect=[0, 0, 0.85, 1])
         
         if save_path:
-            if not Path(save_path).is_absolute(): save_path = self.output_dir / save_path
-            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            full_save_path = Path(save_path)
+            if not full_save_path.is_absolute():
+                 full_save_path = self.output_dir / save_path
+            plt.savefig(full_save_path, dpi=300, bbox_inches='tight')
+            
         return fig
 
-    # ============== Full Pipeline ==============
-
-    def denormalize_image(self, img_tensor: torch.Tensor) -> torch.Tensor:
-        return (img_tensor.clone() * 0.5 + 0.5).clamp(0, 1)
-
-    def visualize_batch(self, dataloader, n_samples: int = 4, use_random_sampling: bool = True):
-        """Processes and visualizes samples using either random or sequential sampling."""
-        print(f"\n{'='*50}")
-        sampling_mode = "Random" if use_random_sampling else "Sequential"
-        print(f"Generating visualizations for {n_samples} samples (Mode: {sampling_mode})")
-        print(f"{'='*50}\n")
-
+    def visualize_batch(self, dataloader, indices_to_process: List[int]):
+        """
+        Generates and saves layer analysis plots for a specific list of sample indices.
+        """
+        n_samples = len(indices_to_process)
+        print(f"\n{'='*50}\nGenerating visualizations for {n_samples} specific samples (one per class)\n{'='*50}\n")
+        
         dataset = dataloader.dataset
-        num_total_samples = len(dataset)
-        if n_samples > num_total_samples:
-            n_samples = num_total_samples
-
-        if use_random_sampling:
-            indices_to_process = np.random.choice(num_total_samples, n_samples, replace=False)
-        else:
-            indices_to_process = np.arange(n_samples)
 
         for i, sample_idx in enumerate(indices_to_process):
             print(f"Processing sample {i + 1}/{n_samples} (Dataset index: {sample_idx})...")
             
-            img_tensor_single, label = dataset[sample_idx]
-            img_tensor_batch = img_tensor_single.unsqueeze(0).to(self.device)
-            img_numpy_denorm = self.denormalize_image(img_tensor_single).cpu().numpy()
-            if isinstance(label, torch.Tensor): label = label.item()
+            # --- Unpack data from dataset ---
+            # This handles both (patch, label, _, _) and (timeseries, label, full_img, scan_path)
+            item = dataset[sample_idx]
+            input_tensor, label, full_image, scan_path = item[0], item[1], item[2], item[3]
             
+            # Use the patch itself as the display image if no full image is available
+            display_image = full_image if (isinstance(full_image, torch.Tensor) and full_image.numel() > 0) else input_tensor
+
+            if isinstance(label, torch.Tensor):
+                label = label.item()
+
             try:
-                save_filename = f'sample_idx_{sample_idx}_analysis.png'
+                save_filename = f'sample_idx_{sample_idx}_class_{label}_analysis.png'
                 fig = self.plot_full_layer_analysis(
-                    img_tensor_batch, img_numpy_denorm, sample_idx=sample_idx, label=label,
+                    input_tensor=input_tensor,
+                    display_image=display_image,
+                    sample_idx=sample_idx,
+                    label=label,
+                    scan_path=scan_path if self.is_scanning else None,
                     save_path=save_filename
                 )
-                plt.close(fig)
+                plt.close(fig) # Prevent plots from displaying in notebooks
                 print(f"  ✓ Analysis plot saved to {self.output_dir / save_filename}")
             except Exception as e:
-                print(f"  ✗ Error during analysis for sample index {sample_idx}: {str(e)}")
                 import traceback
+                print(f"  ✗ Error during analysis for sample index {sample_idx}: {e}")
                 traceback.print_exc()
 
         print(f"\nVisualizations saved to: {self.output_dir}")
 
-    def run_full_evaluation(self, dataloader, features: np.ndarray, labels: np.ndarray,
-                          n_visualization_samples: int = 4, use_random_sampling: bool = True) -> Dict[str, any]:
-        """Runs the complete evaluation pipeline."""
-        print("\n" + "="*60)
-        print("RUNNING FULL MODEL EVALUATION")
-        print("="*60 + "\n")
-        results = {}
+    def run_full_evaluation(self, dataloader, features: np.ndarray, labels: np.ndarray, is_scanning: bool = False):
+        """
+        Runs the complete evaluation pipeline, visualizing one sample from each class.
+
+        Args:
+            dataloader: The DataLoader for fetching samples for visualization.
+            features: Pre-extracted features from the model for the entire dataset.
+            labels: Corresponding labels for the features.
+            is_scanning: Boolean flag to indicate if data is from a scanning process.
+        """
+        print("\n" + "="*60 + "\nRUNNING FULL MODEL EVALUATION\n" + "="*60 + "\n")
         
-        print("1. Quantitative Evaluation")
-        print("-" * 30)
+        # Set the data mode for this evaluation run
+        self.is_scanning = is_scanning
+        results = {}
+
+        # 1. Quantitative Evaluation
+        print("1. Quantitative Evaluation\n" + "-" * 30)
         eval_metrics = self.evaluate_representations(features, labels)
         results['metrics'] = eval_metrics
         for metric, value in eval_metrics.items():
-            print(f"   {metric:<25}: {value:6.2f}" + ('%' if 'accuracy' in metric else ''))
-        
-        print("\n2. Generating Global Visualizations")
-        print("-" * 30)
-        
-        # Get class names from the dataset if they exist, for prettier plots
+            unit = '%' if 'accuracy' in metric else ''
+            print(f"   {metric:<25}: {value:6.2f}{unit}")
+
+        # 2. Representation-level Visualizations
+        print("\n2. Representation Space Analysis\n" + "-" * 30)
         class_names = getattr(dataloader.dataset, 'class_names', None)
         
-        # Use the new, more insightful class similarity plot
-        fig_cos = self.plot_class_similarity_matrix(features, labels, class_names=class_names, save_path='class_cosine_similarity.png')
+        fig_cos = self.plot_class_similarity_matrix(
+            features, labels, class_names=class_names, save_path='class_cosine_similarity.png'
+        )
         plt.close(fig_cos)
-        print("   ✓ Class similarity matrix")
+        print("   ✓ Class similarity matrix saved.")
         
         fig_tsne = self.plot_tsne(features, labels, save_path='tsne_visualization.png')
         plt.close(fig_tsne)
-        print("   ✓ t-SNE visualization")
+        print("   ✓ t-SNE visualization saved.")
         
-        print("\n3. Sample-wise Layer-by-Layer Analysis")
-        print("-" * 30)
-        self.visualize_batch(dataloader, n_samples=n_visualization_samples, use_random_sampling=use_random_sampling)
+        # 3. Sample-wise Qualitative Analysis (One sample per class)
+        print("\n3. Sample-wise Layer-by-Layer Analysis\n" + "-" * 30)
         
-        print("\n" + "="*60)
-        print("EVALUATION COMPLETE")
-        print(f"Results saved to: {self.output_dir}")
-        print("="*60 + "\n")
+        unique_labels = sorted(np.unique(labels))
+        indices_to_visualize = []
+        for label_val in unique_labels:
+            # Find the dataset index of the first sample with this label
+            try:
+                first_occurrence_idx = np.where(labels == label_val)[0][0]
+                indices_to_visualize.append(int(first_occurrence_idx))
+            except IndexError:
+                print(f"Warning: Could not find any samples for label {label_val} to visualize.")
         
+        if indices_to_visualize:
+            print(f"   Selected one sample from each of the {len(unique_labels)} classes for visualization.")
+            print(f"   Dataset indices to be plotted: {indices_to_visualize}")
+            self.visualize_batch(dataloader, indices_to_process=indices_to_visualize)
+        
+        print("\n" + "="*60 + "\nEVALUATION COMPLETE\n" + f"Results saved to: {self.output_dir}\n" + "="*60 + "\n")
         return results
