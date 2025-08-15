@@ -1,4 +1,4 @@
-# ApiaViz - A neural network model of the honeybee _Apis mellifera_ visual system
+# ApiaViz - A bio-inspired neural network model of the insect visual system for natural scene understanding.
 ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
 [![Documentation Status](https://readthedocs.org/projects/apiaviz/badge/?version=latest&style=flat)](https://apiaviz.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -7,11 +7,12 @@
 
 _TODO: Animation/GIF of ApiaViz demo_
 
-This respository contains code for ApiaViz, a neural network model of honeybee vision. ApiaViz is built using [PyTorch](https://pytorch.org/).
+This respository contains code for ApiaViz, a neural network model of insect vision using [Python](https://www.python.org/) and [PyTorch](https://pytorch.org/) for understanding natural scenes and environments. There are two versions of the model provided:
 
-Get started easily by following our simple installation and quickstart instructions, below.
+- An Artificial Neural Network (**ANN**) 
+- A Spiking Neural Network (**SNN**) implemented in [SNNTorch](https://open-neuromorphic.org/neuromorphic-computing/software/snn-frameworks/snntorch/)
 
-_For more information, please visit the [ApiaViz documentation](https://apianet.readthedocs.io/en/latest/)._
+Get started easily by following our simple installation and quickstart instructions, below. _For more information, please visit the [ApiaViz documentation](https://apianet.readthedocs.io/en/latest/)._
 
 ## Installation
 ApiaNet uses [pixi](https://prefix.dev/) to install and manage Python and dependencies. If you have not already installed it, run the following in your command terminal:
@@ -65,6 +66,7 @@ To change the evaluation method from the full image to a **scanning view**, we c
 ```console
 pixi run eval -sc
 ```
+_For a full list of command line arguments, please visit the [ApiaViz documentation](https://apiaviz.readthedocs.io/en/latest/)._
 
 ## Using the vision model externally
 
@@ -85,15 +87,39 @@ state_dict = torch.load('./apiaviz/models/SNNVisionModel.pth', weights_only=True
 snnvisionmodel.load_state_dict(state_dict, strict=False)
 snnvisionmodel.eval()
 ```
+The **ANN** uses single image tensors of shape `[B, C, W, H]` whereas the **SNN** uses temporal sequences of image tensors of shape `[T, B, C, W, H]`, where `T` is the timesteps, `B` is the batch, `C` is the channel, and `W/H` is the width and height. Importantly, the vision systems only process **Blue** and **Green** channels, so if working with RGB images please ensure you are selecting the appropriate color channels:
+
+```python
+import torch
+
+# Generate random input
+ann_input = torch.randn(128, 2, 75, 75) # shape [B, C, W, H]
+snn_input = torch.randn(25, 128, 2, 75, 75) # shape [T, B, C, W, H]
+
+# Pass through corresponding model
+KC_output_ann = visionmodel(ann_input)
+KC_output_snn = snnvisionmodel(snn_input) 
+```
+This will return a sparse Kenyon Cell output of size `[B, 1024]` and `[T, B, 1024]` for the **ANN** and **SNN**, respectively.
+
 For more details and a full guide, please visit the [ApiaViz documentation](https://apiaviz.readthedocs.io/en/latest/).
 
-### Train and evaluate a new agent
-_TODO_
+### Training new models
+We provide pre-trained models for ApiaViz using the [Tiny ImageNet dataset](https://huggingface.co/datasets/zh-plus/tiny-imagenet), however if you would wish to train on another dataset or try different hyperparameters you can easily re-train the **ANN** and **SNN** models.
 
 ```console
+# Optional: download the Tiny ImageNet dataset
+pixi run get_tinyimg
+
+# Run the training
 pixi run train
-pixi run eval
+
+# Train the SNN
+pixi run train -s
 ```
+_If not using `CUDA` or `MPS` as your device, a warning will be shown indicating that training will be very slow. Training the SNN requires a GPU device with a high amount of memory (>30GB) and is recommended to use a high performance computing (HPC) cluster._
+
+
 
 For more information, please refer to the [ApiaViz documentation](https://apiaviz.readthedocs.io/en/latest/).
 

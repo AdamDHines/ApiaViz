@@ -90,7 +90,10 @@ class TrainVision(nn.Module):
                 transforms.Normalize([0.5, 0.5], [0.5, 0.5]),
             ])
 
-        ds_root = "./apiaviz/dataset/tiny-imagenet/train"
+        ds_root = f"{self.dataset_dir}/{self.training_dataset}"
+        # append the train directory if using Tiny ImageNet
+        if self.training_dataset == "tiny-imagenet": 
+            ds_root = f"{ds_root}/train"
         if self.snn:
             # SNN mode: pass snn_mode=True and num_steps to the dataset
             train_ds = TinyImageNetPairDataset(

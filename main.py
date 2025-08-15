@@ -67,6 +67,8 @@ def parse_args():
                         help='Batch size for training')
     parser.add_argument('--lr', type=float, default=1e-4,
                         help='Learning rate for training')
+    parser.add_argument('--training_dataset', type=str, default='tiny-imagenet',
+                        help='Dataset to use for training')
     
     # Evaluation parameters
     parser.add_argument('--eval_samples', type=int, default=128,
