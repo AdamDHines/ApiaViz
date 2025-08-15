@@ -24,15 +24,16 @@ import argparse
 
 from apiaviz.src.eval import EvalVision
 from apiaviz.src.train import TrainVision
+from apiaviz.src.logger import model_logger
 
-def apianet_eval(args):
+def apianet_eval(args, logger, output_folder):
     # Initialize the evaluation class
-    evaluator = EvalVision(args)
+    evaluator = EvalVision(args, logger, output_folder)
     evaluator.eval()
 
-def apianet_train(args):
+def apianet_train(args, logger, output_folder):
     # Initialize the training class
-    trainer = TrainVision(args)
+    trainer = TrainVision(args, logger, output_folder)
     trainer.train()
 
 def parse_args():
@@ -41,20 +42,24 @@ def parse_args():
     '''
     parser = argparse.ArgumentParser(description="Args for default configuration")
 
-    # Training or evaluation mode
-    parser.add_argument('--mode', type=str, default='eval', choices=['train', 'eval'],
+    # Opertaion modes
+    parser.add_argument('-m', '--mode', type=str, default='eval', choices=['train', 'eval'],
                         help='Mode to run: training or evaluation network')
     
-    # Artificial or spiking mode
-    parser.add_argument('--snn', action='store_true',
+    # Vision Module parameters
+    parser.add_argument('-s', '--snn',  action='store_true',
                         help='Use artificial neural network (default)')
     parser.add_argument('--num_steps', type=int, default=25,
                         help='Number of time steps for SNN simulation (default: 100)')
     parser.add_argument('--patch_size', type=int, default=75,  
-                        help='Size of the input patches (default: 28x28)')
+                        help='Size of the input patches')
+    parser.add_argument('-vm', '--vision_model', type=str, default='VisionModel',
+                        help='Name of the vision model for saving/loading')
+    parser.add_argument('-svm', '--snn_vision_model', type=str, default='SNNVisionModel',
+                        help='Name of the SNN vision model for saving/loading')
     
     # Training parameters
-    parser.add_argument('--epochs', type=int, default=20,
+    parser.add_argument('-e', '--epochs', type=int, default=20,
                         help='Number of epochs to train modules')
     parser.add_argument('--train_samples', type=int, default=100_000,
                         help='Number of training samples to use')
@@ -62,48 +67,35 @@ def parse_args():
                         help='Batch size for training')
     parser.add_argument('--lr', type=float, default=1e-4,
                         help='Learning rate for training')
-    parser.add_argument('--models_dir', type=str, default='./apiaviz/models/',
-                        help='Directory to save and load models')
     
     # Evaluation parameters
-    parser.add_argument('--eval_samples', type=int, default=500,
+    parser.add_argument('--eval_samples', type=int, default=128,
                         help='Number of samples to use for evaluation')
     parser.add_argument('--eval_batch_size', type=int, default=128,
                         help='Batch size for evaluation')
-    parser.add_argument('--outdir', type=str, default='./apiaviz/output/',
-                        help='Directory to save evaluation results')
-    parser.add_argument('--n_eval_plots', type=int, default=10,
-                        help='Number of evaluation plots to generate')
-    parser.add_argument('--eval_plot_random', action='store_true',
-                        help='Use random sampling for evaluation plots')
-    parser.add_argument('--ind_plots', type=str, default='batch',
-                        choices=['ind', 'batch'], help='Plots over individual or batch samples')
     
     # Evaluation dataset parameters
-    parser.add_argument("--eval_dataset", default="flowers", choices=["synthetic", "faces", "flowers", "variety"],
+    parser.add_argument('-d', '--eval_dataset', default="flowers", choices=["synthetic", "faces", "flowers", "variety", "nordland"],
                         help="evaluation dataset to use")
-    parser.add_argument('--green_pct_high', type=int, default=90,
-                        help='Percentage of green in the dataset (for synthetic dataset)')
-    parser.add_argument('--green_pct_low', type=int, default=10,
-                        help='Percentage low of green in the dataset (for synthetic dataset)')
-    parser.add_argument('--patching', action='store_true',
-                        help='Use patching for the evaluation dataset')
-    parser.add_argument('--scanning', action='store_true',
+    parser.add_argument('-sc', '--scanning', action='store_true',
                         help='Use scanning for the evaluation dataset')
     
-    # Model names
-    parser.add_argument('--vision_model', type=str, default='VisionModel',
-                        help='Name of the vision model for saving/loading')
-    parser.add_argument('--snn_vision_model', type=str, default='SNNVisionModel',
-                        help='Name of the SNN vision model for saving/loading')
+    # Project directories
+    parser.add_argument('--models_dir', type=str, default='./apiaviz/models/',
+                        help='Directory to save and load models')
+    parser.add_argument('--dataset_dir', type=str, default='./apiaviz/dataset/',
+                        help='Directory where datasets are stored')
+    parser.add_argument('--output_dir', type=str, default='./apiaviz/output/',
+                        help='Directory to save evaluation results')
     
     # Output base configuration
     args = parser.parse_args()
-
+    logger, output_dir = model_logger(args)
+    
     if args.mode == 'train':
-        apianet_train(args)
+        apianet_train(args, logger, output_dir)
     elif args.mode == 'eval':
-        apianet_eval(args)
+        apianet_eval(args, logger, output_dir)
 
 if __name__ == "__main__":
     args = parse_args()

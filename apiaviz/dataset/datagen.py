@@ -1,11 +1,8 @@
 # Imports
-import os
-import cv2
-import math
-import torch
-import random
+import os, cv2, math, torch, random
 
 import numpy as np
+from typing import List, Tuple
 
 from pathlib import Path
 from enum import Enum, auto
@@ -83,138 +80,115 @@ class DataMode(Enum):
 
 class InsectVisionDataset(Dataset):
     """
-    A unified dataset for loading insect vision data in various formats.
-
-    This class can operate in three modes, configurable via the `mode` parameter:
-    1.  STATIC_FULL:    Yields the entire source image, resized if necessary.
-    2.  STATIC_PATCH:   Yields a single random patch from a source image.
-    3.  SCANNING_PATCH: Yields a time-series of patches that form a smooth
-                        scan path across the source image.
+    A unified and robust dataset for loading insect vision data in various formats.
+    This version correctly handles non-square images and auto-adjusts the patch size
+    if it is larger than the source image.
     """
-    def __init__(self, root, dataset, mode = DataMode, patch_size = None, samples_per_image = 100, num_steps = None):
+    def __init__(self, root, dataset, mode, logger, patch_size = None, samples_per_image = 100, num_steps = None):
         """
         Args:
-            root (str): The root directory of the dataset.
+            root (str): The root directory containing dataset folders.
+            dataset (str): The name of the specific dataset folder (e.g., "flowers").
             mode (DataMode): The operating mode (STATIC_FULL, STATIC_PATCH, or SCANNING_PATCH).
-            patch_size (Optional[int]): The size (height and width) of the patches.
-                                        Required for STATIC_PATCH and SCANNING_PATCH modes.
-            samples_per_image (int): How many samples (patches or scan paths) to generate
-                                     per source image. Not used in STATIC_FULL mode.
-            num_steps (Optional[int]): The number of steps in a scanning time-series.
-                                       Required for SCANNING_PATCH mode.
+            patch_size (Optional[int]): The desired size (height and width) of the patches.
+            samples_per_image (int): Samples to generate per source image.
+            num_steps (Optional[int]): Number of steps in a scanning time-series.
         """
         combined_root = os.path.join(root, dataset)
         self.root = Path(combined_root)
         self.dataset = dataset
+        self.logger = logger
         self.mode = mode
         self.patch_size = patch_size
         self.samples_per_image = samples_per_image
         self.num_steps = num_steps
 
         # --- Validate mode-specific arguments ---
-        if self.mode in [DataMode.STATIC_PATCH, DataMode.SCANNING_PATCH]:
-            if self.patch_size is None:
-                raise ValueError("`patch_size` must be provided for patch-based modes.")
-        if self.mode == DataMode.SCANNING_PATCH:
-            if self.num_steps is None:
-                raise ValueError("`num_steps` must be provided for SCANNING_PATCH mode.")
+        if self.mode in [DataMode.STATIC_PATCH, DataMode.SCANNING_PATCH] and self.patch_size is None:
+            raise ValueError("`patch_size` must be provided for patch-based modes.")
+        if self.mode == DataMode.SCANNING_PATCH and self.num_steps is None:
+            raise ValueError("`num_steps` must be provided for SCANNING_PATCH mode.")
 
         # --- Load image paths and class names ---
-        self.source_images = []
+        self.source_images: List[Tuple[Image.Image, int]] = []
         if self.dataset == "flowers":
-            self.class_names = ['lavender-resized', 'sunflower-resized', 'rose-resized']
-        else:
-            self.class_names = ['goldfish1','goldfish2','ball','roads','car','fruit','bird']
+            self.class_names = ['lavender','sunflower','rose']
+        elif self.dataset == "nordland":
+            self.class_names = ['summer','spring','fall','winter']
+        else: 
+            self.class_names = ['goldfish1', 'goldfish2', 'ball', 'roads', 'car', 'fruit', 'bird']
+            
         self.class_to_idx = {name: i for i, name in enumerate(self.class_names)}
         self.to_tensor = transforms.ToTensor()
 
-        print("Loading dataset...")
+        self.logger.info("Loading dataset...")
         for class_name, class_idx in self.class_to_idx.items():
             class_dir = self.root / class_name
-            print(class_dir)
+            self.logger.info(f"Checking directory: {class_dir}")
             if not class_dir.is_dir():
-                print(f"Warning: Directory not found: {class_dir}")
+                self.logger.info(f"Warning: Directory not found: {class_dir}")
                 continue
             
             for fp in sorted(class_dir.glob('*.*')):
                 if fp.name.startswith('.'): continue
                 try:
-                    # Keep images as PIL objects to save memory, convert to tensor on the fly
                     img = Image.open(fp).convert('RGB')
                     self.source_images.append((img, class_idx))
                 except Exception as e:
-                    print(f"Warning: Could not load image {fp}. Error: {e}")
+                    self.logger.info(f"Warning: Could not load image {fp}. Error: {e}")
 
         if not self.source_images:
             raise RuntimeError(f"No images found under the specified root: {self.root}")
 
-        print(f"Dataset loaded. Total source images: {len(self.source_images)}.")
+        self.logger.info(f"\n Dataset loaded. Total source images: {len(self.source_images)}. \n")
 
-    def __len__(self):
+    def __len__(self) -> int:
         """Returns the total number of samples in the dataset."""
         if self.mode == DataMode.STATIC_FULL:
             return len(self.source_images)
         else:
             return len(self.source_images) * self.samples_per_image
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int):
         """
         Returns a single data sample, formatted consistently across all modes.
-
-        Returns:
-            Tuple[torch.Tensor, int, torch.Tensor, list]: A tuple containing:
-            - input_tensor: The data to be fed into the model (full image, patch, or time-series).
-            - label: The integer class label.
-            - source_image: The original full-resolution source image (as a tensor).
-            - scan_path: A tuple of (path_x, path_y) for scanning mode, otherwise an empty list.
         """
-        # Determine which source image to use
-        if self.mode == DataMode.STATIC_FULL:
-            source_idx = idx
-        else:
-            source_idx = idx // self.samples_per_image
+        source_idx = idx if self.mode == DataMode.STATIC_FULL else idx // self.samples_per_image
 
         source_img_pil, label = self.source_images[source_idx]
         source_img_tensor = self.to_tensor(source_img_pil)
-        
-        # --- Mode-specific logic ---
+        _, H, W = source_img_tensor.shape
 
         if self.mode == DataMode.STATIC_FULL:
-            # The input is the full image itself (GB channels only)
-            input_tensor = source_img_tensor[1:3]
-            scan_path = []
-            return input_tensor, label, source_img_tensor, scan_path
+            return source_img_tensor[1:3], label, source_img_tensor, []
 
+        # --- BUG FIX & FEATURE: Auto-adjust patch size and ensure safe boundaries ---
+        
+        # 1. If patch_size is too big, use the smaller of the image's dimensions.
+        effective_patch_size = min(self.patch_size, H, W)
+
+        # 2. Calculate maximum valid starting coordinates, ensuring they are not negative.
+        max_y = max(0, H - effective_patch_size)
+        max_x = max(0, W - effective_patch_size)
+        
         if self.mode == DataMode.STATIC_PATCH:
-            _, H, W = source_img_tensor.shape
-            max_y = H - self.patch_size
-            max_x = W - self.patch_size
-            
-            # Generate a single random crop
             y0 = random.randint(0, max_y)
             x0 = random.randint(0, max_x)
-            patch = source_img_tensor[:, y0:y0 + self.patch_size, x0:x0 + self.patch_size]
-            
-            # Input is the patch (GB channels)
-            input_tensor = patch[1:3]
-            scan_path = []
-            return input_tensor, label, source_img_tensor, scan_path
+            patch = source_img_tensor[:, y0:y0 + effective_patch_size, x0:x0 + effective_patch_size]
+            return patch[1:3], label, source_img_tensor, []
 
         if self.mode == DataMode.SCANNING_PATCH:
-            _, H, W = source_img_tensor.shape
-            max_y = H - self.patch_size
-            max_x = W - self.patch_size
-            
-            # Generate a smooth path for the patch
+            # 3. Generate a path within the correct rectangular bounds.
             path_x, path_y = generate_smooth_scan_path(self.num_steps, max_x, max_y)
             
             patches = []
             for i in range(self.num_steps):
                 y0, x0 = path_y[i], path_x[i]
-                crop = source_img_tensor[:, y0:y0 + self.patch_size, x0:x0 + self.patch_size]
-                patches.append(crop[1:3]) # Keep only Green and Blue channels
+                # 4. Crop using the effective (potentially adjusted) patch size.
+                crop = source_img_tensor[:, y0:y0 + effective_patch_size, x0:x0 + effective_patch_size]
+                patches.append(crop[1:3])
             
-            # Input is the stacked time-series of patches
+            # This stack operation is now safe.
             input_tensor = torch.stack(patches)
             scan_path = (path_x, path_y)
             return input_tensor, label, source_img_tensor, scan_path

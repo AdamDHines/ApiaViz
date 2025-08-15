@@ -37,18 +37,24 @@ def absolute_threshold_sparsity(x, threshold=0.25):
     mask = (x > threshold).float()
     return x * mask
 
-def generate_smooth_scan_path(num_steps: int, max_coord: int, num_waypoints: int = 5) -> tuple[torch.Tensor, torch.Tensor]:
+def generate_smooth_scan_path(num_steps: int, max_x: int, max_y: int, num_waypoints: int = 100) -> tuple[np.ndarray, np.ndarray]:
     """
-    Generates a 2D smooth scanning path. This version guarantees the correct output length.
+    Generates a 2D smooth scanning path within rectangular bounds (max_x, max_y).
+    This version correctly handles non-square images.
     """
-    waypoints_x = np.random.randint(0, max_coord + 1, num_waypoints)
-    waypoints_y = np.random.randint(0, max_coord + 1, num_waypoints)
+    # Generate random waypoints within the separate x and y boundaries
+    waypoints_x = np.random.randint(0, max_x + 1, num_waypoints)
+    waypoints_y = np.random.randint(0, max_y + 1, num_waypoints)
+    
+    # Create the time points for the waypoints and the full path
     control_points = np.linspace(0, num_steps - 1, num_waypoints)
     full_timeline = np.arange(num_steps)
+    
+    # Interpolate x and y paths independently
     path_x = np.interp(full_timeline, control_points, waypoints_x)
     path_y = np.interp(full_timeline, control_points, waypoints_y)
 
-    return torch.from_numpy(path_x.astype(np.int32)), torch.from_numpy(path_y.astype(np.int32))
+    return path_x.astype(np.int32), path_y.astype(np.int32)
 
 # ────────── k-Winner Takes All functions ──────────
 class AdaptiveKWTA(nn.Module):
@@ -81,64 +87,6 @@ class AdaptiveKWTA(nn.Module):
         mask = torch.zeros_like(x).scatter_(1, idx, 1.0)
         
         return x * mask
-    
-class SNNAdaptiveKWTA(nn.Module):
-    """
-    Spiking-aware Adaptive K-Winners-Take-All layer.
-    
-    This version includes the CORRECTED Straight-Through Estimator to ensure
-    the gradient path is not broken.
-    """
-    def __init__(self, sparsity=0.05, momentum=0.9, reset_mechanism="reset"):
-        super().__init__()
-        self.sparsity = sparsity
-        self.momentum = momentum
-        self.reset_mechanism = reset_mechanism
-        
-        self.register_buffer('running_mean', None)
-        self.register_buffer('thresholds', torch.tensor(1.0))
-
-    def forward(self, mem, time_step=0):
-        if self.running_mean is None:
-            self.running_mean = torch.zeros(mem.size(1), device=mem.device)
-            self.thresholds = torch.ones(mem.size(1), device=mem.device)
-
-        mem_adjusted = mem / (self.thresholds.unsqueeze(0) if self.thresholds.dim() > 0 else self.thresholds)
-        
-        k = max(1, int(self.sparsity * mem.size(1)))
-        
-        # --- FORWARD PASS: Generate hard, non-differentiable spikes ---
-        with torch.no_grad(): # Explicitly no_grad for clarity, topk is non-diff anyway
-             _, idx = torch.topk(mem_adjusted, k, dim=1)
-        spk_hard = torch.zeros_like(mem_adjusted).scatter_(1, idx, 1.0)
-        
-        # --- BACKWARD PASS: Create the surrogate gradient path ---
-        # This is the crucial, corrected line.
-        # It ensures the forward pass uses `spk_hard`, but the backward pass
-        # computes gradients as if the operation was just `mem_adjusted`.
-        spk = (spk_hard - mem_adjusted).detach() + mem_adjusted
-        
-        # --- Update running statistics (no gradient needed here) ---
-        with torch.no_grad():
-            batch_mean = spk_hard.float().mean(dim=0) # Use the real spikes for stats
-            self.running_mean = self.momentum * self.running_mean + (1 - self.momentum) * batch_mean
-            self.thresholds = 1.0 + 2.0 * (self.running_mean - self.sparsity).clamp(min=0)
-
-        # --- Reset membrane potential of neurons that fired ---
-        if self.reset_mechanism == "subtract":
-            mem_after_spike = mem - (spk_hard * self.thresholds.unsqueeze(0))
-        else: # "zero"
-            mem_after_spike = mem * (1 - spk_hard)
-            
-        return spk, mem_after_spike
-    
-def k_wta(x, pct=.05):
-    k = max(1, int(pct * x.size(1)))
-    topk, idx = torch.topk(x, k, dim=1)
-    mask = torch.zeros_like(x).scatter_(1, idx, 1.0)
-    y = x * mask        # forward: hard sparsity
-    # backward: pretend mask is constant
-    return (y - x).detach() + x
 
 # ────────── Sparse linear function ──────────
 class SparseLinear(nn.Module):
@@ -183,15 +131,15 @@ class ModelEvaluator:
     - 'scanning': Processing a time-series of patches that scan across a larger image.
     """
 
-    def __init__(self, model: nn.Module, device: str = 'cuda', output_dir: Optional[Path] = None, snn_params: Optional[Dict] = None):
+    def __init__(self, model, logger, device, output_dir=None, snn_params=None, kc_decay_factor=0.9):
         """Initializes the evaluator."""
         self.model = model
         self.device = device
         self.model.to(device)
         self.model.eval()
+        self.logger = logger
 
-        self.output_dir = output_dir or Path('./apiaviz/evaluation_outputs')
-        self.output_dir.mkdir(exist_ok=True)
+        self.output_dir = output_dir
 
         self.activations = {}
         self.hooks = []
@@ -199,10 +147,8 @@ class ModelEvaluator:
         self.snn = snn_params is not None
         self.snn_params = snn_params or {}
         self.num_steps = self.snn_params.get('num_steps', 25)
-        if self.snn:
-            print("[Evaluator] SNN mode enabled.")
 
-        self.is_scanning = False
+        self.kc_decay_factor = kc_decay_factor
 
     def bernoulli_spikes(self, x: torch.Tensor, rate_scale: float = 1.5) -> torch.Tensor:
         """Converts a rate-coded tensor to Bernoulli spikes."""
@@ -244,7 +190,7 @@ class ModelEvaluator:
                 h = layer.register_forward_hook(get_activation(name))
                 self.hooks.append(h)
             except AttributeError:
-                print(f"Warning: Layer '{name}' not found in model. Skipping hook.")
+                self.logger.info(f"Warning: Layer '{name}' not found in model. Skipping hook.")
 
     def remove_hooks(self):
         """Removes all registered hooks."""
@@ -368,13 +314,10 @@ class ModelEvaluator:
                                  scan_path = None, save_path: Optional[str] = None) -> plt.Figure:
         """
         Creates a comprehensive grid showing activations from key network layers.
-        This function now correctly handles all static and scanning data visualizations.
+        This version uses a leaky integrator for scanning ANN Kenyon Cell outputs.
         """
-        self.model.eval()
-        self.activations = {}
+        self.model.eval(); self.activations = {}
 
-        # --- Prepare Model Input & Determine Layers ---
-        # (This part of the logic remains the same as your last working version)
         if self.snn:
             layers_to_hook = ['opsin_lif', 'lamina_lif', 'med_lif', 'lobula_lif', 'asot_lif', 'aiot_lif', 'lot_lif']
             model_input = input_tensor.unsqueeze(1).to(self.device) if self.is_scanning else self._convert_static_to_spiking_single(input_tensor)
@@ -388,12 +331,30 @@ class ModelEvaluator:
         with torch.no_grad():
             if self.snn:
                 output = self.model(model_input, num_steps=self.num_steps)
-                kc_output_sparse = output.sum(dim=0)
-            elif not self.is_scanning:
+                kc_output_sparse = output.sum(dim=0) # Sum over time
+            
+            elif not self.is_scanning: # Static ANN
                 kc_output_sparse = self.model(model_input.unsqueeze(0))
-            else: # ANN Scanning
-                outputs = [self.model(model_input[t].unsqueeze(0)) for t in range(model_input.shape[0])]
-                kc_output_sparse = torch.mean(torch.cat(outputs, dim=0), dim=0, keepdim=True)
+            
+            else: # ANN Scanning with Leaky Integrator
+                
+                # Initialize the accumulator for the KC output
+                accumulated_kc_output = None
+                
+                # Loop through each patch in the time-series
+                for t in range(model_input.shape[0]):
+                    # Get the output for the current patch
+                    # This call also triggers the hooks to save intermediate layer activations
+                    current_output = self.model(model_input[t].unsqueeze(0))
+                    
+                    if accumulated_kc_output is None:
+                        # For the first patch, the accumulator is just the output
+                        accumulated_kc_output = current_output
+                    else:
+                        # For subsequent patches, decay the old value and add the new one
+                        accumulated_kc_output = (self.kc_decay_factor * accumulated_kc_output) + current_output
+                
+                kc_output_sparse = accumulated_kc_output
         
         # --- Plotting ---
         fig, axes = plt.subplots(3, 3, figsize=(18, 18))
@@ -445,6 +406,7 @@ class ModelEvaluator:
             plot_layer(axes[1, 1], 'lobula_lif', 'Lobula (Avg. Spikes)')
             plot_layer(axes[1, 2], 'asot_lif', 'ASOT (Avg. Spikes)')
             plot_layer(axes[2, 0], 'aiot_lif', 'AIOT (Avg. Spikes)')
+            plot_layer(axes[2, 1], 'lot_lif', 'LOT (Avg. Spikes)')
         else: # ANN
             plot_layer(axes[0, 1], 'opsin', 'Opsin Response')
             plot_layer(axes[0, 2], 'lamina', 'Lamina Response')
@@ -561,7 +523,7 @@ class ModelEvaluator:
         """Generates and plots a t-SNE visualization of the features."""
         n_classes = len(np.unique(labels))
         if len(features) <= perplexity:
-            print(f"Warning: Perplexity ({perplexity}) is too high for the number of samples ({len(features)}). Skipping t-SNE plot.")
+            self.logger.info(f"Warning: Perplexity ({perplexity}) is too high for the number of samples ({len(features)}). Skipping t-SNE plot.")
             return plt.figure() # Return an empty figure
 
         # 1. Run t-SNE
@@ -600,12 +562,12 @@ class ModelEvaluator:
         Generates and saves layer analysis plots for a specific list of sample indices.
         """
         n_samples = len(indices_to_process)
-        print(f"\n{'='*50}\nGenerating visualizations for {n_samples} specific samples (one per class)\n{'='*50}\n")
+        self.logger.info(f"\n{'='*50}\nGenerating visualizations for {n_samples} specific samples (one per class)\n{'='*50}\n")
         
         dataset = dataloader.dataset
 
         for i, sample_idx in enumerate(indices_to_process):
-            print(f"Processing sample {i + 1}/{n_samples} (Dataset index: {sample_idx})...")
+            self.logger.info(f"Processing sample {i + 1}/{n_samples} (Dataset index: {sample_idx})...")
             
             # --- Unpack data from dataset ---
             # This handles both (patch, label, _, _) and (timeseries, label, full_img, scan_path)
@@ -629,17 +591,18 @@ class ModelEvaluator:
                     save_path=save_filename
                 )
                 plt.close(fig) # Prevent plots from displaying in notebooks
-                print(f"  ✓ Analysis plot saved to {self.output_dir / save_filename}")
+                self.logger.info(f"  ✓ Analysis plot saved to {self.output_dir / save_filename}")
             except Exception as e:
                 import traceback
-                print(f"  ✗ Error during analysis for sample index {sample_idx}: {e}")
+                self.logger.info(f"  ✗ Error during analysis for sample index {sample_idx}: {e}")
                 traceback.print_exc()
 
-        print(f"\nVisualizations saved to: {self.output_dir}")
+        self.logger.info(f"\nVisualizations saved to: {self.output_dir}")
 
     def run_full_evaluation(self, dataloader, features: np.ndarray, labels: np.ndarray, is_scanning: bool = False):
         """
-        Runs the complete evaluation pipeline, visualizing one sample from each class.
+        Runs the complete evaluation pipeline. This version safely handles cases where
+        classes have only one sample by skipping the quantitative evaluation.
 
         Args:
             dataloader: The DataLoader for fetching samples for visualization.
@@ -647,51 +610,61 @@ class ModelEvaluator:
             labels: Corresponding labels for the features.
             is_scanning: Boolean flag to indicate if data is from a scanning process.
         """
-        print("\n" + "="*60 + "\nRUNNING FULL MODEL EVALUATION\n" + "="*60 + "\n")
+        self.logger.info("\n" + "="*60 + "\nRUNNING FULL MODEL EVALUATION\n" + "="*60 + "\n")
         
         # Set the data mode for this evaluation run
         self.is_scanning = is_scanning
         results = {}
 
-        # 1. Quantitative Evaluation
-        print("1. Quantitative Evaluation\n" + "-" * 30)
-        eval_metrics = self.evaluate_representations(features, labels)
-        results['metrics'] = eval_metrics
-        for metric, value in eval_metrics.items():
-            unit = '%' if 'accuracy' in metric else ''
-            print(f"   {metric:<25}: {value:6.2f}{unit}")
+        # --- Pre-computation Check for Quantitative Evaluation ---
+        # Count samples per class to see if splitting is possible.
+        unique_labels, counts = np.unique(labels, return_counts=True)
+        can_run_quantitative_eval = all(counts >= 2)
 
-        # 2. Representation-level Visualizations
-        print("\n2. Representation Space Analysis\n" + "-" * 30)
+        # 1. Quantitative Evaluation
+        self.logger.info("1. Quantitative Evaluation\n" + "-" * 30)
+        
+        if can_run_quantitative_eval:
+            self.logger.info("   All classes have 2 or more samples. Running quantitative metrics...")
+            eval_metrics = self.evaluate_representations(features, labels)
+            results['metrics'] = eval_metrics
+            for metric, value in eval_metrics.items():
+                unit = '%' if 'accuracy' in metric else ''
+                self.logger.info(f"   {metric:<25}: {value:6.2f}{unit}")
+        else:
+            self.logger.info("   SKIPPING quantitative metrics (KNN, Linear Probe, etc.).")
+            self.logger.info("   Reason: At least one class has fewer than 2 samples, which is required for data splitting.")
+
+        # 2. Representation-level Visualizations (These run regardless)
+        self.logger.info("\n2. Representation Space Analysis\n" + "-" * 30)
         class_names = getattr(dataloader.dataset, 'class_names', None)
         
         fig_cos = self.plot_class_similarity_matrix(
             features, labels, class_names=class_names, save_path='class_cosine_similarity.png'
         )
         plt.close(fig_cos)
-        print("   ✓ Class similarity matrix saved.")
+        self.logger.info("   ✓ Class similarity matrix saved.")
         
         fig_tsne = self.plot_tsne(features, labels, save_path='tsne_visualization.png')
         plt.close(fig_tsne)
-        print("   ✓ t-SNE visualization saved.")
+        self.logger.info("   ✓ t-SNE visualization saved.")
         
         # 3. Sample-wise Qualitative Analysis (One sample per class)
-        print("\n3. Sample-wise Layer-by-Layer Analysis\n" + "-" * 30)
+        self.logger.info("\n3. Sample-wise Layer-by-Layer Analysis\n" + "-" * 30)
         
-        unique_labels = sorted(np.unique(labels))
+        # This logic for selecting one sample per class remains robust.
         indices_to_visualize = []
         for label_val in unique_labels:
-            # Find the dataset index of the first sample with this label
             try:
                 first_occurrence_idx = np.where(labels == label_val)[0][0]
                 indices_to_visualize.append(int(first_occurrence_idx))
             except IndexError:
-                print(f"Warning: Could not find any samples for label {label_val} to visualize.")
+                self.logger.info(f"Warning: Could not find any samples for label {label_val} to visualize.")
         
         if indices_to_visualize:
-            print(f"   Selected one sample from each of the {len(unique_labels)} classes for visualization.")
-            print(f"   Dataset indices to be plotted: {indices_to_visualize}")
+            self.logger.info(f"   Selected one sample from each of the {len(unique_labels)} classes for visualization.")
+            self.logger.info(f"   Dataset indices to be plotted: {indices_to_visualize}")
             self.visualize_batch(dataloader, indices_to_process=indices_to_visualize)
         
-        print("\n" + "="*60 + "\nEVALUATION COMPLETE\n" + f"Results saved to: {self.output_dir}\n" + "="*60 + "\n")
+        self.logger.info("\n" + "="*60 + "\nEVALUATION COMPLETE\n" + f"Results saved to: {self.output_dir}\n" + "="*60 + "\n")
         return results

@@ -19,7 +19,7 @@ mp.set_start_method('spawn', force=True)
 
 class TrainVision(nn.Module):
     # ────────── ctor ──────────
-    def __init__(self, args):
+    def __init__(self, args, logger, outdir):
         super().__init__()
 
         for k in vars(args):
@@ -27,16 +27,13 @@ class TrainVision(nn.Module):
 
         self.models_dir = Path(self.models_dir)
         self.models_dir.mkdir(parents=True, exist_ok=True)
-        self.model_path = Path(f"{self.models_dir}/{self.vision_model}.pth")
-        
-        # Define path for the training log file
-        self.log_path = self.models_dir / "training_log.txt"
-
-        # This will be passed to the SNN model's forward pass.
         if self.snn:
-            # A good starting point is between 10 and 50 steps.
-            self.num_steps = getattr(args, 'num_steps', 25) 
-            print(f"SNN Training enabled with num_steps = {self.num_steps}")
+            self.model_path = Path(f"{self.models_dir}/{self.snn_vision_model}.pth")
+        else:
+            self.model_path = Path(f"{self.models_dir}/{self.vision_model}.pth")
+
+        self.logger = logger
+        self.outdir = Path(outdir)
 
         # device selection (no changes needed here)
         if torch.cuda.is_available():
@@ -47,7 +44,7 @@ class TrainVision(nn.Module):
             self.device = torch.device("cpu")
 
         if self.device.type == "cpu":
-            print("\n========================== WARNING ========================\n"
+            self.logger.info("\n========================== WARNING ========================\n"
                   ".       Training on CPU will be extremely slow. \n"
                   ".     Please use a CUDA-enabled GPU or HPC if available.\n"
                   "  =======================================================  \n")
@@ -59,20 +56,15 @@ class TrainVision(nn.Module):
     # ────────── main training loop ──────────
     def train(self):
         if self.model_path.exists():
-            print(f"A model directory already exists at {self.models_dir}. Overwrite? ((y)/n)")
+            self.logger.info(f"A model directory already exists at {self.models_dir}. Overwrite? ((y)/n)")
             ans = input().strip().lower()
             if ans == "n":
-                print("Exiting training."); return
+                self.logger.info("Exiting training."); return
             if ans not in ("", "y"):
-                print("Invalid input. Exiting training."); return
-            print("Continuing training and overwriting existing models and logs.")
+                self.logger.info("Invalid input. Exiting training."); return
+            self.logger.info("Continuing training and overwriting existing models and logs.")
 
-        # MOD: Initialize the log file with headers
-        with open(self.log_path, 'w') as f:
-            f.write(f"Training Log for {self.vision_model}\n")
-            f.write("="*40 + "\n")
-
-        # --- AUGMENTATION PIPELINE (no changes needed) -----------------------------
+        # --- AUGMENTATION PIPELINE -----------------------------
         self.full_image_size = 64 
         if self.snn:
             aug = transforms.Compose([
@@ -217,10 +209,10 @@ class TrainVision(nn.Module):
             if epoch_loss < best_loss:
                 best_loss = epoch_loss
                 torch.save(model.state_dict(), str(self.model_path))
-                print(f"\n[Epoch {epoch+1}] ↳ New best loss {best_loss:.4f} → {self.model_path}")
+                self.logger.debug(f"\n[Epoch {epoch+1}] ↳ New best loss {best_loss:.4f} → {self.model_path}")
             else:
-                # MOD: Print a confirmation for the per-epoch model save
-                print(f"\n[Epoch {epoch+1}] ↳ Epoch model saved → {epoch_model_path}")
+                # Print a confirmation for the per-epoch model save
+                self.logger.debug(f"\n[Epoch {epoch+1}] ↳ Epoch model saved → {epoch_model_path}")
 
 
-        print(f"\nTraining complete. Best loss {best_loss:.4f} → {self.model_path}")
+        self.logger.info(f"\nTraining complete. Best loss {best_loss:.4f} → {self.model_path}")

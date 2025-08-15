@@ -5,10 +5,10 @@ import torch.nn as nn
 import snntorch as snn
 import torch.nn.functional as F
 
-from .functional import AdaptiveKWTA, SNNAdaptiveKWTA, k_wta, SparseLinear
+from .functional import AdaptiveKWTA, SparseLinear
 
 class VisionModule(nn.Module):
-    def __init__(self, kc_dim=1024, lam_ch=12, vpn_ch=64, use_adaptive_kwta=True, training=False):
+    def __init__(self, kc_dim=1024, lam_ch=12, vpn_ch=64, training=False):
         super().__init__()
         self.training = training
         # ───── Retina to Photoreceptor (Opsin response) ─────
@@ -50,11 +50,8 @@ class VisionModule(nn.Module):
         self.lobula_norm = nn.GroupNorm(num_groups=1, num_channels=128)
         self.lamina_norm = nn.GroupNorm(num_groups=1, num_channels=lam_ch)
 
-        # Choose sparsity mechanism
-        if use_adaptive_kwta:
-            self.sparsity = AdaptiveKWTA(sparsity=0.05)
-        else:
-            self.sparsity = lambda x: k_wta(x, pct=0.05)
+        # Sparsity mechanism
+        self.sparsity = AdaptiveKWTA(sparsity=0.05)
 
     def _initialize_weights(self):
         """Initialize weights to prevent dead neurons."""
@@ -72,10 +69,10 @@ class VisionModule(nn.Module):
 
     def forward(self, x):
         # Retina + Opsin activation
-        p = self.opsin(x)
+        opsin = self.opsin(x)
 
         # Lamina: apply spatial filtering
-        lam = self.lamina(torch.cat([p, -p], 1))
+        lam = self.lamina(torch.cat([opsin, -opsin], 1))
         lam = self.lamina_norm(lam)
         lam = F.leaky_relu(lam, 0.1)
 
@@ -176,12 +173,7 @@ class SNNVisionModule(nn.Module):
         asot_mem = self.asot_lif.init_leaky()
         aiot_mem = self.aiot_lif.init_leaky()
         lot_mem = self.lot_lif.init_leaky()
-
-        if isinstance(self.kc_sparsity, SNNAdaptiveKWTA):
-             # Custom init for stateful adaptive layer
-            kc_mem = torch.zeros(x.shape[1], self.kc_p.linear.out_features, device=x.device)
-        else:
-            kc_mem = self.kc_sparsity.init_leaky()
+        kc_mem = self.kc_sparsity.init_leaky()
 
         kc_spk_rec = []
         for step in range(num_steps):
@@ -227,10 +219,7 @@ class SNNVisionModule(nn.Module):
 
             # 6. Kenyon Cells: Sparse projection and spiking
             kc_cur = self.kc_p(vpn_spk_pooled)
-            if isinstance(self.kc_sparsity, SNNAdaptiveKWTA):
-                spk_kc, kc_mem = self.kc_sparsity(kc_mem + kc_cur, time_step=step)
-            else:
-                spk_kc, kc_mem = self.kc_sparsity(kc_cur, kc_mem)
+            spk_kc, kc_mem = self.kc_sparsity(kc_cur, kc_mem)
 
             kc_spk_rec.append(spk_kc)
 

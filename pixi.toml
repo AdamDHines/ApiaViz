@@ -16,14 +16,11 @@ get_tinyimg = {cmd = "git lfs install && git clone https://huggingface.co/datase
 get_model = {cmd = "git lfs install && git clone https://huggingface.co/AdamHines/ApiaVizVisionModule ./apiaviz/models/"}
 
 # Training
-train = {cmd = "pixi run python main.py --mode train --train_dataset tiny"}
-train_snn = {cmd = "pixi run python main.py --mode train --train_dataset tiny --snn --lr 3e-3"}
+train = {cmd = "pixi run python main.py -m train"}
+train_snn = {cmd = "pixi run python main.py -m train --s"}
 
 # Evaluation
-eval= {cmd = "pixi run python main.py --mode eval"}
-eval_variety = {cmd = "pixi run python main.py --mode eval --num_steps 25 --eval_batch_size 7 --eval_samples 1 --ind_plots ind --n_eval_plots 7 --patch_size 64 --eval_dataset variety"}
-eval_synthetic = {cmd = "pixi run python main.py --mode eval --num_steps 25 --eval_dataset synthetic --eval_batch_size 64 --eval_samples 500 --ind_plots batch --eval_plot_random --n_eval_plots 25 --patch_size 64"}
-eval_flowers = {cmd = "pixi run python main.py --mode eval --num_steps 25 --eval_dataset natural-scenes --eval_batch_size 32 --eval_samples 500 --ind_plots batch --eval_plot_random --n_eval_plots 25 --patch_size 64"}
+eval = {cmd = "pixi run python main.py -m eval"}
 
 [dependencies]
 python = "*"
