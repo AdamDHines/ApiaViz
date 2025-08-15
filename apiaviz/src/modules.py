@@ -26,7 +26,6 @@ class VisionModule(nn.Module):
         self.med_a = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect")
         # Normalization over feature groups (approximates lateral inhibition)
         self.med_n = nn.GroupNorm(12, 60)
-
         # ───── Lobula (higher-order feature integration) ─────
         self.lobula = nn.Sequential(
             nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect"),
@@ -145,10 +144,7 @@ class SNNVisionModule(nn.Module):
 
         # ───── Mushroom Body (Kenyon Cell projection) ─────
         self.kc_p = SparseLinear(3 * vpn_ch, kc_dim)
-        if use_adaptive_kwta:
-            self.kc_sparsity = SNNAdaptiveKWTA(sparsity=0.05, beta=beta)
-        else:
-            self.kc_sparsity = snn.Leaky(beta=beta, init_hidden=False, threshold=1.0)
+        self.kc_sparsity = snn.Leaky(beta=beta, init_hidden=False, threshold=1.0)
 
         self._initialize_weights()
 
