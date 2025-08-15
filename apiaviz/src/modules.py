@@ -101,7 +101,7 @@ class VisionModule(nn.Module):
         return kc_sparse
 
 class SNNVisionModule(nn.Module):
-    def __init__(self, kc_dim=1024, lam_ch=12, vpn_ch=64, use_adaptive_kwta=False, beta=0.9):
+    def __init__(self, kc_dim=1024, lam_ch=12, vpn_ch=64, beta=0.9):
         super().__init__()
 
         self.beta = beta
