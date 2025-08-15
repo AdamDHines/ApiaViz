@@ -36,13 +36,56 @@ git clone git@github.com:AdamDHines/ApiaViz.git
 cd ApiaViz
 ```
 
-## Quickstart
-### Run the demo
-_TODO_
+### Get the pre-trained models and evaluation datasets
+
+We provide pre-trained models for the artificial and spiking versions of our vision model, as well as some evaluation datasets, from [Hugging Face](https://huggingface.co/). Run the following in your command terminal to get both:
 
 ```console
-pixi run demo
+pixi run get_models
+pixi run get_evaldata
 ```
+
+## Quickstart
+
+To run the evaluation, we can use the **pre-trained models and downloaded evaluation datasets** to assess the network quickly and easily:
+
+```console
+pixi run eval
+pixi run eval -s
+```
+By default, the system will use the **ANN**. Using the `-s` argument will run the **SNN**.
+
+To evaluate a different dataset, the `-d` argument can be used:
+
+```console
+pixi run eval -d variety
+```
+To change the evaluation method from the full image to a **scanning view**, we can use the `-sc` argument which will run a **smaller patch over the image** and temporally accumulate output:
+
+```console
+pixi run eval -sc
+```
+
+## Using the vision model externally
+
+To use the vision model in your experimental paradigm, we simply need to load the relevant model and pre-trained weights:
+
+```python
+from apiaviz.src.modules import VisionModel, SNNVisionModel
+
+# ANN
+visionmodel = VisionModel()
+state_dict = torch.load('./apiaviz/models/VisionModel.pth', weights_only=True) # modify model path to your external program
+visionmodel.load_state_dict(state_dict, strict=False)
+visionmodel.eval()
+
+# SNN
+snnmodel = SNNVisionModel()
+state_dict = torch.load('./apiaviz/models/SNNVisionModel.pth', weights_only=True) # modify model path to your external program
+snnvisionmodel.load_state_dict(state_dict, strict=False)
+snnvisionmodel.eval()
+```
+For more details and a full guide, please visit the [ApiaViz documentation](https://apiaviz.readthedocs.io/en/latest/).
 
 ### Train and evaluate a new agent
 _TODO_
@@ -53,24 +96,6 @@ pixi run eval
 ```
 
 For more information, please refer to the [ApiaViz documentation](https://apiaviz.readthedocs.io/en/latest/).
-
-## Train modules
-To train new modules, we can train them individually by running the following in the command terminal:
-
-```console
-pixi run train
-```
-
-For more information, please refer to the [ApiaViz documentation](https://apiaviz.readthedocs.io/en/latest/).
-
-## Evaluate modules
-Individual modules can be evaluated for their respective functions and accuracy. To evaluate the modules, run the following in your command terminal:
-
-```console
-pixi run eval
-```
-
-For more information, please refer to the [ApiaNet documentation](https://apiaviz.readthedocs.io/en/latest/).
 
 ## License and citation
 This code is licensed under the permissive [MIT license](./LICENSE). If you use our code, please cite our [paper]():

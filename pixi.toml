@@ -13,11 +13,11 @@ cuda = ["cuda"]
 [tasks]
 # Datasets and models
 get_tinyimg = {cmd = "git lfs install && git clone https://huggingface.co/datasets/zh-plus/tiny-imagenet ./apiaviz/dataset/tiny-imagenet && pixi run python ./apiaviz/dataset/format_dataset.py -p './apiaviz/dataset/tiny-imagenet/data/train-00000-of-00001-1359597a978bc4fa.parquet' -o './apiaviz/dataset/tiny-imagenet/train' && pixi run python ./apiaviz/dataset/format_dataset.py -p './apiaviz/dataset/tiny-imagenet/data/valid-00000-of-00001-70d52db3c749a935.parquet' -o './apiaviz/dataset/tiny-imagenet/val'"}
-get_model = {cmd = "git lfs install && git clone https://huggingface.co/AdamHines/ApiaVizVisionModule ./apiaviz/models/"}
+get_evaldata = {cmd = "git lfs install && git clone https://huggingface.co/datasets/AdamHines/ApiaVizDatasets ./apiaviz/ApiaVizDatasets && pixi run python ./apiaviz/dataset/unzip.py ./apiaviz/ApiaVizDatasets/flowers.zip ./apiaviz/dataset/ && pixi run python ./apiaviz/dataset/unzip.py ./apiaviz/ApiaVizDatasets/nordland.zip ./apiaviz/dataset/ && pixi run python ./apiaviz/dataset/unzip.py ./apiaviz/ApiaVizDatasets/variety.zip ./apiaviz/dataset/"}
+get_models = {cmd = "git lfs install && git clone https://huggingface.co/AdamHines/ApiaVizVisionModule ./apiaviz/models/"}
 
 # Training
 train = {cmd = "pixi run python main.py -m train"}
-train_snn = {cmd = "pixi run python main.py -m train --s"}
 
 # Evaluation
 eval = {cmd = "pixi run python main.py -m eval"}
