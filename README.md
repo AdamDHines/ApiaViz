@@ -1,4 +1,7 @@
-# ApiaViz - A bio-inspired neural network model of the insect visual system for natural scene understanding.
+<p align="center">
+  <img src="./assets/logo.png" alt="ApiaViz Logo" width="600"/>
+</p>
+
 ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
 [![Documentation Status](https://readthedocs.org/projects/apiaviz/badge/?version=latest&style=flat)](https://apiaviz.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -111,13 +114,13 @@ We provide pre-trained models for ApiaViz using the [Tiny ImageNet dataset](http
 # Optional: download the Tiny ImageNet dataset
 pixi run get_tinyimg
 
-# Run the training
-pixi run train
+# Run the training (CUDA enabled)
+pixi run -e cuda train
 
-# Train the SNN
-pixi run train -s
+# Train the SNN (CUDA enabled)
+pixi run -e cuda train -s
 ```
-_If not using `CUDA` or `MPS` as your device, a warning will be shown indicating that training will be very slow. Training the SNN requires a GPU device with a high amount of memory (>30GB) and is recommended to use a high performance computing (HPC) cluster._
+_If not using `CUDA` as your device, a warning will be shown indicating that training will be very slow. Training the SNN requires a GPU device with a high amount of memory (>30GB) and is recommended to use a high performance computing (HPC) cluster._
 
 
 
