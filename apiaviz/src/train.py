@@ -38,8 +38,6 @@ class TrainVision(nn.Module):
         # device selection (no changes needed here)
         if torch.cuda.is_available():
             self.device = torch.device("cuda")
-        elif torch.backends.mps.is_available():
-            self.device = torch.device("mps")
         else:
             self.device = torch.device("cpu")
 
@@ -192,17 +190,6 @@ class TrainVision(nn.Module):
 
             sched.step()
             epoch_loss = running / processed
-            
-            # MOD: Calculate epoch duration
-            epoch_end_time = time.time()
-            epoch_duration = epoch_end_time - epoch_start_time
-
-            # MOD: Log epoch stats to the text file
-            with open(self.log_path, 'a') as f:
-                log_entry = (f"Epoch: {epoch+1:03d} | "
-                             f"Loss: {epoch_loss:.4f} | "
-                             f"Duration: {epoch_duration:.2f}s\n")
-                f.write(log_entry)
             
             # MOD: Define a unique path for the model of this specific epoch
             epoch_model_path = self.models_dir / f"{self.vision_model}_epoch_{epoch+1}.pth"

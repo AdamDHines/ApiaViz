@@ -114,7 +114,7 @@ class InsectVisionDataset(Dataset):
         if self.dataset == "flowers":
             self.class_names = ['lavender','sunflower','rose']
         elif self.dataset == "nordland":
-            self.class_names = ['summer','spring','fall','winter']
+            self.class_names = ['summer','spring','fall']
         else: 
             self.class_names = ['goldfish1', 'goldfish2', 'ball', 'roads', 'car', 'fruit', 'bird']
             
