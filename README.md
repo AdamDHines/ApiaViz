@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/logo.png" alt="ApiaViz Logo" width="600"/>
+  <img src="./assets/logo.png" alt="ApiaViz Logo" width="894"/>
 </p>
 
 ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
@@ -7,8 +7,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![Pixi Badge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/prefix-dev/pixi/main/assets/badge/v0.json)](https://pixi.sh)
 [![GitHub repo size](https://img.shields.io/github/repo-size/AdamDHines/ApiaViz.svg?style=flat-square)](./README.md)
-
-_TODO: Animation/GIF of ApiaViz demo_
 
 This respository contains code for ApiaViz, a neural network model of insect vision using [Python](https://www.python.org/) and [PyTorch](https://pytorch.org/) for understanding natural scenes and environments. There are two versions of the model provided:
 
