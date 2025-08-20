@@ -237,7 +237,7 @@ class ModelEvaluator:
         heatmap_np = heatmap.squeeze().detach().cpu().numpy()
         
         if len(heatmap_np.shape) == 3:
-            heatmap_np = heatmap_np.mean(axis=0)
+            heatmap_np = heatmap_np.max(axis=0)
             
         heatmap_norm = (heatmap_np - heatmap_np.min()) / (heatmap_np.max() - heatmap_np.min() + 1e-8)
 

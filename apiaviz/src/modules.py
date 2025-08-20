@@ -24,13 +24,8 @@ class VisionModule(nn.Module):
         self.med_c = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect", groups=2)
         # Achromatic pathway (e.g. luminance-based edge detection)
         self.med_a = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect")
-        # Normalization over feature groups (approximates lateral inhibition)
-        self.med_n = nn.LocalResponseNorm(size=5)
         # ───── Lobula (higher-order feature integration) ─────
-        self.lobula = nn.Sequential(
-            nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect"),
-            nn.ReLU()
-        )
+        self.lobula = nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect")
 
         # ───── VPN layers: distinct feature projections ─────
         # These correspond to three pathways:
@@ -45,12 +40,13 @@ class VisionModule(nn.Module):
         # Sparse, high-dimensional representation using learned sparse weights
         self.kc_p = SparseLinear(3 * vpn_ch, kc_dim)
 
-        # LayerNorm for lobula
-        self.lobula_norm = nn.LocalResponseNorm(size=5)
-        self.lamina_norm = nn.LocalResponseNorm(size=5)
+        # Layer normalizations
+        self.local_norm = nn.LocalResponseNorm(size=5)
         self.lamina_ln = nn.GroupNorm(num_groups=1, num_channels=lam_ch)
         self.med_ln = nn.GroupNorm(num_groups=1, num_channels=60)
         self.lobula_ln = nn.GroupNorm(num_groups=1, num_channels=128)
+        self.relu = nn.ReLU()
+
         # Sparsity mechanism
         self.sparsity = AdaptiveKWTA(sparsity=0.05)
 
@@ -74,7 +70,7 @@ class VisionModule(nn.Module):
 
         # Lamina: apply spatial filtering
         lam = self.lamina(torch.cat([opsin, -opsin], 1))
-        lam = self.lamina_norm(lam)
+        lam = self.local_norm(lam)
         lam = self.lamina_ln(lam)
         lam = F.leaky_relu(lam, 0.1)
 
@@ -83,14 +79,15 @@ class VisionModule(nn.Module):
                             self.med_c(lam),
                             self.med_a(lam.mean(1, keepdim=True).expand_as(lam))], 1)
         med = self.med_n(med_raw)
+        med = self.local_norm(med)
         med = self.med_ln(med)
         med = F.leaky_relu(med, 0.1) 
 
         # Lobula: integrate complex features
         lob = self.lobula(med)
-        lob = self.lobula_norm(lob)
+        lob = self.local_norm(lob)
         lob = self.lobula_ln(lob)
-        lob = F.leaky_relu(lob, 0.1)
+        lob = self.relu(lob)
 
         # Extract three different VPN pathway features
         vpn = torch.cat([
@@ -134,10 +131,7 @@ class SNNVisionModule(nn.Module):
 
         # ───── Lobula (higher-order feature integration) ─────
         # FIX: The input channel count must match the output of the medulla layer.
-        self.lobula_conv = nn.Sequential(
-            nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect"),
-            nn.ReLU()
-        )
+        self.lobula_conv = nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect")
         self.lobula_norm = nn.LocalResponseNorm(size=5)
         self.lobula_ln = nn.GroupNorm(num_groups=1, num_channels=128)
         self.lobula_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.75)
