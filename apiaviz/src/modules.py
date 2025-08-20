@@ -78,8 +78,7 @@ class VisionModule(nn.Module):
         med_raw = torch.cat([lam,
                             self.med_c(lam),
                             self.med_a(lam.mean(1, keepdim=True).expand_as(lam))], 1)
-        med = self.med_n(med_raw)
-        med = self.local_norm(med)
+        med = self.local_norm(med_raw)
         med = self.med_ln(med)
         med = F.leaky_relu(med, 0.1) 
 
