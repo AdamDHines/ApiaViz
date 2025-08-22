@@ -25,11 +25,16 @@ import argparse
 from apiaviz.src.eval import EvalVision
 from apiaviz.src.train import TrainVision
 from apiaviz.src.logger import model_logger
+from apiaviz.nav.gardenspoint import GardensPoint
 
 def apianet_eval(args, logger, output_folder):
-    # Initialize the evaluation class
-    evaluator = EvalVision(args, logger, output_folder)
-    evaluator.eval()
+    if args.eval_dataset == "gardens-point":
+        gp = GardensPoint()
+        gp.run_vpr('day_left','day_right')
+    else:
+        # Initialize the evaluation class
+        evaluator = EvalVision(args, logger, output_folder)
+        evaluator.eval()
 
 def apianet_train(args, logger, output_folder):
     # Initialize the training class
@@ -77,7 +82,7 @@ def parse_args():
                         help='Batch size for evaluation')
     
     # Evaluation dataset parameters
-    parser.add_argument('-d', '--eval_dataset', default="flowers", choices=["synthetic", "faces", "flowers", "variety", "nordland"],
+    parser.add_argument('-d', '--eval_dataset', default="flowers", choices=["synthetic", "faces", "flowers", "variety", "nordland", "gardens-point", "gardens-point-few"],
                         help="evaluation dataset to use")
     parser.add_argument('-sc', '--scanning', action='store_true',
                         help='Use scanning for the evaluation dataset')

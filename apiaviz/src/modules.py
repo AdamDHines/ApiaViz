@@ -25,7 +25,7 @@ class VisionModule(nn.Module):
         # Achromatic pathway (e.g. luminance-based edge detection)
         self.med_a = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect")
         # ───── Lobula (higher-order feature integration) ─────
-        self.lobula = nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect")
+        self.lobula = nn.Conv2d(48, 128, 5, padding=2, padding_mode="reflect")
 
         # ───── VPN layers: distinct feature projections ─────
         # These correspond to three pathways:
@@ -43,9 +43,10 @@ class VisionModule(nn.Module):
         # Layer normalizations
         self.local_norm = nn.LocalResponseNorm(size=5)
         self.lamina_ln = nn.GroupNorm(num_groups=1, num_channels=lam_ch)
-        self.med_ln = nn.GroupNorm(num_groups=1, num_channels=60)
+        self.med_ln = nn.GroupNorm(num_groups=1, num_channels=48)
         self.lobula_ln = nn.GroupNorm(num_groups=1, num_channels=128)
         self.relu = nn.ReLU()
+        self.med_leaky = nn.LeakyReLU(0.1)
 
         # Sparsity mechanism
         self.sparsity = AdaptiveKWTA(sparsity=0.05)
@@ -75,12 +76,11 @@ class VisionModule(nn.Module):
         lam = F.leaky_relu(lam, 0.1)
 
         # Medulla: combine chromatic and achromatic processing
-        med_raw = torch.cat([lam,
-                            self.med_c(lam),
+        med_raw = torch.cat([self.med_c(lam),
                             self.med_a(lam.mean(1, keepdim=True).expand_as(lam))], 1)
         med = self.local_norm(med_raw)
         med = self.med_ln(med)
-        med = F.leaky_relu(med, 0.1) 
+        med = self.med_leaky(med)
 
         # Lobula: integrate complex features
         lob = self.lobula(med)
@@ -125,12 +125,12 @@ class SNNVisionModule(nn.Module):
         # This preserves distinct feature pathways, which a single group would merge.
         # 8 groups for 48 channels (6 ch/group) is analogous to 12 groups for 60 channels.
         self.med_n = nn.LocalResponseNorm(size=5)
-        self.med_ln = nn.GroupNorm(num_groups=1, num_channels=60)
+        self.med_ln = nn.GroupNorm(num_groups=1, num_channels=48)
         self.med_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.5)
 
         # ───── Lobula (higher-order feature integration) ─────
         # FIX: The input channel count must match the output of the medulla layer.
-        self.lobula_conv = nn.Conv2d(60, 128, 5, padding=2, padding_mode="reflect")
+        self.lobula_conv = nn.Conv2d(48, 128, 5, padding=2, padding_mode="reflect")
         self.lobula_norm = nn.LocalResponseNorm(size=5)
         self.lobula_ln = nn.GroupNorm(num_groups=1, num_channels=128)
         self.lobula_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.75)
@@ -192,7 +192,7 @@ class SNNVisionModule(nn.Module):
             ach_in = spk_lam.mean(1, keepdim=True).expand_as(spk_lam)
             med_a_cur = self.med_a(ach_in)
 
-            med_raw_cur = torch.cat([lam_mem, med_c_cur, med_a_cur], 1)
+            med_raw_cur = torch.cat([med_c_cur, med_a_cur], 1)
             
             med_norm_cur = self.med_n(med_raw_cur)
             med_norm_cur = self.med_ln(med_norm_cur)

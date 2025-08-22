@@ -5,12 +5,13 @@ import numpy as np
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
+import matplotlib.colors as colors
+import matplotlib.colors as mcolors
 
 from pathlib import Path
 from matplotlib import cm
 from typing import Optional
 from sklearn.cluster import KMeans
-import matplotlib.colors as mcolors
 from typing import Optional, List, Dict, Union
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.manifold import TSNE, trustworthiness
@@ -322,11 +323,14 @@ class ModelEvaluator:
             layers_to_hook = ['opsin_lif', 'lamina_lif', 'med_lif', 'lobula_lif', 'asot_lif', 'aiot_lif', 'lot_lif']
             model_input = input_tensor.unsqueeze(1).to(self.device) if self.is_scanning else self._convert_static_to_spiking_single(input_tensor)
         else:
-            layers_to_hook = ['opsin', 'lamina', 'med_c', 'med_a', 'lobula']
+            layers_to_hook = ['opsin', 'lamina', 'med_c', 'med_a', 'med_leaky', 'lobula']
             model_input = input_tensor.to(self.device)
 
         self.register_hooks(layers_to_hook)
         
+        # resize model input to 75x75 for everything
+        model_input = F.interpolate(model_input.unsqueeze(0), size=(75, 75), mode='bilinear', align_corners=False).squeeze(0)
+
         # --- Model Forward Pass ---
         with torch.no_grad():
             if self.snn:
@@ -412,22 +416,61 @@ class ModelEvaluator:
             plot_layer(axes[0, 2], 'lamina', 'Lamina Response')
             plot_layer(axes[1, 0], 'med_c', 'Medulla Chromatic')
             plot_layer(axes[1, 1], 'med_a', 'Medulla Achromatic')
-            plot_layer(axes[1, 2], 'lobula', 'Lobula Response')
+            plot_layer(axes[1, 2], 'med_leaky', 'Medulla activation Response')
+            plot_layer(axes[2, 0], 'lobula', 'Lobula Response')
 
-        
-        # Plot Kenyon Cell Output
-        ax = axes[2, 2]
+        # Get the GridSpec from the existing axes
+        gs = axes[0, 0].get_gridspec()
+
+        # Remove the old axes to make space for the new one
+        if axes[2, 1] in fig.axes:
+            axes[2, 1].remove()
+        if axes[2, 2] in fig.axes:
+            axes[2, 2].remove()
+
+        # Create a new subplot that spans the desired columns
+        ax = fig.add_subplot(gs[2, 1:])
+
+        # Prepare data for plotting
         kc_output = kc_output_sparse[0].cpu().numpy()
-        active_indices = np.where(kc_output > 0)[0]
-        grid_size = int(np.ceil(np.sqrt(len(kc_output))))
-        kc_grid = np.zeros((grid_size, grid_size))
-        kc_grid.flat[:len(kc_output)] = kc_output
-        ax.imshow(kc_grid, cmap='jet', interpolation='nearest')
-        ax.set_title(f'Kenyon Cells\n({len(active_indices)}/{len(kc_output)} active)', fontsize=16, fontweight='bold')
-        ax.axis('off')
-        
-        # Clean up unused axes
-        axes[2, 1].axis('off')
+        num_kc_total = len(kc_output)
+        all_kc_indices = np.arange(num_kc_total)
+
+        # **FILTER STEP**: Select only the cells with activity > 0
+        active_mask = kc_output > 0
+        kc_indices_active = all_kc_indices[active_mask]
+        kc_output_active = kc_output[active_mask]
+        num_active = len(kc_indices_active)
+
+        # Set title - this will display even if there is no activity
+        ax.set_title(f'Kenyon Cell Activity\n({num_active}/{num_kc_total} active)', fontsize=16, fontweight='bold')
+
+        # Only proceed with plotting if there are active cells
+        if num_active > 0:
+            # Normalize colors based on the range of *active* cells
+            norm = colors.Normalize(vmin=kc_output_active.min(), vmax=kc_output_active.max())
+            cmap = cm.jet
+
+            # Create the stem plot using only the active data
+            # Hide default markers ('') as we will draw our own with scatter
+            markerline, stemlines, baseline = ax.stem(
+                kc_indices_active, kc_output_active, linefmt='-', markerfmt='', basefmt=' '
+            )
+
+            # Apply the colormap to the entire collection of stems
+            stem_colors = cmap(norm(kc_output_active))
+            stemlines.set_color(stem_colors)
+
+            # Use scatter to plot the markers, which handles individual colors correctly
+            ax.scatter(kc_indices_active, kc_output_active, c=kc_output_active, cmap=cmap, s=25, zorder=3)
+            ax.set_ylim(bottom=0) # Ensure y-axis starts at 0
+
+        # Set labels and limits for the plot
+        ax.set_xlabel('Kenyon Cell Index', fontsize=12)
+        ax.set_ylabel('Activity Level', fontsize=12)
+        # Set x-axis to the full range to correctly show the sparse locations
+        ax.set_xlim([0, num_kc_total])
+        ax.grid(True, linestyle='--', alpha=0.6)
         
         plt.tight_layout(rect=[0, 0.03, 1, 0.96])
         if save_path:
@@ -581,7 +624,7 @@ class ModelEvaluator:
                 label = label.item()
 
             try:
-                save_filename = f'sample_idx_{sample_idx}_class_{label}_analysis.png'
+                save_filename = f'sample_idx_{sample_idx}_class_{label}_analysis.pdf'
                 fig = self.plot_full_layer_analysis(
                     input_tensor=input_tensor,
                     display_image=display_image,
