@@ -11,19 +11,18 @@ class VisionModule(nn.Module):
     def __init__(self, kc_dim=1024, lam_ch=12, vpn_ch=64, training=False):
         super().__init__()
         self.training = training
-        # ───── Retina to Photoreceptor (Opsin response) ─────
+        # ───── Retina to Photoreceptor (Retinal response) ─────
         # Two input channels (green, blue), processed independently into 6 channels
-        self.opsin = nn.Conv2d(2, 6, 1, groups=2, bias=False)
+        self.retina = nn.Conv2d(2, 6, 1, groups=2, bias=False)
 
-        # ───── Lamina (early local motion + contrast detection) ─────
+        # ───── Lamina (early local motion + contrast detection - Color & Achromatic Pathways) ─────
         # Depthwise convolution – each lamina channel processes its own input
         self.lamina = nn.Conv2d(lam_ch, lam_ch, 3, padding=1, padding_mode="reflect", groups=lam_ch, bias=False)
-
-        # ───── Medulla: Color & Achromatic Pathways ─────
         # Chromatic pathway (grouped for green/blue separation)
-        self.med_c = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect", groups=2)
+        self.lam_c = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect", groups=2)
         # Achromatic pathway (e.g. luminance-based edge detection)
-        self.med_a = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect")
+        self.lam_a = nn.Conv2d(lam_ch, 2 * lam_ch, 3, padding=1, padding_mode="reflect")
+
         # ───── Lobula (higher-order feature integration) ─────
         self.lobula = nn.Conv2d(48, 128, 5, padding=2, padding_mode="reflect")
 
@@ -66,18 +65,18 @@ class VisionModule(nn.Module):
         return F.adaptive_avg_pool2d(f, 1).flatten(1)
 
     def forward(self, x):
-        # Retina + Opsin activation
-        opsin = self.opsin(x)
+        # Retina activation
+        retina = self.retina(x)
 
         # Lamina: apply spatial filtering
-        lam = self.lamina(torch.cat([opsin, -opsin], 1))
+        lam = self.lamina(torch.cat([retina, -retina], 1))
         lam = self.local_norm(lam)
         lam = self.lamina_ln(lam)
         lam = F.leaky_relu(lam, 0.1)
 
         # Medulla: combine chromatic and achromatic processing
-        med_raw = torch.cat([self.med_c(lam),
-                            self.med_a(lam.mean(1, keepdim=True).expand_as(lam))], 1)
+        med_raw = torch.cat([self.lam_c(lam),
+                            self.lam_a(lam.mean(1, keepdim=True).expand_as(lam))], 1)
         med = self.local_norm(med_raw)
         med = self.med_ln(med)
         med = self.med_leaky(med)
@@ -108,9 +107,9 @@ class SNNVisionModule(nn.Module):
         self.beta = beta
         self.lam_ch = lam_ch
 
-        # ───── Retina to Photoreceptor (Opsin response) ─────
-        self.opsin = nn.Conv2d(2, 6, 1, groups=2, bias=True)
-        self.opsin_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.01)
+        # ───── Retina to Photoreceptor (Retinal response) ─────
+        self.retina = nn.Conv2d(2, 6, 1, groups=2, bias=True)
+        self.retina_lif = snn.Leaky(beta=beta, init_hidden=False, threshold=0.01)
 
         # ───── Lamina (early local motion + contrast detection) ─────
         self.lamina = nn.Conv2d(lam_ch, lam_ch, 3, padding=1, padding_mode="reflect", groups=lam_ch, bias=True)
@@ -163,7 +162,7 @@ class SNNVisionModule(nn.Module):
 
     def forward(self, x, num_steps):
         # Initialize membrane potentials for all LIF layers
-        opsin_mem = self.opsin_lif.init_leaky()
+        retina_mem = self.retina_lif.init_leaky()
         lam_mem = self.lamina_lif.init_leaky()
         med_mem = self.med_lif.init_leaky()
         lob_mem = self.lobula_lif.init_leaky()
@@ -176,12 +175,12 @@ class SNNVisionModule(nn.Module):
         for step in range(num_steps):
             spk_in_step = x[step]
 
-            # 1. Opsin Current Generation
-            opsin_cur = self.opsin(spk_in_step)
-            spk_opsin, opsin_mem = self.opsin_lif(opsin_cur, opsin_mem)
+            # 1. Retina Current Generation
+            retina_cur = self.retina(spk_in_step)
+            spk_retina, retina_mem = self.retina_lif(retina_cur, retina_mem)
 
             # 2. Lamina: ON/OFF channels, Conv, Norm, Spikes
-            lam_in = torch.cat([spk_opsin, -spk_opsin], 1)
+            lam_in = torch.cat([spk_retina, -spk_retina], 1)
             lam_cur = self.lamina(lam_in)
             lam_norm_cur = self.lamina_norm(lam_cur)
             lam_norm_cur = self.lamina_ln(lam_norm_cur)

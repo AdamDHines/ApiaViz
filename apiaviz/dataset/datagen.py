@@ -112,7 +112,7 @@ class InsectVisionDataset(Dataset):
         # --- Load image paths and class names ---
         self.source_images: List[Tuple[Image.Image, int]] = []
         if self.dataset == "flowers":
-            self.class_names = ['lavender','sunflower']
+            self.class_names = ['lavender','sunflower', 'natural']
         elif self.dataset == "nordland":
             self.class_names = ['summer','spring','fall']
         elif self.dataset == "gardens-point-few":
