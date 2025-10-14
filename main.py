@@ -74,6 +74,8 @@ def parse_args():
                         help='Learning rate for training')
     parser.add_argument('--training_dataset', type=str, default='tiny-imagenet',
                         help='Dataset to use for training')
+    parser.add_argument('-bo', '--best_only', action='store_true',
+                        help='Save only the best model during training')
     
     # Evaluation parameters
     parser.add_argument('--eval_samples', type=int, default=128,
@@ -82,7 +84,7 @@ def parse_args():
                         help='Batch size for evaluation')
     
     # Evaluation dataset parameters
-    parser.add_argument('-d', '--eval_dataset', default="flowers", choices=["synthetic", "faces", "flowers", "variety", "nordland", "gardens-point", "gardens-point-few"],
+    parser.add_argument('-d', '--eval_dataset', default="flowers", choices=["synthetic", "faces", "flowers", "variety", "17flowers", "gardens-point", "gardens-point-few"],
                         help="evaluation dataset to use")
     parser.add_argument('-sc', '--scanning', action='store_true',
                         help='Use scanning for the evaluation dataset')

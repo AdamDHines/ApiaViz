@@ -137,9 +137,6 @@ class TrainVision(nn.Module):
 
         # --- CORE TRAINING LOOP (key modifications here) --------------------------
         for epoch in range(self.epochs):
-            # MOD: Record the start time of the epoch
-            epoch_start_time = time.time()
-            
             running, processed = 0.0, 0
             pbar = tqdm(train_dl, desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch")
             scaler = torch.amp.GradScaler()
@@ -190,19 +187,24 @@ class TrainVision(nn.Module):
 
             sched.step()
             epoch_loss = running / processed
-            
-            # MOD: Define a unique path for the model of this specific epoch
-            epoch_model_path = self.models_dir / f"{self.vision_model}_epoch_{epoch+1}.pth"
-            torch.save(model.state_dict(), str(epoch_model_path))
+
+            # Store the epoch_loss into a log file
+            with open(self.outdir / "training_log.txt", "a") as f:
+                f.write(f"Epoch {epoch+1}/{self.epochs}, Loss: {epoch_loss:.4f}\n")
 
             # ---- checkpoint (modified to save best model separately) ----
-            if epoch_loss < best_loss:
-                best_loss = epoch_loss
-                torch.save(model.state_dict(), str(self.model_path))
-                self.logger.debug(f"\n[Epoch {epoch+1}] ↳ New best loss {best_loss:.4f} → {self.model_path}")
+            if self.best_only:
+                if epoch_loss < best_loss:
+                    best_loss = epoch_loss
+                    torch.save(model.state_dict(), str(self.model_path))
+                    self.logger.debug(f"\n[Epoch {epoch+1}] ↳ New best loss {best_loss:.4f} → {self.model_path}")
             else:
                 # Print a confirmation for the per-epoch model save
-                self.logger.debug(f"\n[Epoch {epoch+1}] ↳ Epoch model saved → {epoch_model_path}")
-
+                if self.snn:
+                    new_path = Path(f"{self.models_dir}/{self.snn_vision_model}_Epoch{epoch+1}.pth")
+                else:
+                    new_path = Path(f"{self.models_dir}/{self.vision_model}_Epoch{epoch+1}.pth")
+                torch.save(model.state_dict(), str(new_path))
+                self.logger.debug(f"\n[Epoch {epoch+1}] ↳ Model saved to {new_path}")
 
         self.logger.info(f"\nTraining complete. Best loss {best_loss:.4f} → {self.model_path}")

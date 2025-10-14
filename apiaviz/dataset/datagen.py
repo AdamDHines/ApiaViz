@@ -113,8 +113,9 @@ class InsectVisionDataset(Dataset):
         self.source_images: List[Tuple[Image.Image, int]] = []
         if self.dataset == "flowers":
             self.class_names = ['lavender','sunflower', 'natural']
-        elif self.dataset == "nordland":
-            self.class_names = ['summer','spring','fall']
+        elif self.dataset == "17flowers":
+            self.class_names = ['bluebell','buttercup','coltsfoot','cowslip','crocus','daffodil','daisy','dandelion',
+                                'fritillary','iris','lilyvalley','pansy','snowdrop','sunflower','tigerlily','tulip','wildflower']
         elif self.dataset == "gardens-point-few":
             self.class_names = ['day_left', 'day_right', 'night_right']
         else: 
@@ -160,6 +161,11 @@ class InsectVisionDataset(Dataset):
         source_img_pil, label = self.source_images[source_idx]
         source_img_tensor = self.to_tensor(source_img_pil)
         _, H, W = source_img_tensor.shape
+
+        # resize image if larger than 75x75 pixels
+        if H > 75 or W > 75:
+            resize_transform = transforms.Resize((75, 75))
+            source_img_tensor = resize_transform(source_img_tensor)
 
         if self.mode == DataMode.STATIC_FULL:
             return source_img_tensor[1:3], label, source_img_tensor, []
