@@ -102,10 +102,10 @@ class EvalVision:
         feats, labs = [], []
         batch = 0
         with torch.no_grad():
-            for imgs, lbl, _, _ in tqdm(self.loader, desc="Extracting Features", unit="batch"):
+            for imgs, lbl in tqdm(self.loader, desc="Extracting Features", unit="batch"):
                 start_time = time(); batch += 1
                 imgs = imgs.to(self.device)
-                
+
                 # --- SNN Feature Extraction (Unchanged) ---
                 if getattr(self, 'snn', False):
                     spiked_input_frames = []
@@ -157,7 +157,7 @@ class EvalVision:
         # Concatenate results from all batches
         feats = np.concatenate(feats)
         labs = np.concatenate(labs)
-        
+
         # --- Run evaluation (Unchanged) ---
         snn_params_for_evaluator = None
         if getattr(self, 'snn', False):
@@ -170,4 +170,4 @@ class EvalVision:
             }
 
         self.evaluator = avf.ModelEvaluator(self.model, self.logger, self.device, output_dir=self.outdir, snn_params=snn_params_for_evaluator)
-        self.evaluator.run_full_evaluation(self.loader, feats, labs, is_scanning=self.scanning)
+        self.evaluator.run_full_evaluation(self.loader, feats, labs, self.dataset.groups, is_scanning=self.scanning)

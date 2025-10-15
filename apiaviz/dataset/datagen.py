@@ -110,9 +110,11 @@ class InsectVisionDataset(Dataset):
             raise ValueError("`num_steps` must be provided for SCANNING_PATCH mode.")
 
         # --- Load image paths and class names ---
-        self.source_images: List[Tuple[Image.Image, int]] = []
+        self.source_images = []          # list of (PIL.Image, class_idx)
+        self.source_paths  = []          # NEW: path strings, same length as source_images
+        
         if self.dataset == "flowers":
-            self.class_names = ['lavender','sunflower', 'natural']
+            self.class_names = ['lavender','sunflower', 'rose']
         elif self.dataset == "17flowers":
             self.class_names = ['bluebell','buttercup','coltsfoot','cowslip','crocus','daffodil','daisy','dandelion',
                                 'fritillary','iris','lilyvalley','pansy','snowdrop','sunflower','tigerlily','tulip','wildflower']
@@ -133,13 +135,25 @@ class InsectVisionDataset(Dataset):
                 continue
             
             for fp in sorted(class_dir.glob('*.*')):
-                if fp.name.startswith('.'): continue
+                if fp.name.startswith('.'): 
+                    continue
                 try:
                     img = Image.open(fp).convert('RGB')
                     self.source_images.append((img, class_idx))
+                    self.source_paths.append(str(fp))      # <-- keep identity
                 except Exception as e:
                     self.logger.info(f"Warning: Could not load image {fp}. Error: {e}")
-
+        
+        self.n_sources = len(self.source_images)
+        
+        # Build groups = map each sample index -> source image index
+        if self.mode == DataMode.STATIC_FULL:
+            # one sample per source image
+            self.groups = np.arange(self.n_sources, dtype=int)
+        else:
+            # many samples per source (patch or scanning modes)
+            self.groups = np.repeat(np.arange(self.n_sources, dtype=int),
+                                    self.samples_per_image)
         if not self.source_images:
             raise RuntimeError(f"No images found under the specified root: {self.root}")
 
@@ -162,12 +176,11 @@ class InsectVisionDataset(Dataset):
         source_img_tensor = self.to_tensor(source_img_pil)
         _, H, W = source_img_tensor.shape
 
-        # resize image if larger than 75x75 pixels
-        if H > 75 or W > 75:
-            resize_transform = transforms.Resize((75, 75))
-            source_img_tensor = resize_transform(source_img_tensor)
-
         if self.mode == DataMode.STATIC_FULL:
+            # resize image if larger than 75x75 pixels
+            if H > 75 or W > 75:
+                resize_transform = transforms.Resize((512, 512))
+                source_img_tensor = resize_transform(source_img_tensor)
             return source_img_tensor[1:3], label, source_img_tensor, []
 
         # --- BUG FIX & FEATURE: Auto-adjust patch size and ensure safe boundaries ---
@@ -199,7 +212,7 @@ class InsectVisionDataset(Dataset):
             # This stack operation is now safe.
             input_tensor = torch.stack(patches)
             scan_path = (path_x, path_y)
-            return input_tensor, label, source_img_tensor, scan_path
+            return input_tensor, label
             
         raise NotImplementedError(f"Mode {self.mode} is not implemented.")
 

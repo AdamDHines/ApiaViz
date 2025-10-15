@@ -16,7 +16,7 @@ from typing import Optional, List, Dict, Union
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.manifold import TSNE, trustworthiness
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GroupShuffleSplit, train_test_split
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import silhouette_score, adjusted_rand_score
 
@@ -320,10 +320,10 @@ class ModelEvaluator:
         self.model.eval(); self.activations = {}
 
         if self.snn:
-            layers_to_hook = ['opsin_lif', 'lamina_lif', 'med_lif', 'lobula_lif', 'asot_lif', 'aiot_lif', 'lot_lif']
+            layers_to_hook = ['retina_lif', 'lamina_lif', 'med_lif', 'lobula_lif', 'asot_lif', 'aiot_lif', 'lot_lif']
             model_input = input_tensor.unsqueeze(1).to(self.device) if self.is_scanning else self._convert_static_to_spiking_single(input_tensor)
         else:
-            layers_to_hook = ['opsin', 'lamina', 'med_c', 'med_a', 'med_leaky', 'lobula']
+            layers_to_hook = ['retina', 'lamina', 'lam_c', 'lam_a', 'med_leaky', 'lobula']
             model_input = input_tensor.to(self.device)
 
         self.register_hooks(layers_to_hook)
@@ -404,7 +404,7 @@ class ModelEvaluator:
 
         # --- Map layers to plot locations ---
         if self.snn:
-            plot_layer(axes[0, 1], 'opsin_lif', 'Opsin (Avg. Spikes)')
+            plot_layer(axes[0, 1], 'retina_lif', 'Retina (Avg. Spikes)')
             plot_layer(axes[0, 2], 'lamina_lif', 'Lamina (Avg. Spikes)')
             plot_layer(axes[1, 0], 'med_lif', 'Medulla (Avg. Spikes)')
             plot_layer(axes[1, 1], 'lobula_lif', 'Lobula (Avg. Spikes)')
@@ -412,10 +412,10 @@ class ModelEvaluator:
             plot_layer(axes[2, 0], 'aiot_lif', 'AIOT (Avg. Spikes)')
             plot_layer(axes[2, 1], 'lot_lif', 'LOT (Avg. Spikes)')
         else: # ANN
-            plot_layer(axes[0, 1], 'opsin', 'Opsin Response')
+            plot_layer(axes[0, 1], 'retina', 'Retina Response')
             plot_layer(axes[0, 2], 'lamina', 'Lamina Response')
-            plot_layer(axes[1, 0], 'med_c', 'Medulla Chromatic')
-            plot_layer(axes[1, 1], 'med_a', 'Medulla Achromatic')
+            plot_layer(axes[1, 0], 'lam_c', 'Lamina Chromatic')
+            plot_layer(axes[1, 1], 'lam_a', 'Lamina Achromatic')
             plot_layer(axes[1, 2], 'med_leaky', 'Medulla activation Response')
             plot_layer(axes[2, 0], 'lobula', 'Lobula Response')
 
@@ -482,17 +482,18 @@ class ModelEvaluator:
         self.remove_hooks()
         return fig
 
-    def evaluate_representations(self, features: np.ndarray, labels: np.ndarray, test_size: float = 0.2) -> Dict[str, float]:
+    def evaluate_representations(self, features: np.ndarray, labels: np.ndarray, groups, test_size: float = 0.2) -> Dict[str, float]:
         """Performs a quantitative evaluation of feature representations."""
         results = {}
-        
-        # Ensure there are enough samples for the split
-        if len(np.unique(labels)) > 1 and all(np.bincount(labels) > 1):
-             X_tr, X_te, y_tr, y_te = train_test_split(
-                features, labels, test_size=test_size, stratify=labels, random_state=42
-             )
-        else: # Cannot stratify, use entire dataset for testing
-            X_tr, X_te, y_tr, y_te = features, features, labels, labels
+        from sklearn.model_selection import GroupShuffleSplit
+        gss = GroupShuffleSplit(n_splits=1, test_size=test_size, random_state=42)
+        train_idx, test_idx = next(gss.split(X=np.zeros(len(labels)), y=labels, groups=groups))
+
+        X_tr, X_te = features[train_idx], features[test_idx]
+        y_tr, y_te = labels[train_idx], labels[test_idx]
+
+        # quick leakage check:
+        assert set(groups[train_idx]).isdisjoint(set(groups[test_idx])), "LEAKAGE: groups overlap!"
         
         # 1. K-Nearest Neighbors Classifier
         knn = KNeighborsClassifier(n_neighbors=5, metric="cosine")
@@ -529,7 +530,23 @@ class ModelEvaluator:
         
         # Compute cosine similarity between these mean vectors
         cos_sim = cosine_similarity(mean_features)
-        
+
+        # # Run an additional cosine similarity within each class to get intra-class similarity
+        # class_sims = []
+        # for l in unique_labels:
+        #     class_feats = features[labels == l]
+        #     if len(class_feats) > 1:
+        #         class_sims.append(cosine_similarity(class_feats))
+
+        # # Plot each class sim
+        # for i, sim in enumerate(class_sims):
+        #     fig, ax = plt.subplots(figsize=(6, 5))
+        #     im = ax.imshow(sim, cmap='viridis', vmin=0, vmax=1)
+        #     ax.set_title(f'Intra-class Cosine Similarity (Class {unique_labels[i]})', fontsize=14, fontweight='bold')
+        #     plt.colorbar(im, label='Cosine Similarity')
+        #     plt.show()
+        #     plt.close(fig)
+
         # Setup plot
         fig, ax = plt.subplots(figsize=(10, 8))
         im = ax.imshow(cos_sim, cmap='viridis', vmin=0, vmax=1)
@@ -642,7 +659,7 @@ class ModelEvaluator:
 
         self.logger.info(f"\nVisualizations saved to: {self.output_dir}")
 
-    def run_full_evaluation(self, dataloader, features: np.ndarray, labels: np.ndarray, is_scanning: bool = False):
+    def run_full_evaluation(self, dataloader, features: np.ndarray, labels: np.ndarray, groups, is_scanning: bool = False):
         """
         Runs the complete evaluation pipeline. This version safely handles cases where
         classes have only one sample by skipping the quantitative evaluation.
@@ -669,7 +686,7 @@ class ModelEvaluator:
         
         if can_run_quantitative_eval:
             self.logger.info("   All classes have 2 or more samples. Running quantitative metrics...")
-            eval_metrics = self.evaluate_representations(features, labels)
+            eval_metrics = self.evaluate_representations(features, labels, groups)
             results['metrics'] = eval_metrics
             for metric, value in eval_metrics.items():
                 unit = '%' if 'accuracy' in metric else ''
