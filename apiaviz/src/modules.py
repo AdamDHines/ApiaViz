@@ -10,6 +10,9 @@ from .functional import AdaptiveKWTA, SparseLinear
 class VisionModule(nn.Module):
     def __init__(self, kc_dim=1024, lam_ch=12, vpn_ch=64, training=False):
         super().__init__()
+
+        # TODO: Modify the retina input to handle the BG and greyscale as two separate retina layers
+        # TODO: Match channels to ommatidial count, lamina cartridge, and medulla columns
         self.training = training
         # ───── Retina to Photoreceptor (Retinal response) ─────
         # Two input channels (green, blue), processed independently into 6 channels
@@ -65,6 +68,9 @@ class VisionModule(nn.Module):
         return F.adaptive_avg_pool2d(f, 1).flatten(1)
 
     def forward(self, x):
+        # TODO: Pass the greyscale and BG retina through the respective channel
+        # TODO: Only pass greyscale retina to the lamina, and BG directly to the medulla
+        # TODO: Add the lamina output to the medulla input
         # Retina activation
         retina = self.retina(x)
 

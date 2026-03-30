@@ -64,47 +64,35 @@ class TrainVision(nn.Module):
 
         # --- AUGMENTATION PIPELINE -----------------------------
         self.full_image_size = 64 
-        if self.snn:
-            aug = transforms.Compose([
-                transforms.RandomResizedCrop(64, (0.7, 1.0)),
-                transforms.RandomHorizontalFlip(),
-                transforms.RandomRotation(10, fill=128),
-                transforms.ColorJitter(hue=.2, saturation=.3, brightness=.3, contrast=.3),
-                transforms.GaussianBlur(3, sigma=(.1,2.)),
-                transforms.ToTensor(),
-                transforms.Lambda(self.select_GB),              
-                avf.MaybeGray2Ch(0.5)
-            ])
-        else:
-            aug = transforms.Compose([
-                transforms.RandomResizedCrop(64, (0.7, 1.0)),
-                transforms.RandomHorizontalFlip(),
-                transforms.RandomRotation(10, fill=128),
-                transforms.ColorJitter(hue=.2, saturation=.3, brightness=.3, contrast=.3),
-                transforms.GaussianBlur(3, sigma=(.1,2.)),
-                transforms.ToTensor(),
-                transforms.Lambda(self.select_GB),
-                avf.MaybeGray2Ch(0.5),
-                transforms.Normalize([0.5, 0.5], [0.5, 0.5]),
-            ])
+
+        feature_aug = transforms.Compose([
+            transforms.RandomResizedCrop(64, (0.7, 1.0)),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomRotation(10, fill=128),
+            transforms.ColorJitter(hue=.2, saturation=.3, brightness=.3, contrast=.3),
+            transforms.GaussianBlur(3, sigma=(.1,2.)),
+            transforms.ToTensor(),
+            transforms.Lambda(self.select_GB),
+            transforms.Normalize([0.5, 0.5], [0.5, 0.5]),
+        ])
+
+        spatial_aug = transforms.Compose([
+            transforms.RandomResizedCrop(64, scale=(0.85, 1.0), ratio=(0.95, 1.05)),
+            transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(brightness=0.1, contrast=0.1),
+            transforms.GaussianBlur(3, sigma=(0.1, 1.0)),
+            transforms.ToTensor(),
+            transforms.Lambda(self.select_GB),
+            transforms.Normalize([0.5, 0.5], [0.5, 0.5]),
+        ])
 
         ds_root = f"{self.dataset_dir}/{self.training_dataset}"
         # append the train directory if using Tiny ImageNet
         if self.training_dataset == "tiny-imagenet": 
             ds_root = f"{ds_root}/train"
-        if self.snn:
-            # SNN mode: pass snn_mode=True and num_steps to the dataset
-            train_ds = TinyImageNetPairDataset(
-                ds_root, 
-                transform=aug, 
-                snn_mode=True,
-                num_steps=self.num_steps
-            )
-        else:
-            # ANN mode: standard instantiation
-            train_ds = TinyImageNetPairDataset(ds_root, 
-                                            transform=aug, 
-                                            snn_mode=False)
+
+        # ANN mode: standard instantiation
+        train_ds = TinyImageNetPairDataset(ds_root, feature_transform=feature_aug, spatial_transform=spatial_aug)
             
         train_dl = DataLoader(train_ds, batch_size=self.batch_size)
 
@@ -143,26 +131,10 @@ class TrainVision(nn.Module):
             for v1, v2 in pbar:
                 v1, v2 = v1.to(self.device), v2.to(self.device)
                 opt.zero_grad(set_to_none=True)
-                if self.snn:
-                    # 1. Pass the input and the number of time steps to the model.
-                    # The output will be spikes over time: (num_steps, batch_size, features)
-                    v1 = v1.permute(1, 0, 2, 3, 4)
-                    v2 = v2.permute(1, 0, 2, 3, 4)
-                    spk_h1 = model(v1, num_steps=self.num_steps)
-                    spk_h2 = model(v2, num_steps=self.num_steps)
 
-                    # 2. Decode the spike train into a feature vector (Rate Coding).
-                    h1 = spk_h1.mean(dim=0)
-                    h2 = spk_h2.mean(dim=0)
-                    
-                    # 3. Normalize the spike counts.
-                    h1 = F.normalize(h1, dim=1)
-                    h2 = F.normalize(h2, dim=1)
-
-                else:
-                    # Original ANN forward pass
-                    h1 = F.normalize(model(v1), dim=1)
-                    h2 = F.normalize(model(v2), dim=1)
+                # Original ANN forward pass
+                h1 = F.normalize(model(v1), dim=1)
+                h2 = F.normalize(model(v2), dim=1)
                 
                 # The loss calculation remains the same, as we've prepared `h1` and `h2`
                 loss = avf.nt_xent(h1, h2)
