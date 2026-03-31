@@ -19,8 +19,7 @@ class TinyImageNetPairDataset(Dataset):
     applying a single, shared, smooth scanning path to both augmented views.
     This is suitable for contrastive learning frameworks like SimCLR.
     """
-    def __init__(self, root: str, 
-                 feature_transform: transforms.Compose, 
+    def __init__(self, root: str, feature_transform: transforms.Compose, 
                  spatial_transform: transforms.Compose,
                  snn_mode: bool = False, 
                  num_steps: int = 50):
@@ -62,20 +61,16 @@ class TinyImageNetPairDataset(Dataset):
             return self.__getitem__(random.randint(0, len(self) - 1))
 
         # Create two different augmented views of the same image
-        v1_static_feature = self.feature_transform(img)
-        v2_static_feature = self.feature_transform(img)
-        v1_static_spatial = self.spatial_transform(img)
-        v2_static_spatial = self.spatial_transform(img)
+        v1_static = self.feature_transform(img)
+        v2_static = self.feature_transform(img)
 
-        # Generate an greyscale version of each view
-        v1_static_grey_feature = v1_static_feature.mean(dim=0, keepdim=True)        
-        v2_static_grey_feature = v2_static_feature.mean(dim=0, keepdim=True)
-        v1_static_grey_spatial = v1_static_spatial.mean(dim=0, keepdim=True)
-        v2_static_grey_spatial = v2_static_spatial.mean(dim=0, keepdim=True)
-
-        # Package all v1 and v2 feature and spatial and grey into a single variable
-        v1 = [v1_static_feature, v1_static_spatial, v1_static_grey_feature, v1_static_grey_spatial]
-        v2 = [v2_static_feature, v2_static_spatial, v2_static_grey_feature, v2_static_grey_spatial]
+        if self.snn_mode:
+            v1 = self._create_spike_train(v1_static)
+            v2 = self._create_spike_train(v2_static)
+        else:
+            # In ANN mode, just return the static augmented tensors
+            v1 = v1_static
+            v2 = v2_static
             
         return v1, v2
 

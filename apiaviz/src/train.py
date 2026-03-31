@@ -11,7 +11,7 @@ from pathlib import Path
 from torchvision import transforms
 from torch.utils.data import DataLoader
 from apiaviz.dataset.datagen import TinyImageNetPairDataset
-from apiaviz.src.modules import VisionModule, SNNVisionModule
+from apiaviz.src.modules import VisionBackbone
 
 # Set multiprocessing start method to 'spawn' for compatibility on macOS
 import multiprocessing as mp
@@ -105,25 +105,26 @@ class TrainVision(nn.Module):
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
 
-        if self.snn:
-            # Pass any necessary SNN-specific args here
-            model = SNNVisionModule().to(self.device)
-        else:
-            model = VisionModule().to(self.device)
+
+        backbone = VisionBackbone().to(self.device)
 
         if not self.models_dir.exists():
             self.models_dir.mkdir(parents=True, exist_ok=True)
-        
-        # This saving logic is fine.
-        ckpt = f"./apiaviz/models/{self.vision_model}_untrained.pth"
-        torch.save(model.state_dict(), ckpt)
-        model.train()
 
-        opt = torch.optim.AdamW(model.parameters(), lr=self.lr, weight_decay=1e-4)
+        backbone.train()
+
+        opt = torch.optim.AdamW(backbone.parameters(), lr=self.lr, weight_decay=1e-4)
         sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=self.epochs)
         best_loss = float("inf")
 
-        # --- CORE TRAINING LOOP (key modifications here) --------------------------
+        # define an MLP for the projection head (if needed by the loss function)
+        mlp = nn.Sequential(
+            nn.Linear(128, 256),
+            nn.ReLU(),
+            nn.Linear(256, 128)
+        ).to(self.device)
+
+        # --- Pre-training VisionBackbone
         for epoch in range(self.epochs):
             running, processed = 0.0, 0
             pbar = tqdm(train_dl, desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch")
@@ -133,9 +134,13 @@ class TrainVision(nn.Module):
                 opt.zero_grad(set_to_none=True)
 
                 # Original ANN forward pass
-                h1 = F.normalize(model(v1), dim=1)
-                h2 = F.normalize(model(v2), dim=1)
-                
+                h1, _ = backbone(v1)
+                h2, _ = backbone(v2)
+
+                # Run through MLP
+                h1 = F.normalize(mlp(h1), dim=1)
+                h2 = F.normalize(mlp(h2), dim=1)
+
                 # The loss calculation remains the same, as we've prepared `h1` and `h2`
                 loss = avf.nt_xent(h1, h2)
 
@@ -144,7 +149,7 @@ class TrainVision(nn.Module):
                 # PyTorch handles the gradient flow back through all `num_steps`.
                 scaler.scale(loss).backward()
                 scaler.unscale_(opt)
-                torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+                torch.nn.utils.clip_grad_norm_(backbone.parameters(), 1.0)
                 scaler.step(opt)
                 scaler.update()
 

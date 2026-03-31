@@ -14,7 +14,7 @@ from apiaviz.src.create_GTtol import create_GTtol
 from apiaviz.src.sad import run_sad
 
 # Assuming apiaviz is in the project structure
-from apiaviz.src.modules import VisionModule, SNNVisionModule
+# from apiaviz.src.modules import VisionModule, SNNVisionModule
 
 class GardensPoint:
     """

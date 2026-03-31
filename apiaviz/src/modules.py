@@ -43,9 +43,6 @@ class VisionBackbone(nn.Module):
         return achromatic, chromatic
 
     def forward(self, x, detach_lobula_for_plate=False, return_maps=False):
-        # TODO: Pass the greyscale and BG retina through the respective channel
-        # TODO: Only pass greyscale retina to the lamina, and BG directly to the medulla
-        # TODO: Add the lamina output to the medulla input
         achromatic, chromatic = self._split_input(x)
 
         # Ommatidial activation

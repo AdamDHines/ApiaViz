@@ -92,7 +92,7 @@ def parse_args():
     # Project directories
     parser.add_argument('--models_dir', type=str, default='./apiaviz/models/',
                         help='Directory to save and load models')
-    parser.add_argument('--dataset_dir', type=str, default='./apiaviz/dataset/',
+    parser.add_argument('--dataset_dir', type=str, default='/home/adam/repo/ApiaViz/apiaviz/dataset/',
                         help='Directory where datasets are stored')
     parser.add_argument('--output_dir', type=str, default='./apiaviz/output/',
                         help='Directory to save evaluation results')

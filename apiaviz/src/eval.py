@@ -7,7 +7,7 @@ from time import time
 from tqdm import tqdm
 from pathlib import Path
 from torch.utils.data import DataLoader
-from apiaviz.src.modules import VisionModule, SNNVisionModule
+# from apiaviz.src.modules import VisionModule, SNNVisionModule
 from apiaviz.dataset.datagen import InsectVisionDataset, DataMode
 
 class EvalVision:
