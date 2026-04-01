@@ -173,7 +173,7 @@ class TrainVision(nn.Module):
             if self.best_only:
                 if epoch_loss < best_loss:
                     best_loss = epoch_loss
-                    torch.save(model.state_dict(), str(self.model_path))
+                    torch.save(backbone.state_dict(), str(self.model_path))
                     self.logger.debug(f"\n[Epoch {epoch+1}] ↳ New best loss {best_loss:.4f} → {self.model_path}")
             else:
                 # Print a confirmation for the per-epoch model save
@@ -181,7 +181,7 @@ class TrainVision(nn.Module):
                     new_path = Path(f"{self.models_dir}/{self.snn_vision_model}_Epoch{epoch+1}.pth")
                 else:
                     new_path = Path(f"{self.models_dir}/{self.vision_model}_Epoch{epoch+1}.pth")
-                torch.save(model.state_dict(), str(new_path))
+                torch.save(backbone.state_dict(), str(new_path))
                 self.logger.debug(f"\n[Epoch {epoch+1}] ↳ Model saved to {new_path}")
 
         self.logger.info(f"\nTraining complete. Best loss {best_loss:.4f} → {self.model_path}")

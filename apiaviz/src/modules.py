@@ -95,7 +95,7 @@ class HexRouting2d(nn.Module):
 
     def forward(self, x):
         B, C, H, W = x.shape
-        xp = torch.nn.functional.pad(x, (1, 1, 1, 1), mode="constant", value=0.0)
+        xp = torch.nn.functional.pad(x, (1, 1, 1, 1), mode="reflect")
 
         left  = xp[:, :, 1:H+1, 0:W]
         right = xp[:, :, 1:H+1, 2:W+2]
@@ -233,7 +233,7 @@ class M3Pathway(nn.Module):
     def __init__(self):
         super().__init__()
         self.integrate = nn.Conv2d(2, 1, kernel_size=1, bias=True)
-        self.local = nn.Conv2d(1, 1, kernel_size=3, padding=1, bias=True)
+        self.local = nn.Conv2d(1, 1, kernel_size=3, padding=1, padding_mode="reflect", bias=True)
 
         with torch.no_grad():
             self.integrate.weight.zero_()
@@ -285,9 +285,9 @@ class MedullaFeatureMixer(nn.Module):
     def __init__(self, in_channels=3, out_channels=32, pool_scales=(1, 2, 4)):
         super().__init__()
         self.pool_scales = tuple(pool_scales)
-        self.local = nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, bias=True)
+        self.local = nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, padding_mode="reflect", bias=True)
         self.context = nn.Conv2d(in_channels * len(self.pool_scales), out_channels, kernel_size=1, bias=True)
-        self.refine = nn.Conv2d(out_channels * 2, out_channels, kernel_size=3, padding=1, bias=True)
+        self.refine = nn.Conv2d(out_channels * 2, out_channels, kernel_size=3, padding=1, padding_mode="reflect", bias=True)
         self.norm = nn.GroupNorm(num_groups=1, num_channels=out_channels)
 
     def _pool_context(self, x):
@@ -323,7 +323,7 @@ class Lobula(nn.Module):
     def __init__(self, medulla_channels=3, feature_channels=32, embedding_dim=128):
         super().__init__()
         self.mixer = MedullaFeatureMixer(in_channels=medulla_channels, out_channels=feature_channels)
-        self.integrate = nn.Conv2d(feature_channels, feature_channels, kernel_size=3, padding=1, bias=True)
+        self.integrate = nn.Conv2d(feature_channels, feature_channels, kernel_size=3, padding=1, padding_mode="reflect", bias=True)
         self.norm = nn.GroupNorm(num_groups=1, num_channels=feature_channels)
         self.gem_pool = GeneralizedMeanPooling2d(p=3.0)
         self.embedding = nn.Linear(feature_channels, embedding_dim)
@@ -346,7 +346,7 @@ class LobulaPlate(nn.Module):
     def __init__(self, in_channels=32, out_channels=32):
         super().__init__()
         self.project = nn.Conv2d(in_channels + 2, out_channels, kernel_size=1, bias=True)
-        self.local = nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1, groups=out_channels, bias=True)
+        self.local = nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1, padding_mode="reflect", groups=out_channels, bias=True)
         self.context = nn.Conv2d(out_channels * 2, out_channels, kernel_size=1, bias=True)
         self.norm = nn.GroupNorm(num_groups=1, num_channels=out_channels)
 
