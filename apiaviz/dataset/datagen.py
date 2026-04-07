@@ -1,5 +1,5 @@
 # Imports
-import os, cv2, math, torch, random
+import os, cv2, math, torch, random, re
 
 import numpy as np
 from typing import List, Tuple
@@ -11,6 +11,11 @@ from torchvision import transforms
 from torch.utils.data import Dataset
 from apiaviz.src.functional import generate_smooth_scan_path
 
+IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png"}
+WILDSCENES_DATASET_NAMES = {"wildscenes", "wildscenes2d", "wildscenes-2d"}
+WILDSCENES_IMAGE_DIRS = {"image", "images", "rgb"}
+WILDSCENES_SEQUENCE_RE = re.compile(r"^[a-z]-\d+$", re.IGNORECASE)
+
 class TinyImageNetPairDataset(Dataset):
     """
     Returns two independent augmentations of the same Tiny-ImageNet image.
@@ -19,23 +24,34 @@ class TinyImageNetPairDataset(Dataset):
     applying a single, shared, smooth scanning path to both augmented views.
     This is suitable for contrastive learning frameworks like SimCLR.
     """
-    def __init__(self, root: str, feature_transform: transforms.Compose, 
+    def __init__(self, root: str | None, feature_transform: transforms.Compose, 
                  spatial_transform: transforms.Compose,
+                 image_paths: list[str] | list[Path] | None = None,
                  snn_mode: bool = False, 
                  num_steps: int = 50):
         
         super().__init__()
-        self.root = Path(root)
+        self.root = Path(root) if root is not None else None
         self.feature_transform = feature_transform
         self.spatial_transform = spatial_transform
         self.snn_mode = snn_mode
 
         if self.snn_mode:
             self.num_steps = num_steps
-        
-        self.images = sorted(list(self.root.glob("**/*.jpg")))
+
+        if image_paths is not None:
+            self.images = [Path(image_path) for image_path in image_paths]
+        else:
+            if self.root is None:
+                raise ValueError("Either root or image_paths must be provided.")
+            self.images = sorted(
+                fp for fp in self.root.rglob("*")
+                if fp.suffix.lower() in IMAGE_SUFFIXES
+            )
+
         if len(self.images) == 0:
-            raise RuntimeError(f"No JPEGs found in {self.root} or its subdirectories")
+            src = self.root if self.root is not None else "provided image_paths"
+            raise RuntimeError(f"No images found in {src}")
         random.shuffle(self.images)
 
     def __len__(self) -> int:
@@ -73,6 +89,379 @@ class TinyImageNetPairDataset(Dataset):
             v2 = v2_static
             
         return v1, v2
+
+
+class DenseSpatialPairDataset(Dataset):
+    """
+    Dense spatial correspondence dataset for lobula plate fine-tuning.
+
+    Each sample produces two photometrically different views of the same image,
+    where the second view is translated by a known integer offset. This gives
+    the lobula plate a dense matching task with explicit spatial supervision.
+    """
+    def __init__(
+        self,
+        root: str | None = None,
+        image_paths: list[str] | list[Path] | None = None,
+        image_size: int = 64,
+        max_translation: int = 8,
+        min_translation: int = 0,
+        crop_padding: int = 8,
+        appearance_transform=None,
+        max_samples: int | None = None,
+        deterministic: bool = False,
+        seed: int = 0,
+    ):
+        super().__init__()
+        self.root = Path(root) if root is not None else None
+        self.image_size = int(image_size)
+        self.max_translation = int(max_translation)
+        self.min_translation = int(min_translation)
+        self.crop_padding = int(crop_padding)
+        self.appearance_transform = appearance_transform
+        self.max_samples = max_samples
+        self.deterministic = deterministic
+        self.seed = int(seed)
+
+        if self.max_translation < 0:
+            raise ValueError("max_translation must be >= 0")
+        if self.max_translation >= self.image_size:
+            raise ValueError("max_translation must be smaller than image_size")
+        if self.min_translation < 0:
+            raise ValueError("min_translation must be >= 0")
+        if self.min_translation > self.max_translation:
+            raise ValueError("min_translation must be <= max_translation")
+        if image_paths is None:
+            if self.root is None:
+                raise ValueError("Either root or image_paths must be provided.")
+            self.images = self.discover_image_paths(self.root)
+        else:
+            self.images = [Path(fp) for fp in image_paths]
+        if len(self.images) == 0:
+            src = self.root if self.root is not None else "provided image_paths"
+            raise RuntimeError(f"No images found in {src}")
+
+        shuffle_rng = random.Random(self.seed)
+        shuffle_rng.shuffle(self.images)
+        self.resize = transforms.Resize((self.image_size, self.image_size))
+        self.to_tensor = transforms.ToTensor()
+        self.normalize = transforms.Normalize([0.5, 0.5], [0.5, 0.5])
+
+    @staticmethod
+    def _normalize_split_entry(line: str) -> str:
+        line = line.strip().replace("\\", "/")
+        if not line or line.startswith("#"):
+            return ""
+        return line.split(",")[0].strip().lstrip("./")
+
+    @staticmethod
+    def _split_entry_candidates(entry: str) -> set[str]:
+        entry = DenseSpatialPairDataset._normalize_split_entry(entry)
+        if not entry:
+            return set()
+
+        suffix = Path(entry).suffix.lower()
+        if "/" in entry:
+            candidates = {entry}
+            if suffix:
+                candidates.add(entry[: -len(suffix)])
+            return candidates
+
+        candidates = {entry}
+        basename = Path(entry).name
+        stem = Path(entry).stem
+        if suffix:
+            candidates.add(entry[: -len(suffix)])
+        candidates.add(basename)
+        candidates.add(stem)
+        return {candidate for candidate in candidates if candidate}
+
+    @staticmethod
+    def _path_match_keys(path: Path, root: Path) -> set[str]:
+        rel = path.relative_to(root).as_posix().lstrip("./")
+        parts = rel.split("/")
+        keys = {rel, path.name, path.stem}
+
+        suffix = path.suffix.lower()
+        if suffix:
+            keys.add(rel[: -len(suffix)])
+
+        if len(parts) >= 2:
+            tail = "/".join(parts[1:])
+            keys.add(tail)
+            if suffix:
+                keys.add(tail[: -len(suffix)])
+
+        sequence = None
+        for part in parts:
+            if WILDSCENES_SEQUENCE_RE.match(part):
+                sequence = part
+                break
+
+        if sequence is not None:
+            keys.add(f"{sequence}/{path.name}")
+            keys.add(f"{sequence}/{path.stem}")
+
+        return {key for key in keys if key}
+
+    @staticmethod
+    def _apply_split_file(image_paths: list[Path], root: Path, split_file: str | Path | None) -> list[Path]:
+        if split_file in (None, ""):
+            return sorted(image_paths)
+
+        split_path = Path(split_file)
+        if not split_path.exists():
+            raise FileNotFoundError(f"Split file not found at {split_path}")
+
+        split_entries = []
+        for raw_line in split_path.read_text(encoding="utf-8").splitlines():
+            entry = DenseSpatialPairDataset._normalize_split_entry(raw_line)
+            if entry:
+                split_entries.append(entry)
+
+        if len(split_entries) == 0:
+            raise RuntimeError(f"No usable entries found in split file {split_path}")
+
+        keyed_paths = {}
+        for image_path in image_paths:
+            for key in DenseSpatialPairDataset._path_match_keys(image_path, root):
+                keyed_paths.setdefault(key, []).append(image_path)
+
+        selected = []
+        seen = set()
+        for entry in split_entries:
+            matches = []
+            for candidate in DenseSpatialPairDataset._split_entry_candidates(entry):
+                matches.extend(keyed_paths.get(candidate, []))
+
+            for match in matches:
+                if match not in seen:
+                    selected.append(match)
+                    seen.add(match)
+
+        if len(selected) == 0:
+            raise RuntimeError(
+                f"Split file {split_path} did not match any RGB frames under {root}"
+            )
+
+        return sorted(selected)
+
+    @staticmethod
+    def _looks_like_wildscenes_sequence_dir(path: Path) -> bool:
+        return (
+            path.is_dir()
+            and WILDSCENES_SEQUENCE_RE.match(path.name) is not None
+            and any((path / image_dir).is_dir() for image_dir in WILDSCENES_IMAGE_DIRS)
+        )
+
+    @staticmethod
+    def _looks_like_wildscenes_dataset_root(path: Path) -> bool:
+        if not path.is_dir():
+            return False
+        if DenseSpatialPairDataset._looks_like_wildscenes_sequence_dir(path):
+            return True
+        return any(
+            DenseSpatialPairDataset._looks_like_wildscenes_sequence_dir(child)
+            for child in path.iterdir()
+            if child.is_dir()
+        )
+
+    @staticmethod
+    def _wildscenes_root_candidates(root: Path) -> list[Path]:
+        candidates = [
+            root,
+            root / "WildScenes2d",
+            root / "WildScenes2D",
+            root / "wildscenes2d",
+            root / "WildScenes",
+            root / "wildscenes",
+            root / "data",
+            root / "data" / "WildScenes2d",
+            root / "data" / "WildScenes2D",
+            root / "data" / "WildScenes",
+            root / "data" / "wildscenes",
+            root / "WildScenes" / "WildScenes2d",
+            root / "WildScenes" / "WildScenes2D",
+            root / "wildscenes" / "WildScenes2d",
+            root / "wildscenes" / "WildScenes2D",
+            root / "data" / "WildScenes" / "WildScenes2d",
+            root / "data" / "WildScenes" / "WildScenes2D",
+            root / "data" / "wildscenes" / "WildScenes2d",
+            root / "data" / "wildscenes" / "WildScenes2D",
+        ]
+
+        if root.is_dir():
+            for child in root.iterdir():
+                if not child.is_dir():
+                    continue
+                candidates.extend(
+                    [
+                        child,
+                        child / "data",
+                        child / "WildScenes",
+                        child / "WildScenes2d",
+                        child / "WildScenes2D",
+                        child / "data" / "WildScenes",
+                        child / "data" / "WildScenes2d",
+                        child / "data" / "WildScenes2D",
+                        child / "WildScenes" / "WildScenes2d",
+                        child / "WildScenes" / "WildScenes2D",
+                        child / "data" / "WildScenes" / "WildScenes2d",
+                        child / "data" / "WildScenes" / "WildScenes2D",
+                    ]
+                )
+
+        deduped = []
+        seen = set()
+        for candidate in candidates:
+            if candidate in seen:
+                continue
+            seen.add(candidate)
+            deduped.append(candidate)
+        return deduped
+
+    @staticmethod
+    def resolve_wildscenes2d_root(root: str | Path) -> Path:
+        root = Path(root)
+
+        for candidate in DenseSpatialPairDataset._wildscenes_root_candidates(root):
+            if candidate.name.lower() in WILDSCENES_IMAGE_DIRS and candidate.exists():
+                return candidate
+            if DenseSpatialPairDataset._looks_like_wildscenes_sequence_dir(candidate):
+                return candidate
+            if DenseSpatialPairDataset._looks_like_wildscenes_dataset_root(candidate):
+                return candidate
+
+        return root
+
+    @staticmethod
+    def discover_wildscenes2d_image_paths(
+        root: str | Path,
+        split_file: str | Path | None = None,
+    ) -> list[Path]:
+        resolved_root = DenseSpatialPairDataset.resolve_wildscenes2d_root(root)
+        image_paths = []
+
+        if resolved_root.name.lower() in WILDSCENES_IMAGE_DIRS:
+            image_paths = sorted(
+                fp for fp in resolved_root.iterdir()
+                if fp.is_file() and fp.suffix.lower() in IMAGE_SUFFIXES
+            )
+        else:
+            image_dirs = []
+            for candidate in resolved_root.rglob("*"):
+                if not candidate.is_dir():
+                    continue
+                if candidate.name.lower() not in WILDSCENES_IMAGE_DIRS:
+                    continue
+                parent = candidate.parent
+                if DenseSpatialPairDataset._looks_like_wildscenes_sequence_dir(parent):
+                    image_dirs.append(candidate)
+
+            image_paths = sorted(
+                fp
+                for image_dir in image_dirs
+                for fp in image_dir.iterdir()
+                if fp.is_file() and fp.suffix.lower() in IMAGE_SUFFIXES
+            )
+
+        if len(image_paths) == 0:
+            raise RuntimeError(
+                f"No WildScenes2D RGB frames found under {resolved_root}. "
+                "Expected sequence folders like V-01/image/*.png"
+            )
+
+        return DenseSpatialPairDataset._apply_split_file(image_paths, resolved_root, split_file)
+
+    @staticmethod
+    def discover_image_paths(
+        root: str | Path,
+        dataset_name: str | None = None,
+        split_file: str | Path | None = None,
+    ) -> list[Path]:
+        root = Path(root)
+        dataset_key = (dataset_name or "").strip().lower()
+        if dataset_key in WILDSCENES_DATASET_NAMES:
+            return DenseSpatialPairDataset.discover_wildscenes2d_image_paths(root, split_file=split_file)
+
+        image_paths = sorted(
+            fp for fp in root.rglob("*")
+            if fp.suffix.lower() in IMAGE_SUFFIXES
+        )
+        return DenseSpatialPairDataset._apply_split_file(image_paths, root, split_file)
+
+    def __len__(self) -> int:
+        if self.max_samples is None or self.max_samples <= 0:
+            return len(self.images)
+        return self.max_samples
+
+    def _rng_for_idx(self, idx: int):
+        if self.deterministic:
+            return random.Random(self.seed + idx)
+        return random
+
+    def _load_image(self, idx: int) -> Image.Image:
+        img_path = self.images[idx % len(self.images)]
+        try:
+            return Image.open(img_path).convert("RGB")
+        except Exception:
+            return self._load_image(random.randint(0, len(self.images) - 1))
+
+    def _prepare_view(self, img: Image.Image) -> torch.Tensor:
+        if self.appearance_transform is not None:
+            img = self.appearance_transform(img)
+        tensor = self.to_tensor(self.resize(img))
+        tensor = tensor[1:3]
+        return self.normalize(tensor)
+
+    def _sample_shift(self, rng) -> tuple[int, int]:
+        if self.max_translation == 0:
+            return 0, 0
+
+        while True:
+            shift_x = rng.randint(-self.max_translation, self.max_translation)
+            shift_y = rng.randint(-self.max_translation, self.max_translation)
+            if max(abs(shift_x), abs(shift_y)) >= self.min_translation:
+                return shift_x, shift_y
+
+    def _translate(self, tensor: torch.Tensor, shift_x: int, shift_y: int) -> torch.Tensor:
+        translated = torch.zeros_like(tensor)
+
+        src_x0 = max(0, -shift_x)
+        src_x1 = self.image_size - max(0, shift_x)
+        dst_x0 = max(0, shift_x)
+        dst_x1 = self.image_size - max(0, -shift_x)
+
+        src_y0 = max(0, -shift_y)
+        src_y1 = self.image_size - max(0, shift_y)
+        dst_y0 = max(0, shift_y)
+        dst_y1 = self.image_size - max(0, -shift_y)
+
+        if src_x1 > src_x0 and src_y1 > src_y0:
+            translated[:, dst_y0:dst_y1, dst_x0:dst_x1] = tensor[:, src_y0:src_y1, src_x0:src_x1]
+
+        return translated
+
+    def __getitem__(self, idx: int):
+        rng = self._rng_for_idx(idx)
+        img = self._load_image(idx)
+        anchor = self._prepare_view(img)
+        positive = self._prepare_view(img)
+
+        shift_x, shift_y = self._sample_shift(rng)
+        positive = self._translate(positive, shift_x, shift_y)
+
+        overlap_ratio = (
+            (self.image_size - abs(shift_x))
+            * (self.image_size - abs(shift_y))
+        ) / float(self.image_size * self.image_size)
+
+        return {
+            "anchor": anchor,
+            "positive": positive,
+            "shift": torch.tensor([shift_x, shift_y], dtype=torch.int64),
+            "overlap_ratio": torch.tensor(overlap_ratio, dtype=torch.float32),
+        }
 
 class DataMode(Enum):
     """Defines the operating mode for the dataset."""

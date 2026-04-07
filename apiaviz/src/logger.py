@@ -106,18 +106,36 @@ def model_logger(args):
         logger.info(f'MPS available: {str(torch.backends.mps.is_available())} -- Current device is: MPS')
     else:
         logger.info(f'CUDA available: {str(torch.cuda.is_available())} -- Current device is: CPU \n')
+    model_label = args.snn_vision_model if args.snn else args.vision_model
+    if getattr(args, "mode", None) == "train" and getattr(args, "train_stage", "backbone") == "lobula_plate":
+        model_label = args.lobula_plate_model
+
     if args.snn:
         logger.info(f'ApiaViz is running: Spiking neural network (SNN) mode with model {args.snn_vision_model}.pth \n')
     else:
-        logger.info(f'ApiaViz is running: Artificial neural network (ANN) mode with model {args.vision_model}.pth \n')
+        logger.info(f'ApiaViz is running: Artificial neural network (ANN) mode with model {model_label}.pth \n')
 
     if args.mode == 'train':
         logger.info('Training new model with the following parameters:')
-        logger.info(f'  - Dataset: Tiny ImageNet')
+        logger.info(f'  - Stage: {getattr(args, "train_stage", "backbone")}')
+        logger.info(f'  - Dataset: {args.training_dataset}')
         logger.info(f'  - Epochs: {args.epochs}')
         logger.info(f'  - Batch size: {args.batch_size}')
         logger.info(f'  - Learning rate: {args.lr}')
-        logger.info(f'  - Samples per image: {args.train_samples} \n')
+        logger.info(f'  - Samples per image: {args.train_samples}')
+        if getattr(args, "train_stage", "backbone") == "lobula_plate":
+            logger.info(f'  - Spatial supervision: synthetic_shift')
+            logger.info(f'  - Max shift: {args.spatial_max_shift}')
+            logger.info(f'  - Min shift: {args.min_spatial_shift}')
+            logger.info(f'  - Dense samples: {args.dense_samples}')
+            logger.info(f'  - Dense temperature: {args.dense_temperature}')
+            logger.info(f'  - Dense loss weight: {args.dense_loss_weight}')
+            logger.info(f'  - Shift loss weight: {args.shift_loss_weight}')
+            logger.info(f'  - Lobula LR scale: {args.lobula_lr_scale}')
+            logger.info(f'  - Data loader workers: {args.num_workers}')
+            logger.info(f'  - Init checkpoint: {args.backbone_checkpoint or "[auto-resolve latest pretrained backbone]"} \n')
+        else:
+            logger.info('')
     elif args.mode == 'eval':
         logger.info('Evaluating model with the following parameters:')
         logger.info(f'  - Dataset: {args.eval_dataset}')
