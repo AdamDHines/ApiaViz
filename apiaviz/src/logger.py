@@ -109,6 +109,8 @@ def model_logger(args):
     model_label = args.snn_vision_model if args.snn else args.vision_model
     if getattr(args, "mode", None) == "train" and getattr(args, "train_stage", "backbone") == "lobula_plate":
         model_label = args.lobula_plate_model
+    if getattr(args, "mode", None) == "train" and getattr(args, "train_stage", "backbone") == "projection":
+        model_label = args.projection_model
 
     if args.snn:
         logger.info(f'ApiaViz is running: Spiking neural network (SNN) mode with model {args.snn_vision_model}.pth \n')
@@ -134,6 +136,18 @@ def model_logger(args):
             logger.info(f'  - Lobula LR scale: {args.lobula_lr_scale}')
             logger.info(f'  - Data loader workers: {args.num_workers}')
             logger.info(f'  - Init checkpoint: {args.backbone_checkpoint or "[auto-resolve latest pretrained backbone]"} \n')
+        elif getattr(args, "train_stage", "backbone") == "projection":
+            logger.info(f'  - Near shift range: {args.projection_near_min_shift} to {args.projection_near_max_shift}')
+            logger.info(f'  - Far shift range: {args.projection_far_min_shift} to {args.projection_far_max_shift}')
+            logger.info(f'  - VPN dim: {args.projection_vpn_dim}')
+            logger.info(f'  - KC dim: {args.projection_kc_dim}')
+            logger.info(f'  - KC sparsity: {args.projection_kc_sparsity}')
+            logger.info(f'  - Feature loss weight: {args.projection_feature_loss_weight}')
+            logger.info(f'  - Shift loss weight: {args.projection_shift_loss_weight}')
+            logger.info(f'  - KC loss weight: {args.projection_kc_loss_weight}')
+            logger.info(f'  - Balance loss weight: {args.projection_balance_loss_weight}')
+            logger.info(f'  - Data loader workers: {args.num_workers}')
+            logger.info(f'  - Init checkpoint: {args.backbone_checkpoint or args.lobula_plate_model} \n')
         else:
             logger.info('')
     elif args.mode == 'eval':

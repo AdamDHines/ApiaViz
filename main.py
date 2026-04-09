@@ -50,7 +50,7 @@ def parse_args():
     # Opertaion modes
     parser.add_argument('-m', '--mode', type=str, default='train', choices=['train', 'eval'],
                         help='Mode to run: training or evaluation network')
-    parser.add_argument('--train_stage', type=str, default='backbone', choices=['backbone', 'lobula_plate'],
+    parser.add_argument('--train_stage', type=str, default='backbone', choices=['backbone', 'lobula_plate', 'projection'],
                         help='Training stage to run when mode=train')
     
     # Vision Module parameters
@@ -68,6 +68,8 @@ def parse_args():
                         help='Name of the SNN vision model for saving/loading')
     parser.add_argument('--lobula_plate_model', type=str, default='VisionModel_LobulaPlate',
                         help='Name of the lobula plate fine-tuned checkpoint to save')
+    parser.add_argument('--projection_model', type=str, default='VisionProjection',
+                        help='Name of the VPN and Kenyon projection checkpoint to save')
     
     # Training parameters
     parser.add_argument('-e', '--epochs', type=int, default=20,
@@ -159,6 +161,40 @@ def parse_args():
                         help='Rebuild the cached pre-resized WildScenes frames even if they already exist')
     parser.add_argument('--wildscenes_disable_resized_cache', action='store_true',
                         help='Disable the pre-resized WildScenes image cache and decode original images on the fly')
+    parser.add_argument('--projection_near_max_shift', type=int, default=2,
+                        help='Maximum shift in pixels for near-positive projection tuples')
+    parser.add_argument('--projection_near_min_shift', type=int, default=0,
+                        help='Minimum shift in pixels for near-positive projection tuples')
+    parser.add_argument('--projection_far_max_shift', type=int, default=8,
+                        help='Maximum shift in pixels for far-positive projection tuples')
+    parser.add_argument('--projection_far_min_shift', type=int, default=4,
+                        help='Minimum shift in pixels for far-positive projection tuples')
+    parser.add_argument('--projection_vpn_dim', type=int, default=128,
+                        help='Descriptor dimension for each VPN branch')
+    parser.add_argument('--projection_spatial_pool_size', type=int, default=4,
+                        help='Pooling size used by the spatial VPN branch')
+    parser.add_argument('--projection_spatial_token_dim', type=int, default=64,
+                        help='Token dimension used inside the spatial and conjunctive VPN branches')
+    parser.add_argument('--projection_kc_dim', type=int, default=2048,
+                        help='Number of Kenyon cells in the projection stage')
+    parser.add_argument('--projection_kc_fan_in', type=int, default=8,
+                        help='Sparse fan-in for the Kenyon projection layer')
+    parser.add_argument('--projection_kc_sparsity', type=float, default=0.03,
+                        help='Target sparsity for the Kenyon k-WTA stage')
+    parser.add_argument('--projection_feature_loss_weight', type=float, default=1.0,
+                        help='Weight for the invariant feature VPN objective')
+    parser.add_argument('--projection_shift_loss_weight', type=float, default=1.0,
+                        help='Weight for the spatial shift-regression objective')
+    parser.add_argument('--projection_kc_loss_weight', type=float, default=1.0,
+                        help='Weight for the Kenyon ordering objective')
+    parser.add_argument('--projection_balance_loss_weight', type=float, default=0.05,
+                        help='Weight for the Kenyon load-balancing regularizer')
+    parser.add_argument('--projection_pose_margin', type=float, default=0.10,
+                        help='Required similarity gap between near and far Kenyon codes')
+    parser.add_argument('--projection_negative_margin', type=float, default=0.05,
+                        help='Required similarity gap between far and negative Kenyon codes')
+    parser.add_argument('--projection_preview_samples', type=int, default=24,
+                        help='Number of deterministic validation tuples used for representation plots')
     
     # Evaluation parameters
     parser.add_argument('--eval_samples', type=int, default=128,

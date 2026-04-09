@@ -463,6 +463,136 @@ class DenseSpatialPairDataset(Dataset):
             "overlap_ratio": torch.tensor(overlap_ratio, dtype=torch.float32),
         }
 
+class ProjectionTupleDataset(DenseSpatialPairDataset):
+    """
+    Tuple dataset for VPN and Kenyon projection training.
+
+    Each sample returns:
+    - anchor: reference view
+    - near_positive: same image with a small spatial offset
+    - far_positive: same image with a larger spatial offset
+    - negative: different image
+
+    This gives the projection stage supervision for:
+    - feature invariance across viewpoint changes
+    - spatial sensitivity to larger layout changes
+    - sparse Kenyon ordering between near / far / negative conditions
+    """
+    def __init__(
+        self,
+        root: str | None = None,
+        image_paths: list[str] | list[Path] | None = None,
+        image_size: int = 64,
+        near_max_translation: int = 2,
+        near_min_translation: int = 0,
+        far_max_translation: int = 8,
+        far_min_translation: int = 4,
+        appearance_transform=None,
+        max_samples: int | None = None,
+        deterministic: bool = False,
+        seed: int = 0,
+    ):
+        super().__init__(
+            root=root,
+            image_paths=image_paths,
+            image_size=image_size,
+            max_translation=far_max_translation,
+            min_translation=min(near_min_translation, far_min_translation),
+            appearance_transform=appearance_transform,
+            max_samples=max_samples,
+            deterministic=deterministic,
+            seed=seed,
+        )
+        self.near_max_translation = int(near_max_translation)
+        self.near_min_translation = int(near_min_translation)
+        self.far_max_translation = int(far_max_translation)
+        self.far_min_translation = int(far_min_translation)
+
+        if self.near_max_translation < 0:
+            raise ValueError("near_max_translation must be >= 0")
+        if self.near_min_translation < 0:
+            raise ValueError("near_min_translation must be >= 0")
+        if self.near_min_translation > self.near_max_translation:
+            raise ValueError("near_min_translation must be <= near_max_translation")
+        if self.far_max_translation < 0:
+            raise ValueError("far_max_translation must be >= 0")
+        if self.far_min_translation < 0:
+            raise ValueError("far_min_translation must be >= 0")
+        if self.far_min_translation > self.far_max_translation:
+            raise ValueError("far_min_translation must be <= far_max_translation")
+        if self.far_max_translation >= self.image_size:
+            raise ValueError("far_max_translation must be smaller than image_size")
+        if self.near_max_translation > self.far_max_translation:
+            raise ValueError("near_max_translation must be <= far_max_translation")
+
+    def _sample_shift_in_range(self, rng, min_translation: int, max_translation: int) -> tuple[int, int]:
+        if max_translation == 0:
+            return 0, 0
+
+        while True:
+            shift_x = rng.randint(-max_translation, max_translation)
+            shift_y = rng.randint(-max_translation, max_translation)
+            if max(abs(shift_x), abs(shift_y)) >= min_translation:
+                return shift_x, shift_y
+
+    def _negative_idx(self, idx: int, rng) -> int:
+        if len(self.images) <= 1:
+            return idx % len(self.images)
+
+        while True:
+            candidate = rng.randint(0, len(self.images) - 1)
+            if candidate != (idx % len(self.images)):
+                return candidate
+
+    def __getitem__(self, idx: int):
+        rng = self._rng_for_idx(idx)
+        image_idx = idx % len(self.images)
+
+        img = self._load_image(image_idx)
+        anchor = self._prepare_view(img)
+        near_positive = self._prepare_view(img)
+        far_positive = self._prepare_view(img)
+
+        near_shift_x, near_shift_y = self._sample_shift_in_range(
+            rng,
+            self.near_min_translation,
+            self.near_max_translation,
+        )
+        far_shift_x, far_shift_y = self._sample_shift_in_range(
+            rng,
+            self.far_min_translation,
+            self.far_max_translation,
+        )
+
+        near_positive = self._translate(near_positive, near_shift_x, near_shift_y)
+        far_positive = self._translate(far_positive, far_shift_x, far_shift_y)
+
+        negative_idx = self._negative_idx(idx, rng)
+        negative_img = self._load_image(negative_idx)
+        negative = self._prepare_view(negative_img)
+
+        near_overlap = (
+            (self.image_size - abs(near_shift_x))
+            * (self.image_size - abs(near_shift_y))
+        ) / float(self.image_size * self.image_size)
+        far_overlap = (
+            (self.image_size - abs(far_shift_x))
+            * (self.image_size - abs(far_shift_y))
+        ) / float(self.image_size * self.image_size)
+
+        return {
+            "anchor": anchor,
+            "near_positive": near_positive,
+            "far_positive": far_positive,
+            "negative": negative,
+            "near_shift": torch.tensor([near_shift_x, near_shift_y], dtype=torch.int64),
+            "far_shift": torch.tensor([far_shift_x, far_shift_y], dtype=torch.int64),
+            "near_overlap_ratio": torch.tensor(near_overlap, dtype=torch.float32),
+            "far_overlap_ratio": torch.tensor(far_overlap, dtype=torch.float32),
+            "image_index": torch.tensor(image_idx, dtype=torch.int64),
+            "negative_index": torch.tensor(negative_idx, dtype=torch.int64),
+        }
+
 class DataMode(Enum):
     """Defines the operating mode for the dataset."""
     STATIC_FULL = auto()      # Returns a single, full-size static image.

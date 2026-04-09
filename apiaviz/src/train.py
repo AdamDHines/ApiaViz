@@ -1,4 +1,5 @@
 # Imports
+import json
 import random
 import secrets
 
@@ -16,6 +17,7 @@ from torchvision import transforms
 from torch.utils.data import DataLoader
 from apiaviz.dataset.datagen import (
     DenseSpatialPairDataset,
+    ProjectionTupleDataset,
     TinyImageNetPairDataset,
     WILDSCENES_DATASET_NAMES,
 )
@@ -29,6 +31,18 @@ from apiaviz.dataset.wildscenes import (
     split_wildscenes_frames,
 )
 from apiaviz.src.modules import VisionBackbone
+from apiaviz.src.modules import VisionProjection
+from apiaviz.src.projection_finetune import (
+    ProjectionShiftHead,
+    build_projection_snapshot,
+    descriptor_similarity_summary,
+    kenyon_ordering_loss,
+    load_balance_regularizer,
+    plot_projection_history,
+    plot_projection_snapshot,
+    shift_regression_loss,
+    write_projection_snapshot_json,
+)
 from apiaviz.src.spatial_finetune import (
     centroid_shift_loss,
     descriptor_place_matching_loss,
@@ -57,6 +71,8 @@ class TrainVision(nn.Module):
 
         if self.train_stage == "lobula_plate":
             self.model_path = self.models_dir / f"{self.lobula_plate_model}.pth"
+        elif self.train_stage == "projection":
+            self.model_path = self.models_dir / f"{self.projection_model}.pth"
         elif self.snn:
             self.model_path = self.models_dir / f"{self.snn_vision_model}.pth"
         else:
@@ -221,6 +237,8 @@ class TrainVision(nn.Module):
     def train(self):
         if self.train_stage == "lobula_plate":
             return self.train_lobula_plate()
+        if self.train_stage == "projection":
+            return self.train_projection()
         return self.train_backbone()
 
     # ────────── backbone pretraining ──────────
@@ -769,6 +787,603 @@ class TrainVision(nn.Module):
                 running["pairs"] += batch_size
 
         return self._finalize_pose_metrics(running, processed, len(loader))
+
+    def _split_projection_images(self):
+        train_paths, val_paths = self._split_spatial_images()
+        if val_paths:
+            return train_paths, val_paths
+
+        if len(train_paths) < 4:
+            return train_paths, []
+
+        split_rng = random.Random(self.split_seed)
+        split_rng.shuffle(train_paths)
+        val_count = max(1, int(len(train_paths) * 0.1))
+        val_count = min(val_count, len(train_paths) - 1)
+        val_paths = train_paths[:val_count]
+        train_paths = train_paths[val_count:]
+        self.logger.info(
+            "Projection training did not receive an explicit validation split, "
+            f"so a 10% holdout was created automatically ({len(val_paths)} images)."
+        )
+        return train_paths, val_paths
+
+    def _build_projection_dataset(
+        self,
+        image_paths,
+        max_samples: int | None,
+        deterministic: bool,
+        seed: int,
+        appearance_transform,
+    ) -> ProjectionTupleDataset:
+        return ProjectionTupleDataset(
+            image_paths=image_paths,
+            image_size=self.spatial_image_size,
+            near_max_translation=self.projection_near_max_shift,
+            near_min_translation=self.projection_near_min_shift,
+            far_max_translation=self.projection_far_max_shift,
+            far_min_translation=self.projection_far_min_shift,
+            appearance_transform=appearance_transform,
+            max_samples=max_samples,
+            deterministic=deterministic,
+            seed=seed,
+        )
+
+    def _configure_projection_backbone(self, backbone: VisionBackbone):
+        for parameter in backbone.parameters():
+            parameter.requires_grad = False
+        backbone.eval()
+
+    def _build_projection_optimizer(self, projection: VisionProjection, shift_head: ProjectionShiftHead):
+        return torch.optim.AdamW(
+            [
+                {"params": projection.parameters(), "lr": self.lr},
+                {"params": shift_head.parameters(), "lr": self.lr},
+            ],
+            weight_decay=1e-4,
+        )
+
+    def _empty_projection_metrics(self):
+        return {
+            "loss": 0.0,
+            "feature_loss": 0.0,
+            "shift_loss": 0.0,
+            "kc_loss": 0.0,
+            "balance_loss": 0.0,
+            "feature_top1": 0.0,
+            "shift_mae_px": 0.0,
+            "kc_ordering_acc": 0.0,
+            "feature_ordering_acc": 0.0,
+            "spatial_ordering_acc": 0.0,
+            "conjunctive_ordering_acc": 0.0,
+            "kc_active_fraction": 0.0,
+            "kc_active_count": 0.0,
+            "feature_near_similarity": 0.0,
+            "feature_far_similarity": 0.0,
+            "feature_negative_similarity": 0.0,
+            "spatial_near_similarity": 0.0,
+            "spatial_far_similarity": 0.0,
+            "spatial_negative_similarity": 0.0,
+            "conjunctive_near_similarity": 0.0,
+            "conjunctive_far_similarity": 0.0,
+            "conjunctive_negative_similarity": 0.0,
+            "kc_near_similarity": 0.0,
+            "kc_far_similarity": 0.0,
+            "kc_negative_similarity": 0.0,
+            "near_overlap_ratio": 0.0,
+            "far_overlap_ratio": 0.0,
+        }
+
+    def _finalize_projection_metrics(self, running, processed: int):
+        return {key: value / processed for key, value in running.items()}
+
+    def _projection_checkpoint_paths(self):
+        return (
+            self.model_path,
+            self.models_dir / f"{self.projection_model}_ShiftHead.pth",
+        )
+
+    def _projection_forward(
+        self,
+        backbone: VisionBackbone,
+        projection: VisionProjection,
+        shift_head: ProjectionShiftHead,
+        batch,
+    ):
+        anchor = batch["anchor"].to(self.device, non_blocking=self.device.type == "cuda")
+        near_positive = batch["near_positive"].to(self.device, non_blocking=self.device.type == "cuda")
+        far_positive = batch["far_positive"].to(self.device, non_blocking=self.device.type == "cuda")
+        negative = batch["negative"].to(self.device, non_blocking=self.device.type == "cuda")
+        near_shift = batch["near_shift"].to(self.device, non_blocking=self.device.type == "cuda").float()
+        far_shift = batch["far_shift"].to(self.device, non_blocking=self.device.type == "cuda").float()
+
+        with torch.no_grad():
+            anchor_outputs = backbone(anchor, return_maps=True)
+            near_outputs = backbone(near_positive, return_maps=True)
+            far_outputs = backbone(far_positive, return_maps=True)
+            negative_outputs = backbone(negative, return_maps=True)
+
+        anchor_projection = projection(anchor_outputs)
+        near_projection = projection(near_outputs)
+        far_projection = projection(far_outputs)
+        negative_projection = projection(negative_outputs)
+
+        feature_near_metrics = descriptor_place_matching_loss(
+            anchor_projection["feature_vpn"],
+            near_projection["feature_vpn"],
+            temperature=self.dense_temperature,
+        )
+        feature_far_metrics = descriptor_place_matching_loss(
+            anchor_projection["feature_vpn"],
+            far_projection["feature_vpn"],
+            temperature=self.dense_temperature,
+        )
+        feature_loss = 0.5 * (feature_near_metrics["loss"] + feature_far_metrics["loss"])
+        feature_top1 = 0.5 * (feature_near_metrics["top1"] + feature_far_metrics["top1"])
+
+        near_shift_metrics = shift_regression_loss(
+            shift_head(anchor_projection["spatial_vpn"], near_projection["spatial_vpn"]),
+            near_shift,
+            shift_scale_px=self.projection_far_max_shift,
+        )
+        far_shift_metrics = shift_regression_loss(
+            shift_head(anchor_projection["spatial_vpn"], far_projection["spatial_vpn"]),
+            far_shift,
+            shift_scale_px=self.projection_far_max_shift,
+        )
+        shift_loss = 0.5 * (near_shift_metrics["loss"] + far_shift_metrics["loss"])
+        shift_mae_px = 0.5 * (near_shift_metrics["mae_px"] + far_shift_metrics["mae_px"])
+
+        feature_summary = descriptor_similarity_summary(
+            anchor_projection["feature_vpn"],
+            near_projection["feature_vpn"],
+            far_projection["feature_vpn"],
+            negative_projection["feature_vpn"],
+        )
+        spatial_summary = descriptor_similarity_summary(
+            anchor_projection["spatial_vpn"],
+            near_projection["spatial_vpn"],
+            far_projection["spatial_vpn"],
+            negative_projection["spatial_vpn"],
+        )
+        conjunctive_summary = descriptor_similarity_summary(
+            anchor_projection["conjunctive_vpn"],
+            near_projection["conjunctive_vpn"],
+            far_projection["conjunctive_vpn"],
+            negative_projection["conjunctive_vpn"],
+        )
+        kc_metrics = kenyon_ordering_loss(
+            anchor_projection["kenyon_code"],
+            near_projection["kenyon_code"],
+            far_projection["kenyon_code"],
+            negative_projection["kenyon_code"],
+            pose_margin=self.projection_pose_margin,
+            negative_margin=self.projection_negative_margin,
+        )
+        balance_metrics = load_balance_regularizer(
+            torch.cat(
+                [
+                    anchor_projection["kenyon_drive"],
+                    near_projection["kenyon_drive"],
+                    far_projection["kenyon_drive"],
+                    negative_projection["kenyon_drive"],
+                ],
+                dim=0,
+            )
+        )
+
+        loss = (
+            self.projection_feature_loss_weight * feature_loss
+            + self.projection_shift_loss_weight * shift_loss
+            + self.projection_kc_loss_weight * kc_metrics["loss"]
+            + self.projection_balance_loss_weight * balance_metrics["loss"]
+        )
+
+        kc_active_fraction = torch.cat(
+            [
+                anchor_projection["kc_active_fraction"],
+                near_projection["kc_active_fraction"],
+                far_projection["kc_active_fraction"],
+                negative_projection["kc_active_fraction"],
+            ],
+            dim=0,
+        ).mean()
+        kc_active_count = torch.cat(
+            [
+                anchor_projection["kc_active_counts"].float(),
+                near_projection["kc_active_counts"].float(),
+                far_projection["kc_active_counts"].float(),
+                negative_projection["kc_active_counts"].float(),
+            ],
+            dim=0,
+        ).mean()
+
+        metrics = {
+            "loss": loss.detach(),
+            "feature_loss": feature_loss.detach(),
+            "shift_loss": shift_loss.detach(),
+            "kc_loss": kc_metrics["loss"].detach(),
+            "balance_loss": balance_metrics["loss"].detach(),
+            "feature_top1": feature_top1.detach(),
+            "shift_mae_px": shift_mae_px.detach(),
+            "kc_ordering_acc": kc_metrics["ordering_acc"],
+            "feature_ordering_acc": feature_summary["ordering_acc"],
+            "spatial_ordering_acc": spatial_summary["ordering_acc"],
+            "conjunctive_ordering_acc": conjunctive_summary["ordering_acc"],
+            "kc_active_fraction": kc_active_fraction.detach(),
+            "kc_active_count": kc_active_count.detach(),
+            "feature_near_similarity": feature_summary["near_mean"],
+            "feature_far_similarity": feature_summary["far_mean"],
+            "feature_negative_similarity": feature_summary["negative_mean"],
+            "spatial_near_similarity": spatial_summary["near_mean"],
+            "spatial_far_similarity": spatial_summary["far_mean"],
+            "spatial_negative_similarity": spatial_summary["negative_mean"],
+            "conjunctive_near_similarity": conjunctive_summary["near_mean"],
+            "conjunctive_far_similarity": conjunctive_summary["far_mean"],
+            "conjunctive_negative_similarity": conjunctive_summary["negative_mean"],
+            "kc_near_similarity": kc_metrics["sim_near"].mean(),
+            "kc_far_similarity": kc_metrics["sim_far"].mean(),
+            "kc_negative_similarity": kc_metrics["sim_negative"].mean(),
+            "near_overlap_ratio": batch["near_overlap_ratio"].to(self.device).mean(),
+            "far_overlap_ratio": batch["far_overlap_ratio"].to(self.device).mean(),
+        }
+
+        outputs = {
+            "anchor_projection": anchor_projection,
+            "near_projection": near_projection,
+            "far_projection": far_projection,
+            "negative_projection": negative_projection,
+            "image_index": batch["image_index"],
+            "negative_index": batch["negative_index"],
+            "batch": {
+                "anchor": batch["anchor"].detach().cpu(),
+                "near_positive": batch["near_positive"].detach().cpu(),
+                "far_positive": batch["far_positive"].detach().cpu(),
+                "negative": batch["negative"].detach().cpu(),
+                "near_shift": batch["near_shift"].detach().cpu(),
+                "far_shift": batch["far_shift"].detach().cpu(),
+                "near_overlap_ratio": batch["near_overlap_ratio"].detach().cpu(),
+                "far_overlap_ratio": batch["far_overlap_ratio"].detach().cpu(),
+            },
+        }
+        return loss, metrics, outputs
+
+    def _accumulate_projection_metrics(self, running, metrics, batch_size: int):
+        for key in running:
+            running[key] += float(metrics[key].item()) * batch_size
+
+    def _evaluate_projection_loader(
+        self,
+        backbone: VisionBackbone,
+        projection: VisionProjection,
+        shift_head: ProjectionShiftHead,
+        loader: DataLoader,
+    ):
+        running = self._empty_projection_metrics()
+        processed = 0
+
+        projection.eval()
+        shift_head.eval()
+        with torch.no_grad():
+            for batch in loader:
+                loss, metrics, _ = self._projection_forward(backbone, projection, shift_head, batch)
+                batch_size = batch["anchor"].size(0)
+                processed += batch_size
+                self._accumulate_projection_metrics(running, metrics, batch_size)
+
+        return self._finalize_projection_metrics(running, processed)
+
+    def _save_projection_checkpoint(
+        self,
+        projection: VisionProjection,
+        shift_head: ProjectionShiftHead,
+        epoch_num: int,
+        metric_value: float,
+        best_metric: float,
+        best_ordering: float,
+        ordering_value: float,
+    ):
+        projection_path, shift_head_path = self._projection_checkpoint_paths()
+
+        if self.best_only:
+            improved = (
+                metric_value < (best_metric - self.early_stop_min_delta)
+                or (
+                    abs(metric_value - best_metric) <= self.early_stop_min_delta
+                    and ordering_value > best_ordering
+                )
+            )
+            if improved:
+                torch.save(projection.state_dict(), str(projection_path))
+                torch.save(shift_head.state_dict(), str(shift_head_path))
+                return metric_value, ordering_value, True
+            return best_metric, best_ordering, False
+
+        epoch_projection_path = self.models_dir / f"{self.projection_model}_Epoch{epoch_num}.pth"
+        epoch_shift_head_path = self.models_dir / f"{self.projection_model}_ShiftHead_Epoch{epoch_num}.pth"
+        torch.save(projection.state_dict(), str(epoch_projection_path))
+        torch.save(shift_head.state_dict(), str(epoch_shift_head_path))
+        return metric_value, ordering_value, True
+
+    def _load_projection_backbone(self) -> VisionBackbone:
+        checkpoint_path = resolve_pretrained_checkpoint(
+            models_dir=self.models_dir,
+            checkpoint_name=self.backbone_checkpoint,
+            model_name=self.lobula_plate_model,
+        )
+        self.logger.info(f"Loading pretrained projection backbone from {checkpoint_path}")
+
+        backbone = VisionBackbone().to(self.device)
+        state_dict = torch.load(checkpoint_path, map_location=self.device, weights_only=True)
+        backbone.load_state_dict(state_dict, strict=True)
+        self._configure_projection_backbone(backbone)
+        return backbone
+
+    def train_projection(self):
+        if self.snn:
+            raise NotImplementedError("Projection training is currently implemented for the ANN backbone only.")
+
+        self._confirm_overwrite()
+        self._set_seed()
+        train_paths, val_paths = self._split_projection_images()
+
+        if len(train_paths) == 0:
+            raise RuntimeError("No images found for projection training.")
+
+        self.logger.info(
+            f"Projection training pool: {len(train_paths)} images, validation pool: {len(val_paths)} images"
+        )
+
+        backbone = self._load_projection_backbone()
+        projection = VisionProjection(
+            lobula_dim=backbone.lobula.embedding.out_features,
+            lobula_feature_channels=backbone.lobula.norm.num_channels,
+            lobula_plate_channels=backbone.lobula_plate.norm.num_channels,
+            vpn_dim=self.projection_vpn_dim,
+            spatial_pool_size=self.projection_spatial_pool_size,
+            spatial_token_dim=self.projection_spatial_token_dim,
+            kc_dim=self.projection_kc_dim,
+            kc_fan_in=self.projection_kc_fan_in,
+            kc_sparsity=self.projection_kc_sparsity,
+        ).to(self.device)
+        shift_head = ProjectionShiftHead(in_dim=self.projection_vpn_dim).to(self.device)
+
+        opt = self._build_projection_optimizer(projection, shift_head)
+        sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=self.epochs)
+        scaler = torch.amp.GradScaler(enabled=self.device.type == "cuda")
+
+        preview_paths = val_paths if val_paths else train_paths
+        preview_ds = self._build_projection_dataset(
+            image_paths=preview_paths,
+            max_samples=min(self.projection_preview_samples, max(1, len(preview_paths))),
+            deterministic=True,
+            seed=self.split_seed + 50_000,
+            appearance_transform=None,
+        )
+        preview_dl = DataLoader(
+            preview_ds,
+            **self._loader_kwargs(
+                min(self.batch_size, len(preview_ds)),
+                shuffle=False,
+                drop_last=False,
+            ),
+        )
+        preview_batch = next(iter(preview_dl))
+
+        history = {
+            "epoch": [],
+            "train_loss": [],
+            "val_loss": [],
+            "train_shift_mae_px": [],
+            "val_shift_mae_px": [],
+            "train_kc_ordering_acc": [],
+            "val_kc_ordering_acc": [],
+            "train_kc_active_fraction": [],
+            "val_kc_active_fraction": [],
+            "val_feature_near_similarity": [],
+            "val_feature_far_similarity": [],
+            "val_feature_negative_similarity": [],
+            "val_spatial_near_similarity": [],
+            "val_spatial_far_similarity": [],
+            "val_spatial_negative_similarity": [],
+            "val_kc_near_similarity": [],
+            "val_kc_far_similarity": [],
+            "val_kc_negative_similarity": [],
+        }
+        history_json_path = self.outdir / "projection_history.json"
+        history_plot_path = self.outdir / "projection_history.png"
+        best_metric = float("inf")
+        best_ordering = float("-inf")
+        best_epoch = 0
+        patience = 0
+
+        for epoch in range(self.epochs):
+            epoch_num = epoch + 1
+            projection.train()
+            shift_head.train()
+
+            train_ds = self._build_projection_dataset(
+                image_paths=train_paths,
+                max_samples=self.train_samples,
+                deterministic=False,
+                seed=self.run_seed + epoch,
+                appearance_transform=self._spatial_appearance_transform(),
+            )
+            train_dl = DataLoader(
+                train_ds,
+                **self._loader_kwargs(
+                    self.batch_size,
+                    shuffle=True,
+                    drop_last=len(train_ds) >= self.batch_size,
+                ),
+            )
+
+            val_loader = None
+            if val_paths:
+                val_ds = self._build_projection_dataset(
+                    image_paths=val_paths,
+                    max_samples=self.val_samples,
+                    deterministic=True,
+                    seed=self.split_seed + 10_000,
+                    appearance_transform=None,
+                )
+                val_loader = DataLoader(
+                    val_ds,
+                    **self._loader_kwargs(
+                        self.spatial_val_batch_size or self.batch_size,
+                        shuffle=False,
+                        drop_last=False,
+                    ),
+                )
+
+            running = self._empty_projection_metrics()
+            processed = 0
+            pbar = tqdm(train_dl, desc=f"Epoch {epoch_num}/{self.epochs}", unit="batch")
+
+            for batch in pbar:
+                opt.zero_grad(set_to_none=True)
+                with self._backbone_autocast_context():
+                    loss, metrics, _ = self._projection_forward(backbone, projection, shift_head, batch)
+
+                scaler.scale(loss).backward()
+                scaler.unscale_(opt)
+                torch.nn.utils.clip_grad_norm_(
+                    list(projection.parameters()) + list(shift_head.parameters()),
+                    1.0,
+                )
+                scaler.step(opt)
+                scaler.update()
+
+                batch_size = batch["anchor"].size(0)
+                processed += batch_size
+                self._accumulate_projection_metrics(running, metrics, batch_size)
+
+                pbar.set_postfix(
+                    loss=f"{running['loss'] / processed:.4f}",
+                    shift_mae=f"{running['shift_mae_px'] / processed:.2f}px",
+                    kc_order=f"{running['kc_ordering_acc'] / processed:.3f}",
+                    kc_frac=f"{running['kc_active_fraction'] / processed:.3f}",
+                )
+
+            train_metrics = self._finalize_projection_metrics(running, processed)
+            val_metrics = None
+            if val_loader is not None:
+                val_metrics = self._evaluate_projection_loader(backbone, projection, shift_head, val_loader)
+
+            sched.step()
+
+            monitor_metric = val_metrics["loss"] if val_metrics is not None else train_metrics["loss"]
+            monitor_ordering = (
+                val_metrics["kc_ordering_acc"] if val_metrics is not None else train_metrics["kc_ordering_acc"]
+            )
+            best_metric, best_ordering, improved = self._save_projection_checkpoint(
+                projection,
+                shift_head,
+                epoch_num,
+                monitor_metric,
+                best_metric,
+                best_ordering,
+                monitor_ordering,
+            )
+
+            if improved:
+                best_epoch = epoch_num
+                patience = 0
+            else:
+                patience += 1
+
+            history["epoch"].append(epoch_num)
+            history["train_loss"].append(train_metrics["loss"])
+            history["val_loss"].append(val_metrics["loss"] if val_metrics is not None else train_metrics["loss"])
+            history["train_shift_mae_px"].append(train_metrics["shift_mae_px"])
+            history["val_shift_mae_px"].append(
+                val_metrics["shift_mae_px"] if val_metrics is not None else train_metrics["shift_mae_px"]
+            )
+            history["train_kc_ordering_acc"].append(train_metrics["kc_ordering_acc"])
+            history["val_kc_ordering_acc"].append(
+                val_metrics["kc_ordering_acc"] if val_metrics is not None else train_metrics["kc_ordering_acc"]
+            )
+            history["train_kc_active_fraction"].append(train_metrics["kc_active_fraction"])
+            history["val_kc_active_fraction"].append(
+                val_metrics["kc_active_fraction"] if val_metrics is not None else train_metrics["kc_active_fraction"]
+            )
+            reference_metrics = val_metrics if val_metrics is not None else train_metrics
+            history["val_feature_near_similarity"].append(reference_metrics["feature_near_similarity"])
+            history["val_feature_far_similarity"].append(reference_metrics["feature_far_similarity"])
+            history["val_feature_negative_similarity"].append(reference_metrics["feature_negative_similarity"])
+            history["val_spatial_near_similarity"].append(reference_metrics["spatial_near_similarity"])
+            history["val_spatial_far_similarity"].append(reference_metrics["spatial_far_similarity"])
+            history["val_spatial_negative_similarity"].append(reference_metrics["spatial_negative_similarity"])
+            history["val_kc_near_similarity"].append(reference_metrics["kc_near_similarity"])
+            history["val_kc_far_similarity"].append(reference_metrics["kc_far_similarity"])
+            history["val_kc_negative_similarity"].append(reference_metrics["kc_negative_similarity"])
+
+            history_json_path.write_text(json.dumps(history, indent=2), encoding="utf-8")
+            plot_projection_history(history, history_plot_path, target_kc_sparsity=self.projection_kc_sparsity)
+
+            projection.eval()
+            shift_head.eval()
+            with torch.no_grad():
+                _, _, preview_outputs = self._projection_forward(backbone, projection, shift_head, preview_batch)
+                preview_snapshot = build_projection_snapshot(
+                    preview_outputs["image_index"],
+                    preview_outputs["negative_index"],
+                    preview_outputs["batch"],
+                    preview_outputs["anchor_projection"],
+                    preview_outputs["near_projection"],
+                    preview_outputs["far_projection"],
+                    preview_outputs["negative_projection"],
+                    metadata={
+                        "near_shift_range": f"{self.projection_near_min_shift} to {self.projection_near_max_shift} px",
+                        "far_shift_range": f"{self.projection_far_min_shift} to {self.projection_far_max_shift} px",
+                        "target_kc_sparsity": f"{self.projection_kc_sparsity:.4f}",
+                    },
+                )
+            snapshot_epoch_path = self.outdir / f"projection_snapshot_epoch{epoch_num:03d}.png"
+            snapshot_latest_path = self.outdir / "projection_snapshot_latest.png"
+            snapshot_json_epoch_path = self.outdir / f"projection_snapshot_epoch{epoch_num:03d}.json"
+            snapshot_json_latest_path = self.outdir / "projection_snapshot_latest.json"
+            plot_projection_snapshot(preview_snapshot, snapshot_epoch_path)
+            plot_projection_snapshot(preview_snapshot, snapshot_latest_path)
+            write_projection_snapshot_json(preview_snapshot, snapshot_json_epoch_path)
+            write_projection_snapshot_json(preview_snapshot, snapshot_json_latest_path)
+            if improved:
+                plot_projection_snapshot(preview_snapshot, self.outdir / "projection_snapshot_best.png")
+                write_projection_snapshot_json(preview_snapshot, self.outdir / "projection_snapshot_best.json")
+
+            with open(self.outdir / "training_log.txt", "a", encoding="utf-8") as f:
+                line = (
+                    f"Epoch {epoch_num}/{self.epochs}, "
+                    f"TrainLoss: {train_metrics['loss']:.4f}, TrainFeatureLoss: {train_metrics['feature_loss']:.4f}, "
+                    f"TrainShiftLoss: {train_metrics['shift_loss']:.4f}, TrainKCLoss: {train_metrics['kc_loss']:.4f}, "
+                    f"TrainShiftMAE(px): {train_metrics['shift_mae_px']:.4f}, TrainKCOrder: {train_metrics['kc_ordering_acc']:.4f}, "
+                    f"TrainKCActiveFrac: {train_metrics['kc_active_fraction']:.4f}, "
+                    f"ValLoss: {(val_metrics['loss'] if val_metrics is not None else train_metrics['loss']):.4f}, "
+                    f"ValShiftMAE(px): {(val_metrics['shift_mae_px'] if val_metrics is not None else train_metrics['shift_mae_px']):.4f}, "
+                    f"ValKCOrder: {(val_metrics['kc_ordering_acc'] if val_metrics is not None else train_metrics['kc_ordering_acc']):.4f}\n"
+                )
+                f.write(line)
+
+            self.logger.info(
+                f"Epoch {epoch_num}: "
+                f"train_loss={train_metrics['loss']:.4f}, "
+                f"val_loss={(val_metrics['loss'] if val_metrics is not None else train_metrics['loss']):.4f}, "
+                f"shift_mae={(val_metrics['shift_mae_px'] if val_metrics is not None else train_metrics['shift_mae_px']):.3f}px, "
+                f"kc_order={(val_metrics['kc_ordering_acc'] if val_metrics is not None else train_metrics['kc_ordering_acc']):.3f}, "
+                f"kc_active={(val_metrics['kc_active_fraction'] if val_metrics is not None else train_metrics['kc_active_fraction']):.3f}"
+            )
+
+            if val_loader is not None and self.early_stop_patience > 0 and patience >= self.early_stop_patience:
+                self.logger.info(
+                    f"Early stopping projection training at epoch {epoch_num}; "
+                    f"best epoch was {best_epoch} with loss {best_metric:.4f}"
+                )
+                break
+
+        self.logger.info(
+            "\nProjection training complete. "
+            f"Best monitored loss {best_metric:.4f} at epoch {best_epoch} → {self.model_path}"
+        )
 
     def _load_pretrained_backbone(self) -> VisionBackbone:
         checkpoint_path = resolve_pretrained_checkpoint(

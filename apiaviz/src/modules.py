@@ -369,30 +369,185 @@ class LobulaPlate(nn.Module):
         dense_map = self.context(torch.cat([local, pooled], dim=1))
         return F.relu(self.norm(dense_map + x))
 
-class VisionProjection(nn.Module):
-    def __init__(self, vpn_ch=64, kc_dim=1024):
+class ProjectionMLP(nn.Module):
+    def __init__(self, in_dim, out_dim, hidden_dim=None):
         super().__init__()
-        # ───── VPN layers: distinct feature projections ─────
-        # These correspond to three pathways:
-        #   ASOT = anterior superior optic tract
-        #   AIOT = anterior inferior optic tract
-        #   LOT  = lateral optic tract
-        self.asot = nn.Conv2d(48, vpn_ch, 1)
-        self.aiot = nn.Conv2d(48, vpn_ch, 1)
-        self.lot  = nn.Conv2d(32, vpn_ch, 1)
+        if hidden_dim is None:
+            hidden_dim = max(out_dim * 2, min(in_dim, 512))
+        self.net = nn.Sequential(
+            nn.Linear(in_dim, hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.LayerNorm(hidden_dim),
+            nn.Linear(hidden_dim, out_dim),
+        )
 
-        # ───── Mushroom Body (Kenyon Cell projection) ─────
-        # Sparse, high-dimensional representation using learned sparse weights
-        self.kc_p = SparseLinear(3 * vpn_ch, kc_dim)
+    def forward(self, x):
+        return self.net(x)
 
-    def forward(self, lob):
-        # Extract three different VPN pathway features
-        vpn = torch.cat([
-            self._gp(self.asot(lob[:, :48])),
-            self._gp(self.aiot(lob[:, 48:96])),
-            self._gp(self.lot(lob[:, 96:]))
-        ], dim=1)
-        kc_raw = self.kc_p(vpn)
-        
-        # Apply adaptive sparsity
-        return self.sparsity(kc_raw)
+class FeatureVPN(nn.Module):
+    def __init__(self, embedding_dim=128, feature_channels=32, out_dim=128):
+        super().__init__()
+        self.feature_pool = GeneralizedMeanPooling2d(p=3.0)
+        self.project = ProjectionMLP(embedding_dim + feature_channels, out_dim)
+
+    def forward(self, lobula_embedding, lobula_feature_map):
+        pooled_feature_map = self.feature_pool(lobula_feature_map).flatten(1)
+        descriptor = self.project(torch.cat([lobula_embedding, pooled_feature_map], dim=1))
+        return {
+            "descriptor": descriptor,
+            "pooled_feature_map": pooled_feature_map,
+        }
+
+class SpatialVPN(nn.Module):
+    def __init__(self, in_channels=32, pool_size=4, token_dim=64, out_dim=128):
+        super().__init__()
+        self.pool_size = int(pool_size)
+        self.token_proj = nn.Linear(in_channels + 2, token_dim)
+        self.token_score = nn.Linear(token_dim, 1)
+        self.project = ProjectionMLP(self.pool_size * self.pool_size * token_dim, out_dim)
+
+    def _coords(self, x):
+        _, _, height, width = x.shape
+        yy, xx = torch.meshgrid(
+            torch.linspace(-1, 1, height, device=x.device, dtype=x.dtype),
+            torch.linspace(-1, 1, width, device=x.device, dtype=x.dtype),
+            indexing="ij",
+        )
+        coords = torch.stack([xx, yy], dim=0).unsqueeze(0)
+        return coords.expand(x.size(0), -1, -1, -1)
+
+    def forward(self, lobula_plate):
+        pooled_map = F.adaptive_avg_pool2d(lobula_plate, self.pool_size)
+        token_grid = torch.cat([pooled_map, self._coords(pooled_map)], dim=1)
+        tokens = token_grid.flatten(2).transpose(1, 2)
+        token_features = self.token_proj(tokens)
+        token_weights = torch.softmax(self.token_score(token_features).squeeze(-1), dim=1)
+        pooled_tokens = torch.sum(token_features * token_weights.unsqueeze(-1), dim=1)
+        descriptor = self.project(token_features.flatten(1))
+        return {
+            "descriptor": descriptor,
+            "tokens": token_features,
+            "token_weights": token_weights,
+            "pooled_tokens": pooled_tokens,
+            "pooled_map": pooled_map,
+        }
+
+class ConjunctiveVPN(nn.Module):
+    def __init__(self, feature_dim=128, spatial_dim=128, token_dim=64, out_dim=128):
+        super().__init__()
+        self.feature_gate = nn.Linear(feature_dim, token_dim)
+        self.feature_bias = nn.Linear(feature_dim, token_dim)
+        self.token_score = nn.Linear(token_dim, 1)
+        self.project = ProjectionMLP(feature_dim + spatial_dim + token_dim, out_dim)
+
+    def forward(self, feature_descriptor, spatial_descriptor, spatial_tokens):
+        gate = torch.sigmoid(self.feature_gate(feature_descriptor)).unsqueeze(1)
+        bias = self.feature_bias(feature_descriptor).unsqueeze(1)
+        bound_tokens = spatial_tokens * gate + bias
+        token_weights = torch.softmax(self.token_score(torch.tanh(bound_tokens)).squeeze(-1), dim=1)
+        bound_summary = torch.sum(bound_tokens * token_weights.unsqueeze(-1), dim=1)
+        descriptor = self.project(torch.cat([feature_descriptor, spatial_descriptor, bound_summary], dim=1))
+        return {
+            "descriptor": descriptor,
+            "bound_tokens": bound_tokens,
+            "token_weights": token_weights,
+            "bound_summary": bound_summary,
+            "gate": gate.squeeze(1),
+        }
+
+class VisionProjection(nn.Module):
+    def __init__(
+        self,
+        lobula_dim=128,
+        lobula_feature_channels=32,
+        lobula_plate_channels=32,
+        vpn_dim=128,
+        spatial_pool_size=4,
+        spatial_token_dim=64,
+        kc_dim=2048,
+        kc_fan_in=8,
+        kc_sparsity=0.03,
+    ):
+        super().__init__()
+        self.feature_vpn = FeatureVPN(
+            embedding_dim=lobula_dim,
+            feature_channels=lobula_feature_channels,
+            out_dim=vpn_dim,
+        )
+        self.spatial_vpn = SpatialVPN(
+            in_channels=lobula_plate_channels,
+            pool_size=spatial_pool_size,
+            token_dim=spatial_token_dim,
+            out_dim=vpn_dim,
+        )
+        self.conjunctive_vpn = ConjunctiveVPN(
+            feature_dim=vpn_dim,
+            spatial_dim=vpn_dim,
+            token_dim=spatial_token_dim,
+            out_dim=vpn_dim,
+        )
+        self.kc_projection = SparseLinear(3 * vpn_dim, kc_dim, fan_in=kc_fan_in, bias=False)
+        self.kc_compete = AdaptiveKWTA(sparsity=kc_sparsity)
+
+    def _unpack_inputs(self, lobula, lobula_feature_map=None, lobula_plate=None):
+        if isinstance(lobula, dict):
+            outputs = lobula
+            lobula_feature_map = outputs.get("lobula_feature_map")
+            lobula_plate = outputs.get("lobula_plate")
+            lobula = outputs.get("lobula")
+
+        if lobula is None or lobula_feature_map is None or lobula_plate is None:
+            raise ValueError(
+                "VisionProjection expects lobula embedding, lobula feature map, and lobula plate map. "
+                "Pass either three tensors or the return_maps dictionary from VisionBackbone."
+            )
+
+        return lobula, lobula_feature_map, lobula_plate
+
+    def forward(self, lobula, lobula_feature_map=None, lobula_plate=None):
+        lobula, lobula_feature_map, lobula_plate = self._unpack_inputs(
+            lobula,
+            lobula_feature_map=lobula_feature_map,
+            lobula_plate=lobula_plate,
+        )
+
+        feature_outputs = self.feature_vpn(lobula, lobula_feature_map)
+        spatial_outputs = self.spatial_vpn(lobula_plate)
+        conjunctive_outputs = self.conjunctive_vpn(
+            feature_outputs["descriptor"],
+            spatial_outputs["descriptor"],
+            spatial_outputs["tokens"],
+        )
+
+        vpn = torch.cat(
+            [
+                feature_outputs["descriptor"],
+                spatial_outputs["descriptor"],
+                conjunctive_outputs["descriptor"],
+            ],
+            dim=1,
+        )
+        kenyon_drive = F.relu(self.kc_projection(vpn))
+        kenyon_code = self.kc_compete(kenyon_drive)
+        kc_active_counts = (kenyon_code > 0).sum(dim=1)
+        kc_active_fraction = (kenyon_code > 0).float().mean(dim=1)
+
+        return {
+            "feature_vpn": feature_outputs["descriptor"],
+            "feature_pool": feature_outputs["pooled_feature_map"],
+            "spatial_vpn": spatial_outputs["descriptor"],
+            "spatial_tokens": spatial_outputs["tokens"],
+            "spatial_token_weights": spatial_outputs["token_weights"],
+            "spatial_pooled_tokens": spatial_outputs["pooled_tokens"],
+            "spatial_pooled_map": spatial_outputs["pooled_map"],
+            "conjunctive_vpn": conjunctive_outputs["descriptor"],
+            "conjunctive_tokens": conjunctive_outputs["bound_tokens"],
+            "conjunctive_token_weights": conjunctive_outputs["token_weights"],
+            "conjunctive_gate": conjunctive_outputs["gate"],
+            "conjunctive_summary": conjunctive_outputs["bound_summary"],
+            "vpn": vpn,
+            "kenyon_drive": kenyon_drive,
+            "kenyon_code": kenyon_code,
+            "kc_active_counts": kc_active_counts,
+            "kc_active_fraction": kc_active_fraction,
+        }
