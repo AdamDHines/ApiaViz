@@ -1,4 +1,5 @@
 # Imports
+import json
 import os, cv2, math, torch, random, re
 
 import numpy as np
@@ -15,6 +16,7 @@ IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png"}
 WILDSCENES_DATASET_NAMES = {"wildscenes", "wildscenes2d", "wildscenes-2d"}
 WILDSCENES_IMAGE_DIRS = {"image", "images", "rgb"}
 WILDSCENES_SEQUENCE_RE = re.compile(r"^[a-z]-\d+$", re.IGNORECASE)
+TINY_IMAGENET_LABEL_RE = re.compile(r"_label_(\d+)(?=\.[^.]+$)")
 
 class TinyImageNetPairDataset(Dataset):
     """
@@ -491,6 +493,7 @@ class ProjectionTupleDataset(DenseSpatialPairDataset):
         max_samples: int | None = None,
         deterministic: bool = False,
         seed: int = 0,
+        class_aware_sampling: bool = False,
     ):
         super().__init__(
             root=root,
@@ -525,6 +528,25 @@ class ProjectionTupleDataset(DenseSpatialPairDataset):
         if self.near_max_translation > self.far_max_translation:
             raise ValueError("near_max_translation must be <= far_max_translation")
 
+        self.class_aware_sampling_requested = bool(class_aware_sampling)
+        self.label_names = self._load_dataset_label_names()
+        self.image_labels = [self._infer_label_from_path(path) for path in self.images]
+        observed_labels = [label for label in self.image_labels if label is not None]
+        self.label_to_id = {label: idx for idx, label in enumerate(sorted(set(observed_labels), key=str))}
+        self.indices_by_label = {}
+        if self.class_aware_sampling_requested:
+            if any(label is None for label in self.image_labels):
+                raise RuntimeError(
+                    "Class-aware projection sampling was requested, but at least one image path did not expose a class label. "
+                    "Expected Tiny ImageNet-style filenames like image_000010_label_0.jpg or class-named parent folders."
+                )
+            for image_idx, label in enumerate(self.image_labels):
+                self.indices_by_label.setdefault(label, []).append(image_idx)
+
+        self.class_aware_sampling_enabled = (
+            self.class_aware_sampling_requested and len(self.indices_by_label) > 1
+        )
+
     def _sample_shift_in_range(self, rng, min_translation: int, max_translation: int) -> tuple[int, int]:
         if max_translation == 0:
             return 0, 0
@@ -535,13 +557,70 @@ class ProjectionTupleDataset(DenseSpatialPairDataset):
             if max(abs(shift_x), abs(shift_y)) >= min_translation:
                 return shift_x, shift_y
 
+    def _load_dataset_label_names(self):
+        root_candidates = [self.root] if self.root is not None else []
+        if self.root is not None:
+            root_candidates.extend([self.root.parent, self.root.parent.parent])
+        elif self.images:
+            first_parent = self.images[0].parent
+            root_candidates.extend([first_parent, first_parent.parent, first_parent.parent.parent])
+
+        for candidate in root_candidates:
+            if candidate is None:
+                continue
+            dataset_info_path = Path(candidate) / "dataset_infos.json"
+            if not dataset_info_path.is_file():
+                continue
+            try:
+                payload = json.loads(dataset_info_path.read_text(encoding="utf-8"))
+                entry = next(iter(payload.values()))
+                names = entry["features"]["label"]["names"]
+                if isinstance(names, list) and len(names) > 0:
+                    return names
+            except Exception:
+                continue
+        return None
+
+    def _infer_label_from_path(self, image_path: Path):
+        match = TINY_IMAGENET_LABEL_RE.search(image_path.name)
+        if match is not None:
+            return int(match.group(1))
+
+        parent_name = image_path.parent.name
+        if parent_name and parent_name not in {"train", "val", "images", "image"}:
+            return parent_name
+        return None
+
+    def _class_positive_idx(self, idx: int, rng) -> int:
+        if not self.class_aware_sampling_enabled:
+            return idx % len(self.images)
+
+        image_idx = idx % len(self.images)
+        label = self.image_labels[image_idx]
+        candidates = self.indices_by_label.get(label, [])
+        if len(candidates) <= 1:
+            return image_idx
+
+        while True:
+            candidate = rng.choice(candidates)
+            if candidate != image_idx:
+                return candidate
+
     def _negative_idx(self, idx: int, rng) -> int:
         if len(self.images) <= 1:
             return idx % len(self.images)
 
+        image_idx = idx % len(self.images)
+        if self.class_aware_sampling_enabled:
+            anchor_label = self.image_labels[image_idx]
+            while True:
+                candidate = rng.randint(0, len(self.images) - 1)
+                if candidate != image_idx and self.image_labels[candidate] != anchor_label:
+                    return candidate
+
         while True:
             candidate = rng.randint(0, len(self.images) - 1)
-            if candidate != (idx % len(self.images)):
+            if candidate != image_idx:
                 return candidate
 
     def __getitem__(self, idx: int):
@@ -552,6 +631,9 @@ class ProjectionTupleDataset(DenseSpatialPairDataset):
         anchor = self._prepare_view(img)
         near_positive = self._prepare_view(img)
         far_positive = self._prepare_view(img)
+        class_positive_idx = self._class_positive_idx(image_idx, rng)
+        class_positive_img = self._load_image(class_positive_idx)
+        class_positive = self._prepare_view(class_positive_img)
 
         near_shift_x, near_shift_y = self._sample_shift_in_range(
             rng,
@@ -584,12 +666,18 @@ class ProjectionTupleDataset(DenseSpatialPairDataset):
             "anchor": anchor,
             "near_positive": near_positive,
             "far_positive": far_positive,
+            "class_positive": class_positive,
             "negative": negative,
             "near_shift": torch.tensor([near_shift_x, near_shift_y], dtype=torch.int64),
             "far_shift": torch.tensor([far_shift_x, far_shift_y], dtype=torch.int64),
             "near_overlap_ratio": torch.tensor(near_overlap, dtype=torch.float32),
             "far_overlap_ratio": torch.tensor(far_overlap, dtype=torch.float32),
+            "class_label": torch.tensor(
+                -1 if self.image_labels[image_idx] is None else self.label_to_id[self.image_labels[image_idx]],
+                dtype=torch.int64,
+            ),
             "image_index": torch.tensor(image_idx, dtype=torch.int64),
+            "class_positive_index": torch.tensor(class_positive_idx, dtype=torch.int64),
             "negative_index": torch.tensor(negative_idx, dtype=torch.int64),
         }
 
@@ -736,6 +824,49 @@ class InsectVisionDataset(Dataset):
             return input_tensor, label
             
         raise NotImplementedError(f"Mode {self.mode} is not implemented.")
+
+
+class RewardLabelDataset(Dataset):
+    """Wrap an image dataset and map class labels to binary reward labels."""
+
+    def __init__(self, base_dataset: Dataset, rewarded_class_indices):
+        super().__init__()
+        self.base_dataset = base_dataset
+        self.rewarded_class_indices = {int(idx) for idx in rewarded_class_indices}
+        self.class_names = list(getattr(base_dataset, "class_names", []))
+        self.groups = np.asarray(getattr(base_dataset, "groups", np.arange(len(base_dataset))), dtype=int)
+
+        if hasattr(base_dataset, "source_images"):
+            self.class_labels = np.asarray([int(label) for _, label in base_dataset.source_images], dtype=np.int64)
+        else:
+            labels = []
+            for idx in range(len(base_dataset)):
+                sample = base_dataset[idx]
+                if not isinstance(sample, (list, tuple)) or len(sample) < 2:
+                    raise ValueError("RewardLabelDataset expects the base dataset to return at least (input, class_label).")
+                labels.append(int(sample[1]))
+            self.class_labels = np.asarray(labels, dtype=np.int64)
+
+        self.reward_labels = np.isin(self.class_labels, list(self.rewarded_class_indices)).astype(np.float32)
+
+    def __len__(self):
+        return len(self.base_dataset)
+
+    def __getitem__(self, idx):
+        sample = self.base_dataset[idx]
+        if not isinstance(sample, (list, tuple)) or len(sample) < 2:
+            raise ValueError("RewardLabelDataset expects the base dataset to return at least (input, class_label).")
+
+        image = sample[0]
+        class_label = int(sample[1])
+        reward_label = float(class_label in self.rewarded_class_indices)
+
+        return {
+            "input": image,
+            "reward_label": torch.tensor(reward_label, dtype=torch.float32),
+            "class_label": torch.tensor(class_label, dtype=torch.int64),
+            "dataset_index": torch.tensor(int(idx), dtype=torch.int64),
+        }
 
 class SyntheticDataset(Dataset):
     """

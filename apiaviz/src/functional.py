@@ -11,6 +11,7 @@ import matplotlib.colors as mcolors
 from pathlib import Path
 from matplotlib import cm
 from typing import Optional
+from scipy import sparse as sp
 from sklearn.cluster import KMeans
 from typing import Optional, List, Dict, Union
 from sklearn.neighbors import KNeighborsClassifier
@@ -57,7 +58,7 @@ def generate_smooth_scan_path(num_steps: int, max_x: int, max_y: int, num_waypoi
 
     return path_x.astype(np.int32), path_y.astype(np.int32)
 
-# ────────── k-Winner Takes All functions ──────────
+# ────────── KC competition functions ──────────
 class AdaptiveKWTA(nn.Module):
     def __init__(self, sparsity=0.05, momentum=0.9):
         super().__init__()
@@ -88,6 +89,71 @@ class AdaptiveKWTA(nn.Module):
         mask = torch.zeros_like(x).scatter_(1, idx, 1.0)
         
         return x * mask
+
+
+class APLCompetition(nn.Module):
+    """Approximate APL-mediated global inhibition with homeostatic KC thresholds."""
+
+    def __init__(
+        self,
+        num_units: int,
+        target_sparsity: float = 0.05,
+        feedback_strength: float = 0.05,
+        gain_adapt_rate: float = 0.25,
+        threshold_lr: float = 0.02,
+        homeostatic_momentum: float = 0.95,
+        num_iters: int = 3,
+        eps: float = 1e-6,
+    ):
+        super().__init__()
+        self.num_units = int(num_units)
+        self.target_sparsity = float(target_sparsity)
+        self.feedback_strength = float(feedback_strength)
+        self.gain_adapt_rate = float(gain_adapt_rate)
+        self.threshold_lr = float(threshold_lr)
+        self.homeostatic_momentum = float(homeostatic_momentum)
+        self.num_iters = int(num_iters)
+        self.eps = float(eps)
+
+        if self.num_units <= 0:
+            raise ValueError(f"num_units must be positive, got {self.num_units}")
+        if not 0.0 < self.target_sparsity <= 1.0:
+            raise ValueError(f"target_sparsity must be in (0, 1], got {self.target_sparsity}")
+        if self.num_iters < 1:
+            raise ValueError(f"num_iters must be at least 1, got {self.num_iters}")
+
+        self.register_buffer("homeostatic_mean", torch.zeros(self.num_units))
+        self.register_buffer("kc_thresholds", torch.zeros(self.num_units))
+        self.register_buffer("apl_gain", torch.tensor(float(self.feedback_strength)))
+
+    def forward(self, x):
+        thresholds = self.kc_thresholds.unsqueeze(0)
+        gain = self.apl_gain.clamp(min=self.eps)
+        target = max(self.target_sparsity, self.eps)
+
+        activity = F.relu(x - thresholds)
+        for _ in range(self.num_iters):
+            apl_signal = activity.mean(dim=1, keepdim=True)
+            inhibition = gain * (apl_signal / target)
+            activity = F.relu(x - thresholds - inhibition)
+
+        if self.training:
+            with torch.no_grad():
+                active_mask = (activity > 0).float()
+                batch_mean = active_mask.mean(dim=0)
+                global_fraction = float(active_mask.mean().item())
+
+                self.homeostatic_mean.mul_(self.homeostatic_momentum).add_(
+                    batch_mean * (1.0 - self.homeostatic_momentum)
+                )
+                self.kc_thresholds.add_(self.threshold_lr * (self.homeostatic_mean - self.target_sparsity))
+                self.kc_thresholds.clamp_(min=0.0)
+
+                fraction_ratio = global_fraction / target
+                updated_gain = self.apl_gain * (1.0 + self.gain_adapt_rate * (fraction_ratio - 1.0))
+                self.apl_gain.copy_(updated_gain.clamp(min=self.eps, max=1e6))
+
+        return activity
 
 # ────────── Sparse linear function ──────────
 class SparseLinear(nn.Module):
@@ -489,6 +555,7 @@ class ModelEvaluator:
         gss = GroupShuffleSplit(n_splits=1, test_size=test_size, random_state=42)
         train_idx, test_idx = next(gss.split(X=np.zeros(len(labels)), y=labels, groups=groups))
 
+        # features = features.astype(np.float32)
         X_tr, X_te = features[train_idx], features[test_idx]
         y_tr, y_te = labels[train_idx], labels[test_idx]
 
@@ -520,6 +587,162 @@ class ModelEvaluator:
             results['adjusted_rand_index'] = 0.0
 
         return results
+
+    def analyze_sparse_code_overlap(self, features: np.ndarray, labels: np.ndarray, threshold: float = 0.0):
+        """Summarise how much sparse winner sets overlap within and across classes."""
+        if features.ndim != 2:
+            raise ValueError(f"Expected a 2D feature matrix, got shape {features.shape}")
+        if len(features) != len(labels):
+            raise ValueError("features and labels must contain the same number of samples")
+
+        active_mask = np.asarray(features > threshold, dtype=np.uint8)
+        active_csr = sp.csr_matrix(active_mask)
+        intersections = (active_csr @ active_csr.T).toarray().astype(np.float32, copy=False)
+        active_counts = np.asarray(active_csr.sum(axis=1)).reshape(-1).astype(np.float32, copy=False)
+
+        unions = active_counts[:, None] + active_counts[None, :] - intersections
+        unions = np.maximum(unions, 1.0)
+        jaccard = intersections / unions
+
+        labels = np.asarray(labels)
+        upper_mask = np.triu(np.ones((len(labels), len(labels)), dtype=bool), k=1)
+        same_class_mask = upper_mask & (labels[:, None] == labels[None, :])
+        different_class_mask = upper_mask & (labels[:, None] != labels[None, :])
+
+        same_overlap = intersections[same_class_mask]
+        different_overlap = intersections[different_class_mask]
+        same_jaccard = jaccard[same_class_mask]
+        different_jaccard = jaccard[different_class_mask]
+
+        overlap_stats = {
+            "same_class_pair_count": int(same_overlap.size),
+            "different_class_pair_count": int(different_overlap.size),
+            "same_class_mean_overlap_count": float(same_overlap.mean()) if same_overlap.size else 0.0,
+            "same_class_std_overlap_count": float(same_overlap.std()) if same_overlap.size else 0.0,
+            "different_class_mean_overlap_count": float(different_overlap.mean()) if different_overlap.size else 0.0,
+            "different_class_std_overlap_count": float(different_overlap.std()) if different_overlap.size else 0.0,
+            "same_class_mean_jaccard": float(same_jaccard.mean()) if same_jaccard.size else 0.0,
+            "same_class_std_jaccard": float(same_jaccard.std()) if same_jaccard.size else 0.0,
+            "different_class_mean_jaccard": float(different_jaccard.mean()) if different_jaccard.size else 0.0,
+            "different_class_std_jaccard": float(different_jaccard.std()) if different_jaccard.size else 0.0,
+            "mean_active_count_from_code": float(active_counts.mean()) if active_counts.size else 0.0,
+            "std_active_count_from_code": float(active_counts.std()) if active_counts.size else 0.0,
+        }
+        overlap_stats["overlap_count_gap"] = (
+            overlap_stats["same_class_mean_overlap_count"] - overlap_stats["different_class_mean_overlap_count"]
+        )
+        overlap_stats["jaccard_gap"] = (
+            overlap_stats["same_class_mean_jaccard"] - overlap_stats["different_class_mean_jaccard"]
+        )
+
+        unique_labels = sorted(np.unique(labels))
+        class_overlap_matrix = np.zeros((len(unique_labels), len(unique_labels)), dtype=np.float32)
+        class_jaccard_matrix = np.zeros((len(unique_labels), len(unique_labels)), dtype=np.float32)
+
+        for row_idx, row_label in enumerate(unique_labels):
+            row_mask = labels == row_label
+            for col_idx, col_label in enumerate(unique_labels):
+                col_mask = labels == col_label
+                overlap_block = intersections[np.ix_(row_mask, col_mask)]
+                jaccard_block = jaccard[np.ix_(row_mask, col_mask)]
+
+                if row_idx == col_idx:
+                    valid_mask = ~np.eye(overlap_block.shape[0], dtype=bool)
+                    if np.any(valid_mask):
+                        class_overlap_matrix[row_idx, col_idx] = float(overlap_block[valid_mask].mean())
+                        class_jaccard_matrix[row_idx, col_idx] = float(jaccard_block[valid_mask].mean())
+                else:
+                    class_overlap_matrix[row_idx, col_idx] = float(overlap_block.mean())
+                    class_jaccard_matrix[row_idx, col_idx] = float(jaccard_block.mean())
+
+        details = {
+            "same_class_overlap": same_overlap,
+            "different_class_overlap": different_overlap,
+            "same_class_jaccard": same_jaccard,
+            "different_class_jaccard": different_jaccard,
+            "class_overlap_matrix": class_overlap_matrix,
+            "class_jaccard_matrix": class_jaccard_matrix,
+            "class_labels": unique_labels,
+        }
+        return overlap_stats, details
+
+    def plot_sparse_overlap_histogram(self, overlap_details: Dict[str, np.ndarray], save_path: Optional[str] = None) -> plt.Figure:
+        """Visualise overlap-count and Jaccard distributions for sparse codes."""
+        fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+
+        histogram_specs = [
+            ("same_class_overlap", "different_class_overlap", "Active KC overlap count", axes[0]),
+            ("same_class_jaccard", "different_class_jaccard", "Active KC Jaccard", axes[1]),
+        ]
+
+        for same_key, different_key, xlabel, ax in histogram_specs:
+            same_values = np.asarray(overlap_details[same_key], dtype=np.float32)
+            different_values = np.asarray(overlap_details[different_key], dtype=np.float32)
+            combined = np.concatenate([same_values, different_values]) if same_values.size and different_values.size else np.concatenate([same_values, different_values])
+            if combined.size == 0:
+                ax.set_title(f"{xlabel}\n(no valid pairs)")
+                ax.axis("off")
+                continue
+
+            bins = min(40, max(10, int(np.sqrt(combined.size))))
+            ax.hist(different_values, bins=bins, alpha=0.65, density=True, label="different class", color="#b22222")
+            ax.hist(same_values, bins=bins, alpha=0.65, density=True, label="same class", color="#2e8b57")
+            ax.set_xlabel(xlabel)
+            ax.set_ylabel("Density")
+            ax.grid(True, linestyle="--", alpha=0.35)
+            ax.legend()
+
+        axes[0].set_title("Winner overlap count")
+        axes[1].set_title("Winner-set Jaccard")
+        fig.suptitle("Sparse Kenyon overlap by class relation", fontsize=14, fontweight="bold")
+        plt.tight_layout(rect=[0, 0, 1, 0.95])
+
+        if save_path:
+            full_save_path = Path(save_path)
+            if not full_save_path.is_absolute():
+                full_save_path = self.output_dir / save_path
+            plt.savefig(full_save_path, dpi=300, bbox_inches='tight')
+
+        return fig
+
+    def plot_class_overlap_matrix(
+        self,
+        matrix: np.ndarray,
+        class_names: Optional[List[str]] = None,
+        title: str = "Mean Active KC Jaccard per Class Pair",
+        save_path: Optional[str] = None,
+    ) -> plt.Figure:
+        """Plot a class-by-class heatmap for sparse overlap statistics."""
+        fig, ax = plt.subplots(figsize=(10, 8))
+        im = ax.imshow(matrix, cmap='magma')
+
+        num_classes = matrix.shape[0]
+        if class_names is None:
+            class_names = [f"Class {i}" for i in range(num_classes)]
+
+        ax.set_xticks(np.arange(num_classes))
+        ax.set_yticks(np.arange(num_classes))
+        ax.set_xticklabels(class_names, rotation=45, ha="right")
+        ax.set_yticklabels(class_names)
+
+        if num_classes <= 20:
+            max_value = float(np.max(matrix)) if matrix.size else 0.0
+            for i in range(num_classes):
+                for j in range(num_classes):
+                    text_color = "white" if matrix[i, j] < max_value * 0.6 else "black"
+                    ax.text(j, i, f"{matrix[i, j]:.2f}", ha="center", va="center", color=text_color, fontsize=10)
+
+        plt.colorbar(im, label='Mean value')
+        ax.set_title(title, fontsize=16, fontweight='bold')
+        plt.tight_layout()
+
+        if save_path:
+            full_save_path = Path(save_path)
+            if not full_save_path.is_absolute():
+                 full_save_path = self.output_dir / save_path
+            plt.savefig(full_save_path, dpi=300, bbox_inches='tight')
+
+        return fig
 
     def plot_class_similarity_matrix(self, features: np.ndarray, labels: np.ndarray, class_names: Optional[List[str]] = None, save_path: Optional[str] = None) -> plt.Figure:
         """Plots the cosine similarity between mean feature vectors of each class."""

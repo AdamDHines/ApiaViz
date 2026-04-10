@@ -10,14 +10,19 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import matplotlib.pyplot as plt
 import apiaviz.src.functional as avf
 
 from tqdm import tqdm
 from torchvision import transforms
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
+from sklearn.model_selection import train_test_split
 from apiaviz.dataset.datagen import (
     DenseSpatialPairDataset,
+    DataMode,
+    InsectVisionDataset,
     ProjectionTupleDataset,
+    RewardLabelDataset,
     TinyImageNetPairDataset,
     WILDSCENES_DATASET_NAMES,
 )
@@ -31,16 +36,19 @@ from apiaviz.dataset.wildscenes import (
     split_wildscenes_frames,
 )
 from apiaviz.src.modules import VisionBackbone
-from apiaviz.src.modules import VisionProjection
+from apiaviz.src.modules import RewardMemoryHead, VisionProjection, resolve_kc_sparsity_target
+from apiaviz.src.projection_utils import infer_projection_config, resolve_projection_checkpoint
 from apiaviz.src.projection_finetune import (
     ProjectionShiftHead,
     build_projection_snapshot,
     descriptor_similarity_summary,
     kenyon_ordering_loss,
+    kenyon_sparsity_regularizer,
     load_balance_regularizer,
     plot_projection_history,
     plot_projection_snapshot,
     shift_regression_loss,
+    supervised_contrastive_loss,
     write_projection_snapshot_json,
 )
 from apiaviz.src.spatial_finetune import (
@@ -50,6 +58,14 @@ from apiaviz.src.spatial_finetune import (
     PoseRelationHead,
     relative_pose_regression_loss,
     resolve_pretrained_checkpoint,
+)
+from apiaviz.src.reward_memory import (
+    REWARD_FEATURE_CHOICES,
+    compute_reward_metrics,
+    plot_reward_by_class,
+    plot_reward_history,
+    resolve_reward_feature_dim,
+    resolve_rewarded_classes,
 )
 
 # Set multiprocessing start method to 'spawn' for compatibility on macOS
@@ -73,6 +89,8 @@ class TrainVision(nn.Module):
             self.model_path = self.models_dir / f"{self.lobula_plate_model}.pth"
         elif self.train_stage == "projection":
             self.model_path = self.models_dir / f"{self.projection_model}.pth"
+        elif self.train_stage == "reward_memory":
+            self.model_path = self.models_dir / f"{self.reward_model}.pth"
         elif self.snn:
             self.model_path = self.models_dir / f"{self.snn_vision_model}.pth"
         else:
@@ -97,6 +115,307 @@ class TrainVision(nn.Module):
     def select_GB(self, chw: torch.Tensor) -> torch.Tensor:
         """Return the G & B channels from a 3-channel tensor."""
         return chw[1:3]
+
+    def _projection_kc_config(self, kc_dim: int | None = None):
+        effective_kc_dim = int(self.projection_kc_dim if kc_dim is None else kc_dim)
+        effective_sparsity, target_active = resolve_kc_sparsity_target(
+            effective_kc_dim,
+            kc_sparsity=self.projection_kc_sparsity,
+            kc_target_active=getattr(self, "projection_kc_target_active", 0),
+        )
+        return {
+            "kc_dim": effective_kc_dim,
+            "kc_sparsity": effective_sparsity,
+            "kc_target_active": target_active,
+        }
+
+    def _projection_class_grouping_enabled(self):
+        mode = str(getattr(self, "projection_class_grouping", "auto")).strip().lower()
+        if mode == "auto":
+            return str(self.training_dataset).strip().lower() == "tiny-imagenet"
+        return mode == "on"
+
+    def _projection_class_kc_weight(self, epoch_num: int | None):
+        peak_weight = max(0.0, float(getattr(self, "projection_class_kc_loss_weight", 0.0)))
+        if peak_weight <= 0.0:
+            return 0.0
+        if epoch_num is None or epoch_num <= 0:
+            return peak_weight
+
+        start_epoch = max(1, int(getattr(self, "projection_class_kc_start_epoch", 1)))
+        ramp_epochs = max(0, int(getattr(self, "projection_class_kc_ramp_epochs", 0)))
+
+        if epoch_num < start_epoch:
+            return 0.0
+        if ramp_epochs <= 0:
+            return peak_weight
+
+        ramp_progress = min(1.0, float(epoch_num - start_epoch + 1) / float(ramp_epochs))
+        return peak_weight * ramp_progress
+
+    def _prepare_projection_like_inputs(self, imgs: torch.Tensor):
+        imgs = imgs.float().clamp(0.0, 1.0)
+        input_size = int(getattr(self, "spatial_image_size", 64))
+        if imgs.shape[-2:] != (input_size, input_size):
+            imgs = F.interpolate(
+                imgs,
+                size=(input_size, input_size),
+                mode="bilinear",
+                align_corners=False,
+            )
+        return imgs * 2.0 - 1.0
+
+    def _resolve_reward_feature_tensor(self, outputs: dict):
+        reward_feature = str(getattr(self, "reward_feature", "kenyon_code")).strip().lower()
+        if reward_feature not in REWARD_FEATURE_CHOICES:
+            raise ValueError(
+                f"Unsupported reward feature '{reward_feature}'. Choices: {', '.join(REWARD_FEATURE_CHOICES)}"
+            )
+        if reward_feature not in outputs:
+            raise KeyError(f"Projection outputs did not contain reward feature '{reward_feature}'.")
+        return outputs[reward_feature]
+
+    def _load_reward_frozen_backbone_projection(self):
+        backbone_checkpoint = resolve_pretrained_checkpoint(
+            models_dir=self.models_dir,
+            checkpoint_name=self.backbone_checkpoint,
+            model_name=self.lobula_plate_model,
+        )
+        projection_checkpoint = resolve_projection_checkpoint(
+            models_dir=self.models_dir,
+            checkpoint_name=getattr(self, "projection_checkpoint", ""),
+            model_name=self.projection_model,
+        )
+
+        self.logger.info(f"Loading frozen reward-memory backbone from {backbone_checkpoint}")
+        self.logger.info(f"Loading frozen reward-memory projection from {projection_checkpoint}")
+
+        backbone = VisionBackbone().to(self.device)
+        backbone_state_dict = torch.load(backbone_checkpoint, map_location=self.device, weights_only=True)
+        backbone.load_state_dict(backbone_state_dict, strict=True)
+        for parameter in backbone.parameters():
+            parameter.requires_grad = False
+        backbone.eval()
+
+        projection_state_dict = torch.load(projection_checkpoint, map_location=self.device, weights_only=True)
+        inferred_kc_dim = int(projection_state_dict["kc_projection.weight"].shape[0])
+        effective_kc_sparsity, target_active = resolve_kc_sparsity_target(
+            inferred_kc_dim,
+            kc_sparsity=self.projection_kc_sparsity,
+            kc_target_active=getattr(self, "projection_kc_target_active", 0),
+        )
+        projection_kwargs = infer_projection_config(
+            projection_state_dict,
+            effective_kc_sparsity=effective_kc_sparsity,
+            apl_feedback_strength=self.projection_apl_feedback_strength,
+            apl_gain_adapt_rate=self.projection_apl_gain_adapt_rate,
+            apl_threshold_lr=self.projection_apl_threshold_lr,
+            apl_num_iters=self.projection_apl_num_iters,
+        )
+        projection = VisionProjection(**projection_kwargs).to(self.device)
+        projection_load = projection.load_state_dict(projection_state_dict, strict=False)
+        allowed_unexpected = {"kc_compete.running_mean", "kc_compete.thresholds"}
+        allowed_missing = {
+            "kc_compete.homeostatic_mean",
+            "kc_compete.kc_thresholds",
+            "kc_compete.apl_gain",
+        }
+        unexpected_keys = set(projection_load.unexpected_keys)
+        missing_keys = set(projection_load.missing_keys)
+        if not missing_keys.issubset(allowed_missing) or not unexpected_keys.issubset(allowed_unexpected):
+            raise RuntimeError(
+                "Projection checkpoint did not match the reward-memory projection module. "
+                f"Missing keys: {sorted(missing_keys)}. Unexpected keys: {sorted(unexpected_keys)}."
+            )
+        for parameter in projection.parameters():
+            parameter.requires_grad = False
+        projection.eval()
+
+        self.reward_backbone_checkpoint = backbone_checkpoint
+        self.reward_projection_checkpoint = projection_checkpoint
+        self.reward_backbone_lobula_dim = int(backbone.lobula.embedding.out_features)
+        self.reward_projection_kc_dim = int(projection_kwargs["kc_dim"])
+        self.reward_projection_vpn_dim = int(projection_kwargs["vpn_dim"])
+        self.reward_projection_target_active = int(target_active)
+        return backbone, projection
+
+    def _build_reward_dataset(self):
+        base_dataset = InsectVisionDataset(
+            root=str(self.dataset_dir),
+            dataset=self.reward_dataset,
+            mode=DataMode.STATIC_FULL,
+            logger=self.logger,
+            patch_size=self.patch_size,
+            samples_per_image=1,
+        )
+        rewarded_indices, rewarded_names = resolve_rewarded_classes(
+            getattr(base_dataset, "class_names", []),
+            getattr(self, "rewarded_classes", ""),
+        )
+        reward_dataset = RewardLabelDataset(base_dataset, rewarded_indices)
+        self.rewarded_class_indices = rewarded_indices
+        self.rewarded_class_names = rewarded_names
+        self.logger.info(
+            "Reward mapping: "
+            + ", ".join(f"{name}({idx})" for idx, name in zip(rewarded_indices, rewarded_names))
+        )
+        return reward_dataset
+
+    def _split_reward_indices(self, reward_dataset: RewardLabelDataset):
+        indices = np.arange(len(reward_dataset), dtype=int)
+        class_labels = np.asarray(reward_dataset.class_labels, dtype=np.int64)
+        val_split = float(getattr(self, "reward_val_split", 0.2))
+
+        if not 0.0 < val_split < 1.0:
+            raise ValueError(f"reward_val_split must be in (0, 1), got {val_split}")
+
+        train_idx, val_idx = train_test_split(
+            indices,
+            test_size=val_split,
+            random_state=self.split_seed,
+            stratify=class_labels,
+        )
+        return np.asarray(train_idx, dtype=int), np.asarray(val_idx, dtype=int)
+
+    def _reward_head_input_dim(self):
+        return resolve_reward_feature_dim(
+            getattr(self, "reward_feature", "kenyon_code"),
+            lobula_dim=int(getattr(self, "reward_backbone_lobula_dim", 128)),
+            vpn_dim=int(getattr(self, "reward_projection_vpn_dim", self.projection_vpn_dim)),
+            kc_dim=int(getattr(self, "reward_projection_kc_dim", self.projection_kc_dim)),
+        )
+
+    def _build_reward_optimizer(self, reward_head: RewardMemoryHead):
+        return torch.optim.AdamW(
+            reward_head.parameters(),
+            lr=self.lr,
+            weight_decay=float(getattr(self, "reward_weight_decay", 1e-4)),
+        )
+
+    def _resolve_reward_pos_weight(self, reward_labels: np.ndarray):
+        configured = float(getattr(self, "reward_pos_weight", 0.0))
+        if configured > 0.0:
+            return configured
+
+        positive_count = float(np.sum(reward_labels > 0.5))
+        negative_count = float(np.sum(reward_labels <= 0.5))
+        if positive_count <= 0.0:
+            return 1.0
+        return max(1.0, negative_count / positive_count)
+
+    def _reward_epoch_metrics(self, total_loss: float, processed: int, logits, reward_labels):
+        metrics = compute_reward_metrics(logits, reward_labels, threshold=self.reward_threshold)
+        metrics["loss"] = float(total_loss / max(1, processed))
+        return metrics
+
+    def _run_reward_epoch(
+        self,
+        backbone: VisionBackbone,
+        projection: VisionProjection,
+        reward_head: RewardMemoryHead,
+        loader: DataLoader,
+        loss_fn,
+        optimizer=None,
+        scaler=None,
+    ):
+        is_training = optimizer is not None
+        reward_head.train(is_training)
+
+        total_loss = 0.0
+        processed = 0
+        all_logits = []
+        all_reward_labels = []
+        all_class_labels = []
+
+        if not is_training:
+            reward_head.eval()
+
+        iterator = tqdm(loader, desc="Reward epoch", unit="batch") if is_training else loader
+        for batch in iterator:
+            imgs = batch["input"].to(self.device, non_blocking=self.device.type == "cuda")
+            reward_labels = batch["reward_label"].to(self.device, non_blocking=self.device.type == "cuda")
+            class_labels = batch["class_label"].to(self.device, non_blocking=self.device.type == "cuda")
+
+            prepared = self._prepare_projection_like_inputs(imgs)
+            if is_training:
+                optimizer.zero_grad(set_to_none=True)
+
+            with self._backbone_autocast_context():
+                with torch.no_grad():
+                    backbone_outputs = backbone(prepared, return_maps=True)
+                    projection_outputs = projection(backbone_outputs)
+                    combined_outputs = {
+                        **backbone_outputs,
+                        **projection_outputs,
+                    }
+                    reward_features = self._resolve_reward_feature_tensor(combined_outputs)
+                reward_outputs = reward_head(reward_features)
+                reward_logits = reward_outputs["reward_logit"]
+                loss = loss_fn(reward_logits, reward_labels)
+
+            if is_training:
+                scaler.scale(loss).backward()
+                scaler.unscale_(optimizer)
+                torch.nn.utils.clip_grad_norm_(reward_head.parameters(), 1.0)
+                scaler.step(optimizer)
+                scaler.update()
+
+            batch_size = reward_labels.size(0)
+            processed += batch_size
+            total_loss += float(loss.item()) * batch_size
+            all_logits.append(reward_logits.detach().cpu().numpy())
+            all_reward_labels.append(reward_labels.detach().cpu().numpy())
+            all_class_labels.append(class_labels.detach().cpu().numpy())
+
+            if is_training:
+                batch_metrics = compute_reward_metrics(
+                    all_logits[-1],
+                    all_reward_labels[-1],
+                    threshold=self.reward_threshold,
+                )
+                iterator.set_postfix(
+                    loss=f"{total_loss / max(1, processed):.4f}",
+                    acc=f"{batch_metrics['accuracy']:.3f}",
+                    bal_acc=f"{batch_metrics['balanced_accuracy']:.3f}",
+                )
+
+        logits = np.concatenate(all_logits, axis=0) if all_logits else np.zeros(0, dtype=np.float32)
+        reward_labels = np.concatenate(all_reward_labels, axis=0) if all_reward_labels else np.zeros(0, dtype=np.float32)
+        class_labels = np.concatenate(all_class_labels, axis=0) if all_class_labels else np.zeros(0, dtype=np.int64)
+        metrics = self._reward_epoch_metrics(total_loss, processed, logits, reward_labels)
+        return metrics, {
+            "logits": logits,
+            "reward_labels": reward_labels,
+            "class_labels": class_labels,
+            "probabilities": 1.0 / (1.0 + np.exp(-logits)),
+        }
+
+    def _save_reward_checkpoint(
+        self,
+        reward_head: RewardMemoryHead,
+        epoch_num: int,
+        metric_value: float,
+        best_metric: float,
+        loss_value: float,
+        best_loss: float,
+    ):
+        if self.best_only:
+            improved = metric_value > best_metric + 1e-6 or (
+                abs(metric_value - best_metric) <= 1e-6 and loss_value < best_loss
+            )
+            if improved:
+                torch.save(reward_head.state_dict(), str(self.model_path))
+                return metric_value, loss_value, True
+            return best_metric, best_loss, False
+
+        epoch_path = self.models_dir / f"{self.reward_model}_Epoch{epoch_num}.pth"
+        torch.save(reward_head.state_dict(), str(epoch_path))
+        improved = metric_value > best_metric + 1e-6 or (
+            abs(metric_value - best_metric) <= 1e-6 and loss_value < best_loss
+        )
+        if improved:
+            return metric_value, loss_value, True
+        return best_metric, best_loss, False
 
     def _set_seed(self) -> int:
         seed = secrets.randbits(32)
@@ -239,6 +558,8 @@ class TrainVision(nn.Module):
             return self.train_lobula_plate()
         if self.train_stage == "projection":
             return self.train_projection()
+        if self.train_stage == "reward_memory":
+            return self.train_reward_memory()
         return self.train_backbone()
 
     # ────────── backbone pretraining ──────────
@@ -827,6 +1148,7 @@ class TrainVision(nn.Module):
             max_samples=max_samples,
             deterministic=deterministic,
             seed=seed,
+            class_aware_sampling=self._projection_class_grouping_enabled(),
         )
 
     def _configure_projection_backbone(self, backbone: VisionBackbone):
@@ -849,6 +1171,9 @@ class TrainVision(nn.Module):
             "feature_loss": 0.0,
             "shift_loss": 0.0,
             "kc_loss": 0.0,
+            "class_feature_loss": 0.0,
+            "class_kc_loss": 0.0,
+            "kc_sparsity_loss": 0.0,
             "balance_loss": 0.0,
             "feature_top1": 0.0,
             "shift_mae_px": 0.0,
@@ -861,6 +1186,7 @@ class TrainVision(nn.Module):
             "feature_near_similarity": 0.0,
             "feature_far_similarity": 0.0,
             "feature_negative_similarity": 0.0,
+            "feature_class_similarity": 0.0,
             "spatial_near_similarity": 0.0,
             "spatial_far_similarity": 0.0,
             "spatial_negative_similarity": 0.0,
@@ -870,6 +1196,7 @@ class TrainVision(nn.Module):
             "kc_near_similarity": 0.0,
             "kc_far_similarity": 0.0,
             "kc_negative_similarity": 0.0,
+            "kc_class_similarity": 0.0,
             "near_overlap_ratio": 0.0,
             "far_overlap_ratio": 0.0,
         }
@@ -889,11 +1216,18 @@ class TrainVision(nn.Module):
         projection: VisionProjection,
         shift_head: ProjectionShiftHead,
         batch,
+        class_kc_loss_weight: float | None = None,
     ):
         anchor = batch["anchor"].to(self.device, non_blocking=self.device.type == "cuda")
         near_positive = batch["near_positive"].to(self.device, non_blocking=self.device.type == "cuda")
         far_positive = batch["far_positive"].to(self.device, non_blocking=self.device.type == "cuda")
         negative = batch["negative"].to(self.device, non_blocking=self.device.type == "cuda")
+        use_class_grouping = self._projection_class_grouping_enabled()
+        class_positive = None
+        class_labels = None
+        if use_class_grouping:
+            class_positive = batch["class_positive"].to(self.device, non_blocking=self.device.type == "cuda")
+            class_labels = batch["class_label"].to(self.device, non_blocking=self.device.type == "cuda")
         near_shift = batch["near_shift"].to(self.device, non_blocking=self.device.type == "cuda").float()
         far_shift = batch["far_shift"].to(self.device, non_blocking=self.device.type == "cuda").float()
 
@@ -902,11 +1236,13 @@ class TrainVision(nn.Module):
             near_outputs = backbone(near_positive, return_maps=True)
             far_outputs = backbone(far_positive, return_maps=True)
             negative_outputs = backbone(negative, return_maps=True)
+            class_positive_outputs = backbone(class_positive, return_maps=True) if use_class_grouping else None
 
         anchor_projection = projection(anchor_outputs)
         near_projection = projection(near_outputs)
         far_projection = projection(far_outputs)
         negative_projection = projection(negative_outputs)
+        class_positive_projection = projection(class_positive_outputs) if use_class_grouping else None
 
         feature_near_metrics = descriptor_place_matching_loss(
             anchor_projection["feature_vpn"],
@@ -920,7 +1256,53 @@ class TrainVision(nn.Module):
         )
         feature_loss = 0.5 * (feature_near_metrics["loss"] + feature_far_metrics["loss"])
         feature_top1 = 0.5 * (feature_near_metrics["top1"] + feature_far_metrics["top1"])
+        zero = feature_loss * 0.0
 
+        if use_class_grouping:
+            supcon_labels = torch.cat([class_labels, class_labels], dim=0)
+            class_feature_metrics = supervised_contrastive_loss(
+                torch.cat(
+                    [
+                        anchor_projection["feature_vpn"],
+                        class_positive_projection["feature_vpn"],
+                    ],
+                    dim=0,
+                ),
+                supcon_labels,
+                temperature=self.dense_temperature,
+            )
+            class_kc_metrics = supervised_contrastive_loss(
+                torch.cat(
+                    [
+                        anchor_projection["kenyon_code"],
+                        class_positive_projection["kenyon_code"],
+                    ],
+                    dim=0,
+                ),
+                supcon_labels,
+                temperature=self.dense_temperature,
+            )
+            feature_class_similarity = F.cosine_similarity(
+                F.normalize(anchor_projection["feature_vpn"], dim=1),
+                F.normalize(class_positive_projection["feature_vpn"], dim=1),
+                dim=1,
+            ).mean()
+            kc_class_similarity = F.cosine_similarity(
+                F.normalize(anchor_projection["kenyon_code"], dim=1),
+                F.normalize(class_positive_projection["kenyon_code"], dim=1),
+                dim=1,
+            ).mean()
+        else:
+            class_feature_metrics = {"loss": zero, "top1": zero.detach()}
+            class_kc_metrics = {"loss": zero, "top1": zero.detach()}
+            feature_class_similarity = zero.detach()
+            kc_class_similarity = zero.detach()
+
+        effective_class_kc_loss_weight = (
+            float(self.projection_class_kc_loss_weight)
+            if class_kc_loss_weight is None
+            else float(class_kc_loss_weight)
+        )
         near_shift_metrics = shift_regression_loss(
             shift_head(anchor_projection["spatial_vpn"], near_projection["spatial_vpn"]),
             near_shift,
@@ -971,11 +1353,26 @@ class TrainVision(nn.Module):
                 dim=0,
             )
         )
+        kc_sparsity_inputs = [
+            anchor_projection["kc_active_counts"].float(),
+            near_projection["kc_active_counts"].float(),
+            far_projection["kc_active_counts"].float(),
+            negative_projection["kc_active_counts"].float(),
+        ]
+        if use_class_grouping:
+            kc_sparsity_inputs.append(class_positive_projection["kc_active_counts"].float())
+        kc_sparsity_metrics = kenyon_sparsity_regularizer(
+            torch.cat(kc_sparsity_inputs, dim=0),
+            target_active_count=getattr(self, "projection_target_kc_active", self._projection_kc_config()["kc_target_active"]),
+        )
 
         loss = (
             self.projection_feature_loss_weight * feature_loss
             + self.projection_shift_loss_weight * shift_loss
             + self.projection_kc_loss_weight * kc_metrics["loss"]
+            + self.projection_class_feature_loss_weight * class_feature_metrics["loss"]
+            + effective_class_kc_loss_weight * class_kc_metrics["loss"]
+            + self.projection_kc_sparsity_loss_weight * kc_sparsity_metrics["loss"]
             + self.projection_balance_loss_weight * balance_metrics["loss"]
         )
 
@@ -1003,6 +1400,9 @@ class TrainVision(nn.Module):
             "feature_loss": feature_loss.detach(),
             "shift_loss": shift_loss.detach(),
             "kc_loss": kc_metrics["loss"].detach(),
+            "class_feature_loss": class_feature_metrics["loss"].detach(),
+            "class_kc_loss": class_kc_metrics["loss"].detach(),
+            "kc_sparsity_loss": kc_sparsity_metrics["loss"].detach(),
             "balance_loss": balance_metrics["loss"].detach(),
             "feature_top1": feature_top1.detach(),
             "shift_mae_px": shift_mae_px.detach(),
@@ -1015,6 +1415,7 @@ class TrainVision(nn.Module):
             "feature_near_similarity": feature_summary["near_mean"],
             "feature_far_similarity": feature_summary["far_mean"],
             "feature_negative_similarity": feature_summary["negative_mean"],
+            "feature_class_similarity": feature_class_similarity.detach(),
             "spatial_near_similarity": spatial_summary["near_mean"],
             "spatial_far_similarity": spatial_summary["far_mean"],
             "spatial_negative_similarity": spatial_summary["negative_mean"],
@@ -1024,6 +1425,7 @@ class TrainVision(nn.Module):
             "kc_near_similarity": kc_metrics["sim_near"].mean(),
             "kc_far_similarity": kc_metrics["sim_far"].mean(),
             "kc_negative_similarity": kc_metrics["sim_negative"].mean(),
+            "kc_class_similarity": kc_class_similarity.detach(),
             "near_overlap_ratio": batch["near_overlap_ratio"].to(self.device).mean(),
             "far_overlap_ratio": batch["far_overlap_ratio"].to(self.device).mean(),
         }
@@ -1039,6 +1441,7 @@ class TrainVision(nn.Module):
                 "anchor": batch["anchor"].detach().cpu(),
                 "near_positive": batch["near_positive"].detach().cpu(),
                 "far_positive": batch["far_positive"].detach().cpu(),
+                "class_positive": batch["class_positive"].detach().cpu(),
                 "negative": batch["negative"].detach().cpu(),
                 "near_shift": batch["near_shift"].detach().cpu(),
                 "far_shift": batch["far_shift"].detach().cpu(),
@@ -1058,6 +1461,7 @@ class TrainVision(nn.Module):
         projection: VisionProjection,
         shift_head: ProjectionShiftHead,
         loader: DataLoader,
+        class_kc_loss_weight: float | None = None,
     ):
         running = self._empty_projection_metrics()
         processed = 0
@@ -1066,7 +1470,13 @@ class TrainVision(nn.Module):
         shift_head.eval()
         with torch.no_grad():
             for batch in loader:
-                loss, metrics, _ = self._projection_forward(backbone, projection, shift_head, batch)
+                loss, metrics, _ = self._projection_forward(
+                    backbone,
+                    projection,
+                    shift_head,
+                    batch,
+                    class_kc_loss_weight=class_kc_loss_weight,
+                )
                 batch_size = batch["anchor"].size(0)
                 processed += batch_size
                 self._accumulate_projection_metrics(running, metrics, batch_size)
@@ -1135,6 +1545,8 @@ class TrainVision(nn.Module):
         )
 
         backbone = self._load_projection_backbone()
+        kc_config = self._projection_kc_config()
+        self.projection_target_kc_active = kc_config["kc_target_active"]
         projection = VisionProjection(
             lobula_dim=backbone.lobula.embedding.out_features,
             lobula_feature_channels=backbone.lobula.norm.num_channels,
@@ -1142,9 +1554,13 @@ class TrainVision(nn.Module):
             vpn_dim=self.projection_vpn_dim,
             spatial_pool_size=self.projection_spatial_pool_size,
             spatial_token_dim=self.projection_spatial_token_dim,
-            kc_dim=self.projection_kc_dim,
+            kc_dim=kc_config["kc_dim"],
             kc_fan_in=self.projection_kc_fan_in,
-            kc_sparsity=self.projection_kc_sparsity,
+            kc_sparsity=kc_config["kc_sparsity"],
+            apl_feedback_strength=self.projection_apl_feedback_strength,
+            apl_gain_adapt_rate=self.projection_apl_gain_adapt_rate,
+            apl_threshold_lr=self.projection_apl_threshold_lr,
+            apl_num_iters=self.projection_apl_num_iters,
         ).to(self.device)
         shift_head = ProjectionShiftHead(in_dim=self.projection_vpn_dim).to(self.device)
 
@@ -1174,6 +1590,7 @@ class TrainVision(nn.Module):
             "epoch": [],
             "train_loss": [],
             "val_loss": [],
+            "class_kc_loss_weight": [],
             "train_shift_mae_px": [],
             "val_shift_mae_px": [],
             "train_kc_ordering_acc": [],
@@ -1183,12 +1600,14 @@ class TrainVision(nn.Module):
             "val_feature_near_similarity": [],
             "val_feature_far_similarity": [],
             "val_feature_negative_similarity": [],
+            "val_feature_class_similarity": [],
             "val_spatial_near_similarity": [],
             "val_spatial_far_similarity": [],
             "val_spatial_negative_similarity": [],
             "val_kc_near_similarity": [],
             "val_kc_far_similarity": [],
             "val_kc_negative_similarity": [],
+            "val_kc_class_similarity": [],
         }
         history_json_path = self.outdir / "projection_history.json"
         history_plot_path = self.outdir / "projection_history.png"
@@ -1199,6 +1618,7 @@ class TrainVision(nn.Module):
 
         for epoch in range(self.epochs):
             epoch_num = epoch + 1
+            current_class_kc_weight = self._projection_class_kc_weight(epoch_num)
             projection.train()
             shift_head.train()
 
@@ -1243,7 +1663,13 @@ class TrainVision(nn.Module):
             for batch in pbar:
                 opt.zero_grad(set_to_none=True)
                 with self._backbone_autocast_context():
-                    loss, metrics, _ = self._projection_forward(backbone, projection, shift_head, batch)
+                    loss, metrics, _ = self._projection_forward(
+                        backbone,
+                        projection,
+                        shift_head,
+                        batch,
+                        class_kc_loss_weight=current_class_kc_weight,
+                    )
 
                 scaler.scale(loss).backward()
                 scaler.unscale_(opt)
@@ -1268,7 +1694,13 @@ class TrainVision(nn.Module):
             train_metrics = self._finalize_projection_metrics(running, processed)
             val_metrics = None
             if val_loader is not None:
-                val_metrics = self._evaluate_projection_loader(backbone, projection, shift_head, val_loader)
+                val_metrics = self._evaluate_projection_loader(
+                    backbone,
+                    projection,
+                    shift_head,
+                    val_loader,
+                    class_kc_loss_weight=current_class_kc_weight,
+                )
 
             sched.step()
 
@@ -1295,6 +1727,7 @@ class TrainVision(nn.Module):
             history["epoch"].append(epoch_num)
             history["train_loss"].append(train_metrics["loss"])
             history["val_loss"].append(val_metrics["loss"] if val_metrics is not None else train_metrics["loss"])
+            history["class_kc_loss_weight"].append(current_class_kc_weight)
             history["train_shift_mae_px"].append(train_metrics["shift_mae_px"])
             history["val_shift_mae_px"].append(
                 val_metrics["shift_mae_px"] if val_metrics is not None else train_metrics["shift_mae_px"]
@@ -1311,20 +1744,28 @@ class TrainVision(nn.Module):
             history["val_feature_near_similarity"].append(reference_metrics["feature_near_similarity"])
             history["val_feature_far_similarity"].append(reference_metrics["feature_far_similarity"])
             history["val_feature_negative_similarity"].append(reference_metrics["feature_negative_similarity"])
+            history["val_feature_class_similarity"].append(reference_metrics["feature_class_similarity"])
             history["val_spatial_near_similarity"].append(reference_metrics["spatial_near_similarity"])
             history["val_spatial_far_similarity"].append(reference_metrics["spatial_far_similarity"])
             history["val_spatial_negative_similarity"].append(reference_metrics["spatial_negative_similarity"])
             history["val_kc_near_similarity"].append(reference_metrics["kc_near_similarity"])
             history["val_kc_far_similarity"].append(reference_metrics["kc_far_similarity"])
             history["val_kc_negative_similarity"].append(reference_metrics["kc_negative_similarity"])
+            history["val_kc_class_similarity"].append(reference_metrics["kc_class_similarity"])
 
             history_json_path.write_text(json.dumps(history, indent=2), encoding="utf-8")
-            plot_projection_history(history, history_plot_path, target_kc_sparsity=self.projection_kc_sparsity)
+            plot_projection_history(history, history_plot_path, target_kc_sparsity=kc_config["kc_sparsity"])
 
             projection.eval()
             shift_head.eval()
             with torch.no_grad():
-                _, _, preview_outputs = self._projection_forward(backbone, projection, shift_head, preview_batch)
+                _, _, preview_outputs = self._projection_forward(
+                    backbone,
+                    projection,
+                    shift_head,
+                    preview_batch,
+                    class_kc_loss_weight=current_class_kc_weight,
+                )
                 preview_snapshot = build_projection_snapshot(
                     preview_outputs["image_index"],
                     preview_outputs["negative_index"],
@@ -1333,12 +1774,17 @@ class TrainVision(nn.Module):
                     preview_outputs["near_projection"],
                     preview_outputs["far_projection"],
                     preview_outputs["negative_projection"],
-                    metadata={
-                        "near_shift_range": f"{self.projection_near_min_shift} to {self.projection_near_max_shift} px",
-                        "far_shift_range": f"{self.projection_far_min_shift} to {self.projection_far_max_shift} px",
-                        "target_kc_sparsity": f"{self.projection_kc_sparsity:.4f}",
-                    },
-                )
+                        metadata={
+                            "near_shift_range": f"{self.projection_near_min_shift} to {self.projection_near_max_shift} px",
+                            "far_shift_range": f"{self.projection_far_min_shift} to {self.projection_far_max_shift} px",
+                            "target_kc_sparsity": f"{kc_config['kc_sparsity']:.4f}",
+                            "target_kc_active_count": f"{kc_config['kc_target_active']}",
+                            "competition_module": "APLCompetition",
+                            "apl_feedback_strength": f"{self.projection_apl_feedback_strength:.4f}",
+                            "class_objective": "supervised_contrastive",
+                            "class_kc_loss_weight": f"{current_class_kc_weight:.4f}",
+                        },
+                    )
             snapshot_epoch_path = self.outdir / f"projection_snapshot_epoch{epoch_num:03d}.png"
             snapshot_latest_path = self.outdir / "projection_snapshot_latest.png"
             snapshot_json_epoch_path = self.outdir / f"projection_snapshot_epoch{epoch_num:03d}.json"
@@ -1355,12 +1801,16 @@ class TrainVision(nn.Module):
                 line = (
                     f"Epoch {epoch_num}/{self.epochs}, "
                     f"TrainLoss: {train_metrics['loss']:.4f}, TrainFeatureLoss: {train_metrics['feature_loss']:.4f}, "
+                    f"TrainClassFeatureLoss: {train_metrics['class_feature_loss']:.4f}, "
                     f"TrainShiftLoss: {train_metrics['shift_loss']:.4f}, TrainKCLoss: {train_metrics['kc_loss']:.4f}, "
+                    f"TrainClassKCLoss: {train_metrics['class_kc_loss']:.4f}, TrainClassKCWeight: {current_class_kc_weight:.4f}, "
+                    f"TrainKCSparsityLoss: {train_metrics['kc_sparsity_loss']:.4f}, "
                     f"TrainShiftMAE(px): {train_metrics['shift_mae_px']:.4f}, TrainKCOrder: {train_metrics['kc_ordering_acc']:.4f}, "
                     f"TrainKCActiveFrac: {train_metrics['kc_active_fraction']:.4f}, "
                     f"ValLoss: {(val_metrics['loss'] if val_metrics is not None else train_metrics['loss']):.4f}, "
                     f"ValShiftMAE(px): {(val_metrics['shift_mae_px'] if val_metrics is not None else train_metrics['shift_mae_px']):.4f}, "
-                    f"ValKCOrder: {(val_metrics['kc_ordering_acc'] if val_metrics is not None else train_metrics['kc_ordering_acc']):.4f}\n"
+                    f"ValKCOrder: {(val_metrics['kc_ordering_acc'] if val_metrics is not None else train_metrics['kc_ordering_acc']):.4f}, "
+                    f"ValKCActiveFrac: {(val_metrics['kc_active_fraction'] if val_metrics is not None else train_metrics['kc_active_fraction']):.4f}\n"
                 )
                 f.write(line)
 
@@ -1370,7 +1820,10 @@ class TrainVision(nn.Module):
                 f"val_loss={(val_metrics['loss'] if val_metrics is not None else train_metrics['loss']):.4f}, "
                 f"shift_mae={(val_metrics['shift_mae_px'] if val_metrics is not None else train_metrics['shift_mae_px']):.3f}px, "
                 f"kc_order={(val_metrics['kc_ordering_acc'] if val_metrics is not None else train_metrics['kc_ordering_acc']):.3f}, "
-                f"kc_active={(val_metrics['kc_active_fraction'] if val_metrics is not None else train_metrics['kc_active_fraction']):.3f}"
+                f"kc_active={(val_metrics['kc_active_fraction'] if val_metrics is not None else train_metrics['kc_active_fraction']):.3f}, "
+                f"class_kc_w={current_class_kc_weight:.3f}, "
+                f"class_feat={(val_metrics['feature_class_similarity'] if val_metrics is not None else train_metrics['feature_class_similarity']):.3f}, "
+                f"class_kc={(val_metrics['kc_class_similarity'] if val_metrics is not None else train_metrics['kc_class_similarity']):.3f}"
             )
 
             if val_loader is not None and self.early_stop_patience > 0 and patience >= self.early_stop_patience:
@@ -1383,6 +1836,203 @@ class TrainVision(nn.Module):
         self.logger.info(
             "\nProjection training complete. "
             f"Best monitored loss {best_metric:.4f} at epoch {best_epoch} → {self.model_path}"
+        )
+
+    def train_reward_memory(self):
+        if self.snn:
+            raise NotImplementedError("Reward-memory training is currently implemented for the ANN stack only.")
+
+        self._confirm_overwrite()
+        self._set_seed()
+
+        reward_dataset = self._build_reward_dataset()
+        train_indices, val_indices = self._split_reward_indices(reward_dataset)
+        train_dataset = Subset(reward_dataset, train_indices.tolist())
+        val_dataset = Subset(reward_dataset, val_indices.tolist())
+
+        self.logger.info(
+            "Reward-memory dataset split: "
+            f"train={len(train_dataset)} images, val={len(val_dataset)} images, "
+            f"rewarded={len(self.rewarded_class_names)} class(es)"
+        )
+
+        backbone, projection = self._load_reward_frozen_backbone_projection()
+        reward_head = RewardMemoryHead(
+            in_dim=self._reward_head_input_dim(),
+            hidden_dim=int(getattr(self, "reward_hidden_dim", 0)),
+            dropout=float(getattr(self, "reward_dropout", 0.0)),
+        ).to(self.device)
+        optimizer = self._build_reward_optimizer(reward_head)
+        scaler = torch.amp.GradScaler(enabled=self.device.type == "cuda")
+
+        train_reward_labels = reward_dataset.reward_labels[train_indices]
+        pos_weight = self._resolve_reward_pos_weight(train_reward_labels)
+        loss_fn = nn.BCEWithLogitsLoss(
+            pos_weight=torch.tensor(pos_weight, device=self.device, dtype=torch.float32)
+        )
+
+        config_payload = {
+            "reward_dataset": str(self.reward_dataset),
+            "reward_feature": str(self.reward_feature),
+            "rewarded_class_indices": [int(idx) for idx in self.rewarded_class_indices],
+            "rewarded_class_names": list(self.rewarded_class_names),
+            "reward_head_hidden_dim": int(getattr(self, "reward_hidden_dim", 0)),
+            "reward_threshold": float(getattr(self, "reward_threshold", 0.5)),
+            "reward_pos_weight": float(pos_weight),
+            "backbone_checkpoint": str(self.reward_backbone_checkpoint),
+            "projection_checkpoint": str(self.reward_projection_checkpoint),
+        }
+        (self.outdir / "reward_memory_config.json").write_text(
+            json.dumps(config_payload, indent=2),
+            encoding="utf-8",
+        )
+
+        train_loader = DataLoader(
+            train_dataset,
+            **self._loader_kwargs(self.batch_size, shuffle=True, drop_last=False),
+        )
+        val_loader = DataLoader(
+            val_dataset,
+            **self._loader_kwargs(self.spatial_val_batch_size or self.batch_size, shuffle=False, drop_last=False),
+        )
+
+        history = {
+            "epoch": [],
+            "train_loss": [],
+            "val_loss": [],
+            "train_accuracy": [],
+            "val_accuracy": [],
+            "train_balanced_accuracy": [],
+            "val_balanced_accuracy": [],
+            "train_auroc": [],
+            "val_auroc": [],
+            "train_average_precision": [],
+            "val_average_precision": [],
+        }
+        history_json_path = self.outdir / "reward_memory_history.json"
+        history_plot_path = self.outdir / "reward_memory_history.png"
+        best_metric = float("-inf")
+        best_loss = float("inf")
+        best_epoch = 0
+        patience = 0
+
+        for epoch in range(self.epochs):
+            epoch_num = epoch + 1
+            self.logger.info(f"Reward-memory epoch {epoch_num}/{self.epochs}")
+            train_metrics, _ = self._run_reward_epoch(
+                backbone,
+                projection,
+                reward_head,
+                train_loader,
+                loss_fn,
+                optimizer=optimizer,
+                scaler=scaler,
+            )
+            val_metrics, val_outputs = self._run_reward_epoch(
+                backbone,
+                projection,
+                reward_head,
+                val_loader,
+                loss_fn,
+                optimizer=None,
+                scaler=None,
+            )
+
+            best_metric, best_loss, improved = self._save_reward_checkpoint(
+                reward_head,
+                epoch_num,
+                metric_value=float(val_metrics["balanced_accuracy"]),
+                best_metric=best_metric,
+                loss_value=float(val_metrics["loss"]),
+                best_loss=best_loss,
+            )
+
+            if improved:
+                best_epoch = epoch_num
+                patience = 0
+            else:
+                patience += 1
+
+            history["epoch"].append(epoch_num)
+            history["train_loss"].append(float(train_metrics["loss"]))
+            history["val_loss"].append(float(val_metrics["loss"]))
+            history["train_accuracy"].append(float(train_metrics["accuracy"]))
+            history["val_accuracy"].append(float(val_metrics["accuracy"]))
+            history["train_balanced_accuracy"].append(float(train_metrics["balanced_accuracy"]))
+            history["val_balanced_accuracy"].append(float(val_metrics["balanced_accuracy"]))
+            history["train_auroc"].append(float(train_metrics["auroc"]))
+            history["val_auroc"].append(float(val_metrics["auroc"]))
+            history["train_average_precision"].append(float(train_metrics["average_precision"]))
+            history["val_average_precision"].append(float(val_metrics["average_precision"]))
+
+            history_json_path.write_text(json.dumps(history, indent=2), encoding="utf-8")
+            fig_history = plot_reward_history(history, history_plot_path)
+            if fig_history is not None:
+                plt.close(fig_history)
+
+            fig_class = plot_reward_by_class(
+                class_names=reward_dataset.class_names,
+                class_labels=val_outputs["class_labels"],
+                reward_probabilities=val_outputs["probabilities"],
+                rewarded_class_indices=self.rewarded_class_indices,
+                save_path=self.outdir / "reward_probability_by_class_latest.png",
+            )
+            plt.close(fig_class)
+            if improved:
+                fig_best = plot_reward_by_class(
+                    class_names=reward_dataset.class_names,
+                    class_labels=val_outputs["class_labels"],
+                    reward_probabilities=val_outputs["probabilities"],
+                    rewarded_class_indices=self.rewarded_class_indices,
+                    save_path=self.outdir / "reward_probability_by_class_best.png",
+                )
+                plt.close(fig_best)
+
+            with open(self.outdir / "training_log.txt", "a", encoding="utf-8") as handle:
+                handle.write(
+                    f"Epoch {epoch_num}/{self.epochs}, "
+                    f"TrainLoss: {train_metrics['loss']:.4f}, TrainAcc: {train_metrics['accuracy']:.4f}, "
+                    f"TrainBalAcc: {train_metrics['balanced_accuracy']:.4f}, TrainAUROC: {train_metrics['auroc']:.4f}, "
+                    f"TrainAP: {train_metrics['average_precision']:.4f}, "
+                    f"ValLoss: {val_metrics['loss']:.4f}, ValAcc: {val_metrics['accuracy']:.4f}, "
+                    f"ValBalAcc: {val_metrics['balanced_accuracy']:.4f}, ValAUROC: {val_metrics['auroc']:.4f}, "
+                    f"ValAP: {val_metrics['average_precision']:.4f}\n"
+                )
+
+            self.logger.info(
+                f"Epoch {epoch_num}: "
+                f"train_loss={train_metrics['loss']:.4f}, "
+                f"val_loss={val_metrics['loss']:.4f}, "
+                f"train_bal_acc={train_metrics['balanced_accuracy']:.3f}, "
+                f"val_bal_acc={val_metrics['balanced_accuracy']:.3f}, "
+                f"val_auroc={val_metrics['auroc']:.3f}, "
+                f"val_ap={val_metrics['average_precision']:.3f}, "
+                f"pos_prob={val_metrics['mean_positive_probability']:.3f}, "
+                f"neg_prob={val_metrics['mean_negative_probability']:.3f}"
+            )
+
+            if self.early_stop_patience > 0 and patience >= self.early_stop_patience:
+                self.logger.info(
+                    f"Early stopping reward-memory training at epoch {epoch_num}; "
+                    f"best epoch was {best_epoch} with val balanced accuracy {best_metric:.4f}"
+                )
+                break
+
+        summary_payload = {
+            "best_epoch": int(best_epoch),
+            "best_val_balanced_accuracy": float(best_metric),
+            "best_val_loss": float(best_loss),
+            "rewarded_class_indices": [int(idx) for idx in self.rewarded_class_indices],
+            "rewarded_class_names": list(self.rewarded_class_names),
+        }
+        (self.outdir / "reward_memory_summary.json").write_text(
+            json.dumps(summary_payload, indent=2),
+            encoding="utf-8",
+        )
+
+        self.logger.info(
+            "\nReward-memory training complete. "
+            f"Best val balanced accuracy {best_metric:.4f} at epoch {best_epoch} → {self.model_path}"
         )
 
     def _load_pretrained_backbone(self) -> VisionBackbone:

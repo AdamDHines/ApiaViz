@@ -5,7 +5,7 @@ import torch.nn as nn
 import snntorch as snn
 import torch.nn.functional as F
 
-from .functional import AdaptiveKWTA, SparseLinear
+from .functional import APLCompetition, SparseLinear
 
 class VisionBackbone(nn.Module):
     def __init__(self, lobula_dim=32, lobula_embedding_dim=128, lobula_plate_dim=32):
@@ -467,6 +467,10 @@ class VisionProjection(nn.Module):
         kc_dim=2048,
         kc_fan_in=8,
         kc_sparsity=0.03,
+        apl_feedback_strength=0.05,
+        apl_gain_adapt_rate=0.25,
+        apl_threshold_lr=0.02,
+        apl_num_iters=3,
     ):
         super().__init__()
         self.feature_vpn = FeatureVPN(
@@ -487,7 +491,14 @@ class VisionProjection(nn.Module):
             out_dim=vpn_dim,
         )
         self.kc_projection = SparseLinear(3 * vpn_dim, kc_dim, fan_in=kc_fan_in, bias=False)
-        self.kc_compete = AdaptiveKWTA(sparsity=kc_sparsity)
+        self.kc_compete = APLCompetition(
+            num_units=kc_dim,
+            target_sparsity=kc_sparsity,
+            feedback_strength=apl_feedback_strength,
+            gain_adapt_rate=apl_gain_adapt_rate,
+            threshold_lr=apl_threshold_lr,
+            num_iters=apl_num_iters,
+        )
 
     def _unpack_inputs(self, lobula, lobula_feature_map=None, lobula_plate=None):
         if isinstance(lobula, dict):
@@ -551,3 +562,60 @@ class VisionProjection(nn.Module):
             "kc_active_counts": kc_active_counts,
             "kc_active_fraction": kc_active_fraction,
         }
+
+
+class RewardMemoryHead(nn.Module):
+    def __init__(self, in_dim: int, hidden_dim: int = 0, dropout: float = 0.0):
+        super().__init__()
+        hidden_dim = int(hidden_dim)
+        dropout = float(dropout)
+
+        if hidden_dim > 0:
+            self.net = nn.Sequential(
+                nn.Linear(in_dim, hidden_dim),
+                nn.ReLU(inplace=True),
+                nn.LayerNorm(hidden_dim),
+                nn.Dropout(dropout),
+            )
+            readout_dim = hidden_dim
+        else:
+            self.net = nn.Identity()
+            readout_dim = int(in_dim)
+
+        self.readout = nn.Linear(readout_dim, 1)
+
+    def forward(self, x):
+        hidden = self.net(x)
+        reward_logit = self.readout(hidden).squeeze(-1)
+        reward_probability = torch.sigmoid(reward_logit)
+        return {
+            "reward_logit": reward_logit,
+            "reward_probability": reward_probability,
+        }
+
+
+def resolve_kc_sparsity_target(
+    kc_dim: int,
+    kc_sparsity: float = 0.03,
+    kc_target_active: int = 0,
+):
+    kc_dim = int(kc_dim)
+    if kc_dim <= 0:
+        raise ValueError(f"kc_dim must be positive, got {kc_dim}")
+
+    target_active = int(kc_target_active)
+    if target_active > 0:
+        if target_active > kc_dim:
+            raise ValueError(
+                f"kc_target_active ({target_active}) cannot exceed kc_dim ({kc_dim})"
+            )
+        effective_sparsity = max(1.0 / float(kc_dim), float(target_active) / float(kc_dim))
+        return float(effective_sparsity), int(max(1, target_active))
+
+    kc_sparsity = float(kc_sparsity)
+    if not 0.0 < kc_sparsity <= 1.0:
+        raise ValueError(f"kc_sparsity must be in (0, 1], got {kc_sparsity}")
+
+    effective_sparsity = max(1.0 / float(kc_dim), kc_sparsity)
+    target_active = max(1, int(effective_sparsity * kc_dim))
+    return float(effective_sparsity), int(target_active)

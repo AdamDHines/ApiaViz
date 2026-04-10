@@ -111,16 +111,37 @@ def model_logger(args):
         model_label = args.lobula_plate_model
     if getattr(args, "mode", None) == "train" and getattr(args, "train_stage", "backbone") == "projection":
         model_label = args.projection_model
+    if getattr(args, "mode", None) == "train" and getattr(args, "train_stage", "backbone") == "reward_memory":
+        model_label = args.reward_model
+    if getattr(args, "mode", None) == "eval" and not args.snn:
+        if getattr(args, "eval_feature", "kenyon_code") in {"reward_logit", "reward_probability"}:
+            model_label = f"{args.lobula_plate_model} + {args.projection_model} + {args.reward_model}"
+        else:
+            model_label = f"{args.lobula_plate_model} + {args.projection_model}"
 
     if args.snn:
         logger.info(f'ApiaViz is running: Spiking neural network (SNN) mode with model {args.snn_vision_model}.pth \n')
+    elif getattr(args, "mode", None) == "eval":
+        if getattr(args, "eval_feature", "kenyon_code") in {"reward_logit", "reward_probability"}:
+            logger.info(
+                "ApiaViz is running: Artificial neural network (ANN) mode with checkpoints "
+                f"{args.lobula_plate_model}.pth + {args.projection_model}.pth + {args.reward_model}.pth \n"
+            )
+        else:
+            logger.info(
+                "ApiaViz is running: Artificial neural network (ANN) mode with checkpoints "
+                f"{args.lobula_plate_model}.pth + {args.projection_model}.pth \n"
+            )
     else:
         logger.info(f'ApiaViz is running: Artificial neural network (ANN) mode with model {model_label}.pth \n')
 
     if args.mode == 'train':
+        train_dataset_label = args.training_dataset
+        if getattr(args, "train_stage", "backbone") == "reward_memory":
+            train_dataset_label = args.reward_dataset
         logger.info('Training new model with the following parameters:')
         logger.info(f'  - Stage: {getattr(args, "train_stage", "backbone")}')
-        logger.info(f'  - Dataset: {args.training_dataset}')
+        logger.info(f'  - Dataset: {train_dataset_label}')
         logger.info(f'  - Epochs: {args.epochs}')
         logger.info(f'  - Batch size: {args.batch_size}')
         logger.info(f'  - Learning rate: {args.lr}')
@@ -141,13 +162,53 @@ def model_logger(args):
             logger.info(f'  - Far shift range: {args.projection_far_min_shift} to {args.projection_far_max_shift}')
             logger.info(f'  - VPN dim: {args.projection_vpn_dim}')
             logger.info(f'  - KC dim: {args.projection_kc_dim}')
-            logger.info(f'  - KC sparsity: {args.projection_kc_sparsity}')
+            logger.info(f'  - Class grouping: {args.projection_class_grouping}')
+            logger.info('  - Class objective: supervised contrastive')
+            if getattr(args, "projection_kc_target_active", 0) > 0:
+                effective_sparsity = max(
+                    1.0 / float(args.projection_kc_dim),
+                    float(args.projection_kc_target_active) / float(args.projection_kc_dim),
+                )
+                logger.info(f'  - KC target active count: {args.projection_kc_target_active}')
+                logger.info(f'  - KC effective sparsity: {effective_sparsity:.4f}')
+            else:
+                logger.info(f'  - KC sparsity: {args.projection_kc_sparsity}')
+            logger.info(
+                '  - KC competition: '
+                f'APL-like inhibition (gain={args.projection_apl_feedback_strength:.4f}, '
+                f'adapt={args.projection_apl_gain_adapt_rate:.4f}, '
+                f'threshold_lr={args.projection_apl_threshold_lr:.4f}, '
+                f'iters={args.projection_apl_num_iters})'
+            )
             logger.info(f'  - Feature loss weight: {args.projection_feature_loss_weight}')
             logger.info(f'  - Shift loss weight: {args.projection_shift_loss_weight}')
             logger.info(f'  - KC loss weight: {args.projection_kc_loss_weight}')
+            logger.info(f'  - Class feature loss weight: {args.projection_class_feature_loss_weight}')
+            logger.info(f'  - Class KC loss weight (peak): {args.projection_class_kc_loss_weight}')
+            logger.info(
+                f'  - Class KC curriculum: start epoch {args.projection_class_kc_start_epoch}, '
+                f'ramp {args.projection_class_kc_ramp_epochs} epoch(s)'
+            )
+            logger.info(f'  - KC sparsity loss weight: {args.projection_kc_sparsity_loss_weight}')
             logger.info(f'  - Balance loss weight: {args.projection_balance_loss_weight}')
             logger.info(f'  - Data loader workers: {args.num_workers}')
             logger.info(f'  - Init checkpoint: {args.backbone_checkpoint or args.lobula_plate_model} \n')
+        elif getattr(args, "train_stage", "backbone") == "reward_memory":
+            logger.info(f'  - Dataset: {args.reward_dataset}')
+            logger.info(f'  - Reward feature: {args.reward_feature}')
+            logger.info(f'  - Rewarded classes: {args.rewarded_classes or "[required at runtime]"}')
+            logger.info(f'  - Reward head hidden dim: {args.reward_hidden_dim}')
+            logger.info(f'  - Reward dropout: {args.reward_dropout}')
+            logger.info(f'  - Reward val split: {args.reward_val_split}')
+            logger.info(f'  - Reward threshold: {args.reward_threshold}')
+            logger.info(f'  - Reward weight decay: {args.reward_weight_decay}')
+            logger.info(f'  - Reward positive class weight: {args.reward_pos_weight}')
+            logger.info(f'  - Data loader workers: {args.num_workers}')
+            logger.info(
+                f'  - Frozen checkpoints: '
+                f'{args.backbone_checkpoint or args.lobula_plate_model} + '
+                f'{args.projection_checkpoint or args.projection_model} \n'
+            )
         else:
             logger.info('')
     elif args.mode == 'eval':
@@ -155,6 +216,10 @@ def model_logger(args):
         logger.info(f'  - Dataset: {args.eval_dataset}')
         logger.info(f'  - Samples per image: {args.eval_samples}')
         logger.info(f'  - Batch size: {args.eval_batch_size}')
+        logger.info(f'  - Feature space: {getattr(args, "eval_feature", "kenyon_code")}')
+        if getattr(args, "eval_feature", "kenyon_code") in {"reward_logit", "reward_probability"}:
+            logger.info(f'  - Reward feature input: {args.reward_feature}')
+            logger.info(f'  - Rewarded classes: {args.rewarded_classes or "[required at runtime]"}')
         logger.info(f'  - Scanning: {args.scanning} \n')
 
     return logger, output_folder

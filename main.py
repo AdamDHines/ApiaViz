@@ -50,7 +50,7 @@ def parse_args():
     # Opertaion modes
     parser.add_argument('-m', '--mode', type=str, default='train', choices=['train', 'eval'],
                         help='Mode to run: training or evaluation network')
-    parser.add_argument('--train_stage', type=str, default='backbone', choices=['backbone', 'lobula_plate', 'projection'],
+    parser.add_argument('--train_stage', type=str, default='backbone', choices=['backbone', 'lobula_plate', 'projection', 'reward_memory'],
                         help='Training stage to run when mode=train')
     
     # Vision Module parameters
@@ -70,6 +70,12 @@ def parse_args():
                         help='Name of the lobula plate fine-tuned checkpoint to save')
     parser.add_argument('--projection_model', type=str, default='VisionProjection',
                         help='Name of the VPN and Kenyon projection checkpoint to save')
+    parser.add_argument('--projection_checkpoint', type=str, default='',
+                        help='Optional explicit projection checkpoint path or stem for evaluation')
+    parser.add_argument('--reward_model', type=str, default='RewardMemoryHead',
+                        help='Name of the reward-memory head checkpoint to save/load')
+    parser.add_argument('--reward_checkpoint', type=str, default='',
+                        help='Optional explicit reward-memory checkpoint path or stem for evaluation')
     
     # Training parameters
     parser.add_argument('-e', '--epochs', type=int, default=20,
@@ -165,9 +171,9 @@ def parse_args():
                         help='Maximum shift in pixels for near-positive projection tuples')
     parser.add_argument('--projection_near_min_shift', type=int, default=0,
                         help='Minimum shift in pixels for near-positive projection tuples')
-    parser.add_argument('--projection_far_max_shift', type=int, default=8,
+    parser.add_argument('--projection_far_max_shift', type=int, default=16,
                         help='Maximum shift in pixels for far-positive projection tuples')
-    parser.add_argument('--projection_far_min_shift', type=int, default=4,
+    parser.add_argument('--projection_far_min_shift', type=int, default=8,
                         help='Minimum shift in pixels for far-positive projection tuples')
     parser.add_argument('--projection_vpn_dim', type=int, default=128,
                         help='Descriptor dimension for each VPN branch')
@@ -180,13 +186,35 @@ def parse_args():
     parser.add_argument('--projection_kc_fan_in', type=int, default=8,
                         help='Sparse fan-in for the Kenyon projection layer')
     parser.add_argument('--projection_kc_sparsity', type=float, default=0.03,
-                        help='Target sparsity for the Kenyon k-WTA stage')
+                        help='Target sparsity set point for the Kenyon APL-like inhibition stage')
+    parser.add_argument('--projection_kc_target_active', type=int, default=0,
+                        help='Optional target number of active Kenyon cells; overrides --projection_kc_sparsity when > 0')
+    parser.add_argument('--projection_class_grouping', type=str, default='auto', choices=['auto', 'off', 'on'],
+                        help='Whether projection training should sample same-class positives from different Tiny ImageNet images')
+    parser.add_argument('--projection_apl_feedback_strength', type=float, default=0.05,
+                        help='Initial global APL-like inhibitory feedback gain applied to the KC population')
+    parser.add_argument('--projection_apl_gain_adapt_rate', type=float, default=0.25,
+                        help='Homeostatic update rate for the global APL inhibitory gain')
+    parser.add_argument('--projection_apl_threshold_lr', type=float, default=0.02,
+                        help='Homeostatic update rate for per-KC inhibitory thresholds')
+    parser.add_argument('--projection_apl_num_iters', type=int, default=3,
+                        help='Number of recurrent APL inhibition steps used to settle the KC code')
     parser.add_argument('--projection_feature_loss_weight', type=float, default=1.0,
                         help='Weight for the invariant feature VPN objective')
     parser.add_argument('--projection_shift_loss_weight', type=float, default=1.0,
                         help='Weight for the spatial shift-regression objective')
     parser.add_argument('--projection_kc_loss_weight', type=float, default=1.0,
                         help='Weight for the Kenyon ordering objective')
+    parser.add_argument('--projection_class_feature_loss_weight', type=float, default=0.25,
+                        help='Weight for same-class different-image supervised-contrastive loss on the feature VPN during projection training')
+    parser.add_argument('--projection_class_kc_loss_weight', type=float, default=0.1,
+                        help='Peak weight for same-class different-image supervised-contrastive loss on the Kenyon code during projection training')
+    parser.add_argument('--projection_class_kc_start_epoch', type=int, default=5,
+                        help='Epoch number at which the Kenyon-code class loss begins ramping in; earlier epochs use zero KC class loss')
+    parser.add_argument('--projection_class_kc_ramp_epochs', type=int, default=5,
+                        help='Number of epochs used to ramp the Kenyon-code class loss from zero up to --projection_class_kc_loss_weight')
+    parser.add_argument('--projection_kc_sparsity_loss_weight', type=float, default=0.1,
+                        help='Weight for the explicit Kenyon active-count target penalty')
     parser.add_argument('--projection_balance_loss_weight', type=float, default=0.05,
                         help='Weight for the Kenyon load-balancing regularizer')
     parser.add_argument('--projection_pose_margin', type=float, default=0.10,
@@ -195,12 +223,34 @@ def parse_args():
                         help='Required similarity gap between far and negative Kenyon codes')
     parser.add_argument('--projection_preview_samples', type=int, default=24,
                         help='Number of deterministic validation tuples used for representation plots')
+    parser.add_argument('--reward_dataset', type=str, default='17flowers',
+                        help='Dataset used for reward-memory training')
+    parser.add_argument('--reward_feature', type=str, default='kenyon_code',
+                        choices=['lobula', 'feature_vpn', 'spatial_vpn', 'conjunctive_vpn', 'vpn', 'kenyon_drive', 'kenyon_code'],
+                        help='Feature space consumed by the reward-memory head')
+    parser.add_argument('--rewarded_classes', type=str, default='',
+                        help='Comma-separated class names or indices that should be treated as rewarded')
+    parser.add_argument('--reward_hidden_dim', type=int, default=0,
+                        help='Optional hidden dimension for the reward-memory head; 0 uses a single linear reward neuron')
+    parser.add_argument('--reward_dropout', type=float, default=0.0,
+                        help='Dropout applied inside the reward-memory head when --reward_hidden_dim > 0')
+    parser.add_argument('--reward_val_split', type=float, default=0.2,
+                        help='Validation split fraction for reward-memory training')
+    parser.add_argument('--reward_threshold', type=float, default=0.5,
+                        help='Decision threshold for reward-memory accuracy metrics')
+    parser.add_argument('--reward_weight_decay', type=float, default=1e-4,
+                        help='Weight decay for reward-memory head training')
+    parser.add_argument('--reward_pos_weight', type=float, default=0.0,
+                        help='Optional positive-class weight for BCE loss; 0 enables automatic class balancing')
     
     # Evaluation parameters
     parser.add_argument('--eval_samples', type=int, default=128,
                         help='Number of samples to use for evaluation')
     parser.add_argument('--eval_batch_size', type=int, default=128,
                         help='Batch size for evaluation')
+    parser.add_argument('--eval_feature', type=str, default='kenyon_code',
+                        choices=['lobula', 'feature_vpn', 'spatial_vpn', 'conjunctive_vpn', 'vpn', 'kenyon_drive', 'kenyon_code', 'reward_logit', 'reward_probability'],
+                        help='Feature space to evaluate for linear separability')
     
     # Evaluation dataset parameters
     parser.add_argument('-d', '--eval_dataset', default="flowers", choices=["synthetic", "faces", "flowers", "variety", "17flowers", "gardens-point", "gardens-point-few"],
