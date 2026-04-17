@@ -4,19 +4,239 @@ import os, cv2, math, torch, random, re
 
 import numpy as np
 from typing import List, Tuple
-
+from collections import defaultdict
 from pathlib import Path
 from enum import Enum, auto
 from PIL import Image, ImageDraw
 from torchvision import transforms
 from torch.utils.data import Dataset
 from apiaviz.src.functional import generate_smooth_scan_path
+import torchvision.transforms.functional as TF
 
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png"}
 WILDSCENES_DATASET_NAMES = {"wildscenes", "wildscenes2d", "wildscenes-2d"}
 WILDSCENES_IMAGE_DIRS = {"image", "images", "rgb"}
 WILDSCENES_SEQUENCE_RE = re.compile(r"^[a-z]-\d+$", re.IGNORECASE)
 TINY_IMAGENET_LABEL_RE = re.compile(r"_label_(\d+)(?=\.[^.]+$)")
+
+class TinyImageNetProjectionDataset(Dataset):
+    def __init__(
+        self,
+        image_paths,
+        select_GB,
+        deterministic=False,
+        seed=0,
+        image_size=64,
+        near_min_shift=1,
+        near_max_shift=4,
+        far_min_shift=8,
+        far_max_shift=18,
+        near_rotation_deg=4.0,
+        far_rotation_deg=12.0,
+        near_scale_jitter=0.05,
+        far_scale_jitter=0.12,
+        photometric_jitter_prob=0.8,
+        occlusion_prob=0.25,
+        max_samples=None,
+    ):
+        self.image_paths = [Path(p) for p in image_paths]
+        if max_samples is not None:
+            self.image_paths = self.image_paths[: int(max_samples)]
+
+        self.select_GB = select_GB
+        self.deterministic = bool(deterministic)
+        self.seed = int(seed)
+        self.image_size = int(image_size)
+
+        self.near_min_shift = int(near_min_shift)
+        self.near_max_shift = int(near_max_shift)
+        self.far_min_shift = int(far_min_shift)
+        self.far_max_shift = int(far_max_shift)
+
+        self.near_rotation_deg = float(near_rotation_deg)
+        self.far_rotation_deg = float(far_rotation_deg)
+
+        self.near_scale_jitter = float(near_scale_jitter)
+        self.far_scale_jitter = float(far_scale_jitter)
+
+        self.photometric_jitter_prob = float(photometric_jitter_prob)
+        self.occlusion_prob = float(occlusion_prob)
+
+        self.class_to_indices = defaultdict(list)
+        self.labels = []
+
+        label_re = re.compile(r"_label_(\d+)\.")
+
+        for idx, path in enumerate(self.image_paths):
+            m = label_re.search(path.name)
+            if m is None:
+                raise RuntimeError(f"Could not parse class label from filename: {path.name}")
+
+            class_name = m.group(1)  # keep as string for consistency
+            self.class_to_indices[class_name].append(idx)
+            self.labels.append(class_name)
+
+        self.class_names = sorted(self.class_to_indices.keys())
+        self.class_to_label = {c: i for i, c in enumerate(self.class_names)}
+
+    def __len__(self):
+        return len(self.image_paths)
+
+    def _rng(self, idx):
+        if self.deterministic:
+            return random.Random(self.seed + idx)
+        return random
+
+    def _load_rgb(self, path):
+        img = Image.open(path).convert("RGB")
+        if img.size != (self.image_size, self.image_size):
+            img = img.resize((self.image_size, self.image_size), resample=Image.BILINEAR)
+        return img
+
+    def _apply_photometric(self, img, rng):
+        if rng.random() > self.photometric_jitter_prob:
+            return img
+
+        brightness = rng.uniform(0.90, 1.10)
+        contrast = rng.uniform(0.90, 1.10)
+        saturation = rng.uniform(0.90, 1.10)
+
+        img = TF.adjust_brightness(img, brightness)
+        img = TF.adjust_contrast(img, contrast)
+        img = TF.adjust_saturation(img, saturation)
+        return img
+
+    def _apply_occlusion(self, img, rng):
+        if rng.random() > self.occlusion_prob:
+            return img
+
+        x0 = rng.randint(0, self.image_size - 8)
+        y0 = rng.randint(0, self.image_size - 8)
+        w = rng.randint(6, 14)
+        h = rng.randint(6, 14)
+
+        tensor = TF.to_tensor(img)
+        fill = torch.rand(tensor.size(0), 1, 1)
+        tensor[:, y0:y0 + h, x0:x0 + w] = fill
+        return TF.to_pil_image(tensor)
+
+    def _shift_overlap_ratio(self, dx, dy):
+        overlap_x = max(0.0, 1.0 - abs(dx) / float(self.image_size))
+        overlap_y = max(0.0, 1.0 - abs(dy) / float(self.image_size))
+        return overlap_x * overlap_y
+
+    def _sample_shift(self, rng, min_shift, max_shift):
+        mag = rng.randint(min_shift, max_shift)
+        axis = rng.choice([0, 1])
+        sign = rng.choice([-1, 1])
+
+        if axis == 0:
+            dx = sign * mag
+            dy = rng.randint(-max(1, mag // 3), max(1, mag // 3))
+        else:
+            dy = sign * mag
+            dx = rng.randint(-max(1, mag // 3), max(1, mag // 3))
+        return dx, dy
+
+    def _make_view(self, base_img, rng, dx, dy, rot_deg, scale_jitter, with_occlusion):
+        angle = rng.uniform(-rot_deg, rot_deg)
+        scale = rng.uniform(1.0 - scale_jitter, 1.0 + scale_jitter)
+
+        img = TF.affine(
+            base_img,
+            angle=angle,
+            translate=[dx, dy],
+            scale=scale,
+            shear=[0.0, 0.0],
+            interpolation=TF.InterpolationMode.BILINEAR,
+            fill=128,
+        )
+        img = self._apply_photometric(img, rng)
+        if with_occlusion:
+            img = self._apply_occlusion(img, rng)
+        return img
+
+    def _to_tensor(self, img):
+        x = TF.to_tensor(img)
+        x = self.select_GB(x)
+        x = TF.normalize(x, [0.5, 0.5], [0.5, 0.5])
+        return x
+
+    def __getitem__(self, idx):
+        rng = self._rng(idx)
+        anchor_path = self.image_paths[idx]
+        anchor_class = self.labels[idx]
+        class_label = self.class_to_label[anchor_class]
+
+        anchor_img = self._load_rgb(anchor_path)
+
+        near_dx, near_dy = self._sample_shift(rng, self.near_min_shift, self.near_max_shift)
+        far_dx, far_dy = self._sample_shift(rng, self.far_min_shift, self.far_max_shift)
+
+        near_img = self._make_view(
+            anchor_img,
+            rng,
+            dx=near_dx,
+            dy=near_dy,
+            rot_deg=self.near_rotation_deg,
+            scale_jitter=self.near_scale_jitter,
+            with_occlusion=False,
+        )
+
+        far_img = self._make_view(
+            anchor_img,
+            rng,
+            dx=far_dx,
+            dy=far_dy,
+            rot_deg=self.far_rotation_deg,
+            scale_jitter=self.far_scale_jitter,
+            with_occlusion=True,
+        )
+
+        neg_idx = rng.randrange(len(self.image_paths))
+        while self.labels[neg_idx] == anchor_class and len(self.image_paths) > 1:
+            neg_idx = rng.randrange(len(self.image_paths))
+        negative_img = self._load_rgb(self.image_paths[neg_idx])
+        negative_img = self._apply_photometric(negative_img, rng)
+
+        class_candidates = self.class_to_indices[anchor_class]
+        if len(class_candidates) > 1:
+            class_idx = idx
+            while class_idx == idx:
+                class_idx = rng.choice(class_candidates)
+        else:
+            class_idx = idx
+        class_positive_img = self._load_rgb(self.image_paths[class_idx])
+        class_positive_img = self._make_view(
+            class_positive_img,
+            rng,
+            dx=rng.randint(-4, 4),
+            dy=rng.randint(-4, 4),
+            rot_deg=8.0,
+            scale_jitter=0.08,
+            with_occlusion=False,
+        )
+
+        near_shift = float(math.sqrt(near_dx ** 2 + near_dy ** 2))
+        far_shift = float(math.sqrt(far_dx ** 2 + far_dy ** 2))
+
+        near_overlap_ratio = float(self._shift_overlap_ratio(near_dx, near_dy))
+        far_overlap_ratio = float(self._shift_overlap_ratio(far_dx, far_dy))
+
+        return {
+            "anchor": self._to_tensor(anchor_img),
+            "near_positive": self._to_tensor(near_img),
+            "far_positive": self._to_tensor(far_img),
+            "class_positive": self._to_tensor(class_positive_img),
+            "negative": self._to_tensor(negative_img),
+            "class_label": torch.tensor(class_label, dtype=torch.long),
+            "near_shift": torch.tensor([near_dx, near_dy], dtype=torch.float32),
+            "far_shift": torch.tensor([far_dx, far_dy], dtype=torch.float32),
+            "near_overlap_ratio": torch.tensor(near_overlap_ratio, dtype=torch.float32),
+            "far_overlap_ratio": torch.tensor(far_overlap_ratio, dtype=torch.float32),
+            "image_index": torch.tensor(idx, dtype=torch.long),
+            "negative_index": torch.tensor(neg_idx, dtype=torch.long),
+        }
 
 class TinyImageNetPairDataset(Dataset):
     """

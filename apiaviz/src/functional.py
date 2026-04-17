@@ -1,5 +1,10 @@
 # Imports
-import math, torch, cv2, random
+import math, torch, random
+
+try:
+    import cv2
+except ImportError:
+    cv2 = None
 
 import numpy as np
 import torch.nn as nn
@@ -11,15 +16,32 @@ import matplotlib.colors as mcolors
 from pathlib import Path
 from matplotlib import cm
 from typing import Optional
-from scipy import sparse as sp
-from sklearn.cluster import KMeans
 from typing import Optional, List, Dict, Union
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.manifold import TSNE, trustworthiness
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import GroupShuffleSplit, train_test_split
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.metrics import silhouette_score, adjusted_rand_score
+
+try:
+    from scipy import sparse as sp
+except ImportError:
+    sp = None
+
+try:
+    from sklearn.cluster import KMeans
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.manifold import TSNE, trustworthiness
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.model_selection import GroupShuffleSplit, train_test_split
+    from sklearn.metrics.pairwise import cosine_similarity
+    from sklearn.metrics import silhouette_score, adjusted_rand_score
+except ImportError:
+    KMeans = None
+    KNeighborsClassifier = None
+    TSNE = None
+    trustworthiness = None
+    LogisticRegression = None
+    GroupShuffleSplit = None
+    train_test_split = None
+    cosine_similarity = None
+    silhouette_score = None
+    adjusted_rand_score = None
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -157,21 +179,82 @@ class APLCompetition(nn.Module):
 
 # ────────── Sparse linear function ──────────
 class SparseLinear(nn.Module):
-    def __init__(self, in_f, out_f, fan_in=7, bias=False):
+    """
+    Backward-compatible sparse linear layer.
+
+    New behavior:
+    - optionally enforces grouped fan-in quotas so each KC receives a mix of
+      feature_vpn, spatial_vpn, and conjunctive_vpn inputs instead of sampling
+      arbitrarily from the concatenated vector.
+    """
+    def __init__(
+        self,
+        in_f,
+        out_f,
+        fan_in=7,
+        bias=False,
+        group_slices=None,
+        group_fan_in=None,
+    ):
         super().__init__()
-        mask = torch.zeros(out_f, in_f, dtype=torch.bool)
-        for o in range(out_f):
-            mask[o, torch.randperm(in_f)[:fan_in]] = True
+        self.in_f = int(in_f)
+        self.out_f = int(out_f)
+        self.fan_in = int(fan_in)
+
+        if self.in_f <= 0 or self.out_f <= 0:
+            raise ValueError(f"in_f and out_f must be positive, got {in_f}, {out_f}")
+        if self.fan_in <= 0:
+            raise ValueError(f"fan_in must be positive, got {fan_in}")
+
+        mask = torch.zeros(self.out_f, self.in_f, dtype=torch.bool)
+
+        if group_slices is None:
+            for o in range(self.out_f):
+                cols = torch.randperm(self.in_f)[:self.fan_in]
+                mask[o, cols] = True
+        else:
+            group_slices = [tuple(gs) for gs in group_slices]
+            for start, end in group_slices:
+                if not (0 <= start < end <= self.in_f):
+                    raise ValueError(f"Invalid group slice {(start, end)} for in_f={self.in_f}")
+
+            if group_fan_in is None:
+                base = self.fan_in // len(group_slices)
+                rem = self.fan_in % len(group_slices)
+                group_fan_in = [base + (1 if i < rem else 0) for i in range(len(group_slices))]
+            else:
+                group_fan_in = [int(v) for v in group_fan_in]
+
+            if len(group_fan_in) != len(group_slices):
+                raise ValueError("group_fan_in must match group_slices length")
+            if sum(group_fan_in) != self.fan_in:
+                raise ValueError(
+                    f"sum(group_fan_in) must equal fan_in; got {sum(group_fan_in)} vs {self.fan_in}"
+                )
+
+            for (start, end), k in zip(group_slices, group_fan_in):
+                width = end - start
+                if k <= 0:
+                    raise ValueError(f"group fan-in must be positive, got {k}")
+                if k > width:
+                    raise ValueError(
+                        f"group fan-in {k} exceeds group width {width} for slice {(start, end)}"
+                    )
+
+            for o in range(self.out_f):
+                for (start, end), k in zip(group_slices, group_fan_in):
+                    local = torch.randperm(end - start)[:k] + start
+                    mask[o, local] = True
+
         self.register_buffer("mask", mask)
 
-        # learnable weights only where mask == 1
-        w = torch.zeros(out_f, in_f)
-        w[self.mask] = torch.randn(self.mask.sum()) / math.sqrt(fan_in)
-        self.weight = nn.Parameter(w)           # <-- now optimisable
-        self.bias   = nn.Parameter(torch.zeros(out_f)) if bias else None
+        w = torch.zeros(self.out_f, self.in_f)
+        w[self.mask] = torch.randn(int(self.mask.sum())) / math.sqrt(float(self.fan_in))
+        self.weight = nn.Parameter(w)
+        self.bias = nn.Parameter(torch.zeros(self.out_f)) if bias else None
 
     def forward(self, x):
-        w = self.weight * self.mask            # keep zeros zero
+        w = self.weight * self.mask
         return F.linear(x, w, self.bias)
 
 # ────────── Learning rule ────────── 
@@ -309,7 +392,16 @@ class ModelEvaluator:
         heatmap_norm = (heatmap_np - heatmap_np.min()) / (heatmap_np.max() - heatmap_np.min() + 1e-8)
 
         h, w = image.shape[:2]
-        heatmap_resized = cv2.resize(heatmap_norm, (w, h), interpolation=cv2.INTER_CUBIC)
+        if cv2 is None:
+            heatmap_tensor = torch.from_numpy(heatmap_norm).float().view(1, 1, *heatmap_norm.shape)
+            heatmap_resized = F.interpolate(
+                heatmap_tensor,
+                size=(h, w),
+                mode="bicubic",
+                align_corners=False,
+            ).squeeze().numpy()
+        else:
+            heatmap_resized = cv2.resize(heatmap_norm, (w, h), interpolation=cv2.INTER_CUBIC)
         cmap = cm.get_cmap(colormap)
         heatmap_colored = cmap(heatmap_resized)[:, :, :3]
         

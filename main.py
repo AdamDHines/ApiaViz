@@ -171,9 +171,9 @@ def parse_args():
                         help='Maximum shift in pixels for near-positive projection tuples')
     parser.add_argument('--projection_near_min_shift', type=int, default=0,
                         help='Minimum shift in pixels for near-positive projection tuples')
-    parser.add_argument('--projection_far_max_shift', type=int, default=16,
+    parser.add_argument('--projection_far_max_shift', type=int, default=32,
                         help='Maximum shift in pixels for far-positive projection tuples')
-    parser.add_argument('--projection_far_min_shift', type=int, default=8,
+    parser.add_argument('--projection_far_min_shift', type=int, default=16,
                         help='Minimum shift in pixels for far-positive projection tuples')
     parser.add_argument('--projection_vpn_dim', type=int, default=128,
                         help='Descriptor dimension for each VPN branch')
@@ -181,13 +181,13 @@ def parse_args():
                         help='Pooling size used by the spatial VPN branch')
     parser.add_argument('--projection_spatial_token_dim', type=int, default=64,
                         help='Token dimension used inside the spatial and conjunctive VPN branches')
-    parser.add_argument('--projection_kc_dim', type=int, default=2048,
+    parser.add_argument('--projection_kc_dim', type=int, default=20000,
                         help='Number of Kenyon cells in the projection stage')
     parser.add_argument('--projection_kc_fan_in', type=int, default=8,
                         help='Sparse fan-in for the Kenyon projection layer')
     parser.add_argument('--projection_kc_sparsity', type=float, default=0.03,
                         help='Target sparsity set point for the Kenyon APL-like inhibition stage')
-    parser.add_argument('--projection_kc_target_active', type=int, default=0,
+    parser.add_argument('--projection_kc_target_active', type=int, default=300,
                         help='Optional target number of active Kenyon cells; overrides --projection_kc_sparsity when > 0')
     parser.add_argument('--projection_class_grouping', type=str, default='auto', choices=['auto', 'off', 'on'],
                         help='Whether projection training should sample same-class positives from different Tiny ImageNet images')
@@ -217,6 +217,16 @@ def parse_args():
                         help='Weight for the explicit Kenyon active-count target penalty')
     parser.add_argument('--projection_balance_loss_weight', type=float, default=0.05,
                         help='Weight for the Kenyon load-balancing regularizer')
+    parser.add_argument('--projection_kc_overlap_loss_weight', type=float, default=0.0,
+                        help='Weight for soft-Jaccard Kenyon overlap triplet loss; 0 keeps legacy projection training unchanged')
+    parser.add_argument('--projection_kc_overlap_margin', type=float, default=0.15,
+                        help='Required soft-Jaccard overlap gap between positive and negative KC codes')
+    parser.add_argument('--projection_kc_overlap_far_weight', type=float, default=0.5,
+                        help='How much far-positive KC overlap contributes to the overlap triplet positive term')
+    parser.add_argument('--projection_kc_negative_overlap_target', type=float, default=0.10,
+                        help='Target maximum soft-Jaccard KC overlap for anchor-negative pairs; set negative to disable this penalty')
+    parser.add_argument('--projection_kc_usage_loss_weight', type=float, default=0.0,
+                        help='Weight for post-competition KC winner-usage balancing across each batch')
     parser.add_argument('--projection_pose_margin', type=float, default=0.10,
                         help='Required similarity gap between near and far Kenyon codes')
     parser.add_argument('--projection_negative_margin', type=float, default=0.05,

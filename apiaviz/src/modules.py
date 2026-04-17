@@ -1,8 +1,7 @@
 # Imports
-import torch
+import torch, math
 
 import torch.nn as nn
-import snntorch as snn
 import torch.nn.functional as F
 
 from .functional import APLCompetition, SparseLinear
@@ -384,27 +383,160 @@ class ProjectionMLP(nn.Module):
     def forward(self, x):
         return self.net(x)
 
+class CrossAttentionPool(nn.Module):
+    def __init__(self, token_dim: int, num_slots: int):
+        super().__init__()
+        self.token_dim = int(token_dim)
+        self.num_slots = int(num_slots)
+        self.query = nn.Parameter(torch.randn(self.num_slots, self.token_dim) / math.sqrt(self.token_dim))
+        self.norm = nn.LayerNorm(self.token_dim)
+
+    def forward(self, tokens: torch.Tensor):
+        """
+        tokens: [B, N, D]
+        returns:
+            slots: [B, S, D]
+            attn:  [B, S, N]
+        """
+        if tokens.ndim != 3:
+            raise ValueError(f"CrossAttentionPool expected [B, N, D], got {tuple(tokens.shape)}")
+
+        bsz, _, dim = tokens.shape
+        query = self.query.unsqueeze(0).expand(bsz, -1, -1)  # [B, S, D]
+        attn = torch.softmax(torch.matmul(query, tokens.transpose(1, 2)) / math.sqrt(dim), dim=-1)
+        slots = torch.matmul(attn, tokens)
+        return self.norm(slots), attn
+
+
+class FourierCoordEncoder(nn.Module):
+    def __init__(self, out_dim: int):
+        super().__init__()
+        self.project = nn.Sequential(
+            nn.Linear(10, out_dim),
+            nn.ReLU(inplace=True),
+            nn.LayerNorm(out_dim),
+        )
+
+    def forward(self, coords: torch.Tensor):
+        """
+        coords: [B, N, 2] in [-1, 1]
+        """
+        x = coords[..., 0:1]
+        y = coords[..., 1:2]
+        feats = torch.cat(
+            [
+                x,
+                y,
+                x * y,
+                x.square(),
+                y.square(),
+                torch.sin(math.pi * x),
+                torch.cos(math.pi * x),
+                torch.sin(math.pi * y),
+                torch.cos(math.pi * y),
+                torch.sin(math.pi * (x + y)),
+            ],
+            dim=-1,
+        )
+        return self.project(feats)
+
+
 class FeatureVPN(nn.Module):
+    """
+    Content-focused vPN population.
+
+    Goal:
+    - stable object/content representation
+    - moderate translation tolerance
+    - avoids collapsing everything into one global descriptor too early
+    """
     def __init__(self, embedding_dim=128, feature_channels=32, out_dim=128):
         super().__init__()
+        self.pool_size = 4
+        self.token_dim = max(32, out_dim // 2)
+        self.num_slots = 4
+
         self.feature_pool = GeneralizedMeanPooling2d(p=3.0)
-        self.project = ProjectionMLP(embedding_dim + feature_channels, out_dim)
+
+        self.local_reduce = nn.Conv2d(feature_channels, self.token_dim, kernel_size=1, bias=True)
+        self.local_refine = nn.Conv2d(
+            self.token_dim,
+            self.token_dim,
+            kernel_size=3,
+            padding=1,
+            padding_mode="reflect",
+            bias=True,
+        )
+        self.local_norm = nn.GroupNorm(num_groups=1, num_channels=self.token_dim)
+
+        self.slot_pool = CrossAttentionPool(token_dim=self.token_dim, num_slots=self.num_slots)
+        self.project = ProjectionMLP(
+            embedding_dim + feature_channels + (2 * self.token_dim),
+            out_dim,
+        )
 
     def forward(self, lobula_embedding, lobula_feature_map):
         pooled_feature_map = self.feature_pool(lobula_feature_map).flatten(1)
-        descriptor = self.project(torch.cat([lobula_embedding, pooled_feature_map], dim=1))
+
+        local = F.relu(self.local_reduce(lobula_feature_map))
+        local = F.relu(self.local_norm(self.local_refine(local)))
+
+        token_map = F.adaptive_avg_pool2d(local, self.pool_size)
+        tokens = token_map.flatten(2).transpose(1, 2)  # [B, N, D]
+
+        slots, _ = self.slot_pool(tokens)
+        slot_mean = slots.mean(dim=1)
+        slot_max = slots.amax(dim=1)
+        slot_summary = torch.cat([slot_mean, slot_max], dim=1)
+
+        descriptor = self.project(
+            torch.cat([lobula_embedding, pooled_feature_map, slot_summary], dim=1)
+        )
+
         return {
             "descriptor": descriptor,
             "pooled_feature_map": pooled_feature_map,
         }
-
+    
 class SpatialVPN(nn.Module):
+    """
+    Spatial/context vPN population.
+
+    Goal:
+    - keep coarse position and layout
+    - be less brittle than raw retinotopy
+    - expose position-aware tokens to the conjunctive pathway
+    """
     def __init__(self, in_channels=32, pool_size=4, token_dim=64, out_dim=128):
         super().__init__()
         self.pool_size = int(pool_size)
-        self.token_proj = nn.Linear(in_channels + 2, token_dim)
-        self.token_score = nn.Linear(token_dim, 1)
-        self.project = ProjectionMLP(self.pool_size * self.pool_size * token_dim, out_dim)
+        self.token_dim = int(token_dim)
+        self.coord_dim = max(8, self.token_dim // 4)
+
+        self.pre = nn.Sequential(
+            nn.Conv2d(
+                in_channels,
+                in_channels,
+                kernel_size=3,
+                padding=1,
+                padding_mode="reflect",
+                bias=True,
+            ),
+            nn.ReLU(inplace=True),
+            nn.GroupNorm(num_groups=1, num_channels=in_channels),
+        )
+
+        self.coord_encoder = FourierCoordEncoder(out_dim=self.coord_dim)
+        self.token_proj = nn.Linear(in_channels + self.coord_dim, self.token_dim)
+        self.token_refine = nn.Sequential(
+            nn.LayerNorm(self.token_dim),
+            nn.Linear(self.token_dim, self.token_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(self.token_dim, self.token_dim),
+        )
+        self.token_score = nn.Linear(self.token_dim, 1)
+
+        self.project = ProjectionMLP(2 * self.token_dim, out_dim)
 
     def _coords(self, x):
         _, _, height, width = x.shape
@@ -417,36 +549,85 @@ class SpatialVPN(nn.Module):
         return coords.expand(x.size(0), -1, -1, -1)
 
     def forward(self, lobula_plate):
-        pooled_map = F.adaptive_avg_pool2d(lobula_plate, self.pool_size)
-        token_grid = torch.cat([pooled_map, self._coords(pooled_map)], dim=1)
-        tokens = token_grid.flatten(2).transpose(1, 2)
-        token_features = self.token_proj(tokens)
-        token_weights = torch.softmax(self.token_score(token_features).squeeze(-1), dim=1)
-        pooled_tokens = torch.sum(token_features * token_weights.unsqueeze(-1), dim=1)
-        descriptor = self.project(token_features.flatten(1))
+        dense = self.pre(lobula_plate)
+        pooled_map = F.adaptive_avg_pool2d(dense, self.pool_size)
+
+        coords = self._coords(pooled_map).flatten(2).transpose(1, 2)  # [B, N, 2]
+        pooled_tokens = pooled_map.flatten(2).transpose(1, 2)         # [B, N, C]
+        coord_tokens = self.coord_encoder(coords)                     # [B, N, coord_dim]
+
+        token_features = self.token_proj(torch.cat([pooled_tokens, coord_tokens], dim=-1))
+        token_features = token_features + self.token_refine(token_features)
+
+        token_weights = torch.softmax(self.token_score(torch.tanh(token_features)).squeeze(-1), dim=1)
+        pooled_tokens_summary = torch.sum(token_features * token_weights.unsqueeze(-1), dim=1)
+
+        token_spread = torch.mean(
+            torch.abs(token_features - pooled_tokens_summary.unsqueeze(1)),
+            dim=1,
+        )
+
+        descriptor = self.project(torch.cat([pooled_tokens_summary, token_spread], dim=1))
+
         return {
             "descriptor": descriptor,
             "tokens": token_features,
             "token_weights": token_weights,
-            "pooled_tokens": pooled_tokens,
+            "pooled_tokens": pooled_tokens_summary,
             "pooled_map": pooled_map,
         }
 
+
 class ConjunctiveVPN(nn.Module):
+    """
+    Mixed-selectivity vPN population.
+
+    Goal:
+    - bind stable content with spatial context
+    - same object in a new place should not produce the same code
+    - small changes preserve partial overlap rather than total identity
+    """
     def __init__(self, feature_dim=128, spatial_dim=128, token_dim=64, out_dim=128):
         super().__init__()
         self.feature_gate = nn.Linear(feature_dim, token_dim)
         self.feature_bias = nn.Linear(feature_dim, token_dim)
+        self.spatial_context = nn.Linear(spatial_dim, token_dim)
+
+        self.bound_refine = nn.Sequential(
+            nn.LayerNorm(3 * token_dim),
+            nn.Linear(3 * token_dim, token_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(token_dim, token_dim),
+        )
         self.token_score = nn.Linear(token_dim, 1)
         self.project = ProjectionMLP(feature_dim + spatial_dim + token_dim, out_dim)
 
     def forward(self, feature_descriptor, spatial_descriptor, spatial_tokens):
-        gate = torch.sigmoid(self.feature_gate(feature_descriptor)).unsqueeze(1)
-        bias = self.feature_bias(feature_descriptor).unsqueeze(1)
-        bound_tokens = spatial_tokens * gate + bias
+        gate = torch.sigmoid(self.feature_gate(feature_descriptor)).unsqueeze(1)         # [B, 1, D]
+        bias = self.feature_bias(feature_descriptor).unsqueeze(1)                        # [B, 1, D]
+        spatial_ctx = torch.tanh(self.spatial_context(spatial_descriptor)).unsqueeze(1)  # [B, 1, D]
+
+        gated = spatial_tokens * gate
+        interaction = gated * spatial_ctx
+
+        bound_tokens = self.bound_refine(
+            torch.cat(
+                [
+                    spatial_tokens,
+                    gated + bias,
+                    interaction,
+                ],
+                dim=-1,
+            )
+        )
+
         token_weights = torch.softmax(self.token_score(torch.tanh(bound_tokens)).squeeze(-1), dim=1)
         bound_summary = torch.sum(bound_tokens * token_weights.unsqueeze(-1), dim=1)
-        descriptor = self.project(torch.cat([feature_descriptor, spatial_descriptor, bound_summary], dim=1))
+
+        descriptor = self.project(
+            torch.cat([feature_descriptor, spatial_descriptor, bound_summary], dim=1)
+        )
+
         return {
             "descriptor": descriptor,
             "bound_tokens": bound_tokens,
@@ -454,7 +635,7 @@ class ConjunctiveVPN(nn.Module):
             "bound_summary": bound_summary,
             "gate": gate.squeeze(1),
         }
-
+    
 class VisionProjection(nn.Module):
     def __init__(
         self,
@@ -490,7 +671,25 @@ class VisionProjection(nn.Module):
             token_dim=spatial_token_dim,
             out_dim=vpn_dim,
         )
-        self.kc_projection = SparseLinear(3 * vpn_dim, kc_dim, fan_in=kc_fan_in, bias=False)
+
+        feature_fan_in, spatial_fan_in, conjunctive_fan_in = self._split_kc_fan_in(kc_fan_in)
+
+        self.kc_projection = SparseLinear(
+            3 * vpn_dim,
+            kc_dim,
+            fan_in=kc_fan_in,
+            bias=False,
+            group_slices=[
+                (0, vpn_dim),
+                (vpn_dim, 2 * vpn_dim),
+                (2 * vpn_dim, 3 * vpn_dim),
+            ],
+            group_fan_in=[
+                feature_fan_in,
+                spatial_fan_in,
+                conjunctive_fan_in,
+            ],
+        )
         self.kc_compete = APLCompetition(
             num_units=kc_dim,
             target_sparsity=kc_sparsity,
@@ -499,6 +698,25 @@ class VisionProjection(nn.Module):
             threshold_lr=apl_threshold_lr,
             num_iters=apl_num_iters,
         )
+
+    @staticmethod
+    def _split_kc_fan_in(kc_fan_in: int):
+        kc_fan_in = int(kc_fan_in)
+        if kc_fan_in < 3:
+            return 1, 1, max(1, kc_fan_in - 2)
+
+        feature_fan_in = max(1, kc_fan_in // 4)
+        spatial_fan_in = max(1, kc_fan_in // 4)
+        conjunctive_fan_in = kc_fan_in - feature_fan_in - spatial_fan_in
+
+        if conjunctive_fan_in < 1:
+            conjunctive_fan_in = 1
+            if spatial_fan_in > feature_fan_in:
+                spatial_fan_in -= 1
+            else:
+                feature_fan_in -= 1
+
+        return feature_fan_in, spatial_fan_in, conjunctive_fan_in
 
     def _unpack_inputs(self, lobula, lobula_feature_map=None, lobula_plate=None):
         if isinstance(lobula, dict):
@@ -538,6 +756,7 @@ class VisionProjection(nn.Module):
             ],
             dim=1,
         )
+
         kenyon_drive = F.relu(self.kc_projection(vpn))
         kenyon_code = self.kc_compete(kenyon_drive)
         kc_active_counts = (kenyon_code > 0).sum(dim=1)
@@ -562,7 +781,6 @@ class VisionProjection(nn.Module):
             "kc_active_counts": kc_active_counts,
             "kc_active_fraction": kc_active_fraction,
         }
-
 
 class RewardMemoryHead(nn.Module):
     def __init__(self, in_dim: int, hidden_dim: int = 0, dropout: float = 0.0):

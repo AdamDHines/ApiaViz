@@ -24,6 +24,7 @@ from apiaviz.dataset.datagen import (
     ProjectionTupleDataset,
     RewardLabelDataset,
     TinyImageNetPairDataset,
+    TinyImageNetProjectionDataset,
     WILDSCENES_DATASET_NAMES,
 )
 from apiaviz.dataset.wildscenes import (
@@ -42,8 +43,10 @@ from apiaviz.src.projection_finetune import (
     ProjectionShiftHead,
     build_projection_snapshot,
     descriptor_similarity_summary,
+    kenyon_overlap_triplet_loss,
     kenyon_ordering_loss,
     kenyon_sparsity_regularizer,
+    kenyon_winner_usage_regularizer,
     load_balance_regularizer,
     plot_projection_history,
     plot_projection_snapshot,
@@ -98,6 +101,23 @@ class TrainVision(nn.Module):
 
         self.logger = logger
         self.outdir = Path(outdir)
+
+        self.projection_feature_loss_weight = 1.0
+        self.projection_shift_loss_weight = 0.5
+        self.projection_kc_loss_weight = 0.35
+        self.projection_class_feature_loss_weight = 0.25
+        self.projection_class_kc_loss_weight = 0.0
+        self.projection_kc_sparsity_loss_weight = 0.20
+        self.projection_balance_loss_weight = 0.05
+        self.projection_kc_overlap_loss_weight = 1.0
+        self.projection_kc_usage_loss_weight = 0.10
+
+        self.projection_near_min_shift = 1
+        self.projection_near_max_shift = 4
+        self.projection_far_min_shift = 8
+        self.projection_far_max_shift = 18
+        self.projection_kc_negative_overlap_target = 0.05
+        self.projection_kc_overlap_margin = 0.05
 
         if torch.cuda.is_available():
             self.device = torch.device("cuda")
@@ -1132,23 +1152,22 @@ class TrainVision(nn.Module):
     def _build_projection_dataset(
         self,
         image_paths,
-        max_samples: int | None,
-        deterministic: bool,
-        seed: int,
-        appearance_transform,
-    ) -> ProjectionTupleDataset:
-        return ProjectionTupleDataset(
+        max_samples,
+        deterministic,
+        seed,
+        appearance_transform=None,  # kept for interface compatibility
+    ):
+        return TinyImageNetProjectionDataset(
             image_paths=image_paths,
-            image_size=self.spatial_image_size,
-            near_max_translation=self.projection_near_max_shift,
-            near_min_translation=self.projection_near_min_shift,
-            far_max_translation=self.projection_far_max_shift,
-            far_min_translation=self.projection_far_min_shift,
-            appearance_transform=appearance_transform,
-            max_samples=max_samples,
+            select_GB=self.select_GB,
             deterministic=deterministic,
             seed=seed,
-            class_aware_sampling=self._projection_class_grouping_enabled(),
+            image_size=64,
+            near_min_shift=self.projection_near_min_shift,
+            near_max_shift=self.projection_near_max_shift,
+            far_min_shift=self.projection_far_min_shift,
+            far_max_shift=self.projection_far_max_shift,
+            max_samples=max_samples,
         )
 
     def _configure_projection_backbone(self, backbone: VisionBackbone):
@@ -1156,13 +1175,47 @@ class TrainVision(nn.Module):
             parameter.requires_grad = False
         backbone.eval()
 
-    def _build_projection_optimizer(self, projection: VisionProjection, shift_head: ProjectionShiftHead):
+    def _set_projection_backbone_trainability(self, backbone, epoch_num: int):
+        """
+        Warm up projection-only, then partially unfreeze the late backbone.
+        """
+        warmup_epochs = 3
+
+        for p in backbone.parameters():
+            p.requires_grad = False
+
+        if epoch_num > warmup_epochs:
+            for module in [backbone.lobula, backbone.lobula_plate]:
+                for p in module.parameters():
+                    p.requires_grad = True
+
+    def _build_projection_optimizer(self, backbone, projection, shift_head):
+        proj_lr = self.lr
+        backbone_lr = self.lr * 0.1
+
         return torch.optim.AdamW(
             [
-                {"params": projection.parameters(), "lr": self.lr},
-                {"params": shift_head.parameters(), "lr": self.lr},
-            ],
-            weight_decay=1e-4,
+                {
+                    "params": list(projection.parameters()),
+                    "lr": proj_lr,
+                    "weight_decay": 1e-4,
+                },
+                {
+                    "params": list(shift_head.parameters()),
+                    "lr": proj_lr,
+                    "weight_decay": 1e-4,
+                },
+                {
+                    "params": list(backbone.lobula.parameters()),
+                    "lr": backbone_lr,
+                    "weight_decay": 1e-4,
+                },
+                {
+                    "params": list(backbone.lobula_plate.parameters()),
+                    "lr": backbone_lr,
+                    "weight_decay": 1e-4,
+                },
+            ]
         )
 
     def _empty_projection_metrics(self):
@@ -1175,9 +1228,12 @@ class TrainVision(nn.Module):
             "class_kc_loss": 0.0,
             "kc_sparsity_loss": 0.0,
             "balance_loss": 0.0,
+            "kc_overlap_loss": 0.0,
+            "kc_usage_loss": 0.0,
             "feature_top1": 0.0,
             "shift_mae_px": 0.0,
             "kc_ordering_acc": 0.0,
+            "kc_overlap_ordering_acc": 0.0,
             "feature_ordering_acc": 0.0,
             "spatial_ordering_acc": 0.0,
             "conjunctive_ordering_acc": 0.0,
@@ -1197,6 +1253,13 @@ class TrainVision(nn.Module):
             "kc_far_similarity": 0.0,
             "kc_negative_similarity": 0.0,
             "kc_class_similarity": 0.0,
+            "kc_near_overlap": 0.0,
+            "kc_far_overlap": 0.0,
+            "kc_negative_overlap": 0.0,
+            "kc_negative_overlap_excess": 0.0,
+            "kc_usage_cv2": 0.0,
+            "kc_usage_effective_fraction": 0.0,
+            "kc_usage_max_share": 0.0,
             "near_overlap_ratio": 0.0,
             "far_overlap_ratio": 0.0,
         }
@@ -1231,12 +1294,21 @@ class TrainVision(nn.Module):
         near_shift = batch["near_shift"].to(self.device, non_blocking=self.device.type == "cuda").float()
         far_shift = batch["far_shift"].to(self.device, non_blocking=self.device.type == "cuda").float()
 
-        with torch.no_grad():
+        backbone_trainable = any(p.requires_grad for p in backbone.parameters())
+
+        if backbone_trainable:
             anchor_outputs = backbone(anchor, return_maps=True)
             near_outputs = backbone(near_positive, return_maps=True)
             far_outputs = backbone(far_positive, return_maps=True)
             negative_outputs = backbone(negative, return_maps=True)
             class_positive_outputs = backbone(class_positive, return_maps=True) if use_class_grouping else None
+        else:
+            with torch.no_grad():
+                anchor_outputs = backbone(anchor, return_maps=True)
+                near_outputs = backbone(near_positive, return_maps=True)
+                far_outputs = backbone(far_positive, return_maps=True)
+                negative_outputs = backbone(negative, return_maps=True)
+                class_positive_outputs = backbone(class_positive, return_maps=True) if use_class_grouping else None
 
         anchor_projection = projection(anchor_outputs)
         near_projection = projection(near_outputs)
@@ -1271,27 +1343,13 @@ class TrainVision(nn.Module):
                 supcon_labels,
                 temperature=self.dense_temperature,
             )
-            class_kc_metrics = supervised_contrastive_loss(
-                torch.cat(
-                    [
-                        anchor_projection["kenyon_code"],
-                        class_positive_projection["kenyon_code"],
-                    ],
-                    dim=0,
-                ),
-                supcon_labels,
-                temperature=self.dense_temperature,
-            )
+            class_kc_metrics = {"loss": zero, "top1": zero.detach()}
             feature_class_similarity = F.cosine_similarity(
                 F.normalize(anchor_projection["feature_vpn"], dim=1),
                 F.normalize(class_positive_projection["feature_vpn"], dim=1),
                 dim=1,
             ).mean()
-            kc_class_similarity = F.cosine_similarity(
-                F.normalize(anchor_projection["kenyon_code"], dim=1),
-                F.normalize(class_positive_projection["kenyon_code"], dim=1),
-                dim=1,
-            ).mean()
+            kc_class_similarity = zero.detach()
         else:
             class_feature_metrics = {"loss": zero, "top1": zero.detach()}
             class_kc_metrics = {"loss": zero, "top1": zero.detach()}
@@ -1353,6 +1411,28 @@ class TrainVision(nn.Module):
                 dim=0,
             )
         )
+        near_target = 0.20 + 0.45 * batch["near_overlap_ratio"].to(self.device)
+        far_target = 0.08 + 0.25 * batch["far_overlap_ratio"].to(self.device)
+
+        overlap_metrics = kenyon_overlap_triplet_loss(
+            anchor_projection["kenyon_code"],
+            near_projection["kenyon_code"],
+            far_projection["kenyon_code"],
+            negative_projection["kenyon_code"],
+            near_target=near_target,
+            far_target=far_target,
+            negative_target=getattr(self, "projection_kc_negative_overlap_target", 0.05),
+            ordering_margin=getattr(self, "projection_kc_overlap_margin", 0.05),
+        )
+        usage_inputs = [
+            anchor_projection["kenyon_code"],
+            near_projection["kenyon_code"],
+            far_projection["kenyon_code"],
+            negative_projection["kenyon_code"],
+        ]
+        if use_class_grouping:
+            usage_inputs.append(class_positive_projection["kenyon_code"])
+        usage_metrics = kenyon_winner_usage_regularizer(*usage_inputs)
         kc_sparsity_inputs = [
             anchor_projection["kc_active_counts"].float(),
             near_projection["kc_active_counts"].float(),
@@ -1374,6 +1454,8 @@ class TrainVision(nn.Module):
             + effective_class_kc_loss_weight * class_kc_metrics["loss"]
             + self.projection_kc_sparsity_loss_weight * kc_sparsity_metrics["loss"]
             + self.projection_balance_loss_weight * balance_metrics["loss"]
+            + getattr(self, "projection_kc_overlap_loss_weight", 0.0) * overlap_metrics["loss"]
+            + getattr(self, "projection_kc_usage_loss_weight", 0.0) * usage_metrics["loss"]
         )
 
         kc_active_fraction = torch.cat(
@@ -1404,9 +1486,12 @@ class TrainVision(nn.Module):
             "class_kc_loss": class_kc_metrics["loss"].detach(),
             "kc_sparsity_loss": kc_sparsity_metrics["loss"].detach(),
             "balance_loss": balance_metrics["loss"].detach(),
+            "kc_overlap_loss": overlap_metrics["loss"].detach(),
+            "kc_usage_loss": usage_metrics["loss"].detach(),
             "feature_top1": feature_top1.detach(),
             "shift_mae_px": shift_mae_px.detach(),
             "kc_ordering_acc": kc_metrics["ordering_acc"],
+            "kc_overlap_ordering_acc": overlap_metrics["ordering_acc"],
             "feature_ordering_acc": feature_summary["ordering_acc"],
             "spatial_ordering_acc": spatial_summary["ordering_acc"],
             "conjunctive_ordering_acc": conjunctive_summary["ordering_acc"],
@@ -1426,6 +1511,13 @@ class TrainVision(nn.Module):
             "kc_far_similarity": kc_metrics["sim_far"].mean(),
             "kc_negative_similarity": kc_metrics["sim_negative"].mean(),
             "kc_class_similarity": kc_class_similarity.detach(),
+            "kc_near_overlap": overlap_metrics["near_overlap"].mean(),
+            "kc_far_overlap": overlap_metrics["far_overlap"].mean(),
+            "kc_negative_overlap": overlap_metrics["negative_overlap"].mean(),
+            "kc_negative_overlap_excess": overlap_metrics["negative_excess"],
+            "kc_usage_cv2": usage_metrics["cv2"],
+            "kc_usage_effective_fraction": usage_metrics["effective_fraction"],
+            "kc_usage_max_share": usage_metrics["max_usage"],
             "near_overlap_ratio": batch["near_overlap_ratio"].to(self.device).mean(),
             "far_overlap_ratio": batch["far_overlap_ratio"].to(self.device).mean(),
         }
@@ -1545,6 +1637,7 @@ class TrainVision(nn.Module):
         )
 
         backbone = self._load_projection_backbone()
+        self._set_projection_backbone_trainability(backbone, epoch_num=0)
         kc_config = self._projection_kc_config()
         self.projection_target_kc_active = kc_config["kc_target_active"]
         projection = VisionProjection(
@@ -1564,7 +1657,9 @@ class TrainVision(nn.Module):
         ).to(self.device)
         shift_head = ProjectionShiftHead(in_dim=self.projection_vpn_dim).to(self.device)
 
-        opt = self._build_projection_optimizer(projection, shift_head)
+        print("built projection + shift head")
+        opt = self._build_projection_optimizer(backbone, projection, shift_head)
+        print("built optimizer")
         sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=self.epochs)
         scaler = torch.amp.GradScaler(enabled=self.device.type == "cuda")
 
@@ -1591,12 +1686,20 @@ class TrainVision(nn.Module):
             "train_loss": [],
             "val_loss": [],
             "class_kc_loss_weight": [],
+            "kc_overlap_loss_weight": [],
+            "kc_usage_loss_weight": [],
             "train_shift_mae_px": [],
             "val_shift_mae_px": [],
             "train_kc_ordering_acc": [],
             "val_kc_ordering_acc": [],
+            "train_kc_overlap_ordering_acc": [],
+            "val_kc_overlap_ordering_acc": [],
             "train_kc_active_fraction": [],
             "val_kc_active_fraction": [],
+            "train_kc_negative_overlap": [],
+            "val_kc_negative_overlap": [],
+            "train_kc_usage_effective_fraction": [],
+            "val_kc_usage_effective_fraction": [],
             "val_feature_near_similarity": [],
             "val_feature_far_similarity": [],
             "val_feature_negative_similarity": [],
@@ -1615,9 +1718,14 @@ class TrainVision(nn.Module):
         best_ordering = float("-inf")
         best_epoch = 0
         patience = 0
-
         for epoch in range(self.epochs):
             epoch_num = epoch + 1
+            self._set_projection_backbone_trainability(backbone, epoch_num)
+
+            if any(p.requires_grad for p in backbone.parameters()):
+                backbone.train()
+            else:
+                backbone.eval()
             current_class_kc_weight = self._projection_class_kc_weight(epoch_num)
             projection.train()
             shift_head.train()
@@ -1673,10 +1781,10 @@ class TrainVision(nn.Module):
 
                 scaler.scale(loss).backward()
                 scaler.unscale_(opt)
-                torch.nn.utils.clip_grad_norm_(
-                    list(projection.parameters()) + list(shift_head.parameters()),
-                    1.0,
-                )
+                clip_params = list(projection.parameters()) + list(shift_head.parameters())
+                clip_params += [p for p in backbone.parameters() if p.requires_grad]
+
+                torch.nn.utils.clip_grad_norm_(clip_params, 1.0)
                 scaler.step(opt)
                 scaler.update()
 
@@ -1689,6 +1797,7 @@ class TrainVision(nn.Module):
                     shift_mae=f"{running['shift_mae_px'] / processed:.2f}px",
                     kc_order=f"{running['kc_ordering_acc'] / processed:.3f}",
                     kc_frac=f"{running['kc_active_fraction'] / processed:.3f}",
+                    kc_neg_ov=f"{running['kc_negative_overlap'] / processed:.3f}",
                 )
 
             train_metrics = self._finalize_projection_metrics(running, processed)
@@ -1728,6 +1837,8 @@ class TrainVision(nn.Module):
             history["train_loss"].append(train_metrics["loss"])
             history["val_loss"].append(val_metrics["loss"] if val_metrics is not None else train_metrics["loss"])
             history["class_kc_loss_weight"].append(current_class_kc_weight)
+            history["kc_overlap_loss_weight"].append(float(getattr(self, "projection_kc_overlap_loss_weight", 0.0)))
+            history["kc_usage_loss_weight"].append(float(getattr(self, "projection_kc_usage_loss_weight", 0.0)))
             history["train_shift_mae_px"].append(train_metrics["shift_mae_px"])
             history["val_shift_mae_px"].append(
                 val_metrics["shift_mae_px"] if val_metrics is not None else train_metrics["shift_mae_px"]
@@ -1736,9 +1847,23 @@ class TrainVision(nn.Module):
             history["val_kc_ordering_acc"].append(
                 val_metrics["kc_ordering_acc"] if val_metrics is not None else train_metrics["kc_ordering_acc"]
             )
+            history["train_kc_overlap_ordering_acc"].append(train_metrics["kc_overlap_ordering_acc"])
+            history["val_kc_overlap_ordering_acc"].append(
+                val_metrics["kc_overlap_ordering_acc"] if val_metrics is not None else train_metrics["kc_overlap_ordering_acc"]
+            )
             history["train_kc_active_fraction"].append(train_metrics["kc_active_fraction"])
             history["val_kc_active_fraction"].append(
                 val_metrics["kc_active_fraction"] if val_metrics is not None else train_metrics["kc_active_fraction"]
+            )
+            history["train_kc_negative_overlap"].append(train_metrics["kc_negative_overlap"])
+            history["val_kc_negative_overlap"].append(
+                val_metrics["kc_negative_overlap"] if val_metrics is not None else train_metrics["kc_negative_overlap"]
+            )
+            history["train_kc_usage_effective_fraction"].append(train_metrics["kc_usage_effective_fraction"])
+            history["val_kc_usage_effective_fraction"].append(
+                val_metrics["kc_usage_effective_fraction"]
+                if val_metrics is not None
+                else train_metrics["kc_usage_effective_fraction"]
             )
             reference_metrics = val_metrics if val_metrics is not None else train_metrics
             history["val_feature_near_similarity"].append(reference_metrics["feature_near_similarity"])
@@ -1783,6 +1908,10 @@ class TrainVision(nn.Module):
                             "apl_feedback_strength": f"{self.projection_apl_feedback_strength:.4f}",
                             "class_objective": "supervised_contrastive",
                             "class_kc_loss_weight": f"{current_class_kc_weight:.4f}",
+                            "kc_overlap_loss_weight": f"{float(getattr(self, 'projection_kc_overlap_loss_weight', 0.0)):.4f}",
+                            "kc_overlap_margin": f"{float(getattr(self, 'projection_kc_overlap_margin', 0.15)):.4f}",
+                            "kc_negative_overlap_target": f"{float(getattr(self, 'projection_kc_negative_overlap_target', 0.10)):.4f}",
+                            "kc_usage_loss_weight": f"{float(getattr(self, 'projection_kc_usage_loss_weight', 0.0)):.4f}",
                         },
                     )
             snapshot_epoch_path = self.outdir / f"projection_snapshot_epoch{epoch_num:03d}.png"
@@ -1805,12 +1934,19 @@ class TrainVision(nn.Module):
                     f"TrainShiftLoss: {train_metrics['shift_loss']:.4f}, TrainKCLoss: {train_metrics['kc_loss']:.4f}, "
                     f"TrainClassKCLoss: {train_metrics['class_kc_loss']:.4f}, TrainClassKCWeight: {current_class_kc_weight:.4f}, "
                     f"TrainKCSparsityLoss: {train_metrics['kc_sparsity_loss']:.4f}, "
+                    f"TrainKCOverlapLoss: {train_metrics['kc_overlap_loss']:.4f}, TrainKCUsageLoss: {train_metrics['kc_usage_loss']:.4f}, "
                     f"TrainShiftMAE(px): {train_metrics['shift_mae_px']:.4f}, TrainKCOrder: {train_metrics['kc_ordering_acc']:.4f}, "
+                    f"TrainKCOverlapOrder: {train_metrics['kc_overlap_ordering_acc']:.4f}, "
                     f"TrainKCActiveFrac: {train_metrics['kc_active_fraction']:.4f}, "
+                    f"TrainKCNegativeOverlap: {train_metrics['kc_negative_overlap']:.4f}, "
+                    f"TrainKCUsageEffectiveFrac: {train_metrics['kc_usage_effective_fraction']:.4f}, "
                     f"ValLoss: {(val_metrics['loss'] if val_metrics is not None else train_metrics['loss']):.4f}, "
                     f"ValShiftMAE(px): {(val_metrics['shift_mae_px'] if val_metrics is not None else train_metrics['shift_mae_px']):.4f}, "
                     f"ValKCOrder: {(val_metrics['kc_ordering_acc'] if val_metrics is not None else train_metrics['kc_ordering_acc']):.4f}, "
-                    f"ValKCActiveFrac: {(val_metrics['kc_active_fraction'] if val_metrics is not None else train_metrics['kc_active_fraction']):.4f}\n"
+                    f"ValKCOverlapOrder: {(val_metrics['kc_overlap_ordering_acc'] if val_metrics is not None else train_metrics['kc_overlap_ordering_acc']):.4f}, "
+                    f"ValKCActiveFrac: {(val_metrics['kc_active_fraction'] if val_metrics is not None else train_metrics['kc_active_fraction']):.4f}, "
+                    f"ValKCNegativeOverlap: {(val_metrics['kc_negative_overlap'] if val_metrics is not None else train_metrics['kc_negative_overlap']):.4f}, "
+                    f"ValKCUsageEffectiveFrac: {(val_metrics['kc_usage_effective_fraction'] if val_metrics is not None else train_metrics['kc_usage_effective_fraction']):.4f}\n"
                 )
                 f.write(line)
 
@@ -1820,7 +1956,10 @@ class TrainVision(nn.Module):
                 f"val_loss={(val_metrics['loss'] if val_metrics is not None else train_metrics['loss']):.4f}, "
                 f"shift_mae={(val_metrics['shift_mae_px'] if val_metrics is not None else train_metrics['shift_mae_px']):.3f}px, "
                 f"kc_order={(val_metrics['kc_ordering_acc'] if val_metrics is not None else train_metrics['kc_ordering_acc']):.3f}, "
+                f"kc_overlap={(val_metrics['kc_overlap_ordering_acc'] if val_metrics is not None else train_metrics['kc_overlap_ordering_acc']):.3f}, "
                 f"kc_active={(val_metrics['kc_active_fraction'] if val_metrics is not None else train_metrics['kc_active_fraction']):.3f}, "
+                f"kc_neg_ov={(val_metrics['kc_negative_overlap'] if val_metrics is not None else train_metrics['kc_negative_overlap']):.3f}, "
+                f"kc_usage_eff={(val_metrics['kc_usage_effective_fraction'] if val_metrics is not None else train_metrics['kc_usage_effective_fraction']):.3f}, "
                 f"class_kc_w={current_class_kc_weight:.3f}, "
                 f"class_feat={(val_metrics['feature_class_similarity'] if val_metrics is not None else train_metrics['feature_class_similarity']):.3f}, "
                 f"class_kc={(val_metrics['kc_class_similarity'] if val_metrics is not None else train_metrics['kc_class_similarity']):.3f}"

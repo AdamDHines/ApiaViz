@@ -191,6 +191,13 @@ def model_logger(args):
             )
             logger.info(f'  - KC sparsity loss weight: {args.projection_kc_sparsity_loss_weight}')
             logger.info(f'  - Balance loss weight: {args.projection_balance_loss_weight}')
+            logger.info(f'  - KC overlap loss weight: {getattr(args, "projection_kc_overlap_loss_weight", 0.0)}')
+            logger.info(f'  - KC overlap margin: {getattr(args, "projection_kc_overlap_margin", 0.15)}')
+            logger.info(
+                f'  - KC negative overlap target: '
+                f'{getattr(args, "projection_kc_negative_overlap_target", 0.10)}'
+            )
+            logger.info(f'  - KC usage loss weight: {getattr(args, "projection_kc_usage_loss_weight", 0.0)}')
             logger.info(f'  - Data loader workers: {args.num_workers}')
             logger.info(f'  - Init checkpoint: {args.backbone_checkpoint or args.lobula_plate_model} \n')
         elif getattr(args, "train_stage", "backbone") == "reward_memory":
