@@ -1,5 +1,5 @@
 [workspace]
-name = "apiaviz"
+name = "ApiaViz"
 version = "1.0.0"
 description = "Modelling of honeybee vision"
 authors = ["Adam D Hines <adam.hines@qut.edu.au>, Karin Nordstrom, Andrew Barron"]
@@ -11,16 +11,17 @@ preview = ["pixi-build"]
 cuda = ["cuda"]
 
 [tasks]
-# Datasets and models
-get_tinyimg = {cmd = "git lfs install && git clone https://huggingface.co/datasets/zh-plus/tiny-imagenet ./apiaviz/dataset/tiny-imagenet && pixi run python ./apiaviz/dataset/format_dataset.py -p './apiaviz/dataset/tiny-imagenet/data/train-00000-of-00001-1359597a978bc4fa.parquet' -o './apiaviz/dataset/tiny-imagenet/train' && pixi run python ./apiaviz/dataset/format_dataset.py -p './apiaviz/dataset/tiny-imagenet/data/valid-00000-of-00001-70d52db3c749a935.parquet' -o './apiaviz/dataset/tiny-imagenet/val'"}
-get_evaldata = {cmd = "git lfs install && git clone https://huggingface.co/datasets/AdamHines/ApiaVizDatasets ./apiaviz/ApiaVizDatasets && pixi run python ./apiaviz/dataset/unzip.py ./apiaviz/ApiaVizDatasets/flowers.zip ./apiaviz/dataset/ && pixi run python ./apiaviz/dataset/unzip.py ./apiaviz/ApiaVizDatasets/nordland.zip ./apiaviz/dataset/ && pixi run python ./apiaviz/dataset/unzip.py ./apiaviz/ApiaVizDatasets/variety.zip ./apiaviz/dataset/"}
-get_models = {cmd = "git lfs install && git clone https://huggingface.co/AdamHines/ApiaVizVisionModule ./apiaviz/models/"}
+# --- Evaluation: downstream tasks (each prints a clean summary table) ---
+flowers = {cmd = "python main.py -d flowers"}
+nav = {cmd = "python main.py -d nav"}
 
-# Training
-train = {cmd = "pixi run python main.py -m train"}
+# --- Open-loop navigation suites (untrained backbone, corridor memory, colour-landmark world) ---
+freenav = {cmd = "python apiaviz/nav/run_mbon_openloop_core_suite_standalone.py --device auto"}
+ablation = {cmd = "python apiaviz/nav/run_mbon_openloop_ablation_suite_standalone.py --device auto"}
+diagnostics = {cmd = "python apiaviz/nav/run_mbon_openloop_diagnostics_standalone.py --device auto"}
 
-# Evaluation
-eval = {cmd = "pixi run python main.py -m eval"}
+# --- Presentation figures (mean +/- SEM bars + scan animations) from existing outputs; no reruns ---
+figures = {cmd = "python paper/make_presentation_summary_assets.py"}
 
 [dependencies]
 python = "*"
@@ -29,13 +30,10 @@ pytorch = "*"
 torchvision = "*"
 tqdm = "*"
 opencv = "*"
-imageio = "*"
 matplotlib-base = "*" 
 scikit-learn = "*"
 pandas = "*"
 pyarrow = "*"
-snntorch = "*"
-prettytable = "*"
 
 [feature.cuda]
 platforms = ["linux-64"]

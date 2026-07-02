@@ -217,11 +217,8 @@ __marimo__/
 *.zip
 
 # Project directories
-apiaviz/dataset/natural-scences/
-apiaviz/dataset/tiny-imagenet/
 apiaviz/dataset/17flowers/
-apiaviz/dataset/gardens-point/
-apiaviz/dataset/flowers/
 apiaviz/models/
 apiaviz/output/
 .vscode/
+apiaviz/mbant/data/

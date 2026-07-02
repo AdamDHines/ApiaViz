@@ -1,289 +1,58 @@
-#MIT License
+#!/usr/bin/env python3
+"""ApiaViz entry point: train the vision backbone or evaluate a downstream task.
 
-#Copyright (c) 2025 TBD
+    pixi run train      # self-supervised backbone training
+    pixi run flowers    # flower identification eval (chromatic KC code vs CLAHE)
+    pixi run nav        # navigation eval (retino_kc vs CLAHE)
 
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
+See README.md for the full task list.
+"""
 
-#The above copyright notice and this permission notice shall be included in all
-#copies or substantial portions of the Software.
-
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-#SOFTWARE.
+from __future__ import annotations
 
 import argparse
 
-from apiaviz.src.eval import EvalVision
-from apiaviz.src.train import TrainVision
 from apiaviz.src.logger import model_logger
-from apiaviz.nav.gardenspoint import GardensPoint
+from apiaviz.eval import EvalVision, NavEval
 
-def apianet_eval(args, logger, output_folder):
-    if args.eval_dataset == "gardens-point":
-        gp = GardensPoint()
-        gp.run_vpr('day_left','day_right')
+def apiaviz_eval(args, logger, output_folder):
+    if args.eval_dataset == "nav":
+        NavEval(args, logger, output_folder).run()
     else:
-        # Initialize the evaluation class
-        evaluator = EvalVision(args, logger, output_folder)
-        evaluator.eval()
+        EvalVision(args, logger, output_folder).eval()
 
-def apianet_train(args, logger, output_folder):
-    # Initialize the training class
-    trainer = TrainVision(args, logger, output_folder)
-    trainer.train()
 
 def parse_args():
-    '''
-    Define the base parameter parser (configurable by the user)
-    '''
-    parser = argparse.ArgumentParser(description="Args for default configuration")
+    parser = argparse.ArgumentParser(description="ApiaViz — insect-inspired vision backbone")
 
-    # Opertaion modes
-    parser.add_argument('-m', '--mode', type=str, default='train', choices=['train', 'eval'],
-                        help='Mode to run: training or evaluation network')
-    parser.add_argument('--train_stage', type=str, default='backbone', choices=['backbone', 'lobula_plate', 'projection', 'reward_memory'],
-                        help='Training stage to run when mode=train')
-    
-    # Vision Module parameters
-    parser.add_argument('-s', '--snn',  action='store_true',
-                        help='Use artificial neural network (default)')
-    parser.add_argument('--deterministic', action='store_true',
-                        help='Enable fully deterministic training at the cost of speed')
-    parser.add_argument('--num_steps', type=int, default=25,
-                        help='Number of time steps for SNN simulation (default: 100)')
-    parser.add_argument('--patch_size', type=int, default=75,  
-                        help='Size of the input patches')
-    parser.add_argument('-vm', '--vision_model', type=str, default='VisionModel',
-                        help='Name of the vision model for saving/loading')
-    parser.add_argument('-svm', '--snn_vision_model', type=str, default='SNNVisionModel',
-                        help='Name of the SNN vision model for saving/loading')
-    parser.add_argument('--lobula_plate_model', type=str, default='VisionModel_LobulaPlate',
-                        help='Name of the lobula plate fine-tuned checkpoint to save')
-    parser.add_argument('--projection_model', type=str, default='VisionProjection',
-                        help='Name of the VPN and Kenyon projection checkpoint to save')
-    parser.add_argument('--projection_checkpoint', type=str, default='',
-                        help='Optional explicit projection checkpoint path or stem for evaluation')
-    parser.add_argument('--reward_model', type=str, default='RewardMemoryHead',
-                        help='Name of the reward-memory head checkpoint to save/load')
-    parser.add_argument('--reward_checkpoint', type=str, default='',
-                        help='Optional explicit reward-memory checkpoint path or stem for evaluation')
-    
-    # Training parameters
-    parser.add_argument('-e', '--epochs', type=int, default=20,
-                        help='Number of epochs to train modules')
-    parser.add_argument('--train_samples', type=int, default=100_000,
-                        help='Number of training samples to use')
-    parser.add_argument('--batch_size', type=int, default=128,
-                        help='Batch size for training')
-    parser.add_argument('--lr', type=float, default=1e-4,
-                        help='Learning rate for training')
-    parser.add_argument('--training_dataset', type=str, default='tiny-imagenet',
-                        help='Dataset to use for training, e.g. tiny-imagenet or wildscenes2d')
-    parser.add_argument('-bo', '--best_only', action='store_true',
-                        help='Save only the best model during training')
-    parser.add_argument('--backbone_checkpoint', type=str, default='',
-                        help='Optional pretrained checkpoint path or stem for lobula plate fine-tuning')
-    parser.add_argument('--spatial_supervision', type=str, default='synthetic_shift',
-                        choices=['synthetic_shift'],
-                        help='Spatial supervision mode for lobula plate fine-tuning')
-    parser.add_argument('--spatial_image_size', type=int, default=64,
-                        help='Input size for dense lobula plate fine-tuning')
-    parser.add_argument('--spatial_max_shift', type=int, default=8,
-                        help='Maximum translation in pixels for dense lobula plate fine-tuning')
-    parser.add_argument('--min_spatial_shift', type=int, default=0,
-                        help='Minimum translation magnitude in pixels for dense lobula plate fine-tuning')
-    parser.add_argument('--spatial_crop_padding', type=int, default=0,
-                        help='Deprecated padding argument retained for compatibility')
-    parser.add_argument('--dense_temperature', type=float, default=0.1,
-                        help='Temperature used for dense spatial contrastive loss')
-    parser.add_argument('--dense_samples', type=int, default=128,
-                        help='Sampled dense correspondence locations per image')
-    parser.add_argument('--dense_loss_weight', type=float, default=1.0,
-                        help='Weight for the dense spatial contrastive loss')
-    parser.add_argument('--place_loss_weight', type=float, default=1.0,
-                        help='Weight for cross-traverse place-matching contrastive loss in pose-pair mode')
-    parser.add_argument('--pose_loss_weight', type=float, default=1.0,
-                        help='Weight for relative pose regression loss in pose-pair mode')
-    parser.add_argument('--shift_loss_weight', type=float, default=0.5,
-                        help='Weight for the centroid-based shift supervision loss')
-    parser.add_argument('--shift_loss_mid_weight', type=float, default=0.5,
-                        help='Mid-stage weight for centroid-based shift supervision')
-    parser.add_argument('--shift_loss_final_weight', type=float, default=0.5,
-                        help='Late-stage weight for centroid-based shift supervision')
-    parser.add_argument('--shift_loss_mid_epoch', type=int, default=0,
-                        help='Epoch after which shift loss anneals to the mid-stage weight')
-    parser.add_argument('--shift_loss_final_epoch', type=int, default=0,
-                        help='Epoch after which shift loss anneals to the final-stage weight')
-    parser.add_argument('--shift_curriculum_warmup_epochs', type=int, default=0,
-                        help='Number of warmup epochs using the smallest translation range')
-    parser.add_argument('--shift_curriculum_mid_epochs', type=int, default=0,
-                        help='Number of curriculum epochs before switching to the full translation range')
-    parser.add_argument('--shift_curriculum_warmup_max', type=int, default=3,
-                        help='Maximum translation during the curriculum warmup stage')
-    parser.add_argument('--shift_curriculum_mid_max', type=int, default=6,
-                        help='Maximum translation during the curriculum mid stage')
-    parser.add_argument('--val_split', type=float, default=0.0,
-                        help='Fraction of spatial training images to reserve for validation')
-    parser.add_argument('--val_samples', type=int, default=1024,
-                        help='Number of validation samples to draw per epoch for spatial fine-tuning')
-    parser.add_argument('--spatial_val_batch_size', type=int, default=0,
-                        help='Batch size for spatial validation; 0 uses the training batch size')
-    parser.add_argument('--early_stop_patience', type=int, default=4,
-                        help='Number of epochs without validation dense-top1 improvement before stopping')
-    parser.add_argument('--early_stop_min_delta', type=float, default=0.001,
-                        help='Minimum validation dense-top1 improvement needed to reset early stopping')
-    parser.add_argument('--unfreeze_lobula_epoch', type=int, default=0,
-                        help='Epoch at which to unfreeze the top lobula layers during spatial fine-tuning; 0 disables it')
-    parser.add_argument('--lobula_lr_scale', type=float, default=0.1,
-                        help='Learning-rate multiplier for the partially unfrozen top lobula layers')
-    parser.add_argument('--num_workers', type=int, default=0,
-                        help='Number of data-loader workers')
-    parser.add_argument('--split_seed', type=int, default=1337,
-                        help='Seed used for train/validation splits in spatial fine-tuning')
-    parser.add_argument('--spatial_train_split_file', type=str, default='',
-                        help='Optional file listing spatial-training frames relative to the dataset root')
-    parser.add_argument('--spatial_val_split_file', type=str, default='',
-                        help='Optional file listing spatial-validation frames relative to the dataset root')
-    parser.add_argument('--wildscenes_match_radius_m', type=float, default=3.0,
-                        help='Maximum XY distance in meters for cross-traverse WildScenes positive pairs')
-    parser.add_argument('--wildscenes_yaw_threshold_deg', type=float, default=20.0,
-                        help='Maximum yaw difference in degrees for cross-traverse WildScenes positive pairs')
-    parser.add_argument('--wildscenes_max_candidates', type=int, default=4,
-                        help='Maximum matched positives to retain per WildScenes anchor frame')
-    parser.add_argument('--wildscenes_pose_pool_size', type=int, default=4,
-                        help='Adaptive pooling size used by the pose-relation head on lobula plate maps')
-    parser.add_argument('--wildscenes_cache_dir', type=str, default='./apiaviz/dataset/cache/wildscenes2d',
-                        help='Directory for cached pre-resized WildScenes RGB frames')
-    parser.add_argument('--wildscenes_cache_overwrite', action='store_true',
-                        help='Rebuild the cached pre-resized WildScenes frames even if they already exist')
-    parser.add_argument('--wildscenes_disable_resized_cache', action='store_true',
-                        help='Disable the pre-resized WildScenes image cache and decode original images on the fly')
-    parser.add_argument('--projection_near_max_shift', type=int, default=2,
-                        help='Maximum shift in pixels for near-positive projection tuples')
-    parser.add_argument('--projection_near_min_shift', type=int, default=0,
-                        help='Minimum shift in pixels for near-positive projection tuples')
-    parser.add_argument('--projection_far_max_shift', type=int, default=32,
-                        help='Maximum shift in pixels for far-positive projection tuples')
-    parser.add_argument('--projection_far_min_shift', type=int, default=16,
-                        help='Minimum shift in pixels for far-positive projection tuples')
-    parser.add_argument('--projection_vpn_dim', type=int, default=128,
-                        help='Descriptor dimension for each VPN branch')
-    parser.add_argument('--projection_spatial_pool_size', type=int, default=4,
-                        help='Pooling size used by the spatial VPN branch')
-    parser.add_argument('--projection_spatial_token_dim', type=int, default=64,
-                        help='Token dimension used inside the spatial and conjunctive VPN branches')
-    parser.add_argument('--projection_kc_dim', type=int, default=20000,
-                        help='Number of Kenyon cells in the projection stage')
-    parser.add_argument('--projection_kc_fan_in', type=int, default=8,
-                        help='Sparse fan-in for the Kenyon projection layer')
-    parser.add_argument('--projection_kc_sparsity', type=float, default=0.03,
-                        help='Target sparsity set point for the Kenyon APL-like inhibition stage')
-    parser.add_argument('--projection_kc_target_active', type=int, default=300,
-                        help='Optional target number of active Kenyon cells; overrides --projection_kc_sparsity when > 0')
-    parser.add_argument('--projection_class_grouping', type=str, default='auto', choices=['auto', 'off', 'on'],
-                        help='Whether projection training should sample same-class positives from different Tiny ImageNet images')
-    parser.add_argument('--projection_apl_feedback_strength', type=float, default=0.05,
-                        help='Initial global APL-like inhibitory feedback gain applied to the KC population')
-    parser.add_argument('--projection_apl_gain_adapt_rate', type=float, default=0.25,
-                        help='Homeostatic update rate for the global APL inhibitory gain')
-    parser.add_argument('--projection_apl_threshold_lr', type=float, default=0.02,
-                        help='Homeostatic update rate for per-KC inhibitory thresholds')
-    parser.add_argument('--projection_apl_num_iters', type=int, default=3,
-                        help='Number of recurrent APL inhibition steps used to settle the KC code')
-    parser.add_argument('--projection_feature_loss_weight', type=float, default=1.0,
-                        help='Weight for the invariant feature VPN objective')
-    parser.add_argument('--projection_shift_loss_weight', type=float, default=1.0,
-                        help='Weight for the spatial shift-regression objective')
-    parser.add_argument('--projection_kc_loss_weight', type=float, default=1.0,
-                        help='Weight for the Kenyon ordering objective')
-    parser.add_argument('--projection_class_feature_loss_weight', type=float, default=0.25,
-                        help='Weight for same-class different-image supervised-contrastive loss on the feature VPN during projection training')
-    parser.add_argument('--projection_class_kc_loss_weight', type=float, default=0.1,
-                        help='Peak weight for same-class different-image supervised-contrastive loss on the Kenyon code during projection training')
-    parser.add_argument('--projection_class_kc_start_epoch', type=int, default=5,
-                        help='Epoch number at which the Kenyon-code class loss begins ramping in; earlier epochs use zero KC class loss')
-    parser.add_argument('--projection_class_kc_ramp_epochs', type=int, default=5,
-                        help='Number of epochs used to ramp the Kenyon-code class loss from zero up to --projection_class_kc_loss_weight')
-    parser.add_argument('--projection_kc_sparsity_loss_weight', type=float, default=0.1,
-                        help='Weight for the explicit Kenyon active-count target penalty')
-    parser.add_argument('--projection_balance_loss_weight', type=float, default=0.05,
-                        help='Weight for the Kenyon load-balancing regularizer')
-    parser.add_argument('--projection_kc_overlap_loss_weight', type=float, default=0.0,
-                        help='Weight for soft-Jaccard Kenyon overlap triplet loss; 0 keeps legacy projection training unchanged')
-    parser.add_argument('--projection_kc_overlap_margin', type=float, default=0.15,
-                        help='Required soft-Jaccard overlap gap between positive and negative KC codes')
-    parser.add_argument('--projection_kc_overlap_far_weight', type=float, default=0.5,
-                        help='How much far-positive KC overlap contributes to the overlap triplet positive term')
-    parser.add_argument('--projection_kc_negative_overlap_target', type=float, default=0.10,
-                        help='Target maximum soft-Jaccard KC overlap for anchor-negative pairs; set negative to disable this penalty')
-    parser.add_argument('--projection_kc_usage_loss_weight', type=float, default=0.0,
-                        help='Weight for post-competition KC winner-usage balancing across each batch')
-    parser.add_argument('--projection_pose_margin', type=float, default=0.10,
-                        help='Required similarity gap between near and far Kenyon codes')
-    parser.add_argument('--projection_negative_margin', type=float, default=0.05,
-                        help='Required similarity gap between far and negative Kenyon codes')
-    parser.add_argument('--projection_preview_samples', type=int, default=24,
-                        help='Number of deterministic validation tuples used for representation plots')
-    parser.add_argument('--reward_dataset', type=str, default='17flowers',
-                        help='Dataset used for reward-memory training')
-    parser.add_argument('--reward_feature', type=str, default='kenyon_code',
-                        choices=['lobula', 'feature_vpn', 'spatial_vpn', 'conjunctive_vpn', 'vpn', 'kenyon_drive', 'kenyon_code'],
-                        help='Feature space consumed by the reward-memory head')
-    parser.add_argument('--rewarded_classes', type=str, default='',
-                        help='Comma-separated class names or indices that should be treated as rewarded')
-    parser.add_argument('--reward_hidden_dim', type=int, default=0,
-                        help='Optional hidden dimension for the reward-memory head; 0 uses a single linear reward neuron')
-    parser.add_argument('--reward_dropout', type=float, default=0.0,
-                        help='Dropout applied inside the reward-memory head when --reward_hidden_dim > 0')
-    parser.add_argument('--reward_val_split', type=float, default=0.2,
-                        help='Validation split fraction for reward-memory training')
-    parser.add_argument('--reward_threshold', type=float, default=0.5,
-                        help='Decision threshold for reward-memory accuracy metrics')
-    parser.add_argument('--reward_weight_decay', type=float, default=1e-4,
-                        help='Weight decay for reward-memory head training')
-    parser.add_argument('--reward_pos_weight', type=float, default=0.0,
-                        help='Optional positive-class weight for BCE loss; 0 enables automatic class balancing')
-    
-    # Evaluation parameters
-    parser.add_argument('--eval_samples', type=int, default=128,
-                        help='Number of samples to use for evaluation')
-    parser.add_argument('--eval_batch_size', type=int, default=128,
-                        help='Batch size for evaluation')
-    parser.add_argument('--eval_feature', type=str, default='kenyon_code',
-                        choices=['lobula', 'feature_vpn', 'spatial_vpn', 'conjunctive_vpn', 'vpn', 'kenyon_drive', 'kenyon_code', 'reward_logit', 'reward_probability'],
-                        help='Feature space to evaluate for linear separability')
-    
-    # Evaluation dataset parameters
-    parser.add_argument('-d', '--eval_dataset', default="flowers", choices=["synthetic", "faces", "flowers", "variety", "17flowers", "gardens-point", "gardens-point-few"],
-                        help="evaluation dataset to use")
-    parser.add_argument('-sc', '--scanning', action='store_true',
-                        help='Use scanning for the evaluation dataset')
-    
-    # Project directories
-    parser.add_argument('--models_dir', type=str, default='./apiaviz/models/',
-                        help='Directory to save and load models')
-    parser.add_argument('--dataset_dir', type=str, default='./apiaviz/dataset/',
-                        help='Directory where datasets are stored')
-    parser.add_argument('--output_dir', type=str, default='./apiaviz/output/',
-                        help='Directory to save evaluation results')
-    
-    # Output base configuration
+    # --- Evaluation (shared) ---
+    parser.add_argument("-d", "--eval_dataset", default="nav", choices=["17flowers", "nav"],
+                        help="downstream evaluation task")
+    parser.add_argument("--code_dim", type=int, default=4000, help="Kenyon-cell code dimensionality")
+    parser.add_argument("--seed", type=int, default=7)
+
+    # --- Evaluation: flowers (object identification) ---
+    parser.add_argument("--per_class", type=int, default=40, help="images sampled per flower class")
+    parser.add_argument("--ks", type=int, nargs="*", default=[1, 8], help="scan lengths (fixations) to report")
+
+    # --- Evaluation: nav (route following) ---
+    parser.add_argument("--ant", type=int, default=1, help="ant index for navigation routes")
+    parser.add_argument("--routes", type=int, nargs="*", default=[1, 2, 3], help="route indices to navigate")
+    parser.add_argument("--segments", type=int, default=16, help="MBON population size (route segments)")
+    parser.add_argument("--severity", type=float, default=1.0, help="luminance corruption severity")
+    parser.add_argument("--landmark_fraction", type=float, default=0.5, help="fraction of world triangles that are colour landmarks")
+    parser.add_argument("--chroma", type=float, default=60.0, help="landmark opponent-colour strength")
+    parser.add_argument("--freenav", action="store_true",
+                        help="open-loop free navigation (no snap-back to the route) instead of the corrected loop")
+
+    # --- Directories ---
+    parser.add_argument("--dataset_dir", default="./apiaviz/dataset/")
+    parser.add_argument("--output_dir", default="./apiaviz/output/")
+
     args = parser.parse_args()
     logger, output_dir = model_logger(args)
-    
-    if args.mode == 'train':
-        apianet_train(args, logger, output_dir)
-    elif args.mode == 'eval':
-        apianet_eval(args, logger, output_dir)
+
+    apiaviz_eval(args, logger, output_dir)
 
 if __name__ == "__main__":
-    args = parse_args()
+    parse_args()
