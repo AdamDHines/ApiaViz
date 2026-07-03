@@ -34,6 +34,22 @@ def parse_args():
     # --- Evaluation: flowers (object identification) ---
     parser.add_argument("--per_class", type=int, default=40, help="images sampled per flower class")
     parser.add_argument("--ks", type=int, nargs="*", default=[1, 8], help="scan lengths (fixations) to report")
+    parser.add_argument("--patch_size", type=int, default=75, help="flower object size (px) pasted on the canvas")
+    parser.add_argument("--canvas_size", type=int, default=135, help="neutral canvas size (px) the object is centred on")
+    parser.add_argument("--cv_folds", type=int, default=5, help="stratified CV folds for flower accuracy CIs")
+    parser.add_argument("--cv_repeats", type=int, default=1, help="repeat CV with reshuffled folds for tighter CIs")
+    parser.add_argument("--depression", type=float, default=0.5, help="anti-Hebbian MBON depression for the flower readout")
+    parser.add_argument("--mbon_sweep", action="store_true", help="also report an MBON depression/graded robustness sweep")
+    parser.add_argument("--task", default="reward_gonogo", choices=["reward_gonogo", "classify"],
+                        help="flower task: reward-gated go/no-go foraging (default) or 17-way novelty classification")
+    parser.add_argument("--n_rewarded", type=int, default=5, help="number of rewarded flower classes for the go/no-go task")
+    parser.add_argument("--reward_lr", type=float, default=1.0, help="reward-MBON learning rate (approach-synapse gain)")
+    parser.add_argument("--corruption", default="none", choices=["none", "luminance", "noise"],
+                        help="per-fixation test-time corruption; 'luminance' is isoluminant (spares opponent colour)")
+    parser.add_argument("--severities", type=float, nargs="*", default=[1.0, 2.0],
+                        help="corruption severities to sweep (0 = clean is always included)")
+    parser.add_argument("--ablation", action="store_true",
+                        help="channel-ablation panel: full vs achromatic-only vs opponent-only vs chroma-ablated")
 
     # --- Evaluation: nav (route following) ---
     parser.add_argument("--ant", type=int, default=1, help="ant index for navigation routes")

@@ -251,6 +251,50 @@ class AntiHebbianMBON(nn.Module):
         return (activity * self.weight).sum(dim=1) / activity.sum(dim=1).clamp_min(1e-6)
 
 
+class RewardMBON(nn.Module):
+    """Approach MBON with a reward-gated three-factor learning rule (KC activity x reward x rate).
+
+    Unlike ``AntiHebbianMBON`` -- which measures *novelty* (have I seen this KC pattern) and only ever
+    depresses -- this readout learns a *valence* boundary. A dopaminergic reward signal gates plasticity
+    with a sign: appetitive (rewarded) views potentiate the approach synapses of their active KCs,
+    aversive/unrewarded views depress them. Weights therefore converge to the difference of the rewarded
+    and unrewarded KC-activity prototypes (a balanced linear discriminant), and ``forward`` returns the
+    net **approach drive** ``a . w`` (higher = more likely to land). This is the associative mushroom-body
+    rule used for foraging choice; the anti-Hebbian novelty neuron cannot separate rewarded from
+    unrewarded flowers, only familiar from novel.
+
+    One-shot / few-shot: ``store`` is a single balanced pass, so it doubles as the analytic limit of the
+    reward-modulated STDP in ``mbant/network.py``. No learnable parameters (fixed once stored).
+    """
+
+    def __init__(self, code_dim: int, lr: float = 1.0, graded: bool = False):
+        super().__init__()
+        self.lr = float(lr)
+        self.graded = bool(graded)
+        self.register_buffer("weight", torch.zeros(int(code_dim)))
+
+    def _activity(self, codes: torch.Tensor) -> torch.Tensor:
+        if self.graded:
+            pos = codes.clamp_min(0.0)
+            return pos / pos.amax(dim=1, keepdim=True).clamp_min(1e-6)
+        return (codes > 0).float()
+
+    @torch.no_grad()
+    def store(self, codes: torch.Tensor, rewards) -> None:
+        """One balanced reward-gated pass: potentiate on rewarded views, depress on unrewarded ones."""
+        activity = self._activity(codes).to(self.weight.device)
+        r = torch.as_tensor(rewards, dtype=torch.float32, device=self.weight.device) > 0.5
+        zero = torch.zeros_like(self.weight)
+        proto_rew = activity[r].mean(dim=0) if bool(r.any()) else zero
+        proto_unrew = activity[~r].mean(dim=0) if bool((~r).any()) else zero
+        self.weight.add_(self.lr * (proto_rew - proto_unrew))
+
+    @torch.no_grad()
+    def forward(self, codes: torch.Tensor) -> torch.Tensor:
+        activity = self._activity(codes)
+        return (activity * self.weight).sum(dim=1) / activity.sum(dim=1).clamp_min(1e-6)
+
+
 class MBONPopulation(nn.Module):
     """A small population of anti-Hebbian MBONs, each storing one route SEGMENT.
 

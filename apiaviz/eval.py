@@ -25,22 +25,20 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-import cv2
-import torch.nn.functional as F
-from PIL import Image
-
 from apiaviz.mbant.config import ImageConfig, NavigationConfig
 from apiaviz.mbant.io_utils import load_ant_data, load_world_data, prepare_route
 
-from apiaviz.nav.retino_kc import MBONPopulation, RetinotopicKCEncoder, RetinotopicKCProjection, AntiHebbianMBON, RetinotopicKCProjection
+from apiaviz.nav.retino_kc import MBONPopulation, RetinotopicKCEncoder, RetinotopicKCProjection
 from apiaviz.nav.torch_route import (
     TorchWorldRenderer, CosineRouteMemory, navigate_torch, preprocess_apiaviz_torch, preprocess_original_torch, select_device, render_route_corridor, corridor_offsets, nav_result_summary
 )
 from apiaviz.src.metrics import render_table
 from apiaviz.src.modules import load_vision_backbone
+from apiaviz.src.flowers import (
+    ScanEncoder, build_views, clahe_map, evaluate_cv, stratified_folds, paired_delta,
+    choose_rewarded, evaluate_gonogo_cv, corrupting_scan, affine_scan,
+)
 
-
-_CLAHE = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
 
 def free_navigate(img_pos_np, heading_np, scorer, nav_config, max_steps=None):
     """Open-loop route following: scan headings, step toward the most-familiar one, and repeat -- with
@@ -288,96 +286,194 @@ class EvalVision:
         self.outdir = Path(outdir)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        model_path = os.path.join(self.models_dir, f"{self.vision_model}.pth")
-        self.backbone = load_vision_backbone(model_path, self.device,
-                                             untrained=getattr(self, "untrained", False), logger=self.logger)
+        self.backbone = load_vision_backbone(self.device, logger=self.logger)
         self.logger.info(f"Device: {self.device}")
         self.logger.info("")
 
     def eval(self) -> None:
         if self.eval_dataset in ("flowers", "17flowers"):
-            self._eval_flowers()
+            if getattr(self, "task", "reward_gonogo") == "classify":
+                self._eval_flowers()          # 17-way anti-Hebbian novelty (reference)
+            else:
+                self._eval_flowers_reward()   # reward-gated go/no-go foraging choice
         else:
             raise ValueError(
                 f"eval_dataset '{self.eval_dataset}' is not supported here; try 'flowers' "
                 "(navigation is a separate task: `pixi run nav`)."
             )
 
-    # ------------------------------------------------------------------ flower identification
-    def _make_views(self, paths, offset=(14, 14), canvas=64, obj=36) -> torch.Tensor:
-        """Paste each flower's (G,B) channels on a neutral canvas -> [N,2,canvas,canvas] in [-1,1]."""
-        oy, ox = offset
-        views = []
-        for path in paths:
-            arr = np.asarray(Image.open(path).convert("RGB").resize((obj, obj)), dtype=np.float32) / 255.0
-            canvas_arr = np.full((canvas, canvas, 2), 0.5, dtype=np.float32)
-            canvas_arr[oy:oy + obj, ox:ox + obj, :] = arr[:, :, 1:3]  # (G, B)
-            views.append((torch.from_numpy(canvas_arr).permute(2, 0, 1) - 0.5) / 0.5)
-        return torch.stack(views).to(self.device)
+    def _flower_representations(self, ablation: bool = False):
+        """Build the flower representation panel -> (ScanEncoder, ordered rep names).
 
-    def _jitter(self, views, seed, max_rot=15.0, max_trans=0.10, max_scale=0.1) -> torch.Tensor:
-        """One simulated fixation: a small random affine (rotate/translate/scale)."""
-        n = views.size(0)
-        gen = torch.Generator().manual_seed(int(seed))
-        ang = (torch.rand(n, generator=gen) * 2 - 1) * (max_rot * np.pi / 180.0)
-        scl = 1.0 + (torch.rand(n, generator=gen) * 2 - 1) * max_scale
-        tx = (torch.rand(n, generator=gen) * 2 - 1) * max_trans
-        ty = (torch.rand(n, generator=gen) * 2 - 1) * max_trans
-        cos, sin = torch.cos(ang), torch.sin(ang)
-        theta = torch.zeros(n, 2, 3)
-        theta[:, 0, 0] = cos / scl; theta[:, 0, 1] = -sin / scl; theta[:, 0, 2] = tx
-        theta[:, 1, 0] = sin / scl; theta[:, 1, 1] = cos / scl; theta[:, 1, 2] = ty
-        grid = F.affine_grid(theta, list(views.size()), align_corners=False)
-        return F.grid_sample(views.cpu(), grid, align_corners=False, padding_mode="border").to(views.device)
-
-    def _clahe_map(self, views, size=24) -> torch.Tensor:
-        """Ardin/Webb CLAHE luminance map (grayscale -> invert -> CLAHE clip 2.0/8x8) -> [N,1,size,size].
-
-        Returned as a feature map (not a flat template) so it can be lifted through the SAME kind of
-        KC projection as the chromatic map. Both representations then read out through the MBON, so the
-        comparison isolates the representation (opponent colour vs grayscale luminance), not the readout.
+        Every representation lifts a feature map through the SAME kind of fixed KC projection, so only
+        the code differs at the shared MBON readout. The ablation panel feeds channel-masked slices of
+        the chromatic feature ``[achromatic, G-B, B-G]`` through the *same* projection (seed 23), which
+        isolates which sub-channel carries the discrimination and which survives corruption.
         """
-        gray = ((views + 1.0) / 2.0).mean(dim=1).cpu().numpy()
-        maps = []
-        for img in gray:
-            resized = cv2.resize(img.astype(np.float32), (size, size), interpolation=cv2.INTER_AREA)
-            inverted = np.clip(1.0 - resized, 0.0, 1.0)
-            eq = _CLAHE.apply(np.round(inverted * 255.0).astype(np.uint8)).astype(np.float32) / 255.0
-            maps.append(eq)
-        arr = np.stack(maps, axis=0)[:, None, :, :]
-        return torch.from_numpy(arr).to(self.device)
+        proj_chroma = RetinotopicKCProjection(in_channels=3, code_dim=self.code_dim, seed=23).to(self.device)
+        proj_clahe = RetinotopicKCProjection(in_channels=1, code_dim=self.code_dim, seed=29).to(self.device)
 
-    @torch.no_grad()
-    def _encode(self, proj_chroma, proj_clahe, views, batch=128) -> dict:
-        """One fixation -> {representation: [N,D] KC code}. Both reps: feature map -> KC projection."""
-        chunks = {"CLAHE": [], "chromatic_kc": []}
-        for i in range(0, views.size(0), batch):
-            v = views[i:i + batch]
-            maps = self.backbone(v, return_maps=True)
-            chunks["CLAHE"].append(proj_clahe(self._clahe_map(v)).cpu().numpy())
-            chunks["chromatic_kc"].append(proj_chroma(maps["chromatic_feature"]).cpu().numpy())
-        return {k: np.concatenate(v, axis=0) for k, v in chunks.items()}
+        def chroma(keep):
+            """Feature fn: project the chromatic map with only channels in ``keep`` retained (None = all)."""
+            def fn(v, maps, dev):
+                cf = maps["chromatic_feature"]
+                if keep is not None:
+                    mask = torch.zeros(cf.shape[1], device=cf.device)
+                    if keep:
+                        mask[list(keep)] = 1.0
+                    cf = cf * mask.view(1, -1, 1, 1)
+                return proj_chroma(cf)
+            return fn
 
-    @staticmethod
-    def _mbon_accuracy(feats, labels, train_idx, test_idx, depression=0.5) -> float:
-        """Per-class MBON population: one anti-Hebbian MBON stores each class's KC codes; a test
-        view is assigned to the most-familiar class (lowest novelty). The nav readout, per-class."""
-        codes = torch.from_numpy(feats).float()
-        classes = np.unique(labels[train_idx])
-        novelty = np.zeros((len(test_idx), len(classes)), dtype=np.float64)
-        for j, c in enumerate(classes):
-            mbon = AntiHebbianMBON(code_dim=feats.shape[1], depression=depression)
-            mbon.store(codes[train_idx][labels[train_idx] == c])
-            novelty[:, j] = mbon(codes[test_idx]).numpy()
-        preds = classes[novelty.argmin(axis=1)]
-        return float((preds == labels[test_idx]).mean())
+        reps = {"CLAHE": lambda v, maps, dev: proj_clahe(clahe_map(v, dev))}
+        if ablation:
+            reps["chromatic (full)"] = chroma(None)
+            reps["achromatic-only"] = chroma((0,))       # keep [ach], zero the opponent channels
+            reps["opponent-only"] = chroma((1, 2))       # zero [ach], keep G-B, B-G
+            reps["chroma-ablated"] = chroma(())          # all zero -> chance sanity (ablate_chromatic)
+        else:
+            reps["chromatic_kc"] = chroma(None)
+        return ScanEncoder(self.backbone, reps, self.device), list(reps)
 
-    def _eval_flowers(self) -> None:
-        reps = ["CLAHE", "chromatic_kc"]
+    def _eval_flowers_reward(self) -> None:
+        """Reward-gated go/no-go: learn to approach a rewarded subset of flowers, reject the rest."""
         ks = list(self.ks)
+        kmax = max(ks)
         rng = np.random.default_rng(self.seed)
         torch.manual_seed(self.seed)
 
+        paths, labels, class_dirs = self._sample_dataset(rng)
+        class_names = [d.name for d in class_dirs]
+        n_classes = len(class_dirs)
+        n_rewarded = int(getattr(self, "n_rewarded", 5))
+        rewarded = choose_rewarded(n_classes, n_rewarded, self.seed)
+        reward = np.isin(labels, rewarded).astype(np.float32)
+        base_rate = float(reward.mean())
+        n_folds = int(getattr(self, "cv_folds", 5))
+        n_repeats = int(getattr(self, "cv_repeats", 1))
+        corruption = str(getattr(self, "corruption", "none"))
+        ablation = bool(getattr(self, "ablation", False))
+        lr = float(getattr(self, "reward_lr", 1.0))
+        self.logger.info(f"17flowers go/no-go{' [ablation]' if ablation else ''}: {len(paths)} images; "
+                         f"reward {len(rewarded)}/{n_classes} classes "
+                         f"[{', '.join(class_names[i] for i in rewarded)}]  P(reward)={base_rate:.3f}")
+
+        encoder, reps = self._flower_representations(ablation=ablation)
+        base = build_views(paths, self.device, obj=int(getattr(self, "patch_size", 75)),
+                           canvas=int(getattr(self, "canvas_size", 135)))
+        folds = stratified_folds(reward, n_folds, self.seed, repeats=n_repeats)
+
+        if corruption == "none":
+            self.logger.info(f"Accumulating approach evidence over up to K={kmax} fixations; "
+                             f"{n_folds}-fold CV x{n_repeats} (balanced accuracy / AUC, chance 0.5)...")
+            codes_by_fix = encoder.encode_scan_stack(base, kmax)
+            metrics = evaluate_gonogo_cv(codes_by_fix, reward, folds, reps, ks, lr=lr)
+            if ablation:
+                self._report_ablation(reps, kmax, metrics, base_rate, len(folds))
+            else:
+                self._report_gonogo(reps, ks, kmax, metrics, base_rate, len(folds))
+            return
+
+        # Corruption battery: each fixation is independently corrupted, so accumulating looks denoises.
+        severities = [0.0] + [float(s) for s in getattr(self, "severities", [1.0]) if float(s) > 0]
+        self.logger.info(f"Corruption '{corruption}' sweep {severities[1:]}; accumulating up to K={kmax} "
+                         f"fixations; {n_folds}-fold CV x{n_repeats} (AUC, chance 0.5)...")
+        grid = {}
+        for sev in severities:
+            policy = affine_scan if sev == 0.0 else corrupting_scan(corruption, sev)
+            stack = encoder.encode_scan_stack(base, kmax, scan_policy=policy)
+            grid[sev] = evaluate_gonogo_cv(stack, reward, folds, reps, ks, lr=lr)
+        if ablation:
+            self._report_ablation_corruption(reps, kmax, grid, corruption, base_rate, len(folds))
+        else:
+            self._report_gonogo_corruption(reps, ks, kmax, grid, corruption, base_rate, len(folds))
+
+    def _report_gonogo_corruption(self, reps, ks, kmax, grid, corruption, base_rate, n_folds) -> None:
+        # AUC at the shortest and longest scan for each rep, across corruption severities.
+        rows = []
+        for sev in sorted(grid):
+            m = grid[sev]
+            rows.append([
+                f"{sev:.1f}",
+                f"{m[('CLAHE', 1)]['auc']:.3f}", f"{m[('CLAHE', kmax)]['auc']:.3f}",
+                f"{m[('chromatic_kc', 1)]['auc']:.3f}", f"{m[('chromatic_kc', kmax)]['auc']:.3f}",
+                f"{m[('chromatic_kc', kmax)]['auc'] - m[('CLAHE', kmax)]['auc']:+.3f}",
+            ])
+        self._log_table(render_table(
+            ["severity", "CLAHE K=1", f"CLAHE K={kmax}", "chroma K=1", f"chroma K={kmax}", f"colour-CLAHE@K{kmax}"],
+            rows,
+            title=f"\nReward go/no-go AUC under '{corruption}' corruption  ({n_folds}-fold CV; "
+                  f"P(reward)={base_rate:.3f}, chance 0.5)"))
+
+        # Isolate the scan benefit: AUC gained by accumulating K=1 -> K=max at each severity.
+        grows = []
+        for sev in sorted(grid):
+            m = grid[sev]
+            grows.append([f"{sev:.1f}",
+                          f"{m[('CLAHE', kmax)]['auc'] - m[('CLAHE', 1)]['auc']:+.3f}",
+                          f"{m[('chromatic_kc', kmax)]['auc'] - m[('chromatic_kc', 1)]['auc']:+.3f}"])
+        self._log_table(render_table(
+            ["severity", f"CLAHE dAUC(K1->K{kmax})", f"chroma dAUC(K1->K{kmax})"], grows,
+            title="\nScan benefit: AUC recovered by accumulating fixations"))
+        self.logger.info("")
+        self.logger.info("Under isoluminant corruption the opponent-colour code holds while grayscale CLAHE "
+                         "falls; accumulating fixations recovers AUC as independent corruption averages out.")
+
+    def _report_ablation(self, reps, kmax, metrics, base_rate, n_folds) -> None:
+        # Which sub-channel of the chromatic feature carries the reward discrimination (clean).
+        rows = [[r, f"{metrics[(r, 1)]['auc']:.3f}+-{metrics[(r, 1)]['ci_auc']:.3f}",
+                 f"{metrics[(r, kmax)]['auc']:.3f}+-{metrics[(r, kmax)]['ci_auc']:.3f}"] for r in reps]
+        self._log_table(render_table(
+            ["representation", "K=1 AUC+-ci", f"K={kmax} AUC+-ci"], rows,
+            title=f"\nChannel ablation: reward go/no-go AUC  ({n_folds}-fold CV; "
+                  f"P(reward)={base_rate:.3f}, chance 0.5)"))
+        self.logger.info("")
+        self.logger.info("Opponent-only tracks the full chromatic code; achromatic-only sits near CLAHE; "
+                         "zeroing chroma (ablate_chromatic) falls to chance -- the signal is the opponent colour.")
+
+    def _report_ablation_corruption(self, reps, kmax, grid, corruption, base_rate, n_folds) -> None:
+        # Each sub-channel's robustness: AUC at the longest scan across corruption severities.
+        sevs = sorted(grid)
+        rows = [[r, *[f"{grid[s][(r, kmax)]['auc']:.3f}" for s in sevs]] for r in reps]
+        self._log_table(render_table(
+            ["representation", *[f"sev {s:.1f}" for s in sevs]], rows,
+            title=f"\nChannel ablation under '{corruption}' corruption: AUC@K{kmax}  ({n_folds}-fold CV; "
+                  f"P(reward)={base_rate:.3f}, chance 0.5)"))
+        self.logger.info("")
+        self.logger.info("The opponent-only channel survives isoluminant corruption (G-B is spared); the "
+                         "achromatic-only channel collapses with CLAHE -- the robustness is specifically the colour opponency.")
+
+    def _report_gonogo(self, reps, ks, kmax, metrics, base_rate, n_folds) -> None:
+        rows = []
+        for r in reps:
+            note = "ours" if r == "chromatic_kc" else "baseline"
+            auc_cells = [f"{metrics[(r, k)]['auc']:.3f}+-{metrics[(r, k)]['ci_auc']:.3f}" for k in ks]
+            m = metrics[(r, kmax)]
+            rows.append([r, *auc_cells, f"{m['bacc']:.3f}+-{m['ci_bacc']:.3f}",
+                         f"{m['hit']:.2f}", f"{m['fa']:.2f}", note])
+        headers = ["representation", *[f"K={k} AUC+-ci" for k in ks],
+                   f"bal.acc@K{kmax}", f"hit@K{kmax}", f"FA@K{kmax}", "note"]
+        self._log_table(render_table(
+            headers, rows,
+            title=f"\nReward go/no-go vs scan length K  ({n_folds}-fold CV, mean+-95%CI; "
+                  f"P(reward)={base_rate:.3f}, chance AUC/bal.acc = 0.5)"))
+
+        prows = []
+        for k in ks:
+            d = paired_delta(metrics[("chromatic_kc", k)]["fold_auc"], metrics[("CLAHE", k)]["fold_auc"])
+            has_p = d["p"] == d["p"]
+            prows.append([f"K={k}", f"{d['mean']:+.3f}+-{d['ci']:.3f}",
+                          f"{d['p']:.1e}" if has_p else "n/a", "yes" if has_p and d["p"] < 0.05 else "no"])
+        self._log_table(render_table(
+            ["scan", "chromatic_kc - CLAHE (AUC)", "paired-t p", "p<0.05"], prows,
+            title="\nPaired advantage over CLAHE (aligned folds)"))
+        self.logger.info("")
+        self.logger.info("Reward-gated approach MBON on both representations, so only the code differs: the "
+                         "opponent-colour code learns which flowers pay; the grayscale CLAHE code cannot.")
+
+    # ------------------------------------------------------------------ flower identification
+    def _sample_dataset(self, rng):
+        """Sample up to ``per_class`` jpgs from each 17flowers class dir -> (paths, labels, class_dirs)."""
         root = Path(self.dataset_dir) / "17flowers"
         class_dirs = sorted([d for d in root.iterdir() if d.is_dir() and any(d.glob("*.jpg"))])
         if not class_dirs:
@@ -388,41 +484,111 @@ class EvalVision:
             chosen = rng.choice(imgs, size=min(self.per_class, len(imgs)), replace=False)
             paths += [Path(p) for p in chosen]
             labels += [ci] * len(chosen)
-        labels = np.asarray(labels)
-        chance = 1.0 / len(class_dirs)
-        self.logger.info(f"17flowers: {len(paths)} images, {len(class_dirs)} classes (chance {chance:.3f})")
-        self.logger.info(f"Scan-accumulating chromatic code over up to K={max(ks)} fixations...")
+        return paths, np.asarray(labels), class_dirs
+
+    def _eval_flowers(self) -> None:
+        reps = ["CLAHE", "chromatic_kc"]
+        ks = list(self.ks)
+        kmax = max(ks)
+        rng = np.random.default_rng(self.seed)
+        torch.manual_seed(self.seed)
+
+        paths, labels, class_dirs = self._sample_dataset(rng)
+        class_names = [d.name for d in class_dirs]
+        n_classes = len(class_dirs)
+        chance = 1.0 / n_classes
+        n_folds = int(getattr(self, "cv_folds", 5))
+        n_repeats = int(getattr(self, "cv_repeats", 1))
+        depression = float(getattr(self, "depression", 0.5))
+        self.logger.info(f"17flowers: {len(paths)} images, {n_classes} classes (chance {chance:.3f})")
+        self.logger.info(f"Scan-accumulating chromatic code over up to K={kmax} fixations; "
+                         f"{n_folds}-fold CV x{n_repeats} (MBON depression {depression})...")
 
         proj_chroma = RetinotopicKCProjection(in_channels=3, code_dim=self.code_dim, seed=23).to(self.device)
         proj_clahe = RetinotopicKCProjection(in_channels=1, code_dim=self.code_dim, seed=29).to(self.device)
-        base = self._make_views(paths)
-        running, snapshots = None, {}
-        for fix in range(max(ks)):
-            views = base if fix == 0 else self._jitter(base, seed=1000 + fix)
-            feats = self._encode(proj_chroma, proj_clahe, views)
-            running = ({r: feats[r].astype(np.float64) for r in reps} if running is None
-                       else {r: running[r] + feats[r] for r in reps})
-            if fix + 1 in ks:
-                snapshots[fix + 1] = {r: (running[r] / (fix + 1)).astype(np.float32) for r in reps}
+        # Both representations lift a feature map through the same kind of fixed KC projection, so only
+        # the code differs at the (shared) MBON readout: opponent colour vs grayscale CLAHE luminance.
+        representations = {
+            "CLAHE": lambda v, maps, dev: proj_clahe(clahe_map(v, dev)),
+            "chromatic_kc": lambda v, maps, dev: proj_chroma(maps["chromatic_feature"]),
+        }
+        encoder = ScanEncoder(self.backbone, representations, self.device)
+        base = build_views(paths, self.device, obj=int(getattr(self, "patch_size", 75)),
+                           canvas=int(getattr(self, "canvas_size", 135)))
+        snapshots = encoder.scan(base, ks)
 
-        idx = np.arange(len(paths)); rng.shuffle(idx)
-        split = int(0.7 * len(idx))
-        train_idx, test_idx = idx[:split], idx[split:]
+        folds = stratified_folds(labels, n_folds, self.seed, repeats=n_repeats)
+        metrics = evaluate_cv(snapshots, labels, folds, reps, ks, depression=depression, topk=3)
+        self._report_flowers(reps, ks, kmax, metrics, chance, class_names, len(folds))
+        if bool(getattr(self, "mbon_sweep", False)):
+            self._report_mbon_sweep(snapshots, labels, folds, kmax, chance)
 
+    def _report_flowers(self, reps, ks, kmax, metrics, chance, class_names, n_folds) -> None:
+        # Headline: top-1 (mean +- 95% CI) at each scan length, plus top-3 and x chance at the longest scan.
         rows = []
         for r in reps:
-            accs = [self._mbon_accuracy(snapshots[k][r], labels, train_idx, test_idx) for k in ks]
             note = "ours" if r == "chromatic_kc" else "baseline"
-            rows.append([r, "MBON", *[f"{a:.3f}" for a in accs], f"{accs[-1] / chance:.1f}x", note])
-
-        headers = ["representation", "readout", *[f"K={k}" for k in ks], "x chance", "note"]
-        table = render_table(
+            cells = [f"{metrics[(r, k)]['top1']:.3f}+-{metrics[(r, k)]['ci']:.3f}" for k in ks]
+            m = metrics[(r, kmax)]
+            rows.append([r, "MBON", *cells, f"{m['topk']:.3f}", f"{m['top1'] / chance:.1f}x", note])
+        headers = ["representation", "readout", *[f"K={k} top1+-ci" for k in ks],
+                   f"top3@K{kmax}", "x chance", "note"]
+        self._log_table(render_table(
             headers, rows,
-            title=f"\nFlower identification accuracy vs scan length K  (chance {chance:.3f})",
-        )
-        self.logger.info("")
-        for line in table.splitlines():
-            self.logger.info(line)
+            title=f"\nFlower identification vs scan length K  ({n_folds}-fold CV, mean+-95%CI; "
+                  f"chance {chance:.3f})"))
+
+        # Paired advantage of the colour code over CLAHE on aligned folds.
+        prows = []
+        for k in ks:
+            d = paired_delta(metrics[("chromatic_kc", k)]["fold_top1"], metrics[("CLAHE", k)]["fold_top1"])
+            has_p = d["p"] == d["p"]  # not NaN
+            sig = "yes" if has_p and d["p"] < 0.05 else "no"
+            prows.append([f"K={k}", f"{d['mean']:+.3f}+-{d['ci']:.3f}",
+                          f"{d['p']:.1e}" if has_p else "n/a", sig])
+        self._log_table(render_table(
+            ["scan", "chromatic_kc - CLAHE (top1)", "paired-t p", "p<0.05"], prows,
+            title="\nPaired advantage over CLAHE (aligned folds)"))
+
+        # Per-class recall of the colour code at the longest scan + its dominant off-diagonal confusion.
+        conf = metrics[("chromatic_kc", kmax)]["confusion"]
+        pca = metrics[("chromatic_kc", kmax)]["per_class_acc"]
+        off = conf.copy(); np.fill_diagonal(off, 0)
+        crows = []
+        for ci, name in enumerate(class_names):
+            worst = int(off[ci].argmax())
+            conf_note = f"{class_names[worst]} ({off[ci, worst]})" if off[ci, worst] > 0 else "-"
+            crows.append([name, f"{pca[ci]:.3f}", conf_note])
+        self._log_table(render_table(
+            ["class", f"recall@K{kmax}", "most confused with (n)"], crows,
+            title=f"\nPer-class accuracy (chromatic_kc, K={kmax})"))
+
+        # Persist the full confusion matrices (rows = true, cols = predicted) for offline inspection.
+        for r in reps:
+            path = self.outdir / f"confusion_{r}_K{kmax}.csv"
+            np.savetxt(path, metrics[(r, kmax)]["confusion"], fmt="%d", delimiter=",",
+                       header="true\\pred," + ",".join(class_names), comments="")
+            self.logger.info(f"saved {path}")
         self.logger.info("")
         self.logger.info("Same per-class MBON readout on both representations, so only the code differs: "
                          "the opponent-colour KC code identifies flowers; the grayscale CLAHE KC code cannot.")
+
+    def _report_mbon_sweep(self, snapshots, labels, folds, kmax, chance) -> None:
+        """Readout-robustness check: CV top-1 at the longest scan across MBON depression / graded settings."""
+        reps = ["CLAHE", "chromatic_kc"]
+        rows = []
+        for depression in (0.25, 0.5, 0.75, 1.0):
+            for graded in (False, True):
+                m = evaluate_cv(snapshots, labels, folds, reps, [kmax],
+                                depression=depression, topk=3, graded=graded)
+                rows.append([f"{depression:.2f}", "yes" if graded else "no",
+                             f"{m[('CLAHE', kmax)]['top1']:.3f}+-{m[('CLAHE', kmax)]['ci']:.3f}",
+                             f"{m[('chromatic_kc', kmax)]['top1']:.3f}+-{m[('chromatic_kc', kmax)]['ci']:.3f}"])
+        self._log_table(render_table(
+            ["depression", "graded", "CLAHE top1", "chromatic_kc top1"], rows,
+            title=f"\nMBON readout robustness sweep (K={kmax}, {len(folds)} folds; chance {chance:.3f})"))
+
+    def _log_table(self, table) -> None:
+        self.logger.info("")
+        for line in table.splitlines():
+            self.logger.info(line)

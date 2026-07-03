@@ -12,7 +12,7 @@ cuda = ["cuda"]
 
 [tasks]
 # --- Evaluation: downstream tasks (each prints a clean summary table) ---
-flowers = {cmd = "python main.py -d flowers"}
+flowers = {cmd = "python main.py -d 17flowers"}
 nav = {cmd = "python main.py -d nav"}
 
 # --- Open-loop navigation suites (untrained backbone, corridor memory, colour-landmark world) ---
