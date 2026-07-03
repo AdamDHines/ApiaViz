@@ -34,7 +34,7 @@ from apiaviz.mbant.io_utils import load_ant_data, load_world_data, prepare_route
 
 from apiaviz.nav.retino_kc import MBONPopulation, RetinotopicKCEncoder, RetinotopicKCProjection, AntiHebbianMBON, RetinotopicKCProjection
 from apiaviz.nav.torch_route import (
-    TorchWorldRenderer, CosineRouteMemory, navigate_torch, preprocess_apiaviz_torch, preprocess_original_torch, select_device, render_route_centers, nav_result_summary
+    TorchWorldRenderer, CosineRouteMemory, navigate_torch, preprocess_apiaviz_torch, preprocess_original_torch, select_device, render_route_corridor, corridor_offsets, nav_result_summary
 )
 from apiaviz.src.metrics import render_table
 from apiaviz.src.modules import load_vision_backbone
@@ -59,7 +59,7 @@ def free_navigate(img_pos_np, heading_np, scorer, nav_config, max_steps=None):
     reached = False
     for _ in range(n_steps):
         scan_headings = center + scan_offsets
-        en = scorer.score(pos, scan_headings)["en"].detach()
+        en = scorer.score(pos, scan_headings, device)["en"].detach()
         center = scan_headings[int(torch.argmin(en).item())]
         rad = torch.deg2rad(center)
         pos = pos + torch.stack([torch.cos(rad), torch.sin(rad)]) * nav_config.step_size
@@ -74,7 +74,7 @@ def _l2(x: torch.Tensor) -> torch.Tensor:
     return x / x.norm(dim=1, keepdim=True).clamp_min(1e-6)
 
 
-def build_landmark_color(triangle_grey: torch.Tensor, fraction: float, chroma: float, seed: int) -> torch.Tensor:
+def build_landmark_color(triangle_grey: torch.Tensor, fraction: float, chroma: float, seed: int, device: torch.device) -> torch.Tensor:
     """[n_tri,3] RGB: grey baseline for all, an isoluminant G-B tint on a `fraction` of triangles.
 
     Landmark i: RGB = (L, L+chroma*s, L-chroma*s), s in {+1,-1}. mean(RGB)=L (luminance held at the grey
@@ -86,12 +86,16 @@ def build_landmark_color(triangle_grey: torch.Tensor, fraction: float, chroma: f
     tc = L[:, None].repeat(1, 3)
     is_lm = torch.rand(n, generator=gen) < fraction
     sign = torch.where(torch.rand(n, generator=gen) < 0.5, 1.0, -1.0)
+    # put onto torch.device
+    L = L.to(device)
+    is_lm = is_lm.to(device)
+    sign = sign.to(device)
     tc[:, 1] = torch.where(is_lm, (L + chroma * sign).clamp(0, 255), L)  # G
     tc[:, 2] = torch.where(is_lm, (L - chroma * sign).clamp(0, 255), L)  # B
     return tc
 
 
-def luminance_corrupt(raw: torch.Tensor, severity: float, seed: int) -> torch.Tensor:
+def luminance_corrupt(raw: torch.Tensor, severity: float, seed: int, device: torch.device) -> torch.Tensor:
     """Add a multi-scale luminance shift to all channels equally (G-B preserved)."""
     if severity <= 0:
         return raw
@@ -102,6 +106,9 @@ def luminance_corrupt(raw: torch.Tensor, severity: float, seed: int) -> torch.Te
         small = torch.randn(n, 1, max(1, h // scale), max(1, w // scale), generator=gen)
         field = field + F.interpolate(small, size=(h, w), mode="bilinear", align_corners=False)
     field = field / field.flatten(1).std(dim=1).clamp_min(1e-6).view(n, 1, 1, 1)
+    # place all on device
+    raw = raw.to(device)
+    field = field.to(device)
     return (raw + severity * 90.0 * field).clamp(0.0, 255.0)
 
 
@@ -112,12 +119,12 @@ class _PerturbScorer:
         self.renderer, self.memory, self.ic = renderer, memory, ic
         self.severity, self.seed0, self._calls = float(severity), int(seed0), 0
 
-    def _raw(self, position, headings):
+    def _raw(self, position, headings, device):
         positions = position.view(1, 2).expand(headings.numel(), -1)
         raw = self.renderer.render_batch(positions, headings, self.ic.eye_height)
         if self.severity > 0:
             self._calls += 1
-            raw = luminance_corrupt(raw, self.severity, self.seed0 + self._calls)
+            raw = luminance_corrupt(raw, self.severity, self.seed0 + self._calls, device)
         return raw
 
 
@@ -127,8 +134,8 @@ class _KCScorer(_PerturbScorer):
         self.backbone, self.code_fn = backbone, code_fn
 
     @torch.no_grad()
-    def score(self, position, headings):
-        raw = self._raw(position, headings)
+    def score(self, position, headings, device):
+        raw = self._raw(position, headings, device)
         maps = self.backbone(preprocess_apiaviz_torch(raw).to(self.renderer.device), return_maps=True)
         code = self.code_fn(maps)
         return {"en": self.memory(code), "codes": code}
@@ -136,8 +143,8 @@ class _KCScorer(_PerturbScorer):
 
 class _CLAHEScorer(_PerturbScorer):
     @torch.no_grad()
-    def score(self, position, headings):
-        raw = self._raw(position, headings)
+    def score(self, position, headings, device):
+        raw = self._raw(position, headings, device)
         code = preprocess_original_torch(raw, 1.0, self.ic.resize_shape).to(self.renderer.device)
         return {"en": self.memory(code), "codes": code}
 
@@ -150,7 +157,12 @@ class NavEval:
             setattr(self, key, getattr(args, key))
         self.logger = logger
         self.outdir = Path(outdir)
-        self.device = select_device("cpu")  # renderer + adaptive pool are CPU-only here
+        if torch.cuda.is_available():
+            self.device = torch.device("cuda")
+        elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+            self.device = torch.device("mps")
+        else:
+            self.device = torch.device("cpu")
 
         antData = "apiaviz/mbant/data/antview/AntData.mat"
         worldData = "apiaviz/mbant/data/antview/world5000_gray.mat"
@@ -170,7 +182,7 @@ class NavEval:
 
         base = TorchWorldRenderer(world, device=self.device, hfov=self.ic.hfov,
                                   resolution=self.ic.resolution, chunk_size=512, color=True)
-        landmark_tc = build_landmark_color(base.triangle_grey, self.landmark_fraction, self.chroma, seed=99)
+        landmark_tc = build_landmark_color(base.triangle_grey, self.landmark_fraction, self.chroma, seed=99, device=self.device)
         self.renderer = TorchWorldRenderer(world, device=self.device, hfov=self.ic.hfov,
                                            resolution=self.ic.resolution, chunk_size=512,
                                            color=True, triangle_color=landmark_tc)
@@ -181,8 +193,15 @@ class NavEval:
         self.opp_proj = RetinotopicKCProjection(in_channels=2, code_dim=self.code_dim, seed=self.seed + 16).to(self.device)
         self.mem_kwargs = dict(mode="max_cosine", topk=5, softmax_temperature=0.05)
         self.freenav = bool(getattr(self, "freenav", False))
+        self.viewpoints = max(1, int(getattr(self, "viewpoints", 1)))
+        self.corridor_width = float(getattr(self, "corridor_width", 0.2))
         loop = "open-loop free navigation" if self.freenav else "corrected route-following"
-        self.logger.info(f"Device: {self.device}  |  loop: {loop}")
+        # The route-corridor memory (multiple laterally-shifted viewpoints per route index) is what
+        # rescues open-loop navigation, so it is only engaged in the freenav paradigm.
+        self.memory_viewpoints = self.viewpoints if self.freenav else 1
+        memory = (f"route corridor ({self.memory_viewpoints} viewpoints, +-{self.corridor_width:g} m)"
+                  if self.memory_viewpoints > 1 else "single centreline viewpoint")
+        self.logger.info(f"Device: {self.device}  |  loop: {loop}  |  memory: {memory}")
         self.logger.info("")
 
     def _combined_code(self, maps):
@@ -194,14 +213,15 @@ class NavEval:
         nav_config = NavigationConfig(step_size=0.1, scan_range=120.0, scan_step=10.0, dis_threshold=0.2,
                                       eye_height=self.ic.eye_height, resolution=self.ic.resolution, hfov=self.ic.hfov)
         pop_name = f"MBON population (S={self.segments})"
-        methods = ["CLAHE", "MBON single (S=1)", pop_name]
+        methods = ["CLAHE", pop_name]
         conditions = [("clean", 0.0), ("corruption", float(self.severity))]
         agg = {(c, m): [] for c in ("clean", "corruption") for m in methods}
 
         for route in self.routes:
             rd = self.ants[f"Ant{self.ant}"]["routes"][f"Route{route}"]
             img_pos, heading, _ = prepare_route(rd, img_separation=self.ic.img_separation)
-            raw_route = render_route_centers(self.renderer, img_pos, heading, self.ic.eye_height)
+            offsets = corridor_offsets(self.memory_viewpoints, self.corridor_width)
+            raw_route = render_route_corridor(self.renderer, img_pos, heading, offsets, self.ic.eye_height)
             with torch.no_grad():
                 maps = self.backbone(preprocess_apiaviz_torch(raw_route).to(self.device), return_maps=True)
                 combined_route = self._combined_code(maps).detach()
@@ -220,7 +240,7 @@ class NavEval:
                         scorer = _KCScorer(self.renderer, self.backbone, self._combined_code,
                                            memories[method], self.ic, severity, seed0=5000)
                     if self.freenav:
-                        summary = free_navigate(img_pos, heading, scorer, nav_config)
+                        summary = free_navigate(img_pos, heading, scorer, nav_config, max_steps=self.max_steps)
                         metric = float(summary["final_route_progress"])
                     else:
                         nav = navigate_torch(img_pos, heading, scorer, nav_config)

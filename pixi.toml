@@ -32,6 +32,7 @@ tqdm = "*"
 opencv = "*"
 matplotlib-base = "*" 
 scikit-learn = "*"
+scikit-image = "*"
 pandas = "*"
 pyarrow = "*"
 

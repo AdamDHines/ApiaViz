@@ -53,6 +53,33 @@ def _tap_channels(tap: str) -> int:
     }.get(tap, 3)
 
 
+def _adaptive_avg_matrix(in_size: int, out_size: int, device, dtype) -> torch.Tensor:
+    """Averaging matrix ``A[o, i]`` reproducing PyTorch adaptive-pool bins along one axis."""
+    A = torch.zeros(out_size, in_size, device=device, dtype=dtype)
+    for o in range(out_size):
+        start = (o * in_size) // out_size
+        end = -(-(o + 1) * in_size // out_size)  # ceil division
+        A[o, start:end] = 1.0 / (end - start)
+    return A
+
+
+def adaptive_avg_pool2d_anysize(x: torch.Tensor, out_hw: tuple[int, int]) -> torch.Tensor:
+    """``F.adaptive_avg_pool2d`` that also works on MPS for non-divisible sizes.
+
+    MPS only implements adaptive pooling when the input is divisible by the output
+    (pytorch#96056). Adaptive average pooling is separable and linear, so for the
+    general case we express it as two small fixed averaging matmuls, which every MPS
+    kernel supports. Matches the native op to float32 precision; no CPU transfer.
+    """
+    Ho, Wo = int(out_hw[0]), int(out_hw[1])
+    _, _, Hi, Wi = x.shape
+    if Hi % Ho == 0 and Wi % Wo == 0:  # fast path: native kernel handles this
+        return F.adaptive_avg_pool2d(x, (Ho, Wo))
+    Ah = _adaptive_avg_matrix(Hi, Ho, x.device, x.dtype)
+    Aw = _adaptive_avg_matrix(Wi, Wo, x.device, x.dtype)
+    return torch.einsum("oi,ncij,pj->ncop", Ah, x, Aw)
+
+
 class RetinotopicKCProjection(nn.Module):
     """Fixed random sparse PN->KC projection + k-WTA over an azimuth-preserving pool.
 
@@ -100,7 +127,7 @@ class RetinotopicKCProjection(nn.Module):
     def forward(self, feature_map: torch.Tensor) -> torch.Tensor:
         if feature_map.dim() != 4:
             raise ValueError(f"expected [N,C,H,W], got {tuple(feature_map.shape)}")
-        pooled = F.adaptive_avg_pool2d(feature_map, self.pool_hw)
+        pooled = adaptive_avg_pool2d_anysize(feature_map, self.pool_hw)
         flat = pooled.flatten(1)
         if flat.size(1) != self.pn_dim:
             raise ValueError(

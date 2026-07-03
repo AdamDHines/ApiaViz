@@ -13,12 +13,8 @@ import torch.nn.functional as F
 
 from apiaviz.mbant.config import NavigationConfig
 
-try:
-    from skimage.exposure import equalize_adapthist as _skimage_equalize_adapthist
-    from skimage.transform import resize as _skimage_resize
-except ImportError:
-    _skimage_equalize_adapthist = None
-    _skimage_resize = None
+from skimage.exposure import equalize_adapthist as _skimage_equalize_adapthist
+from skimage.transform import resize as _skimage_resize
 
 def normalize_codes(codes: torch.Tensor) -> torch.Tensor:
     x = codes.detach().float().clamp_min(0.0)
@@ -63,6 +59,65 @@ def render_route_centers(
     headings = torch.as_tensor(heading, dtype=torch.float32, device=renderer.device)
     return renderer.render_batch(positions, headings, eye_height=eye_height)
 
+
+def corridor_offsets(n_viewpoints: int, halfwidth: float) -> np.ndarray:
+    """Lateral offsets (m) for a corridor of parallel walks either side of the centreline.
+
+    ``n_viewpoints == 1`` -> ``[0.0]`` (the classic single-viewpoint centreline memory).
+    ``n_viewpoints  > 1`` -> ``n_viewpoints`` offsets evenly spaced across
+    ``[-halfwidth, +halfwidth]`` (the centreline included when the count is odd).
+    """
+    n = max(1, int(n_viewpoints))
+    if n == 1:
+        return np.asarray([0.0], dtype=np.float32)
+    return np.linspace(-float(halfwidth), float(halfwidth), n, dtype=np.float32)
+
+
+def _lateral_position(pos: np.ndarray, heading_deg: float, lateral_m: float) -> np.ndarray:
+    """Shift ``pos`` by ``lateral_m`` along the left-hand normal of ``heading_deg``."""
+    rad = math.radians(float(heading_deg))
+    normal = np.array([-math.sin(rad), math.cos(rad)], dtype=np.float32)
+    return np.asarray(pos, dtype=np.float32) + normal * float(lateral_m)
+
+
+def route_corridor_bank(
+    img_pos: np.ndarray,
+    heading: np.ndarray,
+    offsets: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Corridor memory positions/headings, ordered route-index major, lateral-walk minor.
+
+    Each route index shares its heading across all lateral walks; the offset shifts the position
+    along the route normal. The route-index-major ordering means an ``MBONPopulation`` with a
+    contiguous partition packs every lateral viewpoint of a route stretch into the same MBON, so a
+    single readout neuron learns the whole corridor cross-section it is responsible for.
+    """
+    positions: list[np.ndarray] = []
+    headings: list[float] = []
+    for idx in range(len(heading)):
+        h = float(heading[idx])
+        for offset in offsets:
+            positions.append(_lateral_position(img_pos[idx], h, float(offset)))
+            headings.append(h)
+    return np.asarray(positions, dtype=np.float32), np.asarray(headings, dtype=np.float32)
+
+
+def render_route_corridor(
+    renderer: TorchWorldRenderer,
+    img_pos: np.ndarray,
+    heading: np.ndarray,
+    offsets: np.ndarray,
+    eye_height: float,
+) -> torch.Tensor:
+    """Render the corridor memory bank -> raw images ``[len(offsets) * num_pos, ...]``.
+
+    With a single ``[0.0]`` offset this is identical to :func:`render_route_centers`.
+    """
+    positions, headings = route_corridor_bank(img_pos, heading, offsets)
+    pos_t = torch.as_tensor(positions, dtype=torch.float32, device=renderer.device)
+    head_t = torch.as_tensor(headings, dtype=torch.float32, device=renderer.device)
+    return renderer.render_batch(pos_t, head_t, eye_height=eye_height)
+
 def navigation_route_index_summary(nav: dict[str, Any]) -> dict[str, Any]:
     positions = np.asarray(nav["current_position"], dtype=np.float32)
     route = np.asarray(nav["trained_route"], dtype=np.float32)
@@ -99,8 +154,8 @@ def select_device(device_arg: str) -> torch.device:
     if device_arg == "auto":
         if torch.cuda.is_available():
             return torch.device("cuda")
-        # if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
-        #     return torch.device("mps")
+        if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+            return torch.device("mps")
         return torch.device("cpu")
     return torch.device(device_arg)
 
@@ -487,7 +542,7 @@ def navigate_torch(
         center_heading = heading[current_pos_idx] if not moving else step_record[0, step_count - 1]
 
         scan_headings = center_heading + scan_offsets
-        scan = scorer.score(current_position[step_count], scan_headings)
+        scan = scorer.score(current_position[step_count], scan_headings, device)
         en_scores = scan["en"].detach()
         en_responses.append(en_scores.detach().cpu().numpy())
         winner = int(torch.argmin(en_scores).item())

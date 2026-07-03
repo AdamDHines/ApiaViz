@@ -38,12 +38,19 @@ def parse_args():
     # --- Evaluation: nav (route following) ---
     parser.add_argument("--ant", type=int, default=1, help="ant index for navigation routes")
     parser.add_argument("--routes", type=int, nargs="*", default=[1, 2, 3], help="route indices to navigate")
-    parser.add_argument("--segments", type=int, default=16, help="MBON population size (route segments)")
+    parser.add_argument("--segments", type=int, default=80, help="MBON population size (route segments)")
     parser.add_argument("--severity", type=float, default=1.0, help="luminance corruption severity")
     parser.add_argument("--landmark_fraction", type=float, default=0.5, help="fraction of world triangles that are colour landmarks")
     parser.add_argument("--chroma", type=float, default=60.0, help="landmark opponent-colour strength")
     parser.add_argument("--freenav", action="store_true",
                         help="open-loop free navigation (no snap-back to the route) instead of the corrected loop")
+    parser.add_argument("--viewpoints", type=int, default=9,
+                        help="number of laterally-shifted corridor viewpoints stored per route index in "
+                             "freenav memory (1 = classic single centreline viewpoint)")
+    parser.add_argument("--corridor_width", type=float, default=0.2,
+                        help="half-width (m) of the memory corridor spanned by the lateral viewpoints")
+    parser.add_argument("--max-steps", type=int, default=200,
+                        help="maximum number of steps for the ant to take during navigation evaluation")
 
     # --- Directories ---
     parser.add_argument("--dataset_dir", default="./apiaviz/dataset/")
