@@ -45,11 +45,9 @@ DEFAULT_SPARSITY = 0.05
 
 
 def _tap_channels(tap: str) -> int:
-    # contrast_features = [ON, OFF, luminance]; pathway/scene maps differ.
+    # contrast_features = [ON, OFF, luminance].
     return {
         "contrast_features": 3,
-        "pathway": 3,
-        "scene_feature_map": 32,
     }.get(tap, 3)
 
 
@@ -147,8 +145,9 @@ class RetinotopicKCProjection(nn.Module):
 class RetinotopicKCEncoder(nn.Module):
     """Full ``view -> sparse KC code`` module: frozen backbone front end + fixed projection.
 
-    The backbone is frozen and only its early retinotopic ``tap`` map is used; the GeM
-    ``scene_embedding`` is intentionally bypassed.
+    The backbone is frozen and only its early retinotopic ``tap`` map is used. The GeM
+    global ``scene_embedding`` head was removed from the backbone entirely (it discarded
+    the azimuth/identity structure this code preserves and no task read it).
     """
 
     def __init__(
@@ -176,10 +175,6 @@ class RetinotopicKCEncoder(nn.Module):
         )
 
     def _tap_map(self, maps: dict[str, torch.Tensor]) -> torch.Tensor:
-        if self.tap == "pathway":
-            return torch.cat(
-                [maps["on_feature"], maps["off_feature"], maps["color_luminance_feature"]], dim=1
-            )
         return maps[self.tap]
 
     @torch.no_grad()

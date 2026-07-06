@@ -33,22 +33,13 @@ def load_vision_backbone(device="cpu", logger=None):
 
 
 class VisionBackbone(nn.Module):
-    def __init__(
-        self,
-        feature_channels: int = 32,
-        embedding_dim: int = 128,
-    ):
+    def __init__(self):
         super().__init__()
 
         self.spatial_sampler = HexRouting2d(1, learnable=True, bias=True)
         self.luminance_adapter = LocalLuminanceAdapter()
         self.chromatic_encoder = ChromaticEncoder()
         self.contrast_filter = ContrastFilterBank()
-        self.pathway_stack = PathwayStack()
-        self.feature_integrator = FeatureIntegrator(
-            feature_channels=feature_channels,
-            embedding_dim=embedding_dim,
-        )
 
     def _split_input(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         if x.size(1) == 2:
@@ -62,13 +53,11 @@ class VisionBackbone(nn.Module):
         return luminance, chromatic
 
     def freeze_frontend_layers(self) -> None:
-        """Freeze initialized low-level filters and first pathway relays."""
+        """Freeze the initialized low-level filters."""
         frozen_modules = [
             self.spatial_sampler,
             self.chromatic_encoder,
             self.contrast_filter,
-            self.pathway_stack.on_feature,
-            self.pathway_stack.off_feature,
         ]
         for module in frozen_modules:
             for param in module.parameters():
@@ -83,12 +72,6 @@ class VisionBackbone(nn.Module):
             chromatic_feature = torch.zeros_like(chromatic_feature)
         adapted_luminance = self.luminance_adapter(sampled_luminance)
         contrast_features = self.contrast_filter(adapted_luminance)
-        pathway_features = self.pathway_stack(contrast_features, chromatic_feature)
-        integrated = self.feature_integrator(
-            pathway_features["on_feature"],
-            pathway_features["off_feature"],
-            pathway_features["color_luminance_feature"],
-        )
 
         if return_maps:
             return {
@@ -97,14 +80,15 @@ class VisionBackbone(nn.Module):
                 "adapted_luminance": adapted_luminance,
                 "contrast_features": contrast_features,
                 "chromatic_feature": chromatic_feature,
-                **pathway_features,
-                "scene_embedding": integrated["embedding"],
-                "scene_feature_map": integrated["feature_map"],
-                "pooling_exponent": integrated["pooling_exponent"],
-                "fused_pathway_map": integrated["fused_pathway_map"],
             }
 
-        return integrated["embedding"]
+        # No global embedding head and no pathway relay. The retinotopic maps ARE the
+        # output: the sparse Kenyon-cell code (RetinotopicKCProjection) taps these maps
+        # directly. The navigation/flower tasks read ``contrast_features`` (ON/OFF/luminance)
+        # and ``chromatic_feature`` (achromatic + G-B/B-G opponent); a global-pooled
+        # descriptor would discard the azimuth/identity structure they need. Default return
+        # is the ``contrast_features`` map [N, 3, H, W].
+        return contrast_features
 
 
 class HexRouting2d(nn.Module):
@@ -246,142 +230,3 @@ class ContrastFilterBank(nn.Module):
         off_channel = F.relu(y[:, 1:2])
         luminance_channel = y[:, 2:3]
         return torch.cat([on_channel, off_channel, luminance_channel], dim=1)
-
-
-class OnFeaturePathway(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.gain = nn.Conv2d(1, 1, kernel_size=1, bias=True)
-        with torch.no_grad():
-            self.gain.weight.fill_(1.0)
-            self.gain.bias.zero_()
-
-    def forward(self, on_channel):
-        return F.relu(self.gain(on_channel))
-
-
-class OffFeaturePathway(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.gain = nn.Conv2d(1, 1, kernel_size=1, bias=True)
-        with torch.no_grad():
-            self.gain.weight.fill_(1.0)
-            self.gain.bias.zero_()
-
-    def forward(self, off_channel):
-        return F.relu(self.gain(off_channel))
-
-
-class ColorLuminancePathway(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.integrate = nn.Conv2d(2, 1, kernel_size=1, bias=True)
-        self.local = nn.Conv2d(1, 1, kernel_size=3, padding=1, padding_mode="reflect", bias=True)
-
-        with torch.no_grad():
-            self.integrate.weight.zero_()
-            self.integrate.bias.zero_()
-            self.integrate.weight[0, 0, 0, 0] = 0.5
-            self.integrate.weight[0, 1, 0, 0] = 0.5
-
-            self.local.weight.zero_()
-            self.local.bias.zero_()
-            self.local.weight[0, 0] = torch.ones(3, 3) / 9.0
-
-    def forward(self, luminance_channel, chromatic_feature):
-        achromatic = chromatic_feature[:, 0:1]
-        if chromatic_feature.size(1) >= 3:
-            opponent_magnitude = chromatic_feature[:, 1:2] + chromatic_feature[:, 2:3]
-        else:
-            opponent_magnitude = torch.zeros_like(achromatic)
-        x = torch.cat([luminance_channel, achromatic], dim=1)
-        x = self.integrate(x) + 0.25 * opponent_magnitude
-        x = self.local(x)
-        return F.relu(x)
-
-
-class PathwayStack(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.on_feature = OnFeaturePathway()
-        self.off_feature = OffFeaturePathway()
-        self.color_luminance_feature = ColorLuminancePathway()
-
-    def forward(self, contrast_features, chromatic_feature):
-        on_channel = contrast_features[:, 0:1]
-        off_channel = contrast_features[:, 1:2]
-        luminance_channel = contrast_features[:, 2:3]
-
-        on_feature = self.on_feature(on_channel)
-        off_feature = self.off_feature(off_channel)
-        color_luminance_feature = self.color_luminance_feature(luminance_channel, chromatic_feature)
-
-        return {
-            "on_feature": on_feature,
-            "off_feature": off_feature,
-            "color_luminance_feature": color_luminance_feature,
-        }
-
-
-class PathwayFeatureMixer(nn.Module):
-    def __init__(self, in_channels=3, out_channels=32, pool_scales=(1, 2, 4)):
-        super().__init__()
-        self.pool_scales = tuple(pool_scales)
-        self.local = nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, padding_mode="reflect", bias=True)
-        self.context = nn.Conv2d(in_channels * len(self.pool_scales), out_channels, kernel_size=1, bias=True)
-        self.refine = nn.Conv2d(out_channels * 2, out_channels, kernel_size=3, padding=1, padding_mode="reflect", bias=True)
-        self.norm = nn.GroupNorm(num_groups=1, num_channels=out_channels)
-
-    def _pool_context(self, x):
-        pooled = []
-        for scale in self.pool_scales:
-            if scale == 1:
-                pooled.append(x)
-                continue
-            p = F.avg_pool2d(x, kernel_size=scale, stride=scale, ceil_mode=True)
-            p = F.interpolate(p, size=x.shape[-2:], mode="bilinear", align_corners=False)
-            pooled.append(p)
-        return torch.cat(pooled, dim=1)
-
-    def forward(self, x):
-        local = self.local(x)
-        context = self.context(self._pool_context(x))
-        fused = torch.cat([local, context], dim=1)
-        return F.relu(self.norm(self.refine(fused)))
-
-
-class GeneralizedMeanPooling2d(nn.Module):
-    def __init__(self, p=3.0, eps=1e-6):
-        super().__init__()
-        self.p = nn.Parameter(torch.tensor(float(p)))
-        self.eps = eps
-
-    def forward(self, x):
-        p = self.p.clamp(min=self.eps)
-        x = x.clamp(min=self.eps).pow(p)
-        x = F.adaptive_avg_pool2d(x, 1)
-        return x.pow(1.0 / p)
-
-
-class FeatureIntegrator(nn.Module):
-    def __init__(self, pathway_channels=3, feature_channels=32, embedding_dim=128):
-        super().__init__()
-        self.mixer = PathwayFeatureMixer(in_channels=pathway_channels, out_channels=feature_channels)
-        self.integrate = nn.Conv2d(feature_channels, feature_channels, kernel_size=3, padding=1, padding_mode="reflect", bias=True)
-        self.norm = nn.GroupNorm(num_groups=1, num_channels=feature_channels)
-        self.gem_pool = GeneralizedMeanPooling2d(p=3.0)
-        self.embedding = nn.Linear(feature_channels, embedding_dim)
-
-    def forward(self, on_feature, off_feature, color_luminance_feature):
-        pathway_features = torch.cat([on_feature, off_feature, color_luminance_feature], dim=1)
-        fused = self.mixer(pathway_features)
-        feature_map = F.relu(self.norm(self.integrate(fused) + fused))
-        pooled = self.gem_pool(feature_map).flatten(1)
-        embedding = self.embedding(pooled)
-
-        return {
-            "feature_map": feature_map,
-            "embedding": embedding,
-            "fused_pathway_map": fused,
-            "pooling_exponent": self.gem_pool.p.clamp(min=self.gem_pool.eps).detach(),
-        }
