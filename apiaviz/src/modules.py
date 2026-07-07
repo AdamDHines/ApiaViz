@@ -32,25 +32,48 @@ def load_vision_backbone(device="cpu", logger=None):
     return backbone
 
 
+# Ablation targets: each removes exactly one computational stage (bypassed to an identity
+# that preserves the tensor contract). Threaded via the ``ablate`` attribute so every call
+# site respects it without rewiring; "none" runs the full pipeline.
+ABLATIONS = ("none", "hex", "adapt", "opponency", "dog")
+
+
 class VisionBackbone(nn.Module):
+    """Insect-inspired vision front end shared by ALL downstream tasks.
+
+    A single pipeline feeds every task so that each computational stage is upstream of every
+    readout (navigation, flower choice). Both photoreceptor channels pass through the shared
+    ommatidial (hex) sampling; the streams then diverge into a luminance form pathway (light
+    adaptation -> DoG center-surround) and a spectral-opponency colour pathway (a photoreceptor
+    difference, deliberately not luminance-normalized so it stays invariant to isoluminant
+    corruption). The two are concatenated into one retinotopic *view code*::
+
+        input (G,B) -> hex sample ->  light adapt -> DoG contrast (form)  ┐
+                                  ->  spectral opponency (G-B / B-G)      ┘ -> [contrast|chroma]
+
+    The unified 6-channel view is what the Kenyon-cell projection taps for every task, so an
+    ablation of any stage (``self.ablate``) produces a measurable effect on all of them.
+    """
+
     def __init__(self):
         super().__init__()
 
-        self.spatial_sampler = HexRouting2d(1, learnable=True, bias=True)
-        self.luminance_adapter = LocalLuminanceAdapter()
+        self.spatial_sampler = HexRouting2d(channels=2, learnable=True, bias=True)
+        self.luminance_adapter = LocalLuminanceAdapter()                 # divisive Weber gain (form path)
+        self.chromatic_adapter = LocalLuminanceAdapter(divisive=False)   # subtractive only (colour path)
         self.chromatic_encoder = ChromaticEncoder()
         self.contrast_filter = ContrastFilterBank()
+        # Which stage (if any) to bypass; set once (e.g. by the eval harness) and honoured by
+        # every forward call. See ``ABLATIONS``.
+        self.ablate = "none"
 
-    def _split_input(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+    def _split_input(self, x: torch.Tensor) -> torch.Tensor:
+        """Return the two photoreceptor channels (G, B) as [N, 2, H, W]."""
         if x.size(1) == 2:
-            luminance = x.mean(dim=1, keepdim=True)
-            chromatic = x
-        elif x.size(1) >= 3:
-            luminance = x.mean(dim=1, keepdim=True)
-            chromatic = x[:, 1:3]
-        else:
-            raise ValueError(f"VisionBackbone expected 2 or 3 input channels, got {x.size(1)}")
-        return luminance, chromatic
+            return x
+        if x.size(1) >= 3:
+            return x[:, 1:3]
+        raise ValueError(f"VisionBackbone expected 2 or 3 input channels, got {x.size(1)}")
 
     def freeze_frontend_layers(self) -> None:
         """Freeze the initialized low-level filters."""
@@ -63,15 +86,37 @@ class VisionBackbone(nn.Module):
             for param in module.parameters():
                 param.requires_grad_(False)
 
-    def forward(self, x: torch.Tensor, return_maps: bool = False, ablate_chromatic: bool = False):
-        luminance, chromatic = self._split_input(x)
+    def forward(self, x: torch.Tensor, return_maps: bool = False, ablate: str | None = None):
+        ablate = self.ablate if ablate is None else ablate
+        if ablate not in ABLATIONS:
+            raise ValueError(f"ablate must be one of {ABLATIONS}, got {ablate!r}")
 
-        sampled_luminance = self.spatial_sampler(luminance)
-        chromatic_feature = self.chromatic_encoder(chromatic)
-        if ablate_chromatic:
-            chromatic_feature = torch.zeros_like(chromatic_feature)
-        adapted_luminance = self.luminance_adapter(sampled_luminance)
-        contrast_features = self.contrast_filter(adapted_luminance)
+        chromatic_in = self._split_input(x)                       # [N, 2, H, W] raw (G, B)
+        luminance = chromatic_in.mean(dim=1, keepdim=True)        # raw luminance (pre front end)
+
+        # --- shared front end: ommatidial (hex) sampling on BOTH photoreceptor channels ---
+        sampled = chromatic_in if ablate == "hex" else self.spatial_sampler(chromatic_in)
+        sampled_luminance = sampled.mean(dim=1, keepdim=True)     # hex is linear: = hex(mean)
+
+        # --- diverge: spatial-contrast (DoG) form pathway (luminance channel, light-adapted) ---
+        # Light adaptation is a luminance-channel gain control. It precedes the center-surround so an
+        # "adapt" ablation still reaches every downstream task through the form sub-code.
+        adapted_luminance = sampled_luminance if ablate == "adapt" else self.luminance_adapter(sampled_luminance)
+        if ablate == "dog":  # bypass the center-surround: pointwise ON/OFF rectification only
+            contrast_features = torch.cat(
+                [F.relu(adapted_luminance), F.relu(-adapted_luminance), adapted_luminance], dim=1)
+        else:
+            contrast_features = self.contrast_filter(adapted_luminance)
+
+        # --- diverge: spectral-opponency colour pathway (subtractive light adaptation) ---
+        # The colour path is light-adapted too (so an "adapt" ablation reaches it), but only
+        # subtractively: the opponent difference (G-B) cancels the shared local-luminance baseline and
+        # so stays invariant to the isoluminant luminance corruption the navigation code must survive.
+        adapted_chromatic = sampled if ablate == "adapt" else self.chromatic_adapter(sampled)
+        chromatic_feature = self.chromatic_encoder(adapted_chromatic)  # [achromatic, G-B, B-G]
+        if ablate == "opponency":  # remove colour opponency, keep the achromatic sum
+            chromatic_feature = torch.cat(
+                [chromatic_feature[:, 0:1], torch.zeros_like(chromatic_feature[:, 1:3])], dim=1)
 
         if return_maps:
             return {
@@ -82,31 +127,27 @@ class VisionBackbone(nn.Module):
                 "chromatic_feature": chromatic_feature,
             }
 
-        # No global embedding head and no pathway relay. The retinotopic maps ARE the
-        # output: the sparse Kenyon-cell code (RetinotopicKCProjection) taps these maps
-        # directly. The navigation/flower tasks read ``contrast_features`` (ON/OFF/luminance)
-        # and ``chromatic_feature`` (achromatic + G-B/B-G opponent); a global-pooled
-        # descriptor would discard the azimuth/identity structure they need. Default return
-        # is the ``contrast_features`` map [N, 3, H, W].
-        return contrast_features
+        # Unified retinotopic view code [N, 6, H, W] = [ON, OFF, luminance | achromatic, G-B, B-G].
+        # Every task's Kenyon-cell projection taps this, so all stages are upstream of all tasks.
+        return torch.cat([contrast_features, chromatic_feature], dim=1)
 
 
 class HexRouting2d(nn.Module):
-    def __init__(self, in_channels, out_channels=1, learnable=False, bias=False):
+    """Depthwise hexagonal (ommatidial) resampling: each channel is averaged over its six
+    hex neighbours with per-channel weights (initialised to a uniform 1/6). Applied to all
+    photoreceptor channels so colour and luminance share the same ommatidial front end.
+    """
+
+    def __init__(self, channels=1, learnable=False, bias=False):
         super().__init__()
-        self.in_channels = in_channels
-        self.out_channels = out_channels
+        self.channels = channels
 
         if learnable:
-            self.weight = nn.Parameter(torch.ones(out_channels, in_channels, 6) / 6.0)
+            self.weight = nn.Parameter(torch.ones(channels, 6) / 6.0)
         else:
-            weight = torch.ones(out_channels, in_channels, 6, dtype=torch.float32) / 6.0
-            self.register_buffer("weight", weight)
+            self.register_buffer("weight", torch.ones(channels, 6, dtype=torch.float32) / 6.0)
 
-        if bias:
-            self.bias = nn.Parameter(torch.zeros(out_channels))
-        else:
-            self.bias = None
+        self.bias = nn.Parameter(torch.zeros(channels)) if bias else None
 
     def forward(self, x):
         batch, channels, height, width = x.shape
@@ -132,8 +173,8 @@ class HexRouting2d(nn.Module):
         down_a = even_mask * down_mid + odd_mask * down_left
         down_b = even_mask * down_right + odd_mask * down_mid
 
-        neighbours = torch.stack([left, right, up_a, up_b, down_a, down_b], dim=2)
-        y = torch.einsum("ocn,bcnhw->bohw", self.weight, neighbours)
+        neighbours = torch.stack([left, right, up_a, up_b, down_a, down_b], dim=2)  # [B,C,6,H,W]
+        y = torch.einsum("cn,bcnhw->bchw", self.weight, neighbours)                 # depthwise
 
         if self.bias is not None:
             y = y + self.bias.view(1, -1, 1, 1)
@@ -141,26 +182,44 @@ class HexRouting2d(nn.Module):
 
 
 class LocalLuminanceAdapter(nn.Module):
-    """Parameter-free local luminance normalization before contrast extraction."""
+    """Parameter-free local light-adaptation (luminance gain control) shared across receptor channels.
 
-    def __init__(self, kernel_size: int = 9, gain: float = 2.0, eps: float = 0.05):
+    Photoreceptor adaptation is a **shared luminance** gain: every channel is baselined and divided by
+    the same local luminance (the mean across channels), not by its own channel mean. This is what gives
+    colour constancy -- a per-channel divisive normalization would subtract each channel's own local DC
+    and annihilate the opponent signal ``G-B`` on uniform isoluminant patches (the landmark-colour cue
+    the navigation opponent-colour code depends on). With a shared denominator the opponent difference
+    survives (both channels share the subtracted baseline and the gain), so the stage can sit upstream of
+    both the luminance-contrast and the spectral-opponency pathways. For a single-channel (luminance)
+    input the shared mean is the channel itself, so the luminance pathway is unchanged.
+    """
+
+    def __init__(self, kernel_size: int = 9, gain: float = 2.0, eps: float = 0.05, divisive: bool = True):
         super().__init__()
         if kernel_size % 2 != 1:
             raise ValueError("kernel_size must be odd")
         self.kernel_size = kernel_size
         self.gain = gain
         self.eps = eps
+        # ``divisive`` = Weber-law gain control (divide by local luminance): the standard light
+        # adaptation for the luminance/form pathway. The colour pathway uses ``divisive=False``
+        # (subtractive only): dividing the opponent channels by the corruptible local luminance
+        # would destroy their invariance to isoluminant corruption, so there we only remove the
+        # shared local DC (which cancels in ``G-B`` and keeps the opponent cue corruption-invariant).
+        self.divisive = bool(divisive)
 
     def forward(self, x):
         intensity = (x + 1.0) * 0.5
+        luminance = intensity.mean(dim=1, keepdim=True)          # shared local-luminance basis
         pad = self.kernel_size // 2
-        local_mean = F.avg_pool2d(
-            F.pad(intensity, (pad, pad, pad, pad), mode="reflect"),
+        local_lum = F.avg_pool2d(
+            F.pad(luminance, (pad, pad, pad, pad), mode="reflect"),
             kernel_size=self.kernel_size,
             stride=1,
         )
-        local_contrast = (intensity - local_mean) / (local_mean.abs() + self.eps)
-        return torch.tanh(self.gain * local_contrast)
+        centered = intensity - local_lum
+        adapted = centered / (local_lum.abs() + self.eps) if self.divisive else centered
+        return torch.tanh(self.gain * adapted)
 
 
 class ChromaticEncoder(nn.Module):

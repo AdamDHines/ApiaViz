@@ -15,14 +15,6 @@ cuda = ["cuda"]
 flowers = {cmd = "python main.py -d 17flowers"}
 nav = {cmd = "python main.py -d nav"}
 
-# --- Open-loop navigation suites (untrained backbone, corridor memory, colour-landmark world) ---
-freenav = {cmd = "python apiaviz/nav/run_mbon_openloop_core_suite_standalone.py --device auto"}
-ablation = {cmd = "python apiaviz/nav/run_mbon_openloop_ablation_suite_standalone.py --device auto"}
-diagnostics = {cmd = "python apiaviz/nav/run_mbon_openloop_diagnostics_standalone.py --device auto"}
-
-# --- Presentation figures (mean +/- SEM bars + scan animations) from existing outputs; no reruns ---
-figures = {cmd = "python paper/make_presentation_summary_assets.py"}
-
 [dependencies]
 python = "*"
 numpy = "==1.26.4,<2"

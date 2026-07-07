@@ -30,6 +30,10 @@ def parse_args():
                         help="downstream evaluation task")
     parser.add_argument("--code_dim", type=int, default=4000, help="Kenyon-cell code dimensionality")
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--ablate", default="none",
+                        choices=["none", "hex", "adapt", "opponency", "dog"],
+                        help="remove one VisionBackbone stage to measure its contribution to the task "
+                             "(hex sampling / light adaptation / spectral opponency / DoG center-surround)")
 
     # --- Evaluation: flowers (object identification) ---
     parser.add_argument("--per_class", type=int, default=40, help="images sampled per flower class")
@@ -46,16 +50,17 @@ def parse_args():
     parser.add_argument("--reward_lr", type=float, default=1.0, help="reward-MBON learning rate (approach-synapse gain)")
     parser.add_argument("--corruption", default="none", choices=["none", "luminance", "noise"],
                         help="per-fixation test-time corruption; 'luminance' is isoluminant (spares opponent colour)")
-    parser.add_argument("--severities", type=float, nargs="*", default=[1.0, 2.0],
+    parser.add_argument("--severities", type=float, nargs="*", default=[],
                         help="corruption severities to sweep (0 = clean is always included)")
     parser.add_argument("--ablation", action="store_true",
                         help="channel-ablation panel: full vs achromatic-only vs opponent-only vs chroma-ablated")
 
     # --- Evaluation: nav (route following) ---
-    parser.add_argument("--ant", type=int, default=1, help="ant index for navigation routes")
-    parser.add_argument("--routes", type=int, nargs="*", default=[1, 2, 3], help="route indices to navigate")
+    parser.add_argument("--ant", type=int, default=0, help="ant index for navigation routes (<=0 = all ants, the default)")
+    parser.add_argument("--routes", type=int, nargs="*", default=[],
+                        help="route indices to navigate; empty (the default) or any value <=0 = all available routes "
+                             "for the ant. Selections absent from the data are skipped with a warning.")
     parser.add_argument("--segments", type=int, default=80, help="MBON population size (route segments)")
-    parser.add_argument("--severity", type=float, default=1.0, help="luminance corruption severity")
     parser.add_argument("--landmark_fraction", type=float, default=0.5, help="fraction of world triangles that are colour landmarks")
     parser.add_argument("--chroma", type=float, default=60.0, help="landmark opponent-colour strength")
     parser.add_argument("--freenav", action="store_true",

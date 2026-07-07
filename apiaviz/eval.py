@@ -185,6 +185,7 @@ class NavEval:
                                            resolution=self.ic.resolution, chunk_size=512,
                                            color=True, triangle_color=landmark_tc)
         backbone = load_vision_backbone(self.device, logger=self.logger)
+        backbone.ablate = str(getattr(self, "ablate", "none"))
         encoder = RetinotopicKCEncoder(backbone=backbone, tap="contrast_features",
                                        code_dim=self.code_dim, seed=self.seed).to(self.device)
         self.backbone, self.ach_proj = encoder.backbone, encoder.projection
@@ -199,7 +200,8 @@ class NavEval:
         self.memory_viewpoints = self.viewpoints if self.freenav else 1
         memory = (f"route corridor ({self.memory_viewpoints} viewpoints, +-{self.corridor_width:g} m)"
                   if self.memory_viewpoints > 1 else "single centreline viewpoint")
-        self.logger.info(f"Device: {self.device}  |  loop: {loop}  |  memory: {memory}")
+        self.logger.info(f"Device: {self.device}  |  loop: {loop}  |  memory: {memory}  |  "
+                         f"backbone ablation: {self.backbone.ablate}")
         self.logger.info("")
 
     def _combined_code(self, maps):
@@ -207,16 +209,63 @@ class NavEval:
         return torch.cat([_l2(self.ach_proj(maps["contrast_features"])),
                           _l2(self.opp_proj(maps["chromatic_feature"][:, 1:3]))], dim=1)
 
+    def _resolve_jobs(self):
+        """Resolve (ant, route) pairs to actually run, skipping anything absent from the data.
+
+        Ants and routes are non-uniform (e.g. Ant6 only has 2 inward routes), so a requested
+        index may not exist. Rather than crash on a KeyError, we filter to what is available and
+        log a warning for each skipped selection.
+
+        Selection rules:
+            --ant  <= 0  -> every ant present in the data
+            --routes empty / any value <= 0 -> every available route for that ant
+        """
+        available_ants = sorted(int(k[3:]) for k in self.ants)  # e.g. [1, 2, ..., 15]
+
+        if int(self.ant) <= 0:
+            ant_indices = available_ants
+        elif int(self.ant) in available_ants:
+            ant_indices = [int(self.ant)]
+        else:
+            self.logger.info(f"[skip] Ant{self.ant} is not in the data "
+                             f"(available: {available_ants[0]}-{available_ants[-1]}); nothing to run.")
+            ant_indices = []
+
+        requested = [int(r) for r in self.routes]
+        want_all_routes = not requested or any(r <= 0 for r in requested)
+
+        jobs = []
+        for ant_idx in ant_indices:
+            available = self.ants[f"Ant{ant_idx}"]["available_routes"]
+            routes = available if want_all_routes else requested
+            for route in routes:
+                if route in available:
+                    jobs.append((ant_idx, route))
+                else:
+                    self.logger.info(f"[skip] Ant{ant_idx} has no Route{route} "
+                                     f"(available routes: {available}).")
+        return jobs
+
     def run(self):
         nav_config = NavigationConfig(step_size=0.1, scan_range=120.0, scan_step=10.0, dis_threshold=0.2,
                                       eye_height=self.ic.eye_height, resolution=self.ic.resolution, hfov=self.ic.hfov)
         pop_name = f"MBON population (S={self.segments})"
         methods = ["CLAHE", pop_name]
-        conditions = [("clean", 0.0), ("corruption", float(self.severity))]
-        agg = {(c, m): [] for c in ("clean", "corruption") for m in methods}
+        # Clean is always evaluated; each positive severity in --severities adds a corruption
+        # condition. An empty list means clean-only (no corruption).
+        severities = [float(s) for s in getattr(self, "severities", []) if float(s) > 0]
+        conditions = [("clean", 0.0)] + [(f"corruption(sev={s:g})", s) for s in severities]
+        self._cond_labels = [c for c, _ in conditions]
+        agg = {(c, m): [] for c in self._cond_labels for m in methods}
 
-        for route in self.routes:
-            rd = self.ants[f"Ant{self.ant}"]["routes"][f"Route{route}"]
+        jobs = self._resolve_jobs()
+        if not jobs:
+            self.logger.info("No valid (ant, route) selections to navigate; check --ant / --routes.")
+            return
+        self._jobs = jobs
+
+        for ant, route in jobs:
+            rd = self.ants[f"Ant{ant}"]["routes"][f"Route{route}"]
             img_pos, heading, _ = prepare_route(rd, img_separation=self.ic.img_separation)
             offsets = corridor_offsets(self.memory_viewpoints, self.corridor_width)
             raw_route = render_route_corridor(self.renderer, img_pos, heading, offsets, self.ic.eye_height)
@@ -247,16 +296,24 @@ class NavEval:
                         metric = float(summary.get("error_rate"))
                     agg[(cond, method)].append((bool(summary.get("reached_nest")), metric))
                     mname = "progress" if self.freenav else "error_rate"
-                    self.logger.info(f"Route{route:<2d} {cond:<11s} {method:<22s} "
+                    self.logger.info(f"Ant{ant:<2d} Route{route:<2d} {cond:<11s} {method:<22s} "
                                      f"reached={summary.get('reached_nest')} {mname}={metric:.3f}")
 
         self._report(methods, agg)
 
     def _report(self, methods, agg):
-        n = len(self.routes)
+        jobs = getattr(self, "_jobs", [])
+        n = len(jobs)
+        ants_run = sorted({a for a, _ in jobs})
+        if len(ants_run) == 1:
+            ant_label = f"Ant{ants_run[0]}"
+        elif ants_run:
+            ant_label = f"{len(ants_run)} ants (Ant{ants_run[0]}-Ant{ants_run[-1]})"
+        else:
+            ant_label = f"Ant{self.ant}"
         metric_name = "progress" if self.freenav else "error_rate"
         loop_kind = "open-loop free navigation" if self.freenav else "corrected route-following"
-        for cond in ("clean", "corruption"):
+        for cond in getattr(self, "_cond_labels", ["clean"]):
             rows = []
             for method in methods:
                 results = agg[(cond, method)]
@@ -266,15 +323,16 @@ class NavEval:
                 rows.append([method, f"{reached:.2f}", f"{metric:.3f}", note])
             table = render_table(
                 ["readout", "reached", metric_name, "note"], rows,
-                title=f"\nNavigation under {cond}  ({loop_kind}; Ant{self.ant}, {n} route{'s' if n != 1 else ''}; "
+                title=f"\nNavigation under {cond}  ({loop_kind}; {ant_label}, {n} route{'s' if n != 1 else ''}; "
                       f"reached = fraction of nests homed)",
             )
             self.logger.info("")
             for line in table.splitlines():
                 self.logger.info(line)
-        self.logger.info("")
-        self.logger.info("Under corruption the single MBON drifts; the MBON population homes as often as the "
-                         "colour code allows and beats the colour-blind CLAHE baseline.")
+        if len(getattr(self, "_cond_labels", ["clean"])) > 1:
+            self.logger.info("")
+            self.logger.info("Under corruption the single MBON drifts; the MBON population homes as often as the "
+                             "colour code allows and beats the colour-blind CLAHE baseline.")
 
 class EvalVision:
     """Evaluate the frozen VisionBackbone on a downstream identification task."""
@@ -287,7 +345,8 @@ class EvalVision:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         self.backbone = load_vision_backbone(self.device, logger=self.logger)
-        self.logger.info(f"Device: {self.device}")
+        self.backbone.ablate = str(getattr(self, "ablate", "none"))
+        self.logger.info(f"Device: {self.device}  |  backbone ablation: {self.backbone.ablate}")
         self.logger.info("")
 
     def eval(self) -> None:
@@ -312,6 +371,7 @@ class EvalVision:
         """
         proj_chroma = RetinotopicKCProjection(in_channels=3, code_dim=self.code_dim, seed=23).to(self.device)
         proj_clahe = RetinotopicKCProjection(in_channels=1, code_dim=self.code_dim, seed=29).to(self.device)
+        proj_view = RetinotopicKCProjection(in_channels=6, code_dim=self.code_dim, seed=23).to(self.device)
 
         def chroma(keep):
             """Feature fn: project the chromatic map with only channels in ``keep`` retained (None = all)."""
@@ -325,14 +385,20 @@ class EvalVision:
                 return proj_chroma(cf)
             return fn
 
+        def view_fn(v, maps, dev):
+            """The unified backbone view: form + colour, all stages upstream."""
+            return proj_view(torch.cat([maps["contrast_features"], maps["chromatic_feature"]], dim=1))
+
         reps = {"CLAHE": lambda v, maps, dev: proj_clahe(clahe_map(v, dev))}
         if ablation:
+            # Channel-ablation panel: dissect which chromatic sub-channel carries the signal
+            # (orthogonal to the --ablate stage-removal study).
             reps["chromatic (full)"] = chroma(None)
             reps["achromatic-only"] = chroma((0,))       # keep [ach], zero the opponent channels
             reps["opponent-only"] = chroma((1, 2))       # zero [ach], keep G-B, B-G
-            reps["chroma-ablated"] = chroma(())          # all zero -> chance sanity (ablate_chromatic)
+            reps["chroma-ablated"] = chroma(())          # all zero -> chance sanity
         else:
-            reps["chromatic_kc"] = chroma(None)
+            reps["vision_kc"] = view_fn
         return ScanEncoder(self.backbone, reps, self.device), list(reps)
 
     def _eval_flowers_reward(self) -> None:
@@ -396,8 +462,8 @@ class EvalVision:
             rows.append([
                 f"{sev:.1f}",
                 f"{m[('CLAHE', 1)]['auc']:.3f}", f"{m[('CLAHE', kmax)]['auc']:.3f}",
-                f"{m[('chromatic_kc', 1)]['auc']:.3f}", f"{m[('chromatic_kc', kmax)]['auc']:.3f}",
-                f"{m[('chromatic_kc', kmax)]['auc'] - m[('CLAHE', kmax)]['auc']:+.3f}",
+                f"{m[('vision_kc', 1)]['auc']:.3f}", f"{m[('vision_kc', kmax)]['auc']:.3f}",
+                f"{m[('vision_kc', kmax)]['auc'] - m[('CLAHE', kmax)]['auc']:+.3f}",
             ])
         self._log_table(render_table(
             ["severity", "CLAHE K=1", f"CLAHE K={kmax}", "chroma K=1", f"chroma K={kmax}", f"colour-CLAHE@K{kmax}"],
@@ -411,7 +477,7 @@ class EvalVision:
             m = grid[sev]
             grows.append([f"{sev:.1f}",
                           f"{m[('CLAHE', kmax)]['auc'] - m[('CLAHE', 1)]['auc']:+.3f}",
-                          f"{m[('chromatic_kc', kmax)]['auc'] - m[('chromatic_kc', 1)]['auc']:+.3f}"])
+                          f"{m[('vision_kc', kmax)]['auc'] - m[('vision_kc', 1)]['auc']:+.3f}"])
         self._log_table(render_table(
             ["severity", f"CLAHE dAUC(K1->K{kmax})", f"chroma dAUC(K1->K{kmax})"], grows,
             title="\nScan benefit: AUC recovered by accumulating fixations"))
@@ -446,7 +512,7 @@ class EvalVision:
     def _report_gonogo(self, reps, ks, kmax, metrics, base_rate, n_folds) -> None:
         rows = []
         for r in reps:
-            note = "ours" if r == "chromatic_kc" else "baseline"
+            note = "ours" if r == "vision_kc" else "baseline"
             auc_cells = [f"{metrics[(r, k)]['auc']:.3f}+-{metrics[(r, k)]['ci_auc']:.3f}" for k in ks]
             m = metrics[(r, kmax)]
             rows.append([r, *auc_cells, f"{m['bacc']:.3f}+-{m['ci_bacc']:.3f}",
@@ -460,12 +526,12 @@ class EvalVision:
 
         prows = []
         for k in ks:
-            d = paired_delta(metrics[("chromatic_kc", k)]["fold_auc"], metrics[("CLAHE", k)]["fold_auc"])
+            d = paired_delta(metrics[("vision_kc", k)]["fold_auc"], metrics[("CLAHE", k)]["fold_auc"])
             has_p = d["p"] == d["p"]
             prows.append([f"K={k}", f"{d['mean']:+.3f}+-{d['ci']:.3f}",
                           f"{d['p']:.1e}" if has_p else "n/a", "yes" if has_p and d["p"] < 0.05 else "no"])
         self._log_table(render_table(
-            ["scan", "chromatic_kc - CLAHE (AUC)", "paired-t p", "p<0.05"], prows,
+            ["scan", "vision_kc - CLAHE (AUC)", "paired-t p", "p<0.05"], prows,
             title="\nPaired advantage over CLAHE (aligned folds)"))
         self.logger.info("")
         self.logger.info("Reward-gated approach MBON on both representations, so only the code differs: the "
@@ -487,7 +553,7 @@ class EvalVision:
         return paths, np.asarray(labels), class_dirs
 
     def _eval_flowers(self) -> None:
-        reps = ["CLAHE", "chromatic_kc"]
+        reps = ["CLAHE", "vision_kc"]
         ks = list(self.ks)
         kmax = max(ks)
         rng = np.random.default_rng(self.seed)
@@ -501,16 +567,19 @@ class EvalVision:
         n_repeats = int(getattr(self, "cv_repeats", 1))
         depression = float(getattr(self, "depression", 0.5))
         self.logger.info(f"17flowers: {len(paths)} images, {n_classes} classes (chance {chance:.3f})")
-        self.logger.info(f"Scan-accumulating chromatic code over up to K={kmax} fixations; "
+        self.logger.info(f"Scan-accumulating the full vision code over up to K={kmax} fixations; "
                          f"{n_folds}-fold CV x{n_repeats} (MBON depression {depression})...")
 
-        proj_chroma = RetinotopicKCProjection(in_channels=3, code_dim=self.code_dim, seed=23).to(self.device)
+        proj_view = RetinotopicKCProjection(in_channels=6, code_dim=self.code_dim, seed=23).to(self.device)
         proj_clahe = RetinotopicKCProjection(in_channels=1, code_dim=self.code_dim, seed=29).to(self.device)
         # Both representations lift a feature map through the same kind of fixed KC projection, so only
-        # the code differs at the (shared) MBON readout: opponent colour vs grayscale CLAHE luminance.
+        # the code differs at the (shared) MBON readout. ``vision_kc`` is the unified backbone view
+        # [ON, OFF, luminance | achromatic, G-B, B-G] -- every stage (hex, adapt, DoG, opponency) is
+        # upstream of it -- versus the grayscale CLAHE luminance template.
         representations = {
             "CLAHE": lambda v, maps, dev: proj_clahe(clahe_map(v, dev)),
-            "chromatic_kc": lambda v, maps, dev: proj_chroma(maps["chromatic_feature"]),
+            "vision_kc": lambda v, maps, dev: proj_view(
+                torch.cat([maps["contrast_features"], maps["chromatic_feature"]], dim=1)),
         }
         encoder = ScanEncoder(self.backbone, representations, self.device)
         base = build_views(paths, self.device, obj=int(getattr(self, "patch_size", 75)),
@@ -527,7 +596,7 @@ class EvalVision:
         # Headline: top-1 (mean +- 95% CI) at each scan length, plus top-3 and x chance at the longest scan.
         rows = []
         for r in reps:
-            note = "ours" if r == "chromatic_kc" else "baseline"
+            note = "ours" if r == "vision_kc" else "baseline"
             cells = [f"{metrics[(r, k)]['top1']:.3f}+-{metrics[(r, k)]['ci']:.3f}" for k in ks]
             m = metrics[(r, kmax)]
             rows.append([r, "MBON", *cells, f"{m['topk']:.3f}", f"{m['top1'] / chance:.1f}x", note])
@@ -541,18 +610,18 @@ class EvalVision:
         # Paired advantage of the colour code over CLAHE on aligned folds.
         prows = []
         for k in ks:
-            d = paired_delta(metrics[("chromatic_kc", k)]["fold_top1"], metrics[("CLAHE", k)]["fold_top1"])
+            d = paired_delta(metrics[("vision_kc", k)]["fold_top1"], metrics[("CLAHE", k)]["fold_top1"])
             has_p = d["p"] == d["p"]  # not NaN
             sig = "yes" if has_p and d["p"] < 0.05 else "no"
             prows.append([f"K={k}", f"{d['mean']:+.3f}+-{d['ci']:.3f}",
                           f"{d['p']:.1e}" if has_p else "n/a", sig])
         self._log_table(render_table(
-            ["scan", "chromatic_kc - CLAHE (top1)", "paired-t p", "p<0.05"], prows,
+            ["scan", "vision_kc - CLAHE (top1)", "paired-t p", "p<0.05"], prows,
             title="\nPaired advantage over CLAHE (aligned folds)"))
 
         # Per-class recall of the colour code at the longest scan + its dominant off-diagonal confusion.
-        conf = metrics[("chromatic_kc", kmax)]["confusion"]
-        pca = metrics[("chromatic_kc", kmax)]["per_class_acc"]
+        conf = metrics[("vision_kc", kmax)]["confusion"]
+        pca = metrics[("vision_kc", kmax)]["per_class_acc"]
         off = conf.copy(); np.fill_diagonal(off, 0)
         crows = []
         for ci, name in enumerate(class_names):
@@ -561,7 +630,7 @@ class EvalVision:
             crows.append([name, f"{pca[ci]:.3f}", conf_note])
         self._log_table(render_table(
             ["class", f"recall@K{kmax}", "most confused with (n)"], crows,
-            title=f"\nPer-class accuracy (chromatic_kc, K={kmax})"))
+            title=f"\nPer-class accuracy (vision_kc, K={kmax})"))
 
         # Persist the full confusion matrices (rows = true, cols = predicted) for offline inspection.
         for r in reps:
@@ -571,11 +640,12 @@ class EvalVision:
             self.logger.info(f"saved {path}")
         self.logger.info("")
         self.logger.info("Same per-class MBON readout on both representations, so only the code differs: "
-                         "the opponent-colour KC code identifies flowers; the grayscale CLAHE KC code cannot.")
+                         "the full vision KC code (form + colour, all backbone stages) identifies flowers; "
+                         "the grayscale CLAHE KC code cannot.")
 
     def _report_mbon_sweep(self, snapshots, labels, folds, kmax, chance) -> None:
         """Readout-robustness check: CV top-1 at the longest scan across MBON depression / graded settings."""
-        reps = ["CLAHE", "chromatic_kc"]
+        reps = ["CLAHE", "vision_kc"]
         rows = []
         for depression in (0.25, 0.5, 0.75, 1.0):
             for graded in (False, True):
@@ -583,9 +653,9 @@ class EvalVision:
                                 depression=depression, topk=3, graded=graded)
                 rows.append([f"{depression:.2f}", "yes" if graded else "no",
                              f"{m[('CLAHE', kmax)]['top1']:.3f}+-{m[('CLAHE', kmax)]['ci']:.3f}",
-                             f"{m[('chromatic_kc', kmax)]['top1']:.3f}+-{m[('chromatic_kc', kmax)]['ci']:.3f}"])
+                             f"{m[('vision_kc', kmax)]['top1']:.3f}+-{m[('vision_kc', kmax)]['ci']:.3f}"])
         self._log_table(render_table(
-            ["depression", "graded", "CLAHE top1", "chromatic_kc top1"], rows,
+            ["depression", "graded", "CLAHE top1", "vision_kc top1"], rows,
             title=f"\nMBON readout robustness sweep (K={kmax}, {len(folds)} folds; chance {chance:.3f})"))
 
     def _log_table(self, table) -> None:
