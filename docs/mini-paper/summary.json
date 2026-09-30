@@ -1,0 +1,56 @@
+[
+  {
+    "method": "apiaviz",
+    "label": "ApiaViz",
+    "successes": 3,
+    "mean_deviation_cm": 11.549773405645205,
+    "mean_activity_pct": 4.950670525431633,
+    "activity_min_pct": 4.918939247727394,
+    "activity_max_pct": 4.966415837407112
+  },
+  {
+    "method": "gray",
+    "label": "Grayscale pixels",
+    "successes": 3,
+    "mean_deviation_cm": 33.14619147405587,
+    "mean_activity_pct": 5.505133047699928,
+    "activity_min_pct": 5.494528263807297,
+    "activity_max_pct": 5.514064803719521
+  },
+  {
+    "method": "raw_colour",
+    "label": "Raw colour",
+    "successes": 2,
+    "mean_deviation_cm": 36.30657616311875,
+    "mean_activity_pct": 5.521358083933592,
+    "activity_min_pct": 5.514146015048027,
+    "activity_max_pct": 5.527443811297417
+  },
+  {
+    "method": "opponent",
+    "label": "Simple opponency",
+    "successes": 2,
+    "mean_deviation_cm": 39.321505469579506,
+    "mean_activity_pct": 5.356830544769764,
+    "activity_min_pct": 5.345013365149498,
+    "activity_max_pct": 5.367809534072876
+  },
+  {
+    "method": "sobel_colour",
+    "label": "Sobel + colour",
+    "successes": 4,
+    "mean_deviation_cm": 18.537638386275987,
+    "mean_activity_pct": 4.987608455121517,
+    "activity_min_pct": 4.980924725532532,
+    "activity_max_pct": 4.994678869843483
+  },
+  {
+    "method": "ardin_input",
+    "label": "Ardin-style input",
+    "successes": 2,
+    "mean_deviation_cm": 66.4469680387074,
+    "mean_activity_pct": 5.550907831639051,
+    "activity_min_pct": 5.535922572016716,
+    "activity_max_pct": 5.574788898229599
+  }
+]

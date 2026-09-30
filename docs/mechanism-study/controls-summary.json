@@ -1,0 +1,524 @@
+{
+  "count_control": [
+    {
+      "method": "apiaviz",
+      "label": "ApiaViz",
+      "fixed_count": {
+        "clean_heading_error_deg": 11.75,
+        "clean_tangent_margin": 0.01758591616526246,
+        "clean_restoring_fraction": 0.346875,
+        "brightness_heading_error_deg": 12.03125,
+        "brightness_heading_change_deg": 2.25625,
+        "neighbour_overlap": 0.5539110884070396,
+        "distant_overlap": 0.43068659156560896,
+        "effective_rank": 53.7395824432373
+      },
+      "finite_timing": {
+        "clean_heading_error_deg": 12.1875,
+        "clean_tangent_margin": 0.01405481044203043,
+        "clean_restoring_fraction": 0.3546875,
+        "brightness_heading_error_deg": 12.96875,
+        "brightness_heading_change_deg": 2.98125,
+        "neighbour_overlap": 0.5523130044341087,
+        "distant_overlap": 0.43206515461206435,
+        "effective_rank": 53.450648593902585
+      }
+    },
+    {
+      "method": "gray",
+      "label": "Grayscale",
+      "fixed_count": {
+        "clean_heading_error_deg": 14.125,
+        "clean_tangent_margin": 0.0059531181119382385,
+        "clean_restoring_fraction": 0.3453125,
+        "brightness_heading_error_deg": 14.125,
+        "brightness_heading_change_deg": 0.0,
+        "neighbour_overlap": 0.6659530311822891,
+        "distant_overlap": 0.5409268409013748,
+        "effective_rank": 40.72557306289673
+      },
+      "finite_timing": {
+        "clean_heading_error_deg": 14.65625,
+        "clean_tangent_margin": 0.006760301720350981,
+        "clean_restoring_fraction": 0.36171875,
+        "brightness_heading_error_deg": 14.65625,
+        "brightness_heading_change_deg": 0.0,
+        "neighbour_overlap": 0.6742772489786149,
+        "distant_overlap": 0.5516302645206451,
+        "effective_rank": 40.53879270553589
+      }
+    },
+    {
+      "method": "raw_colour",
+      "label": "Raw colour",
+      "fixed_count": {
+        "clean_heading_error_deg": 13.8125,
+        "clean_tangent_margin": 0.00560155576094985,
+        "clean_restoring_fraction": 0.34453125,
+        "brightness_heading_error_deg": 13.8125,
+        "brightness_heading_change_deg": 0.0,
+        "neighbour_overlap": 0.6460599824786186,
+        "distant_overlap": 0.5359098672866821,
+        "effective_rank": 47.46819124221802
+      },
+      "finite_timing": {
+        "clean_heading_error_deg": 15.125,
+        "clean_tangent_margin": 0.005377447977662086,
+        "clean_restoring_fraction": 0.3625,
+        "brightness_heading_error_deg": 15.125,
+        "brightness_heading_change_deg": 0.00625,
+        "neighbour_overlap": 0.6497960537672043,
+        "distant_overlap": 0.5417065903544426,
+        "effective_rank": 47.44478054046631
+      }
+    },
+    {
+      "method": "opponent",
+      "label": "Simple opponency",
+      "fixed_count": {
+        "clean_heading_error_deg": 13.09375,
+        "clean_tangent_margin": 0.0048593683168292046,
+        "clean_restoring_fraction": 0.37109375,
+        "brightness_heading_error_deg": 13.09375,
+        "brightness_heading_change_deg": 0.0,
+        "neighbour_overlap": 0.581607335805893,
+        "distant_overlap": 0.47984061315655707,
+        "effective_rank": 55.31899013519287
+      },
+      "finite_timing": {
+        "clean_heading_error_deg": 13.15625,
+        "clean_tangent_margin": 0.004108995757997036,
+        "clean_restoring_fraction": 0.3625,
+        "brightness_heading_error_deg": 13.1875,
+        "brightness_heading_change_deg": 0.06875,
+        "neighbour_overlap": 0.5910559296607971,
+        "distant_overlap": 0.4904067493975163,
+        "effective_rank": 54.72869138717651
+      }
+    },
+    {
+      "method": "sobel_colour",
+      "label": "Sobel + colour",
+      "fixed_count": {
+        "clean_heading_error_deg": 9.9375,
+        "clean_tangent_margin": 0.02026560278609395,
+        "clean_restoring_fraction": 0.3421875,
+        "brightness_heading_error_deg": 9.9375,
+        "brightness_heading_change_deg": 0.0,
+        "neighbour_overlap": 0.530825125426054,
+        "distant_overlap": 0.4071442365646362,
+        "effective_rank": 56.088332939147946
+      },
+      "finite_timing": {
+        "clean_heading_error_deg": 11.1875,
+        "clean_tangent_margin": 0.017428587190806866,
+        "clean_restoring_fraction": 0.35078125,
+        "brightness_heading_error_deg": 11.1875,
+        "brightness_heading_change_deg": 0.0125,
+        "neighbour_overlap": 0.5277440100908279,
+        "distant_overlap": 0.4067137621343136,
+        "effective_rank": 56.26399192810059
+      }
+    },
+    {
+      "method": "ardin_input",
+      "label": "Ardin-style input",
+      "fixed_count": {
+        "clean_heading_error_deg": 17.8125,
+        "clean_tangent_margin": 0.0029687464237213137,
+        "clean_restoring_fraction": 0.378125,
+        "brightness_heading_error_deg": 17.8125,
+        "brightness_heading_change_deg": 0.13125,
+        "neighbour_overlap": 0.6764300242066383,
+        "distant_overlap": 0.5669765904545784,
+        "effective_rank": 41.16694946289063
+      },
+      "finite_timing": {
+        "clean_heading_error_deg": 16.875,
+        "clean_tangent_margin": 0.003489075507968664,
+        "clean_restoring_fraction": 0.39375,
+        "brightness_heading_error_deg": 16.875,
+        "brightness_heading_change_deg": 0.10625,
+        "neighbour_overlap": 0.6800908863544464,
+        "distant_overlap": 0.5726909652352333,
+        "effective_rank": 41.30744409561157
+      }
+    },
+    {
+      "method": "no_hex",
+      "label": "Without hex smoothing",
+      "fixed_count": {
+        "clean_heading_error_deg": 11.09375,
+        "clean_tangent_margin": 0.016281227674335243,
+        "clean_restoring_fraction": 0.33984375,
+        "brightness_heading_error_deg": 11.53125,
+        "brightness_heading_change_deg": 3.33125,
+        "neighbour_overlap": 0.49612770676612855,
+        "distant_overlap": 0.38202115446329116,
+        "effective_rank": 59.44975986480713
+      },
+      "finite_timing": {
+        "clean_heading_error_deg": 12.46875,
+        "clean_tangent_margin": 0.013617333024740219,
+        "clean_restoring_fraction": 0.3640625,
+        "brightness_heading_error_deg": 12.6875,
+        "brightness_heading_change_deg": 4.3625,
+        "neighbour_overlap": 0.4953106701374054,
+        "distant_overlap": 0.3837727397680283,
+        "effective_rank": 59.34302644729614
+      }
+    },
+    {
+      "method": "no_adapt",
+      "label": "Without adaptation",
+      "fixed_count": {
+        "clean_heading_error_deg": 13.4375,
+        "clean_tangent_margin": 0.0023984335362911223,
+        "clean_restoring_fraction": 0.3546875,
+        "brightness_heading_error_deg": 22.40625,
+        "brightness_heading_change_deg": 16.975,
+        "neighbour_overlap": 0.7119811624288559,
+        "distant_overlap": 0.6134679928421974,
+        "effective_rank": 43.55839195251465
+      },
+      "finite_timing": {
+        "clean_heading_error_deg": 16.25,
+        "clean_tangent_margin": -0.0015658095479011535,
+        "clean_restoring_fraction": 0.37890625,
+        "brightness_heading_error_deg": 27.71875,
+        "brightness_heading_change_deg": 23.29375,
+        "neighbour_overlap": 0.7072961941361428,
+        "distant_overlap": 0.6111298695206642,
+        "effective_rank": 43.20716924667359
+      }
+    },
+    {
+      "method": "no_dog",
+      "label": "Without form filter bank",
+      "fixed_count": {
+        "clean_heading_error_deg": 12.96875,
+        "clean_tangent_margin": 0.014398416830226779,
+        "clean_restoring_fraction": 0.3421875,
+        "brightness_heading_error_deg": 13.0625,
+        "brightness_heading_change_deg": 2.1125,
+        "neighbour_overlap": 0.523004749417305,
+        "distant_overlap": 0.4048526965081692,
+        "effective_rank": 56.34880704879761
+      },
+      "finite_timing": {
+        "clean_heading_error_deg": 13.8125,
+        "clean_tangent_margin": 0.013171127531677485,
+        "clean_restoring_fraction": 0.35390625,
+        "brightness_heading_error_deg": 13.625,
+        "brightness_heading_change_deg": 2.8375,
+        "neighbour_overlap": 0.5231033839285374,
+        "distant_overlap": 0.4068766713142395,
+        "effective_rank": 55.92801961898804
+      }
+    },
+    {
+      "method": "apia_simple_colour",
+      "label": "Apia form + simple colour",
+      "fixed_count": {
+        "clean_heading_error_deg": 10.5,
+        "clean_tangent_margin": 0.020703098690137266,
+        "clean_restoring_fraction": 0.34296875,
+        "brightness_heading_error_deg": 10.4375,
+        "brightness_heading_change_deg": 0.96875,
+        "neighbour_overlap": 0.49975939020514487,
+        "distant_overlap": 0.38137429803609846,
+        "effective_rank": 58.35178461074829
+      },
+      "finite_timing": {
+        "clean_heading_error_deg": 11.46875,
+        "clean_tangent_margin": 0.016322921868413685,
+        "clean_restoring_fraction": 0.3546875,
+        "brightness_heading_error_deg": 11.65625,
+        "brightness_heading_change_deg": 1.11875,
+        "neighbour_overlap": 0.49563817083835604,
+        "distant_overlap": 0.3806621879339218,
+        "effective_rank": 58.54027118682861
+      }
+    },
+    {
+      "method": "sobel_apia_colour",
+      "label": "Sobel form + Apia colour",
+      "fixed_count": {
+        "clean_heading_error_deg": 11.09375,
+        "clean_tangent_margin": 0.018851541448384523,
+        "clean_restoring_fraction": 0.32890625,
+        "brightness_heading_error_deg": 11.65625,
+        "brightness_heading_change_deg": 1.96875,
+        "neighbour_overlap": 0.5849768400192261,
+        "distant_overlap": 0.45645653679966924,
+        "effective_rank": 51.09504117965698
+      },
+      "finite_timing": {
+        "clean_heading_error_deg": 11.84375,
+        "clean_tangent_margin": 0.015713011659681798,
+        "clean_restoring_fraction": 0.3625,
+        "brightness_heading_error_deg": 12.03125,
+        "brightness_heading_change_deg": 2.475,
+        "neighbour_overlap": 0.5828241348266602,
+        "distant_overlap": 0.45661981627345083,
+        "effective_rank": 50.94296255111694
+      }
+    }
+  ],
+  "feature_geometry": [
+    {
+      "method": "apiaviz",
+      "stream": "form",
+      "neighbour_cosine": 0.6851260215044022,
+      "distant_cosine": 0.5131747163832188,
+      "effective_rank": 25.783992767333984,
+      "plane_energy_shares": [
+        0.050922919530421495,
+        0.0462776618078351,
+        0.9027994200587273
+      ]
+    },
+    {
+      "method": "apiaviz",
+      "stream": "colour",
+      "neighbour_cosine": 0.8027821332216263,
+      "distant_cosine": 0.7309054881334305,
+      "effective_rank": 24.323843955993652,
+      "plane_energy_shares": [
+        0.7731626629829407,
+        0.22683733887970448
+      ]
+    },
+    {
+      "method": "gray",
+      "stream": "form",
+      "neighbour_cosine": 0.8851149678230286,
+      "distant_cosine": 0.798266775906086,
+      "effective_rank": 17.722362756729126,
+      "plane_energy_shares": [
+        0.3333333544433117,
+        0.3333333544433117,
+        0.3333333544433117
+      ]
+    },
+    {
+      "method": "gray",
+      "stream": "colour",
+      "neighbour_cosine": 0.8851149454712868,
+      "distant_cosine": 0.7982667237520218,
+      "effective_rank": 17.722365021705627,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "method": "raw_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8670118525624275,
+      "distant_cosine": 0.7819424420595169,
+      "effective_rank": 22.39074182510376,
+      "plane_energy_shares": [
+        0.2923070676624775,
+        0.1479454468935728,
+        0.5597474947571754
+      ]
+    },
+    {
+      "method": "raw_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8597116842865944,
+      "distant_cosine": 0.7753994911909103,
+      "effective_rank": 24.19790530204773,
+      "plane_energy_shares": [
+        0.2088757622987032,
+        0.791124239563942
+      ]
+    },
+    {
+      "method": "opponent",
+      "stream": "form",
+      "neighbour_cosine": 0.8851149678230286,
+      "distant_cosine": 0.798266775906086,
+      "effective_rank": 17.722362756729126,
+      "plane_energy_shares": [
+        0.3333333544433117,
+        0.3333333544433117,
+        0.3333333544433117
+      ]
+    },
+    {
+      "method": "opponent",
+      "stream": "colour",
+      "neighbour_cosine": 0.7134494855999947,
+      "distant_cosine": 0.6352606862783432,
+      "effective_rank": 37.12622022628784,
+      "plane_energy_shares": [
+        0.7715757340192795,
+        0.22842424921691418
+      ]
+    },
+    {
+      "method": "sobel_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8065781742334366,
+      "distant_cosine": 0.6707757115364075,
+      "effective_rank": 23.065513134002686,
+      "plane_energy_shares": [
+        0.0925800921395421,
+        0.41908183321356773,
+        0.48833806067705154
+      ]
+    },
+    {
+      "method": "sobel_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7134494855999947,
+      "distant_cosine": 0.6352606862783432,
+      "effective_rank": 37.12622022628784,
+      "plane_energy_shares": [
+        0.7715757340192795,
+        0.22842424921691418
+      ]
+    },
+    {
+      "method": "ardin_input",
+      "stream": "form",
+      "neighbour_cosine": 0.8902354761958122,
+      "distant_cosine": 0.813150517642498,
+      "effective_rank": 17.36728847026825,
+      "plane_energy_shares": [
+        0.3333333618938923,
+        0.3333333618938923,
+        0.3333333618938923
+      ]
+    },
+    {
+      "method": "ardin_input",
+      "stream": "colour",
+      "neighbour_cosine": 0.8902353718876839,
+      "distant_cosine": 0.813150517642498,
+      "effective_rank": 17.36728811264038,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "method": "no_hex",
+      "stream": "form",
+      "neighbour_cosine": 0.6495877280831337,
+      "distant_cosine": 0.47366663813591003,
+      "effective_rank": 29.16296124458313,
+      "plane_energy_shares": [
+        0.08174435701221228,
+        0.0770964166149497,
+        0.8411591947078705
+      ]
+    },
+    {
+      "method": "no_hex",
+      "stream": "colour",
+      "neighbour_cosine": 0.7459114268422127,
+      "distant_cosine": 0.6728421375155449,
+      "effective_rank": 34.67656064033508,
+      "plane_energy_shares": [
+        0.7794881761074066,
+        0.2205118052661419
+      ]
+    },
+    {
+      "method": "no_adapt",
+      "stream": "form",
+      "neighbour_cosine": 0.9576978385448456,
+      "distant_cosine": 0.9100034236907959,
+      "effective_rank": 9.886577427387238,
+      "plane_energy_shares": [
+        0.07163065765053034,
+        0.07079417444765568,
+        0.8575751632452011
+      ]
+    },
+    {
+      "method": "no_adapt",
+      "stream": "colour",
+      "neighbour_cosine": 0.7958744242787361,
+      "distant_cosine": 0.7229197025299072,
+      "effective_rank": 24.539937257766724,
+      "plane_energy_shares": [
+        0.7790372297167778,
+        0.2209627702832222
+      ]
+    },
+    {
+      "method": "no_dog",
+      "stream": "form",
+      "neighbour_cosine": 0.6621837541460991,
+      "distant_cosine": 0.4955078437924385,
+      "effective_rank": 29.094096422195435,
+      "plane_energy_shares": [
+        0.14144966937601566,
+        0.28050458803772926,
+        0.5780457481741905
+      ]
+    },
+    {
+      "method": "no_dog",
+      "stream": "colour",
+      "neighbour_cosine": 0.8027821332216263,
+      "distant_cosine": 0.7309054881334305,
+      "effective_rank": 24.323843955993652,
+      "plane_energy_shares": [
+        0.7731626629829407,
+        0.22683733887970448
+      ]
+    },
+    {
+      "method": "apia_simple_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.6851260215044022,
+      "distant_cosine": 0.5131747163832188,
+      "effective_rank": 25.783992767333984,
+      "plane_energy_shares": [
+        0.050922919530421495,
+        0.0462776618078351,
+        0.9027994200587273
+      ]
+    },
+    {
+      "method": "apia_simple_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7134494855999947,
+      "distant_cosine": 0.6352606862783432,
+      "effective_rank": 37.12622022628784,
+      "plane_energy_shares": [
+        0.7715757340192795,
+        0.22842424921691418
+      ]
+    },
+    {
+      "method": "sobel_apia_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8065781742334366,
+      "distant_cosine": 0.6707757115364075,
+      "effective_rank": 23.065513134002686,
+      "plane_energy_shares": [
+        0.0925800921395421,
+        0.41908183321356773,
+        0.48833806067705154
+      ]
+    },
+    {
+      "method": "sobel_apia_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8027821332216263,
+      "distant_cosine": 0.7309054881334305,
+      "effective_rank": 24.323843955993652,
+      "plane_energy_shares": [
+        0.7731626629829407,
+        0.22683733887970448
+      ]
+    }
+  ],
+  "scope": "Explanatory controls; no extra confirmatory p-values. Fixed-count ranking changes timing as well as spike budget. Pre-projection features do not vary across wiring seeds."
+}

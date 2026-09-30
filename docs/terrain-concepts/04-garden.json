@@ -1,0 +1,54 @@
+{
+  "concept": "garden",
+  "title": "Garden edge",
+  "description": "Broad green leaves, small white and yellow flowers, soil and rounded stones.",
+  "geometry_seed": 20260933,
+  "render_seed": 20260929,
+  "sun": {
+    "azimuth_deg": 35.0,
+    "elevation_deg": 38.0,
+    "convention": "azimuth counterclockwise from world +X; +Z up",
+    "energy": 4.0,
+    "angle_deg": 0.7
+  },
+  "camera": {
+    "eye_height_above_ground_m": 0.01,
+    "position": [
+      0.0,
+      0.0,
+      0.009999999776482582
+    ],
+    "perspective_hfov_deg": 100,
+    "perspective_pitch_deg": 2.862405226111748,
+    "depth_of_field": false,
+    "heading": "world +Y"
+  },
+  "panorama": {
+    "hfov_deg": 296,
+    "elevation_min_deg": -15,
+    "elevation_max_deg": 60
+  },
+  "render": {
+    "engine": "Cycles",
+    "device": "GPU",
+    "samples": 64,
+    "view_transform": "AgX",
+    "exposure": 0.3,
+    "denoising": true,
+    "blender": "5.2.2 LTS"
+  },
+  "sky": {
+    "model": "HOSEK_WILKIE",
+    "strength": 3.0,
+    "turbidity": 2.5,
+    "ground_albedo": 0.25
+  },
+  "objects": 380,
+  "mesh_faces": 159375,
+  "images": [
+    "04-garden.png",
+    "04-garden-panorama.png"
+  ],
+  "draft": false,
+  "scope": "Visual terrain prototypes only. Not used for training, evaluation or model input. All assets procedural; no external photographs or generated images."
+}

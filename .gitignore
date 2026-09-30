@@ -222,3 +222,28 @@ apiaviz/models/
 apiaviz/output/
 .vscode/
 apiaviz/mbant/data/
+
+# Large research artifacts stay local; transfer or regenerate them separately.
+# Keep source, protocols, numerical summaries and small documentation figures.
+*.blend
+*.blend[0-9]*
+*.mp4
+*.mov
+*.webm
+*.avi
+*.mkv
+*.exr
+*.hdr
+*.npz
+*.pt
+*.ckpt
+*.safetensors
+*.onnx
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.tar
+*.tar.*
+*.tgz
+*.7z

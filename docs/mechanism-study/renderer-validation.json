@@ -1,0 +1,33 @@
+{
+  "images": 120,
+  "pixel_mismatches": 0,
+  "original_seconds": 7.894524465780705,
+  "sparse_seconds": 0.28802050719968975,
+  "speedup": 27.409591568795104,
+  "pilot_paths": [
+    {
+      "ant": 5,
+      "steps": 82,
+      "trajectory_exact": true,
+      "max_score_difference": 0.0
+    },
+    {
+      "ant": 8,
+      "steps": 200,
+      "trajectory_exact": true,
+      "max_score_difference": 0.0
+    },
+    {
+      "ant": 11,
+      "steps": 76,
+      "trajectory_exact": true,
+      "max_score_difference": 0.0
+    },
+    {
+      "ant": 14,
+      "steps": 80,
+      "trajectory_exact": true,
+      "max_score_difference": 0.0
+    }
+  ]
+}

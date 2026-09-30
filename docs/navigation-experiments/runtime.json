@@ -1,0 +1,11 @@
+{
+  "python": "3.12.11 | packaged by conda-forge | (main, Jun  4 2025, 14:38:53) [Clang 18.1.8 ]",
+  "platform": "macOS-14.8.3-arm64-arm-64bit",
+  "machine": "arm64",
+  "torch": "2.7.1",
+  "numpy": "1.26.4",
+  "pillow": "11.3.0",
+  "scipy": "1.16.0",
+  "threads": 1,
+  "device": "CPU for encoders; Blender Cycles Metal for rendering"
+}

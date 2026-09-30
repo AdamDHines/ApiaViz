@@ -1,0 +1,3967 @@
+{
+  "views_checked": 440,
+  "mismatches": [],
+  "checks": [
+    {
+      "ant": 4,
+      "seed": 19,
+      "method": "apiaviz",
+      "trace": "ant-4-seed-19-apiaviz.json",
+      "step": 60,
+      "deviation_m": 0.12689208053855336,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 19,
+      "method": "gray",
+      "trace": "ant-4-seed-19-gray.json",
+      "step": 31,
+      "deviation_m": 0.10946690723994604,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 19,
+      "method": "raw_colour",
+      "trace": "ant-4-seed-19-raw_colour.json",
+      "step": 57,
+      "deviation_m": 0.1198430910356175,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 19,
+      "method": "opponent",
+      "trace": "ant-4-seed-19-opponent.json",
+      "step": 82,
+      "deviation_m": 0.13291968781621802,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 19,
+      "method": "sobel_colour",
+      "trace": "ant-4-seed-19-sobel_colour.json",
+      "step": 72,
+      "deviation_m": 0.13133228190984317,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 19,
+      "method": "ardin_input",
+      "trace": "ant-4-seed-19-ardin_input.json",
+      "step": 136,
+      "deviation_m": 0.9050100347440677,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 19,
+      "method": "no_hex",
+      "trace": "ant-4-seed-19-no_hex.json",
+      "step": 66,
+      "deviation_m": 0.806752347747234,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 19,
+      "method": "no_adapt",
+      "trace": "ant-4-seed-19-no_adapt.json",
+      "step": 200,
+      "deviation_m": 5.741758410906111,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 19,
+      "method": "no_dog",
+      "trace": "ant-4-seed-19-no_dog.json",
+      "step": 82,
+      "deviation_m": 0.08952715234762611,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 19,
+      "method": "apia_simple_colour",
+      "trace": "ant-4-seed-19-apia_simple_colour.json",
+      "step": 67,
+      "deviation_m": 0.08726018679028975,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 19,
+      "method": "sobel_apia_colour",
+      "trace": "ant-4-seed-19-sobel_apia_colour.json",
+      "step": 162,
+      "deviation_m": 4.276012418652124,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "method": "apiaviz",
+      "trace": "ant-4-seed-31-apiaviz.json",
+      "step": 53,
+      "deviation_m": 1.1659250238785948,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "method": "gray",
+      "trace": "ant-4-seed-31-gray.json",
+      "step": 46,
+      "deviation_m": 0.25573207013632715,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "method": "raw_colour",
+      "trace": "ant-4-seed-31-raw_colour.json",
+      "step": 42,
+      "deviation_m": 0.3804814560763369,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "method": "opponent",
+      "trace": "ant-4-seed-31-opponent.json",
+      "step": 69,
+      "deviation_m": 0.032437721319056326,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "method": "sobel_colour",
+      "trace": "ant-4-seed-31-sobel_colour.json",
+      "step": 57,
+      "deviation_m": 0.13934766014998884,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "method": "ardin_input",
+      "trace": "ant-4-seed-31-ardin_input.json",
+      "step": 200,
+      "deviation_m": 5.237654181116343,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "method": "no_hex",
+      "trace": "ant-4-seed-31-no_hex.json",
+      "step": 31,
+      "deviation_m": 0.08342228848684574,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "method": "no_adapt",
+      "trace": "ant-4-seed-31-no_adapt.json",
+      "step": 172,
+      "deviation_m": 1.1878050704948706,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "method": "no_dog",
+      "trace": "ant-4-seed-31-no_dog.json",
+      "step": 44,
+      "deviation_m": 0.9824627913940146,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "method": "apia_simple_colour",
+      "trace": "ant-4-seed-31-apia_simple_colour.json",
+      "step": 72,
+      "deviation_m": 0.7461026367810043,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "method": "sobel_apia_colour",
+      "trace": "ant-4-seed-31-sobel_apia_colour.json",
+      "step": 196,
+      "deviation_m": 4.478336590945041,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "method": "apiaviz",
+      "trace": "ant-4-seed-43-apiaviz.json",
+      "step": 73,
+      "deviation_m": 0.14309594465778977,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "method": "gray",
+      "trace": "ant-4-seed-43-gray.json",
+      "step": 35,
+      "deviation_m": 0.4317488604903178,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "method": "raw_colour",
+      "trace": "ant-4-seed-43-raw_colour.json",
+      "step": 39,
+      "deviation_m": 0.17669664751501726,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "method": "opponent",
+      "trace": "ant-4-seed-43-opponent.json",
+      "step": 80,
+      "deviation_m": 0.1751063642329686,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "method": "sobel_colour",
+      "trace": "ant-4-seed-43-sobel_colour.json",
+      "step": 57,
+      "deviation_m": 1.076564770575637,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "method": "ardin_input",
+      "trace": "ant-4-seed-43-ardin_input.json",
+      "step": 67,
+      "deviation_m": 0.7876386848798667,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "method": "no_hex",
+      "trace": "ant-4-seed-43-no_hex.json",
+      "step": 82,
+      "deviation_m": 0.13233435966122709,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "method": "no_adapt",
+      "trace": "ant-4-seed-43-no_adapt.json",
+      "step": 21,
+      "deviation_m": 0.5622726760853478,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "method": "no_dog",
+      "trace": "ant-4-seed-43-no_dog.json",
+      "step": 200,
+      "deviation_m": 7.2677144739481525,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "method": "apia_simple_colour",
+      "trace": "ant-4-seed-43-apia_simple_colour.json",
+      "step": 82,
+      "deviation_m": 0.0695953762058826,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "method": "sobel_apia_colour",
+      "trace": "ant-4-seed-43-sobel_apia_colour.json",
+      "step": 91,
+      "deviation_m": 0.800250117474414,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "method": "apiaviz",
+      "trace": "ant-4-seed-59-apiaviz.json",
+      "step": 80,
+      "deviation_m": 1.0684485793491976,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "method": "gray",
+      "trace": "ant-4-seed-59-gray.json",
+      "step": 78,
+      "deviation_m": 1.0342163995650469,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "method": "raw_colour",
+      "trace": "ant-4-seed-59-raw_colour.json",
+      "step": 111,
+      "deviation_m": 1.208542754274053,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "method": "opponent",
+      "trace": "ant-4-seed-59-opponent.json",
+      "step": 42,
+      "deviation_m": 0.25612876182286054,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "method": "sobel_colour",
+      "trace": "ant-4-seed-59-sobel_colour.json",
+      "step": 45,
+      "deviation_m": 0.9611060526220833,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "method": "ardin_input",
+      "trace": "ant-4-seed-59-ardin_input.json",
+      "step": 188,
+      "deviation_m": 1.3380716928754404,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "method": "no_hex",
+      "trace": "ant-4-seed-59-no_hex.json",
+      "step": 145,
+      "deviation_m": 4.369009730056501,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "method": "no_adapt",
+      "trace": "ant-4-seed-59-no_adapt.json",
+      "step": 31,
+      "deviation_m": 0.33924105810635713,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "method": "no_dog",
+      "trace": "ant-4-seed-59-no_dog.json",
+      "step": 78,
+      "deviation_m": 0.08705829425265693,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "method": "apia_simple_colour",
+      "trace": "ant-4-seed-59-apia_simple_colour.json",
+      "step": 200,
+      "deviation_m": 2.5690158013152553,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "method": "sobel_apia_colour",
+      "trace": "ant-4-seed-59-sobel_apia_colour.json",
+      "step": 53,
+      "deviation_m": 0.07286820533399031,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "method": "apiaviz",
+      "trace": "ant-4-seed-71-apiaviz.json",
+      "step": 81,
+      "deviation_m": 0.08601785829821712,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "method": "gray",
+      "trace": "ant-4-seed-71-gray.json",
+      "step": 45,
+      "deviation_m": 0.8617212462528423,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "method": "raw_colour",
+      "trace": "ant-4-seed-71-raw_colour.json",
+      "step": 83,
+      "deviation_m": 1.0926256430076027,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "method": "opponent",
+      "trace": "ant-4-seed-71-opponent.json",
+      "step": 77,
+      "deviation_m": 0.10575232591944092,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "method": "sobel_colour",
+      "trace": "ant-4-seed-71-sobel_colour.json",
+      "step": 115,
+      "deviation_m": 1.6680349650153623,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "method": "ardin_input",
+      "trace": "ant-4-seed-71-ardin_input.json",
+      "step": 105,
+      "deviation_m": 1.2933774730991292,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "method": "no_hex",
+      "trace": "ant-4-seed-71-no_hex.json",
+      "step": 200,
+      "deviation_m": 4.934930018442149,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "method": "no_adapt",
+      "trace": "ant-4-seed-71-no_adapt.json",
+      "step": 40,
+      "deviation_m": 0.1276126200222854,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "method": "no_dog",
+      "trace": "ant-4-seed-71-no_dog.json",
+      "step": 82,
+      "deviation_m": 0.10739752225220893,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "method": "apia_simple_colour",
+      "trace": "ant-4-seed-71-apia_simple_colour.json",
+      "step": 87,
+      "deviation_m": 0.6573995820523244,
+      "pixels_different": 0
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "method": "sobel_apia_colour",
+      "trace": "ant-4-seed-71-sobel_apia_colour.json",
+      "step": 72,
+      "deviation_m": 0.13452369345155823,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "method": "apiaviz",
+      "trace": "ant-6-seed-19-apiaviz.json",
+      "step": 200,
+      "deviation_m": 7.89003308093235,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "method": "gray",
+      "trace": "ant-6-seed-19-gray.json",
+      "step": 200,
+      "deviation_m": 5.21035943029273,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "method": "raw_colour",
+      "trace": "ant-6-seed-19-raw_colour.json",
+      "step": 77,
+      "deviation_m": 1.236430634750311,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "method": "opponent",
+      "trace": "ant-6-seed-19-opponent.json",
+      "step": 200,
+      "deviation_m": 2.8125752517450344,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "method": "sobel_colour",
+      "trace": "ant-6-seed-19-sobel_colour.json",
+      "step": 200,
+      "deviation_m": 3.3155713324958396,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "method": "ardin_input",
+      "trace": "ant-6-seed-19-ardin_input.json",
+      "step": 107,
+      "deviation_m": 1.5982231596750232,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "method": "no_hex",
+      "trace": "ant-6-seed-19-no_hex.json",
+      "step": 200,
+      "deviation_m": 3.1216173853931437,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "method": "no_adapt",
+      "trace": "ant-6-seed-19-no_adapt.json",
+      "step": 76,
+      "deviation_m": 0.20237817918336276,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "method": "no_dog",
+      "trace": "ant-6-seed-19-no_dog.json",
+      "step": 78,
+      "deviation_m": 0.17621387796617008,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "method": "apia_simple_colour",
+      "trace": "ant-6-seed-19-apia_simple_colour.json",
+      "step": 200,
+      "deviation_m": 7.400858576669617,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "method": "sobel_apia_colour",
+      "trace": "ant-6-seed-19-sobel_apia_colour.json",
+      "step": 200,
+      "deviation_m": 6.913185459512039,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "method": "apiaviz",
+      "trace": "ant-6-seed-31-apiaviz.json",
+      "step": 200,
+      "deviation_m": 2.8228135180047067,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "method": "gray",
+      "trace": "ant-6-seed-31-gray.json",
+      "step": 81,
+      "deviation_m": 0.13744552132649732,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "method": "raw_colour",
+      "trace": "ant-6-seed-31-raw_colour.json",
+      "step": 24,
+      "deviation_m": 0.25267281033003286,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "method": "opponent",
+      "trace": "ant-6-seed-31-opponent.json",
+      "step": 106,
+      "deviation_m": 1.7280055667243301,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "method": "sobel_colour",
+      "trace": "ant-6-seed-31-sobel_colour.json",
+      "step": 200,
+      "deviation_m": 5.9604688903366805,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "method": "ardin_input",
+      "trace": "ant-6-seed-31-ardin_input.json",
+      "step": 58,
+      "deviation_m": 1.5259729438599134,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "method": "no_hex",
+      "trace": "ant-6-seed-31-no_hex.json",
+      "step": 38,
+      "deviation_m": 0.16535457949374746,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "method": "no_adapt",
+      "trace": "ant-6-seed-31-no_adapt.json",
+      "step": 153,
+      "deviation_m": 1.6430305556282399,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "method": "no_dog",
+      "trace": "ant-6-seed-31-no_dog.json",
+      "step": 200,
+      "deviation_m": 3.7035074987182517,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "method": "apia_simple_colour",
+      "trace": "ant-6-seed-31-apia_simple_colour.json",
+      "step": 200,
+      "deviation_m": 6.566807294184893,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "method": "sobel_apia_colour",
+      "trace": "ant-6-seed-31-sobel_apia_colour.json",
+      "step": 44,
+      "deviation_m": 0.10115176806750392,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "method": "apiaviz",
+      "trace": "ant-6-seed-43-apiaviz.json",
+      "step": 51,
+      "deviation_m": 0.041252167498969795,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "method": "gray",
+      "trace": "ant-6-seed-43-gray.json",
+      "step": 104,
+      "deviation_m": 1.5714512221514247,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "method": "raw_colour",
+      "trace": "ant-6-seed-43-raw_colour.json",
+      "step": 81,
+      "deviation_m": 0.13959635164727136,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "method": "opponent",
+      "trace": "ant-6-seed-43-opponent.json",
+      "step": 53,
+      "deviation_m": 0.15307175205381776,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "method": "sobel_colour",
+      "trace": "ant-6-seed-43-sobel_colour.json",
+      "step": 38,
+      "deviation_m": 0.06950637425670528,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "method": "ardin_input",
+      "trace": "ant-6-seed-43-ardin_input.json",
+      "step": 200,
+      "deviation_m": 7.171789562217667,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "method": "no_hex",
+      "trace": "ant-6-seed-43-no_hex.json",
+      "step": 162,
+      "deviation_m": 1.3187798355476394,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "method": "no_adapt",
+      "trace": "ant-6-seed-43-no_adapt.json",
+      "step": 195,
+      "deviation_m": 5.866859639281195,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "method": "no_dog",
+      "trace": "ant-6-seed-43-no_dog.json",
+      "step": 65,
+      "deviation_m": 0.04485338892513409,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "method": "apia_simple_colour",
+      "trace": "ant-6-seed-43-apia_simple_colour.json",
+      "step": 37,
+      "deviation_m": 0.12242406193462767,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "method": "sobel_apia_colour",
+      "trace": "ant-6-seed-43-sobel_apia_colour.json",
+      "step": 74,
+      "deviation_m": 0.20446068812270002,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "method": "apiaviz",
+      "trace": "ant-6-seed-59-apiaviz.json",
+      "step": 144,
+      "deviation_m": 2.8306264720639875,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "method": "gray",
+      "trace": "ant-6-seed-59-gray.json",
+      "step": 104,
+      "deviation_m": 1.7484244640356315,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "method": "raw_colour",
+      "trace": "ant-6-seed-59-raw_colour.json",
+      "step": 133,
+      "deviation_m": 1.9176309719183526,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "method": "opponent",
+      "trace": "ant-6-seed-59-opponent.json",
+      "step": 138,
+      "deviation_m": 2.4099603729960695,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "method": "sobel_colour",
+      "trace": "ant-6-seed-59-sobel_colour.json",
+      "step": 80,
+      "deviation_m": 0.13955330288140844,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "method": "ardin_input",
+      "trace": "ant-6-seed-59-ardin_input.json",
+      "step": 200,
+      "deviation_m": 2.081718088031398,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "method": "no_hex",
+      "trace": "ant-6-seed-59-no_hex.json",
+      "step": 47,
+      "deviation_m": 1.0008158840327335,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "method": "no_adapt",
+      "trace": "ant-6-seed-59-no_adapt.json",
+      "step": 103,
+      "deviation_m": 2.001936180035467,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "method": "no_dog",
+      "trace": "ant-6-seed-59-no_dog.json",
+      "step": 50,
+      "deviation_m": 0.060471940441830865,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "method": "apia_simple_colour",
+      "trace": "ant-6-seed-59-apia_simple_colour.json",
+      "step": 192,
+      "deviation_m": 1.803589793201113,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "method": "sobel_apia_colour",
+      "trace": "ant-6-seed-59-sobel_apia_colour.json",
+      "step": 81,
+      "deviation_m": 0.13919280933834263,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "method": "apiaviz",
+      "trace": "ant-6-seed-71-apiaviz.json",
+      "step": 144,
+      "deviation_m": 2.0637362098290164,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "method": "gray",
+      "trace": "ant-6-seed-71-gray.json",
+      "step": 80,
+      "deviation_m": 0.06683879128228715,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "method": "raw_colour",
+      "trace": "ant-6-seed-71-raw_colour.json",
+      "step": 160,
+      "deviation_m": 4.991559468225063,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "method": "opponent",
+      "trace": "ant-6-seed-71-opponent.json",
+      "step": 164,
+      "deviation_m": 3.956236913030068,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "method": "sobel_colour",
+      "trace": "ant-6-seed-71-sobel_colour.json",
+      "step": 44,
+      "deviation_m": 0.0720484875956004,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "method": "ardin_input",
+      "trace": "ant-6-seed-71-ardin_input.json",
+      "step": 200,
+      "deviation_m": 6.878045544282048,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "method": "no_hex",
+      "trace": "ant-6-seed-71-no_hex.json",
+      "step": 83,
+      "deviation_m": 0.6532775666328474,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "method": "no_adapt",
+      "trace": "ant-6-seed-71-no_adapt.json",
+      "step": 200,
+      "deviation_m": 5.02551088242716,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "method": "no_dog",
+      "trace": "ant-6-seed-71-no_dog.json",
+      "step": 200,
+      "deviation_m": 4.56158886149421,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "method": "apia_simple_colour",
+      "trace": "ant-6-seed-71-apia_simple_colour.json",
+      "step": 78,
+      "deviation_m": 1.3419775431375636,
+      "pixels_different": 0
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "method": "sobel_apia_colour",
+      "trace": "ant-6-seed-71-sobel_apia_colour.json",
+      "step": 49,
+      "deviation_m": 0.07734621219733231,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "method": "apiaviz",
+      "trace": "ant-7-seed-19-apiaviz.json",
+      "step": 11,
+      "deviation_m": 0.7391007877685607,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "method": "gray",
+      "trace": "ant-7-seed-19-gray.json",
+      "step": 23,
+      "deviation_m": 0.3905726581702729,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "method": "raw_colour",
+      "trace": "ant-7-seed-19-raw_colour.json",
+      "step": 142,
+      "deviation_m": 1.5184588646623616,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "method": "opponent",
+      "trace": "ant-7-seed-19-opponent.json",
+      "step": 168,
+      "deviation_m": 3.949745174442346,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "method": "sobel_colour",
+      "trace": "ant-7-seed-19-sobel_colour.json",
+      "step": 169,
+      "deviation_m": 5.322940630734602,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "method": "ardin_input",
+      "trace": "ant-7-seed-19-ardin_input.json",
+      "step": 166,
+      "deviation_m": 1.681992325657936,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "method": "no_hex",
+      "trace": "ant-7-seed-19-no_hex.json",
+      "step": 200,
+      "deviation_m": 3.4769364384523334,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "method": "no_adapt",
+      "trace": "ant-7-seed-19-no_adapt.json",
+      "step": 200,
+      "deviation_m": 4.718026985147081,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "method": "no_dog",
+      "trace": "ant-7-seed-19-no_dog.json",
+      "step": 162,
+      "deviation_m": 3.2026734047055547,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "method": "apia_simple_colour",
+      "trace": "ant-7-seed-19-apia_simple_colour.json",
+      "step": 181,
+      "deviation_m": 5.437835220475047,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "method": "sobel_apia_colour",
+      "trace": "ant-7-seed-19-sobel_apia_colour.json",
+      "step": 150,
+      "deviation_m": 1.7363753165564315,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "method": "apiaviz",
+      "trace": "ant-7-seed-31-apiaviz.json",
+      "step": 110,
+      "deviation_m": 2.357857896272532,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "method": "gray",
+      "trace": "ant-7-seed-31-gray.json",
+      "step": 170,
+      "deviation_m": 3.5415187191038098,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "method": "raw_colour",
+      "trace": "ant-7-seed-31-raw_colour.json",
+      "step": 9,
+      "deviation_m": 0.6401017457532435,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "method": "opponent",
+      "trace": "ant-7-seed-31-opponent.json",
+      "step": 200,
+      "deviation_m": 8.808049535518643,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "method": "sobel_colour",
+      "trace": "ant-7-seed-31-sobel_colour.json",
+      "step": 200,
+      "deviation_m": 9.929823905914382,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "method": "ardin_input",
+      "trace": "ant-7-seed-31-ardin_input.json",
+      "step": 200,
+      "deviation_m": 8.531601247128362,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "method": "no_hex",
+      "trace": "ant-7-seed-31-no_hex.json",
+      "step": 98,
+      "deviation_m": 2.5091716429180786,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "method": "no_adapt",
+      "trace": "ant-7-seed-31-no_adapt.json",
+      "step": 194,
+      "deviation_m": 3.700295093451216,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "method": "no_dog",
+      "trace": "ant-7-seed-31-no_dog.json",
+      "step": 96,
+      "deviation_m": 1.2391966870713473,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "method": "apia_simple_colour",
+      "trace": "ant-7-seed-31-apia_simple_colour.json",
+      "step": 184,
+      "deviation_m": 6.817338761279426,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "method": "sobel_apia_colour",
+      "trace": "ant-7-seed-31-sobel_apia_colour.json",
+      "step": 137,
+      "deviation_m": 3.4643629426612215,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "method": "apiaviz",
+      "trace": "ant-7-seed-43-apiaviz.json",
+      "step": 10,
+      "deviation_m": 0.7651416912499451,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "method": "gray",
+      "trace": "ant-7-seed-43-gray.json",
+      "step": 199,
+      "deviation_m": 4.259141914376869,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "method": "raw_colour",
+      "trace": "ant-7-seed-43-raw_colour.json",
+      "step": 144,
+      "deviation_m": 4.261125092293939,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "method": "opponent",
+      "trace": "ant-7-seed-43-opponent.json",
+      "step": 147,
+      "deviation_m": 6.383249023761912,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "method": "sobel_colour",
+      "trace": "ant-7-seed-43-sobel_colour.json",
+      "step": 99,
+      "deviation_m": 1.8707667526488985,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "method": "ardin_input",
+      "trace": "ant-7-seed-43-ardin_input.json",
+      "step": 70,
+      "deviation_m": 2.468032739453796,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "method": "no_hex",
+      "trace": "ant-7-seed-43-no_hex.json",
+      "step": 195,
+      "deviation_m": 3.4826206536460593,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "method": "no_adapt",
+      "trace": "ant-7-seed-43-no_adapt.json",
+      "step": 158,
+      "deviation_m": 4.924694656794097,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "method": "no_dog",
+      "trace": "ant-7-seed-43-no_dog.json",
+      "step": 31,
+      "deviation_m": 0.7934193162367401,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "method": "apia_simple_colour",
+      "trace": "ant-7-seed-43-apia_simple_colour.json",
+      "step": 170,
+      "deviation_m": 5.113734571416771,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "method": "sobel_apia_colour",
+      "trace": "ant-7-seed-43-sobel_apia_colour.json",
+      "step": 191,
+      "deviation_m": 4.521348646992674,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "method": "apiaviz",
+      "trace": "ant-7-seed-59-apiaviz.json",
+      "step": 114,
+      "deviation_m": 4.245018220190607,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "method": "gray",
+      "trace": "ant-7-seed-59-gray.json",
+      "step": 200,
+      "deviation_m": 5.391242423771714,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "method": "raw_colour",
+      "trace": "ant-7-seed-59-raw_colour.json",
+      "step": 142,
+      "deviation_m": 1.9755659962813206,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "method": "opponent",
+      "trace": "ant-7-seed-59-opponent.json",
+      "step": 49,
+      "deviation_m": 1.5251481427426907,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "method": "sobel_colour",
+      "trace": "ant-7-seed-59-sobel_colour.json",
+      "step": 192,
+      "deviation_m": 4.304578650958051,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "method": "ardin_input",
+      "trace": "ant-7-seed-59-ardin_input.json",
+      "step": 175,
+      "deviation_m": 2.732060137437439,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "method": "no_hex",
+      "trace": "ant-7-seed-59-no_hex.json",
+      "step": 200,
+      "deviation_m": 11.66312442800865,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "method": "no_adapt",
+      "trace": "ant-7-seed-59-no_adapt.json",
+      "step": 124,
+      "deviation_m": 8.1239989427929,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "method": "no_dog",
+      "trace": "ant-7-seed-59-no_dog.json",
+      "step": 70,
+      "deviation_m": 0.5728873444266492,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "method": "apia_simple_colour",
+      "trace": "ant-7-seed-59-apia_simple_colour.json",
+      "step": 184,
+      "deviation_m": 2.5852037252540487,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "method": "sobel_apia_colour",
+      "trace": "ant-7-seed-59-sobel_apia_colour.json",
+      "step": 172,
+      "deviation_m": 3.042181084806187,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "method": "apiaviz",
+      "trace": "ant-7-seed-71-apiaviz.json",
+      "step": 200,
+      "deviation_m": 11.92447425394197,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "method": "gray",
+      "trace": "ant-7-seed-71-gray.json",
+      "step": 200,
+      "deviation_m": 12.826046098403081,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "method": "raw_colour",
+      "trace": "ant-7-seed-71-raw_colour.json",
+      "step": 17,
+      "deviation_m": 0.5353460656749744,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "method": "opponent",
+      "trace": "ant-7-seed-71-opponent.json",
+      "step": 166,
+      "deviation_m": 6.523107439799391,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "method": "sobel_colour",
+      "trace": "ant-7-seed-71-sobel_colour.json",
+      "step": 200,
+      "deviation_m": 5.470499707708575,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "method": "ardin_input",
+      "trace": "ant-7-seed-71-ardin_input.json",
+      "step": 125,
+      "deviation_m": 1.5227208918434036,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "method": "no_hex",
+      "trace": "ant-7-seed-71-no_hex.json",
+      "step": 125,
+      "deviation_m": 3.1103645557407456,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "method": "no_adapt",
+      "trace": "ant-7-seed-71-no_adapt.json",
+      "step": 123,
+      "deviation_m": 1.4877433429835336,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "method": "no_dog",
+      "trace": "ant-7-seed-71-no_dog.json",
+      "step": 200,
+      "deviation_m": 12.384430118822294,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "method": "apia_simple_colour",
+      "trace": "ant-7-seed-71-apia_simple_colour.json",
+      "step": 172,
+      "deviation_m": 3.114326334135348,
+      "pixels_different": 0
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "method": "sobel_apia_colour",
+      "trace": "ant-7-seed-71-sobel_apia_colour.json",
+      "step": 49,
+      "deviation_m": 2.4428060116658807,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "method": "apiaviz",
+      "trace": "ant-9-seed-19-apiaviz.json",
+      "step": 58,
+      "deviation_m": 0.1678019110521998,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "method": "gray",
+      "trace": "ant-9-seed-19-gray.json",
+      "step": 192,
+      "deviation_m": 1.0985507383020423,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "method": "raw_colour",
+      "trace": "ant-9-seed-19-raw_colour.json",
+      "step": 44,
+      "deviation_m": 0.25744184545221516,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "method": "opponent",
+      "trace": "ant-9-seed-19-opponent.json",
+      "step": 63,
+      "deviation_m": 0.20940877794781418,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "method": "sobel_colour",
+      "trace": "ant-9-seed-19-sobel_colour.json",
+      "step": 73,
+      "deviation_m": 0.08203524563472465,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "method": "ardin_input",
+      "trace": "ant-9-seed-19-ardin_input.json",
+      "step": 200,
+      "deviation_m": 4.078513953824713,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "method": "no_hex",
+      "trace": "ant-9-seed-19-no_hex.json",
+      "step": 62,
+      "deviation_m": 2.0122169038287256,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "method": "no_adapt",
+      "trace": "ant-9-seed-19-no_adapt.json",
+      "step": 183,
+      "deviation_m": 4.328258752243132,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "method": "no_dog",
+      "trace": "ant-9-seed-19-no_dog.json",
+      "step": 71,
+      "deviation_m": 0.030693541403462712,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "method": "apia_simple_colour",
+      "trace": "ant-9-seed-19-apia_simple_colour.json",
+      "step": 35,
+      "deviation_m": 0.20374931383674647,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "method": "sobel_apia_colour",
+      "trace": "ant-9-seed-19-sobel_apia_colour.json",
+      "step": 51,
+      "deviation_m": 0.16970866127656153,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "method": "apiaviz",
+      "trace": "ant-9-seed-31-apiaviz.json",
+      "step": 65,
+      "deviation_m": 0.04786888494825583,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "method": "gray",
+      "trace": "ant-9-seed-31-gray.json",
+      "step": 124,
+      "deviation_m": 1.381257438169422,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "method": "raw_colour",
+      "trace": "ant-9-seed-31-raw_colour.json",
+      "step": 200,
+      "deviation_m": 6.01721590708966,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "method": "opponent",
+      "trace": "ant-9-seed-31-opponent.json",
+      "step": 200,
+      "deviation_m": 2.3609969490385088,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "method": "sobel_colour",
+      "trace": "ant-9-seed-31-sobel_colour.json",
+      "step": 45,
+      "deviation_m": 0.06329643928862219,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "method": "ardin_input",
+      "trace": "ant-9-seed-31-ardin_input.json",
+      "step": 91,
+      "deviation_m": 3.408476315835973,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "method": "no_hex",
+      "trace": "ant-9-seed-31-no_hex.json",
+      "step": 22,
+      "deviation_m": 0.3873903319687174,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "method": "no_adapt",
+      "trace": "ant-9-seed-31-no_adapt.json",
+      "step": 57,
+      "deviation_m": 0.6897717269172007,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "method": "no_dog",
+      "trace": "ant-9-seed-31-no_dog.json",
+      "step": 80,
+      "deviation_m": 0.06948671140167417,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "method": "apia_simple_colour",
+      "trace": "ant-9-seed-31-apia_simple_colour.json",
+      "step": 200,
+      "deviation_m": 5.225383813262522,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "method": "sobel_apia_colour",
+      "trace": "ant-9-seed-31-sobel_apia_colour.json",
+      "step": 66,
+      "deviation_m": 0.24220817699950803,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "method": "apiaviz",
+      "trace": "ant-9-seed-43-apiaviz.json",
+      "step": 28,
+      "deviation_m": 0.05717198560337314,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "method": "gray",
+      "trace": "ant-9-seed-43-gray.json",
+      "step": 200,
+      "deviation_m": 3.8414407908157204,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "method": "raw_colour",
+      "trace": "ant-9-seed-43-raw_colour.json",
+      "step": 36,
+      "deviation_m": 0.3805590751242059,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "method": "opponent",
+      "trace": "ant-9-seed-43-opponent.json",
+      "step": 40,
+      "deviation_m": 0.21645153746118667,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "method": "sobel_colour",
+      "trace": "ant-9-seed-43-sobel_colour.json",
+      "step": 75,
+      "deviation_m": 0.18443671226375719,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "method": "ardin_input",
+      "trace": "ant-9-seed-43-ardin_input.json",
+      "step": 66,
+      "deviation_m": 0.7339009846619154,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "method": "no_hex",
+      "trace": "ant-9-seed-43-no_hex.json",
+      "step": 68,
+      "deviation_m": 0.19362864526005968,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "method": "no_adapt",
+      "trace": "ant-9-seed-43-no_adapt.json",
+      "step": 200,
+      "deviation_m": 6.413626892603432,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "method": "no_dog",
+      "trace": "ant-9-seed-43-no_dog.json",
+      "step": 135,
+      "deviation_m": 2.9977115460195582,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "method": "apia_simple_colour",
+      "trace": "ant-9-seed-43-apia_simple_colour.json",
+      "step": 50,
+      "deviation_m": 0.05541706979395938,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "method": "sobel_apia_colour",
+      "trace": "ant-9-seed-43-sobel_apia_colour.json",
+      "step": 64,
+      "deviation_m": 0.09220942851082053,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "method": "apiaviz",
+      "trace": "ant-9-seed-59-apiaviz.json",
+      "step": 39,
+      "deviation_m": 0.0722688102558354,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "method": "gray",
+      "trace": "ant-9-seed-59-gray.json",
+      "step": 40,
+      "deviation_m": 0.13127519127775605,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "method": "raw_colour",
+      "trace": "ant-9-seed-59-raw_colour.json",
+      "step": 55,
+      "deviation_m": 0.16287772531309472,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "method": "opponent",
+      "trace": "ant-9-seed-59-opponent.json",
+      "step": 71,
+      "deviation_m": 0.055645360362809065,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "method": "sobel_colour",
+      "trace": "ant-9-seed-59-sobel_colour.json",
+      "step": 54,
+      "deviation_m": 0.11859703923181172,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "method": "ardin_input",
+      "trace": "ant-9-seed-59-ardin_input.json",
+      "step": 161,
+      "deviation_m": 4.811031113368844,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "method": "no_hex",
+      "trace": "ant-9-seed-59-no_hex.json",
+      "step": 51,
+      "deviation_m": 0.1176960989801672,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "method": "no_adapt",
+      "trace": "ant-9-seed-59-no_adapt.json",
+      "step": 46,
+      "deviation_m": 0.07022326455818827,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "method": "no_dog",
+      "trace": "ant-9-seed-59-no_dog.json",
+      "step": 52,
+      "deviation_m": 0.06414327173942529,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "method": "apia_simple_colour",
+      "trace": "ant-9-seed-59-apia_simple_colour.json",
+      "step": 78,
+      "deviation_m": 0.11532948070544605,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "method": "sobel_apia_colour",
+      "trace": "ant-9-seed-59-sobel_apia_colour.json",
+      "step": 71,
+      "deviation_m": 0.08635899881940494,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "method": "apiaviz",
+      "trace": "ant-9-seed-71-apiaviz.json",
+      "step": 151,
+      "deviation_m": 1.596182682649622,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "method": "gray",
+      "trace": "ant-9-seed-71-gray.json",
+      "step": 200,
+      "deviation_m": 2.3370384341709527,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "method": "raw_colour",
+      "trace": "ant-9-seed-71-raw_colour.json",
+      "step": 25,
+      "deviation_m": 0.5547895609423177,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "method": "opponent",
+      "trace": "ant-9-seed-71-opponent.json",
+      "step": 80,
+      "deviation_m": 0.04953477276994813,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "method": "sobel_colour",
+      "trace": "ant-9-seed-71-sobel_colour.json",
+      "step": 79,
+      "deviation_m": 0.0768099059510999,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "method": "ardin_input",
+      "trace": "ant-9-seed-71-ardin_input.json",
+      "step": 141,
+      "deviation_m": 4.190575091998856,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "method": "no_hex",
+      "trace": "ant-9-seed-71-no_hex.json",
+      "step": 196,
+      "deviation_m": 2.474184724342609,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "method": "no_adapt",
+      "trace": "ant-9-seed-71-no_adapt.json",
+      "step": 91,
+      "deviation_m": 2.0558516644924385,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "method": "no_dog",
+      "trace": "ant-9-seed-71-no_dog.json",
+      "step": 156,
+      "deviation_m": 2.5520795652054518,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "method": "apia_simple_colour",
+      "trace": "ant-9-seed-71-apia_simple_colour.json",
+      "step": 71,
+      "deviation_m": 0.0684162779605705,
+      "pixels_different": 0
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "method": "sobel_apia_colour",
+      "trace": "ant-9-seed-71-sobel_apia_colour.json",
+      "step": 62,
+      "deviation_m": 0.18762269073718255,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "method": "apiaviz",
+      "trace": "ant-10-seed-19-apiaviz.json",
+      "step": 77,
+      "deviation_m": 0.7624440301951493,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "method": "gray",
+      "trace": "ant-10-seed-19-gray.json",
+      "step": 75,
+      "deviation_m": 0.15374295496451415,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "method": "raw_colour",
+      "trace": "ant-10-seed-19-raw_colour.json",
+      "step": 50,
+      "deviation_m": 0.6649448039410221,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "method": "opponent",
+      "trace": "ant-10-seed-19-opponent.json",
+      "step": 74,
+      "deviation_m": 0.15864781935691208,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "method": "sobel_colour",
+      "trace": "ant-10-seed-19-sobel_colour.json",
+      "step": 57,
+      "deviation_m": 0.0788190069321446,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "method": "ardin_input",
+      "trace": "ant-10-seed-19-ardin_input.json",
+      "step": 133,
+      "deviation_m": 1.2895068662100913,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "method": "no_hex",
+      "trace": "ant-10-seed-19-no_hex.json",
+      "step": 75,
+      "deviation_m": 0.6721674503059435,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "method": "no_adapt",
+      "trace": "ant-10-seed-19-no_adapt.json",
+      "step": 158,
+      "deviation_m": 1.660953884572991,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "method": "no_dog",
+      "trace": "ant-10-seed-19-no_dog.json",
+      "step": 43,
+      "deviation_m": 0.08347242079665312,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "method": "apia_simple_colour",
+      "trace": "ant-10-seed-19-apia_simple_colour.json",
+      "step": 58,
+      "deviation_m": 0.09054339799310515,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "method": "sobel_apia_colour",
+      "trace": "ant-10-seed-19-sobel_apia_colour.json",
+      "step": 59,
+      "deviation_m": 0.06872636791019945,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "method": "apiaviz",
+      "trace": "ant-10-seed-31-apiaviz.json",
+      "step": 58,
+      "deviation_m": 0.23232870682995502,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "method": "gray",
+      "trace": "ant-10-seed-31-gray.json",
+      "step": 38,
+      "deviation_m": 0.2124320681251858,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "method": "raw_colour",
+      "trace": "ant-10-seed-31-raw_colour.json",
+      "step": 41,
+      "deviation_m": 0.4684321146319914,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "method": "opponent",
+      "trace": "ant-10-seed-31-opponent.json",
+      "step": 41,
+      "deviation_m": 0.5910781061106916,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "method": "sobel_colour",
+      "trace": "ant-10-seed-31-sobel_colour.json",
+      "step": 39,
+      "deviation_m": 0.18750557930841852,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "method": "ardin_input",
+      "trace": "ant-10-seed-31-ardin_input.json",
+      "step": 188,
+      "deviation_m": 2.8021542042176493,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "method": "no_hex",
+      "trace": "ant-10-seed-31-no_hex.json",
+      "step": 74,
+      "deviation_m": 0.2889033288403054,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "method": "no_adapt",
+      "trace": "ant-10-seed-31-no_adapt.json",
+      "step": 54,
+      "deviation_m": 0.12083619498773422,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "method": "no_dog",
+      "trace": "ant-10-seed-31-no_dog.json",
+      "step": 88,
+      "deviation_m": 1.1284961092381656,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "method": "apia_simple_colour",
+      "trace": "ant-10-seed-31-apia_simple_colour.json",
+      "step": 125,
+      "deviation_m": 2.743273955708523,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "method": "sobel_apia_colour",
+      "trace": "ant-10-seed-31-sobel_apia_colour.json",
+      "step": 57,
+      "deviation_m": 0.045721845335093506,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "method": "apiaviz",
+      "trace": "ant-10-seed-43-apiaviz.json",
+      "step": 76,
+      "deviation_m": 0.10073288224898211,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "method": "gray",
+      "trace": "ant-10-seed-43-gray.json",
+      "step": 78,
+      "deviation_m": 0.593342627692015,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "method": "raw_colour",
+      "trace": "ant-10-seed-43-raw_colour.json",
+      "step": 54,
+      "deviation_m": 0.13175489725737488,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "method": "opponent",
+      "trace": "ant-10-seed-43-opponent.json",
+      "step": 73,
+      "deviation_m": 0.6516776448864682,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "method": "sobel_colour",
+      "trace": "ant-10-seed-43-sobel_colour.json",
+      "step": 41,
+      "deviation_m": 0.08897251200615855,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "method": "ardin_input",
+      "trace": "ant-10-seed-43-ardin_input.json",
+      "step": 139,
+      "deviation_m": 4.740859091238781,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "method": "no_hex",
+      "trace": "ant-10-seed-43-no_hex.json",
+      "step": 79,
+      "deviation_m": 0.09848630496704094,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "method": "no_adapt",
+      "trace": "ant-10-seed-43-no_adapt.json",
+      "step": 128,
+      "deviation_m": 0.6385179829352121,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "method": "no_dog",
+      "trace": "ant-10-seed-43-no_dog.json",
+      "step": 57,
+      "deviation_m": 0.058654059508836676,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "method": "apia_simple_colour",
+      "trace": "ant-10-seed-43-apia_simple_colour.json",
+      "step": 85,
+      "deviation_m": 0.5409378345968522,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "method": "sobel_apia_colour",
+      "trace": "ant-10-seed-43-sobel_apia_colour.json",
+      "step": 60,
+      "deviation_m": 0.09166439210407777,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "method": "apiaviz",
+      "trace": "ant-10-seed-59-apiaviz.json",
+      "step": 56,
+      "deviation_m": 0.05967615280429841,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "method": "gray",
+      "trace": "ant-10-seed-59-gray.json",
+      "step": 58,
+      "deviation_m": 0.09345893595689868,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "method": "raw_colour",
+      "trace": "ant-10-seed-59-raw_colour.json",
+      "step": 82,
+      "deviation_m": 0.13853425909062625,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "method": "opponent",
+      "trace": "ant-10-seed-59-opponent.json",
+      "step": 135,
+      "deviation_m": 2.7431925788413816,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "method": "sobel_colour",
+      "trace": "ant-10-seed-59-sobel_colour.json",
+      "step": 57,
+      "deviation_m": 0.06315102959581219,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "method": "ardin_input",
+      "trace": "ant-10-seed-59-ardin_input.json",
+      "step": 128,
+      "deviation_m": 1.8712380205317116,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "method": "no_hex",
+      "trace": "ant-10-seed-59-no_hex.json",
+      "step": 58,
+      "deviation_m": 0.07931198365726316,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "method": "no_adapt",
+      "trace": "ant-10-seed-59-no_adapt.json",
+      "step": 60,
+      "deviation_m": 0.08927449618143463,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "method": "no_dog",
+      "trace": "ant-10-seed-59-no_dog.json",
+      "step": 57,
+      "deviation_m": 0.07568672023620183,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "method": "apia_simple_colour",
+      "trace": "ant-10-seed-59-apia_simple_colour.json",
+      "step": 57,
+      "deviation_m": 0.04704923029393037,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "method": "sobel_apia_colour",
+      "trace": "ant-10-seed-59-sobel_apia_colour.json",
+      "step": 57,
+      "deviation_m": 0.07568672023620183,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "method": "apiaviz",
+      "trace": "ant-10-seed-71-apiaviz.json",
+      "step": 44,
+      "deviation_m": 0.5468526479279223,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "method": "gray",
+      "trace": "ant-10-seed-71-gray.json",
+      "step": 39,
+      "deviation_m": 0.2270947380476757,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "method": "raw_colour",
+      "trace": "ant-10-seed-71-raw_colour.json",
+      "step": 80,
+      "deviation_m": 0.14296381805161318,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "method": "opponent",
+      "trace": "ant-10-seed-71-opponent.json",
+      "step": 75,
+      "deviation_m": 0.13644127640125728,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "method": "sobel_colour",
+      "trace": "ant-10-seed-71-sobel_colour.json",
+      "step": 80,
+      "deviation_m": 0.11820857242917658,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "method": "ardin_input",
+      "trace": "ant-10-seed-71-ardin_input.json",
+      "step": 41,
+      "deviation_m": 0.4095185113689719,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "method": "no_hex",
+      "trace": "ant-10-seed-71-no_hex.json",
+      "step": 75,
+      "deviation_m": 0.12491684043421444,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "method": "no_adapt",
+      "trace": "ant-10-seed-71-no_adapt.json",
+      "step": 71,
+      "deviation_m": 1.143145198195289,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "method": "no_dog",
+      "trace": "ant-10-seed-71-no_dog.json",
+      "step": 80,
+      "deviation_m": 0.14243776034850453,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "method": "apia_simple_colour",
+      "trace": "ant-10-seed-71-apia_simple_colour.json",
+      "step": 72,
+      "deviation_m": 0.3628983467965267,
+      "pixels_different": 0
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "method": "sobel_apia_colour",
+      "trace": "ant-10-seed-71-sobel_apia_colour.json",
+      "step": 114,
+      "deviation_m": 3.489772738329145,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "method": "apiaviz",
+      "trace": "ant-12-seed-19-apiaviz.json",
+      "step": 77,
+      "deviation_m": 0.12714530893691128,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "method": "gray",
+      "trace": "ant-12-seed-19-gray.json",
+      "step": 164,
+      "deviation_m": 2.7505451042866866,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "method": "raw_colour",
+      "trace": "ant-12-seed-19-raw_colour.json",
+      "step": 62,
+      "deviation_m": 0.09751983993480419,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "method": "opponent",
+      "trace": "ant-12-seed-19-opponent.json",
+      "step": 99,
+      "deviation_m": 1.4468719973869486,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "method": "sobel_colour",
+      "trace": "ant-12-seed-19-sobel_colour.json",
+      "step": 69,
+      "deviation_m": 0.23808052881666236,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "method": "ardin_input",
+      "trace": "ant-12-seed-19-ardin_input.json",
+      "step": 200,
+      "deviation_m": 2.665249186342783,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "method": "no_hex",
+      "trace": "ant-12-seed-19-no_hex.json",
+      "step": 101,
+      "deviation_m": 1.652948408125105,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "method": "no_adapt",
+      "trace": "ant-12-seed-19-no_adapt.json",
+      "step": 62,
+      "deviation_m": 0.10147778085154643,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "method": "no_dog",
+      "trace": "ant-12-seed-19-no_dog.json",
+      "step": 31,
+      "deviation_m": 0.05472067520936177,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "method": "apia_simple_colour",
+      "trace": "ant-12-seed-19-apia_simple_colour.json",
+      "step": 76,
+      "deviation_m": 0.09681738048616782,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "method": "sobel_apia_colour",
+      "trace": "ant-12-seed-19-sobel_apia_colour.json",
+      "step": 77,
+      "deviation_m": 0.0991576600747573,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "method": "apiaviz",
+      "trace": "ant-12-seed-31-apiaviz.json",
+      "step": 77,
+      "deviation_m": 0.053054588512059186,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "method": "gray",
+      "trace": "ant-12-seed-31-gray.json",
+      "step": 88,
+      "deviation_m": 0.8782965982119038,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "method": "raw_colour",
+      "trace": "ant-12-seed-31-raw_colour.json",
+      "step": 170,
+      "deviation_m": 1.6127897603355577,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "method": "opponent",
+      "trace": "ant-12-seed-31-opponent.json",
+      "step": 63,
+      "deviation_m": 0.17292014722131957,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "method": "sobel_colour",
+      "trace": "ant-12-seed-31-sobel_colour.json",
+      "step": 155,
+      "deviation_m": 1.4795447247389477,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "method": "ardin_input",
+      "trace": "ant-12-seed-31-ardin_input.json",
+      "step": 108,
+      "deviation_m": 0.7459810597866755,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "method": "no_hex",
+      "trace": "ant-12-seed-31-no_hex.json",
+      "step": 65,
+      "deviation_m": 0.16834984291757157,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "method": "no_adapt",
+      "trace": "ant-12-seed-31-no_adapt.json",
+      "step": 37,
+      "deviation_m": 0.14759218705830807,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "method": "no_dog",
+      "trace": "ant-12-seed-31-no_dog.json",
+      "step": 200,
+      "deviation_m": 6.99455348623997,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "method": "apia_simple_colour",
+      "trace": "ant-12-seed-31-apia_simple_colour.json",
+      "step": 64,
+      "deviation_m": 0.1674691961829061,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "method": "sobel_apia_colour",
+      "trace": "ant-12-seed-31-sobel_apia_colour.json",
+      "step": 76,
+      "deviation_m": 0.16946425339947738,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "method": "apiaviz",
+      "trace": "ant-12-seed-43-apiaviz.json",
+      "step": 67,
+      "deviation_m": 0.04931081044335669,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "method": "gray",
+      "trace": "ant-12-seed-43-gray.json",
+      "step": 110,
+      "deviation_m": 1.5933542893613726,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "method": "raw_colour",
+      "trace": "ant-12-seed-43-raw_colour.json",
+      "step": 126,
+      "deviation_m": 0.8151267058572574,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "method": "opponent",
+      "trace": "ant-12-seed-43-opponent.json",
+      "step": 189,
+      "deviation_m": 1.88414361227413,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "method": "sobel_colour",
+      "trace": "ant-12-seed-43-sobel_colour.json",
+      "step": 77,
+      "deviation_m": 0.05148210547001523,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "method": "ardin_input",
+      "trace": "ant-12-seed-43-ardin_input.json",
+      "step": 184,
+      "deviation_m": 1.3413518017062427,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "method": "no_hex",
+      "trace": "ant-12-seed-43-no_hex.json",
+      "step": 67,
+      "deviation_m": 0.024642516342343344,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "method": "no_adapt",
+      "trace": "ant-12-seed-43-no_adapt.json",
+      "step": 112,
+      "deviation_m": 2.912476601131059,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "method": "no_dog",
+      "trace": "ant-12-seed-43-no_dog.json",
+      "step": 118,
+      "deviation_m": 1.5405577091915295,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "method": "apia_simple_colour",
+      "trace": "ant-12-seed-43-apia_simple_colour.json",
+      "step": 67,
+      "deviation_m": 0.024642516342343344,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "method": "sobel_apia_colour",
+      "trace": "ant-12-seed-43-sobel_apia_colour.json",
+      "step": 77,
+      "deviation_m": 0.03593026139758418,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "method": "apiaviz",
+      "trace": "ant-12-seed-59-apiaviz.json",
+      "step": 33,
+      "deviation_m": 0.17726613339789826,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "method": "gray",
+      "trace": "ant-12-seed-59-gray.json",
+      "step": 29,
+      "deviation_m": 0.6943559350454648,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "method": "raw_colour",
+      "trace": "ant-12-seed-59-raw_colour.json",
+      "step": 34,
+      "deviation_m": 0.41527849494857266,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "method": "opponent",
+      "trace": "ant-12-seed-59-opponent.json",
+      "step": 39,
+      "deviation_m": 0.2997957872679836,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "method": "sobel_colour",
+      "trace": "ant-12-seed-59-sobel_colour.json",
+      "step": 70,
+      "deviation_m": 0.13509852589687205,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "method": "ardin_input",
+      "trace": "ant-12-seed-59-ardin_input.json",
+      "step": 90,
+      "deviation_m": 1.5027868834136964,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "method": "no_hex",
+      "trace": "ant-12-seed-59-no_hex.json",
+      "step": 47,
+      "deviation_m": 0.04996627512843749,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "method": "no_adapt",
+      "trace": "ant-12-seed-59-no_adapt.json",
+      "step": 25,
+      "deviation_m": 0.09489372729995885,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "method": "no_dog",
+      "trace": "ant-12-seed-59-no_dog.json",
+      "step": 95,
+      "deviation_m": 2.1542964742096835,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "method": "apia_simple_colour",
+      "trace": "ant-12-seed-59-apia_simple_colour.json",
+      "step": 67,
+      "deviation_m": 0.024642516342343344,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "method": "sobel_apia_colour",
+      "trace": "ant-12-seed-59-sobel_apia_colour.json",
+      "step": 65,
+      "deviation_m": 0.1151838061589133,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "method": "apiaviz",
+      "trace": "ant-12-seed-71-apiaviz.json",
+      "step": 77,
+      "deviation_m": 0.08768214052668404,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "method": "gray",
+      "trace": "ant-12-seed-71-gray.json",
+      "step": 51,
+      "deviation_m": 0.07557550882886238,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "method": "raw_colour",
+      "trace": "ant-12-seed-71-raw_colour.json",
+      "step": 77,
+      "deviation_m": 0.17715152064321,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "method": "opponent",
+      "trace": "ant-12-seed-71-opponent.json",
+      "step": 83,
+      "deviation_m": 0.5868929323004328,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "method": "sobel_colour",
+      "trace": "ant-12-seed-71-sobel_colour.json",
+      "step": 77,
+      "deviation_m": 0.09810377816398676,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "method": "ardin_input",
+      "trace": "ant-12-seed-71-ardin_input.json",
+      "step": 172,
+      "deviation_m": 1.7097843263112666,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "method": "no_hex",
+      "trace": "ant-12-seed-71-no_hex.json",
+      "step": 62,
+      "deviation_m": 0.14184214158510283,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "method": "no_adapt",
+      "trace": "ant-12-seed-71-no_adapt.json",
+      "step": 169,
+      "deviation_m": 4.8073988192332715,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "method": "no_dog",
+      "trace": "ant-12-seed-71-no_dog.json",
+      "step": 49,
+      "deviation_m": 0.04145811633425905,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "method": "apia_simple_colour",
+      "trace": "ant-12-seed-71-apia_simple_colour.json",
+      "step": 141,
+      "deviation_m": 2.1936371338401948,
+      "pixels_different": 0
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "method": "sobel_apia_colour",
+      "trace": "ant-12-seed-71-sobel_apia_colour.json",
+      "step": 65,
+      "deviation_m": 0.13633535071162453,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "method": "apiaviz",
+      "trace": "ant-13-seed-19-apiaviz.json",
+      "step": 84,
+      "deviation_m": 0.3818793164433637,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "method": "gray",
+      "trace": "ant-13-seed-19-gray.json",
+      "step": 79,
+      "deviation_m": 0.2671976970403085,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "method": "raw_colour",
+      "trace": "ant-13-seed-19-raw_colour.json",
+      "step": 140,
+      "deviation_m": 1.3209488837719734,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "method": "opponent",
+      "trace": "ant-13-seed-19-opponent.json",
+      "step": 127,
+      "deviation_m": 1.6909395953911157,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "method": "sobel_colour",
+      "trace": "ant-13-seed-19-sobel_colour.json",
+      "step": 56,
+      "deviation_m": 0.11292734879672311,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "method": "ardin_input",
+      "trace": "ant-13-seed-19-ardin_input.json",
+      "step": 171,
+      "deviation_m": 1.686660851388795,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "method": "no_hex",
+      "trace": "ant-13-seed-19-no_hex.json",
+      "step": 56,
+      "deviation_m": 0.11721674356001406,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "method": "no_adapt",
+      "trace": "ant-13-seed-19-no_adapt.json",
+      "step": 60,
+      "deviation_m": 0.16761307795330577,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "method": "no_dog",
+      "trace": "ant-13-seed-19-no_dog.json",
+      "step": 142,
+      "deviation_m": 1.7421445309114896,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "method": "apia_simple_colour",
+      "trace": "ant-13-seed-19-apia_simple_colour.json",
+      "step": 56,
+      "deviation_m": 0.11475601689902315,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "method": "sobel_apia_colour",
+      "trace": "ant-13-seed-19-sobel_apia_colour.json",
+      "step": 78,
+      "deviation_m": 0.12013965065235654,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "method": "apiaviz",
+      "trace": "ant-13-seed-31-apiaviz.json",
+      "step": 56,
+      "deviation_m": 0.11571151474474892,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "method": "gray",
+      "trace": "ant-13-seed-31-gray.json",
+      "step": 45,
+      "deviation_m": 0.33295686685872905,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "method": "raw_colour",
+      "trace": "ant-13-seed-31-raw_colour.json",
+      "step": 81,
+      "deviation_m": 0.15011939252639853,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "method": "opponent",
+      "trace": "ant-13-seed-31-opponent.json",
+      "step": 89,
+      "deviation_m": 1.3223232018852362,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "method": "sobel_colour",
+      "trace": "ant-13-seed-31-sobel_colour.json",
+      "step": 56,
+      "deviation_m": 0.11721674356001406,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "method": "ardin_input",
+      "trace": "ant-13-seed-31-ardin_input.json",
+      "step": 71,
+      "deviation_m": 0.17073963739443326,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "method": "no_hex",
+      "trace": "ant-13-seed-31-no_hex.json",
+      "step": 80,
+      "deviation_m": 1.2798291714710772,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "method": "no_adapt",
+      "trace": "ant-13-seed-31-no_adapt.json",
+      "step": 50,
+      "deviation_m": 0.8097243589606502,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "method": "no_dog",
+      "trace": "ant-13-seed-31-no_dog.json",
+      "step": 84,
+      "deviation_m": 0.876771748336739,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "method": "apia_simple_colour",
+      "trace": "ant-13-seed-31-apia_simple_colour.json",
+      "step": 112,
+      "deviation_m": 1.3410350386040912,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "method": "sobel_apia_colour",
+      "trace": "ant-13-seed-31-sobel_apia_colour.json",
+      "step": 86,
+      "deviation_m": 0.1197164241836792,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "method": "apiaviz",
+      "trace": "ant-13-seed-43-apiaviz.json",
+      "step": 79,
+      "deviation_m": 1.481063896926454,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "method": "gray",
+      "trace": "ant-13-seed-43-gray.json",
+      "step": 134,
+      "deviation_m": 1.4191062543119752,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "method": "raw_colour",
+      "trace": "ant-13-seed-43-raw_colour.json",
+      "step": 61,
+      "deviation_m": 0.09126290770228568,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "method": "opponent",
+      "trace": "ant-13-seed-43-opponent.json",
+      "step": 61,
+      "deviation_m": 0.16006402397755176,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "method": "sobel_colour",
+      "trace": "ant-13-seed-43-sobel_colour.json",
+      "step": 197,
+      "deviation_m": 3.1536010450221768,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "method": "ardin_input",
+      "trace": "ant-13-seed-43-ardin_input.json",
+      "step": 120,
+      "deviation_m": 3.854603063521501,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "method": "no_hex",
+      "trace": "ant-13-seed-43-no_hex.json",
+      "step": 76,
+      "deviation_m": 1.156020274535488,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "method": "no_adapt",
+      "trace": "ant-13-seed-43-no_adapt.json",
+      "step": 80,
+      "deviation_m": 1.6416967328068628,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "method": "no_dog",
+      "trace": "ant-13-seed-43-no_dog.json",
+      "step": 39,
+      "deviation_m": 0.09115459292835336,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "method": "apia_simple_colour",
+      "trace": "ant-13-seed-43-apia_simple_colour.json",
+      "step": 55,
+      "deviation_m": 0.13930195887223626,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "method": "sobel_apia_colour",
+      "trace": "ant-13-seed-43-sobel_apia_colour.json",
+      "step": 85,
+      "deviation_m": 0.1698221284622421,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "method": "apiaviz",
+      "trace": "ant-13-seed-59-apiaviz.json",
+      "step": 59,
+      "deviation_m": 0.11520860537472663,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "method": "gray",
+      "trace": "ant-13-seed-59-gray.json",
+      "step": 81,
+      "deviation_m": 0.9132816663707414,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "method": "raw_colour",
+      "trace": "ant-13-seed-59-raw_colour.json",
+      "step": 71,
+      "deviation_m": 1.3372038995951305,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "method": "opponent",
+      "trace": "ant-13-seed-59-opponent.json",
+      "step": 61,
+      "deviation_m": 0.11008395254261738,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "method": "sobel_colour",
+      "trace": "ant-13-seed-59-sobel_colour.json",
+      "step": 56,
+      "deviation_m": 0.11489387454934585,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "method": "ardin_input",
+      "trace": "ant-13-seed-59-ardin_input.json",
+      "step": 190,
+      "deviation_m": 4.137974551206698,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "method": "no_hex",
+      "trace": "ant-13-seed-59-no_hex.json",
+      "step": 155,
+      "deviation_m": 2.0287509343233707,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "method": "no_adapt",
+      "trace": "ant-13-seed-59-no_adapt.json",
+      "step": 59,
+      "deviation_m": 0.10522381866632591,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "method": "no_dog",
+      "trace": "ant-13-seed-59-no_dog.json",
+      "step": 79,
+      "deviation_m": 1.3943714589453893,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "method": "apia_simple_colour",
+      "trace": "ant-13-seed-59-apia_simple_colour.json",
+      "step": 56,
+      "deviation_m": 0.12308304487388198,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "method": "sobel_apia_colour",
+      "trace": "ant-13-seed-59-sobel_apia_colour.json",
+      "step": 76,
+      "deviation_m": 1.1304510072603255,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "method": "apiaviz",
+      "trace": "ant-13-seed-71-apiaviz.json",
+      "step": 42,
+      "deviation_m": 0.08061109729032351,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "method": "gray",
+      "trace": "ant-13-seed-71-gray.json",
+      "step": 108,
+      "deviation_m": 1.5291653206351565,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "method": "raw_colour",
+      "trace": "ant-13-seed-71-raw_colour.json",
+      "step": 93,
+      "deviation_m": 1.5922590176384805,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "method": "opponent",
+      "trace": "ant-13-seed-71-opponent.json",
+      "step": 60,
+      "deviation_m": 0.15499969580715778,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "method": "sobel_colour",
+      "trace": "ant-13-seed-71-sobel_colour.json",
+      "step": 200,
+      "deviation_m": 1.28637696302869,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "method": "ardin_input",
+      "trace": "ant-13-seed-71-ardin_input.json",
+      "step": 105,
+      "deviation_m": 1.0019650664964388,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "method": "no_hex",
+      "trace": "ant-13-seed-71-no_hex.json",
+      "step": 31,
+      "deviation_m": 0.08850125140686871,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "method": "no_adapt",
+      "trace": "ant-13-seed-71-no_adapt.json",
+      "step": 74,
+      "deviation_m": 0.20509574712583437,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "method": "no_dog",
+      "trace": "ant-13-seed-71-no_dog.json",
+      "step": 78,
+      "deviation_m": 0.218459297310329,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "method": "apia_simple_colour",
+      "trace": "ant-13-seed-71-apia_simple_colour.json",
+      "step": 56,
+      "deviation_m": 0.11721674356001406,
+      "pixels_different": 0
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "method": "sobel_apia_colour",
+      "trace": "ant-13-seed-71-sobel_apia_colour.json",
+      "step": 101,
+      "deviation_m": 1.7483921537030365,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "method": "apiaviz",
+      "trace": "ant-15-seed-19-apiaviz.json",
+      "step": 200,
+      "deviation_m": 8.841911479475982,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "method": "gray",
+      "trace": "ant-15-seed-19-gray.json",
+      "step": 72,
+      "deviation_m": 2.019156024315346,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "method": "raw_colour",
+      "trace": "ant-15-seed-19-raw_colour.json",
+      "step": 26,
+      "deviation_m": 0.22234548530905793,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "method": "opponent",
+      "trace": "ant-15-seed-19-opponent.json",
+      "step": 200,
+      "deviation_m": 2.2252774291723862,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "method": "sobel_colour",
+      "trace": "ant-15-seed-19-sobel_colour.json",
+      "step": 62,
+      "deviation_m": 0.5648958706451748,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "method": "ardin_input",
+      "trace": "ant-15-seed-19-ardin_input.json",
+      "step": 192,
+      "deviation_m": 2.1761704785554943,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "method": "no_hex",
+      "trace": "ant-15-seed-19-no_hex.json",
+      "step": 38,
+      "deviation_m": 0.22887184272592392,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "method": "no_adapt",
+      "trace": "ant-15-seed-19-no_adapt.json",
+      "step": 161,
+      "deviation_m": 4.060087231954689,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "method": "no_dog",
+      "trace": "ant-15-seed-19-no_dog.json",
+      "step": 178,
+      "deviation_m": 2.2497601445650366,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "method": "apia_simple_colour",
+      "trace": "ant-15-seed-19-apia_simple_colour.json",
+      "step": 52,
+      "deviation_m": 0.428043277028708,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "method": "sobel_apia_colour",
+      "trace": "ant-15-seed-19-sobel_apia_colour.json",
+      "step": 47,
+      "deviation_m": 0.5284011426922035,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "method": "apiaviz",
+      "trace": "ant-15-seed-31-apiaviz.json",
+      "step": 63,
+      "deviation_m": 0.7799929726530339,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "method": "gray",
+      "trace": "ant-15-seed-31-gray.json",
+      "step": 110,
+      "deviation_m": 1.082365055258771,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "method": "raw_colour",
+      "trace": "ant-15-seed-31-raw_colour.json",
+      "step": 65,
+      "deviation_m": 0.5746163770095859,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "method": "opponent",
+      "trace": "ant-15-seed-31-opponent.json",
+      "step": 53,
+      "deviation_m": 0.2791180770168734,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "method": "sobel_colour",
+      "trace": "ant-15-seed-31-sobel_colour.json",
+      "step": 47,
+      "deviation_m": 0.44040554204289256,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "method": "ardin_input",
+      "trace": "ant-15-seed-31-ardin_input.json",
+      "step": 75,
+      "deviation_m": 1.7683719501888864,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "method": "no_hex",
+      "trace": "ant-15-seed-31-no_hex.json",
+      "step": 103,
+      "deviation_m": 0.9631599368088275,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "method": "no_adapt",
+      "trace": "ant-15-seed-31-no_adapt.json",
+      "step": 97,
+      "deviation_m": 0.5946906765585158,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "method": "no_dog",
+      "trace": "ant-15-seed-31-no_dog.json",
+      "step": 175,
+      "deviation_m": 3.748876609522342,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "method": "apia_simple_colour",
+      "trace": "ant-15-seed-31-apia_simple_colour.json",
+      "step": 195,
+      "deviation_m": 3.5246057069136834,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "method": "sobel_apia_colour",
+      "trace": "ant-15-seed-31-sobel_apia_colour.json",
+      "step": 199,
+      "deviation_m": 3.714175231916465,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "method": "apiaviz",
+      "trace": "ant-15-seed-43-apiaviz.json",
+      "step": 30,
+      "deviation_m": 0.7187094042090635,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "method": "gray",
+      "trace": "ant-15-seed-43-gray.json",
+      "step": 90,
+      "deviation_m": 1.4008562904831199,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "method": "raw_colour",
+      "trace": "ant-15-seed-43-raw_colour.json",
+      "step": 171,
+      "deviation_m": 2.1332643736153445,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "method": "opponent",
+      "trace": "ant-15-seed-43-opponent.json",
+      "step": 74,
+      "deviation_m": 0.21826760463628406,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "method": "sobel_colour",
+      "trace": "ant-15-seed-43-sobel_colour.json",
+      "step": 140,
+      "deviation_m": 1.143944452759552,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "method": "ardin_input",
+      "trace": "ant-15-seed-43-ardin_input.json",
+      "step": 87,
+      "deviation_m": 0.9950374248292015,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "method": "no_hex",
+      "trace": "ant-15-seed-43-no_hex.json",
+      "step": 185,
+      "deviation_m": 3.5816113932004567,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "method": "no_adapt",
+      "trace": "ant-15-seed-43-no_adapt.json",
+      "step": 118,
+      "deviation_m": 2.103421444019419,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "method": "no_dog",
+      "trace": "ant-15-seed-43-no_dog.json",
+      "step": 200,
+      "deviation_m": 5.837597664821589,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "method": "apia_simple_colour",
+      "trace": "ant-15-seed-43-apia_simple_colour.json",
+      "step": 122,
+      "deviation_m": 1.784529149787679,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "method": "sobel_apia_colour",
+      "trace": "ant-15-seed-43-sobel_apia_colour.json",
+      "step": 75,
+      "deviation_m": 1.4277255994648415,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "method": "apiaviz",
+      "trace": "ant-15-seed-59-apiaviz.json",
+      "step": 90,
+      "deviation_m": 1.0032298850981873,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "method": "gray",
+      "trace": "ant-15-seed-59-gray.json",
+      "step": 103,
+      "deviation_m": 2.842291049211221,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "method": "raw_colour",
+      "trace": "ant-15-seed-59-raw_colour.json",
+      "step": 172,
+      "deviation_m": 1.0423276238624717,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "method": "opponent",
+      "trace": "ant-15-seed-59-opponent.json",
+      "step": 98,
+      "deviation_m": 1.4155803152872823,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "method": "sobel_colour",
+      "trace": "ant-15-seed-59-sobel_colour.json",
+      "step": 76,
+      "deviation_m": 0.22903501512668864,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "method": "ardin_input",
+      "trace": "ant-15-seed-59-ardin_input.json",
+      "step": 200,
+      "deviation_m": 8.07915330194368,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "method": "no_hex",
+      "trace": "ant-15-seed-59-no_hex.json",
+      "step": 200,
+      "deviation_m": 9.74240029103144,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "method": "no_adapt",
+      "trace": "ant-15-seed-59-no_adapt.json",
+      "step": 57,
+      "deviation_m": 0.4879243609666834,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "method": "no_dog",
+      "trace": "ant-15-seed-59-no_dog.json",
+      "step": 44,
+      "deviation_m": 0.2343148167595055,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "method": "apia_simple_colour",
+      "trace": "ant-15-seed-59-apia_simple_colour.json",
+      "step": 200,
+      "deviation_m": 9.490445554992995,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "method": "sobel_apia_colour",
+      "trace": "ant-15-seed-59-sobel_apia_colour.json",
+      "step": 200,
+      "deviation_m": 6.062793391954969,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "method": "apiaviz",
+      "trace": "ant-15-seed-71-apiaviz.json",
+      "step": 185,
+      "deviation_m": 2.4262210494879723,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "method": "gray",
+      "trace": "ant-15-seed-71-gray.json",
+      "step": 200,
+      "deviation_m": 2.8385040975157407,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "method": "raw_colour",
+      "trace": "ant-15-seed-71-raw_colour.json",
+      "step": 129,
+      "deviation_m": 2.012372706752398,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "method": "opponent",
+      "trace": "ant-15-seed-71-opponent.json",
+      "step": 39,
+      "deviation_m": 1.4305154631298682,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "method": "sobel_colour",
+      "trace": "ant-15-seed-71-sobel_colour.json",
+      "step": 50,
+      "deviation_m": 0.47124301259739304,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "method": "ardin_input",
+      "trace": "ant-15-seed-71-ardin_input.json",
+      "step": 200,
+      "deviation_m": 4.728251907854326,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "method": "no_hex",
+      "trace": "ant-15-seed-71-no_hex.json",
+      "step": 97,
+      "deviation_m": 1.8683809910604057,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "method": "no_adapt",
+      "trace": "ant-15-seed-71-no_adapt.json",
+      "step": 37,
+      "deviation_m": 0.21134603867179375,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "method": "no_dog",
+      "trace": "ant-15-seed-71-no_dog.json",
+      "step": 57,
+      "deviation_m": 1.7743805600379805,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "method": "apia_simple_colour",
+      "trace": "ant-15-seed-71-apia_simple_colour.json",
+      "step": 110,
+      "deviation_m": 1.9709847010060235,
+      "pixels_different": 0
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "method": "sobel_apia_colour",
+      "trace": "ant-15-seed-71-sobel_apia_colour.json",
+      "step": 181,
+      "deviation_m": 0.9545807241567961,
+      "pixels_different": 0
+    }
+  ],
+  "selection": "For every trial: query position and chosen heading at the step with maximum post-movement route deviation."
+}

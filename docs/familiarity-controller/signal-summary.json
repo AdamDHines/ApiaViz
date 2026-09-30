@@ -1,0 +1,149 @@
+{
+  "summary": [
+    {
+      "method": "linear_colour",
+      "phase": "taught",
+      "distance_m": 0.1,
+      "n": 54,
+      "fraction_inward_positive": 1.0,
+      "median_change": 0.4772332958016304
+    },
+    {
+      "method": "linear_colour",
+      "phase": "taught",
+      "distance_m": 0.2,
+      "n": 54,
+      "fraction_inward_positive": 0.9814814814814815,
+      "median_change": 0.23053306139796198
+    },
+    {
+      "method": "linear_colour",
+      "phase": "taught",
+      "distance_m": 0.5,
+      "n": 45,
+      "fraction_inward_positive": 0.8666666666666667,
+      "median_change": 0.3940202215781267
+    },
+    {
+      "method": "linear_colour",
+      "phase": "between",
+      "distance_m": 0.1,
+      "n": 54,
+      "fraction_inward_positive": 0.7777777777777778,
+      "median_change": 0.08171845902964417
+    },
+    {
+      "method": "linear_colour",
+      "phase": "between",
+      "distance_m": 0.2,
+      "n": 54,
+      "fraction_inward_positive": 0.9814814814814815,
+      "median_change": 0.1933559595089408
+    },
+    {
+      "method": "linear_colour",
+      "phase": "between",
+      "distance_m": 0.5,
+      "n": 45,
+      "fraction_inward_positive": 0.7555555555555555,
+      "median_change": 0.2741561913178195
+    },
+    {
+      "method": "sobel_colour",
+      "phase": "taught",
+      "distance_m": 0.1,
+      "n": 54,
+      "fraction_inward_positive": 1.0,
+      "median_change": 0.4220933674390339
+    },
+    {
+      "method": "sobel_colour",
+      "phase": "taught",
+      "distance_m": 0.2,
+      "n": 54,
+      "fraction_inward_positive": 1.0,
+      "median_change": 0.2430474469148683
+    },
+    {
+      "method": "sobel_colour",
+      "phase": "taught",
+      "distance_m": 0.5,
+      "n": 45,
+      "fraction_inward_positive": 0.8444444444444444,
+      "median_change": 0.373011437272564
+    },
+    {
+      "method": "sobel_colour",
+      "phase": "between",
+      "distance_m": 0.1,
+      "n": 54,
+      "fraction_inward_positive": 0.7407407407407407,
+      "median_change": 0.057797582610692046
+    },
+    {
+      "method": "sobel_colour",
+      "phase": "between",
+      "distance_m": 0.2,
+      "n": 54,
+      "fraction_inward_positive": 1.0,
+      "median_change": 0.21281565143293224
+    },
+    {
+      "method": "sobel_colour",
+      "phase": "between",
+      "distance_m": 0.5,
+      "n": 45,
+      "fraction_inward_positive": 0.8,
+      "median_change": 0.2988305769686157
+    },
+    {
+      "method": "ardin_input",
+      "phase": "taught",
+      "distance_m": 0.1,
+      "n": 54,
+      "fraction_inward_positive": 1.0,
+      "median_change": 0.23739694637550557
+    },
+    {
+      "method": "ardin_input",
+      "phase": "taught",
+      "distance_m": 0.2,
+      "n": 54,
+      "fraction_inward_positive": 0.9074074074074074,
+      "median_change": 0.08099021471874426
+    },
+    {
+      "method": "ardin_input",
+      "phase": "taught",
+      "distance_m": 0.5,
+      "n": 45,
+      "fraction_inward_positive": 0.8888888888888888,
+      "median_change": 0.13153983556478901
+    },
+    {
+      "method": "ardin_input",
+      "phase": "between",
+      "distance_m": 0.1,
+      "n": 54,
+      "fraction_inward_positive": 0.9629629629629629,
+      "median_change": 0.047158268723914924
+    },
+    {
+      "method": "ardin_input",
+      "phase": "between",
+      "distance_m": 0.2,
+      "n": 54,
+      "fraction_inward_positive": 0.9074074074074074,
+      "median_change": 0.07672949655629435
+    },
+    {
+      "method": "ardin_input",
+      "phase": "between",
+      "distance_m": 0.5,
+      "n": 45,
+      "fraction_inward_positive": 0.8222222222222222,
+      "median_change": 0.10577874466175125
+    }
+  ],
+  "caveat": "Pairs share positions, worlds and wiring seeds; no significance claim. Three headings only measure local directional contrast, not the complete familiarity landscape."
+}

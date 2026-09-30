@@ -14,6 +14,8 @@ cuda = ["cuda"]
 # --- Evaluation: downstream tasks (each prints a clean summary table) ---
 flowers = {cmd = "python main.py -d 17flowers"}
 nav = {cmd = "python main.py -d nav"}
+study = {cmd = "python -m apiaviz.research"}
+test = {cmd = "python -m unittest discover -s tests -v"}
 
 [dependencies]
 python = "*"

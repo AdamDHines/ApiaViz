@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "source_hashes_checked": 24,
+  "coverage_rejections_passed": true,
+  "unit_and_uv_block_tests": [
+    {
+      "input": "flat",
+      "expected": [
+        0.9999999999999999,
+        1.0,
+        1.0
+      ],
+      "rendered": [
+        1.0006037950515747,
+        0.9999467134475708,
+        0.9994482398033142
+      ]
+    },
+    {
+      "input": "uv_blocked",
+      "expected": [
+        0.09477180701165726,
+        0.750481244293838,
+        0.9232652834256861
+      ],
+      "rendered": [
+        0.09470407664775848,
+        0.7502796649932861,
+        0.9226548075675964
+      ]
+    }
+  ],
+  "independent_seed_relative_mean_changes": {
+    "sky": [
+      -1.3706272459113045e-05,
+      -6.54664300190344e-05,
+      -7.879924978937414e-05
+    ],
+    "terrain": [
+      0.00024976728187953157,
+      0.000172621895181857,
+      1.797997636310278e-05
+    ]
+  },
+  "original_render_max_abs_difference": 0.0,
+  "primary_ascii_crosschecks": {
+    "dry_grass": {
+      "primary_file": "cheatgrass-v5.asc",
+      "n": 169,
+      "max_absolute_difference": 5.000000000005e-07
+    },
+    "dead_plant": {
+      "primary_file": "tumbleweed-v5.asc",
+      "n": 169,
+      "max_absolute_difference": 4.999999999866223e-07
+    },
+    "carbonate": {
+      "primary_file": "calcite-v5.asc",
+      "n": 169,
+      "max_absolute_difference": 4.999999999588667e-07
+    }
+  },
+  "interpretation": "Numerical and provenance validation only; not an empirical validation of scene realism or UV sky polarization."
+}

@@ -1,0 +1,194 @@
+{
+  "blackbrush.html": {
+    "url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/V/blackbrush_anp92-1a_veg.html",
+    "resolved_url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/V/blackbrush_anp92-1a_veg.html",
+    "downloaded_utc": "2026-09-30T00:43:57.562805+00:00",
+    "bytes": 4516,
+    "sha256": "075300704b91b817c334077ce98e81f4683b669b451fdec2a50bdba742fa8a21",
+    "content_type": "text/html"
+  },
+  "calcite-v5.asc": {
+    "url": "https://pubs.usgs.gov/of/2003/ofr-03-395/ASCII/M/calcite_co2004.1474.asc",
+    "resolved_url": "https://pubs.usgs.gov/of/2003/ofr-03-395/ASCII/M/calcite_co2004.1474.asc",
+    "downloaded_utc": "2026-09-30T00:43:57.533181+00:00",
+    "bytes": 22652,
+    "sha256": "70c00c5e5ba724ced1cdca27bd7cb28084f2490f0760c721256361a6d5c70a7a",
+    "content_type": "text/plain"
+  },
+  "calcite.html": {
+    "url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/M/calcite_co2004.html",
+    "resolved_url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/M/calcite_co2004.html",
+    "downloaded_utc": "2026-09-30T00:43:57.717476+00:00",
+    "bytes": 5293,
+    "sha256": "22f783d48cce13edf1bbed385a392aefc3cc0ba03d564dcfb6725cec002ffba7",
+    "content_type": "text/html"
+  },
+  "cheatgrass-v5.asc": {
+    "url": "https://pubs.usgs.gov/of/2003/ofr-03-395/ASCII/V/cheatgrass_anp92-11a_veg.10831.asc",
+    "resolved_url": "https://pubs.usgs.gov/of/2003/ofr-03-395/ASCII/V/cheatgrass_anp92-11a_veg.10831.asc",
+    "downloaded_utc": "2026-09-30T00:43:57.517634+00:00",
+    "bytes": 22652,
+    "sha256": "34d1d9e29474267f5dba9cbb3b86fa62fe395f4c59bf2dc22c1214473b48f563",
+    "content_type": "text/plain"
+  },
+  "cheatgrass.html": {
+    "url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/V/cheatgrass_anp92-11a_veg.html",
+    "resolved_url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/V/cheatgrass_anp92-11a_veg.html",
+    "downloaded_utc": "2026-09-30T00:43:57.615452+00:00",
+    "bytes": 4501,
+    "sha256": "86d3b8a9ff0318de95e86cdde97f72be55d80eb76f996c01a663765b9df7f31a",
+    "content_type": "text/html"
+  },
+  "checksums.txt": {
+    "url": "https://github.com/null-jones/openspeclib/releases/download/v0.0.6/checksums.txt",
+    "resolved_url": "https://release-assets.githubusercontent.com/github-production-release-asset/1210960779/a022bd57-528a-4a34-a096-adcdc25cdc70?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-09-30T01%3A33%3A32Z&rscd=attachment%3B+filename%3Dchecksums.txt&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-09-30T00%3A32%3A56Z&ske=2026-09-30T01%3A33%3A32Z&sks=b&skv=2018-11-09&sig=8yVCfKg0dgM%2BzU4gDRkUvvGTCuXQ%2FrLcEHuVEohY6hE%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MDcyOTI2NiwibmJmIjoxNzkwNzI4OTY2LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.GpPJn2_KqSay3ALkvWUbmZRyN0k1Xa6q8acAx5mBOlQ&response-content-disposition=attachment%3B%20filename%3Dchecksums.txt&response-content-type=application%2Foctet-stream",
+    "downloaded_utc": "2026-09-30T00:42:46.389292+00:00",
+    "bytes": 435,
+    "sha256": "c76fbec84196be4dd160bd83c5106670e65015bdc9df60f505b285d041ddc5c2",
+    "content_type": "application/octet-stream"
+  },
+  "grass-mixtures.html": {
+    "url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/V/grass_dry%2Bgreen_series.html",
+    "resolved_url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/V/grass_dry%2Bgreen_series.html",
+    "downloaded_utc": "2026-09-30T00:43:24.280167+00:00",
+    "bytes": 5578,
+    "sha256": "4711704d09a3ec9fd6942b5a375c2671b23dc2057cf6bfee2f687427484f44c3",
+    "content_type": "text/html"
+  },
+  "lawn-grass.html": {
+    "url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/V/lawn_grass_gds91.html",
+    "resolved_url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/V/lawn_grass_gds91.html",
+    "downloaded_utc": "2026-09-30T00:44:46.505298+00:00",
+    "bytes": 5014,
+    "sha256": "6c95e467da18157f3ceb34e80ab7f80e885a1d8e625b7c9054dd5cb14e872a05",
+    "content_type": "text/html"
+  },
+  "openspeclib-release.json": {
+    "url": "https://api.github.com/repos/null-jones/openspeclib/releases/tags/v0.0.6",
+    "resolved_url": "https://api.github.com/repos/null-jones/openspeclib/releases/tags/v0.0.6",
+    "downloaded_utc": "2026-09-30T00:38:40.755076+00:00",
+    "bytes": 13986,
+    "sha256": "4b6782587f8286aeedd15311e954622d700085817ab7033fa10f8146970c6c1d",
+    "content_type": "application/json; charset=utf-8"
+  },
+  "pavo-LICENSE.md": {
+    "url": "https://raw.githubusercontent.com/rmaia/pavo/f25bdb2f5d0ed7fe3386e9946b72b6b15b4f2bb2/LICENSE.md",
+    "resolved_url": "https://raw.githubusercontent.com/rmaia/pavo/f25bdb2f5d0ed7fe3386e9946b72b6b15b4f2bb2/LICENSE.md",
+    "downloaded_utc": "2026-09-30T00:37:04.801933+00:00",
+    "bytes": 17895,
+    "sha256": "aef8b4222b79d0dbf6bf17cfff71c90a6a6bb8917a4162abe417b469ed22da2e",
+    "content_type": "text/plain; charset=utf-8"
+  },
+  "pavo-NEWS.md": {
+    "url": "https://raw.githubusercontent.com/rmaia/pavo/f25bdb2f5d0ed7fe3386e9946b72b6b15b4f2bb2/NEWS.md",
+    "resolved_url": "https://raw.githubusercontent.com/rmaia/pavo/f25bdb2f5d0ed7fe3386e9946b72b6b15b4f2bb2/NEWS.md",
+    "downloaded_utc": "2026-09-30T00:38:40.753687+00:00",
+    "bytes": 43063,
+    "sha256": "a314d4ade8868ae13c8b96fef8ff69d5ae544eda4ce69f010aed041871329ef9",
+    "content_type": "text/plain; charset=utf-8"
+  },
+  "pavo-data-raw-sysdata.R": {
+    "url": "https://raw.githubusercontent.com/rmaia/pavo/f25bdb2f5d0ed7fe3386e9946b72b6b15b4f2bb2/data-raw/sysdata.R",
+    "resolved_url": "https://raw.githubusercontent.com/rmaia/pavo/f25bdb2f5d0ed7fe3386e9946b72b6b15b4f2bb2/data-raw/sysdata.R",
+    "downloaded_utc": "2026-09-30T00:37:04.815984+00:00",
+    "bytes": 2078,
+    "sha256": "f537e66419bded010e3ceb2affe507d40403c1bb71df78ece70e1e7ce7059500",
+    "content_type": "text/plain; charset=utf-8"
+  },
+  "pavo-data-vissyst.R": {
+    "url": "https://raw.githubusercontent.com/rmaia/pavo/f25bdb2f5d0ed7fe3386e9946b72b6b15b4f2bb2/R/data-vissyst.R",
+    "resolved_url": "https://raw.githubusercontent.com/rmaia/pavo/f25bdb2f5d0ed7fe3386e9946b72b6b15b4f2bb2/R/data-vissyst.R",
+    "downloaded_utc": "2026-09-30T00:37:04.806236+00:00",
+    "bytes": 375,
+    "sha256": "34638505b630febfcef1796ca6ac8440a14fb22617488355007fb5c729def24c",
+    "content_type": "text/plain; charset=utf-8"
+  },
+  "pavo-sysdata.rda": {
+    "url": "https://raw.githubusercontent.com/rmaia/pavo/f25bdb2f5d0ed7fe3386e9946b72b6b15b4f2bb2/R/sysdata.rda",
+    "resolved_url": "https://raw.githubusercontent.com/rmaia/pavo/f25bdb2f5d0ed7fe3386e9946b72b6b15b4f2bb2/R/sysdata.rda",
+    "downloaded_utc": "2026-09-30T00:37:04.825765+00:00",
+    "bytes": 146568,
+    "sha256": "51e1d4c7719e9593249fb8442be133c223cbae09849ad146abb07e98a993479f",
+    "content_type": "application/octet-stream"
+  },
+  "pavo-tree.json": {
+    "url": "https://api.github.com/repos/rmaia/pavo/git/trees/master?recursive=1",
+    "resolved_url": "https://api.github.com/repos/rmaia/pavo/git/trees/master?recursive=1",
+    "downloaded_utc": "2026-09-30T00:36:21.409533+00:00",
+    "bytes": 62407,
+    "sha256": "cdd0d450fdddae5737396ee529521bba8638cfa7e3053c5f93954d93ea4de755",
+    "content_type": "application/json; charset=utf-8"
+  },
+  "prague-tree.json": {
+    "url": "https://api.github.com/repos/PetrVevoda/pragueskymodel/git/trees/master?recursive=1",
+    "resolved_url": "https://api.github.com/repos/PetrVevoda/pragueskymodel/git/trees/master?recursive=1",
+    "downloaded_utc": "2026-09-30T00:37:04.836927+00:00",
+    "bytes": 9711,
+    "sha256": "b0dc110fd94b9c4fba2c55be093d8f8a61ba43696992da2213f7a20d470afdf3",
+    "content_type": "application/json; charset=utf-8"
+  },
+  "sky-dataset-README.md": {
+    "url": "https://entrepot.recherche.data.gouv.fr/api/access/datafile/197223",
+    "resolved_url": "https://prod-espace-generique.opens3r-tls.stockage.inrae.fr/10.57745/9L2YUB/18f1a219f25-f07165d70e41?response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27README.md&response-content-type=text%2Fmarkdown&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260930T004324Z&X-Amz-SignedHeaders=host&X-Amz-Expires=14400&X-Amz-Credential=fe7774ae7b984cc58e9012f0d8d3531c%2F20260930%2Fdataverse%2Fs3%2Faws4_request&X-Amz-Signature=03fa2c56ea244254a2b0f860bc53d06282a112ae053e5434ef4f0c864d3b85c6",
+    "downloaded_utc": "2026-09-30T00:43:28.086990+00:00",
+    "bytes": 8449,
+    "sha256": "d94f3e9210f23e50a0bcbd79da53db89f5f22e301fec0cd6d47e859bdb1b4413",
+    "content_type": "text/markdown"
+  },
+  "sky-measurement-record.json": {
+    "url": "https://entrepot.recherche.data.gouv.fr/api/datasets/:persistentId/?persistentId=doi:10.57745/9L2YUB",
+    "resolved_url": "https://entrepot.recherche.data.gouv.fr/api/datasets/:persistentId/?persistentId=doi:10.57745/9L2YUB",
+    "downloaded_utc": "2026-09-30T00:38:46.263588+00:00",
+    "bytes": 85489,
+    "sha256": "48bdc8b3ae632ce230526ccc809f562a7aa30cb9cadb5b46d82d6a4672daa916",
+    "content_type": "application/json;charset=UTF-8"
+  },
+  "tumbleweed-v5.asc": {
+    "url": "https://pubs.usgs.gov/of/2003/ofr-03-395/ASCII/V/tumbleweed.anp92-2c.veg.11916.asc",
+    "resolved_url": "https://pubs.usgs.gov/of/2003/ofr-03-395/ASCII/V/tumbleweed.anp92-2c.veg.11916.asc",
+    "downloaded_utc": "2026-09-30T00:43:57.540691+00:00",
+    "bytes": 22652,
+    "sha256": "b4dff633bb4ee34c482f8b59c755c7b19ba68c18d90da2e83af5204a15a04514",
+    "content_type": "text/plain"
+  },
+  "tumbleweed.html": {
+    "url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/V/tumbleweed.anp92-2c.veg.html",
+    "resolved_url": "https://pubs.usgs.gov/of/2003/ofr-03-395/DESCRIPT/V/tumbleweed.anp92-2c.veg.html",
+    "downloaded_utc": "2026-09-30T00:43:57.609168+00:00",
+    "bytes": 4491,
+    "sha256": "b760b586389373edc9a26466f88c0d8dd3ca3a6ef6ca1d3f8101c346a4497710",
+    "content_type": "text/html"
+  },
+  "usgs-report.pdf": {
+    "url": "https://pubs.usgs.gov/ds/1035/ds1035.pdf",
+    "resolved_url": "https://pubs.usgs.gov/ds/1035/ds1035.pdf",
+    "downloaded_utc": "2026-09-30T00:43:25.638220+00:00",
+    "bytes": 4684529,
+    "sha256": "ca2d25a08892b5ba6d5eb5f2507c49c4ee75a45d67c96dfc9d9b90dc98176261",
+    "content_type": "application/pdf"
+  },
+  "usgs-v5-table.html": {
+    "url": "https://pubs.usgs.gov/of/2003/ofr-03-395/datatable.html",
+    "resolved_url": "https://pubs.usgs.gov/of/2003/ofr-03-395/datatable.html",
+    "downloaded_utc": "2026-09-30T00:38:41.648393+00:00",
+    "bytes": 266513,
+    "sha256": "bd72b2405e9630a02567257eac1970f5167e3fe36893cf75eb9a44ce86381667",
+    "content_type": "text/html"
+  },
+  "usgs_splib07.parquet": {
+    "url": "https://github.com/null-jones/openspeclib/releases/download/v0.0.6/usgs_splib07.parquet",
+    "resolved_url": "https://release-assets.githubusercontent.com/github-production-release-asset/1210960779/fc8dc669-91ef-49cd-92f2-98505fdb359e?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-09-30T01%3A29%3A24Z&rscd=attachment%3B+filename%3Dusgs_splib07.parquet&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-09-30T00%3A28%3A51Z&ske=2026-09-30T01%3A29%3A24Z&sks=b&skv=2018-11-09&sig=WsE7j3X2oz5%2BG4gjhnXoikJQ7VjQ62Q4bsUHtH4vujw%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MDczMDczNiwibmJmIjoxNzkwNzI4OTM2LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.pPpb3wt_Wes-Wj2J06r8bhCdc9qVwOnmYu7SmDtsC38&response-content-disposition=attachment%3B%20filename%3Dusgs_splib07.parquet&response-content-type=application%2Foctet-stream",
+    "downloaded_utc": "2026-09-30T00:42:19.953203+00:00",
+    "bytes": 39775444,
+    "sha256": "5232bd29810b245fa1b66690c4c5a8068f26e07b8a2112c3e39f5e6dc555767d",
+    "content_type": "application/octet-stream"
+  },
+  "wavelengths.parquet": {
+    "url": "https://github.com/null-jones/openspeclib/releases/download/v0.0.6/wavelengths.parquet",
+    "resolved_url": "https://release-assets.githubusercontent.com/github-production-release-asset/1210960779/07bdf1ec-84ac-4ab6-9eed-fb8177a9cd2f?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-09-30T01%3A18%3A04Z&rscd=attachment%3B+filename%3Dwavelengths.parquet&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-09-30T00%3A17%3A24Z&ske=2026-09-30T01%3A18%3A04Z&sks=b&skv=2018-11-09&sig=HcxL9wfR98FxDnjyKfsoalvx2FNFVzJFzq0KyTtnBOw%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MDcyOTIzNywibmJmIjoxNzkwNzI4OTM3LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.QZfTEfFARmXJM0lh3Ag5tR4IJZhKElsZ4LSbOI7_6rg&response-content-disposition=attachment%3B%20filename%3Dwavelengths.parquet&response-content-type=application%2Foctet-stream",
+    "downloaded_utc": "2026-09-30T00:42:18.057335+00:00",
+    "bytes": 294081,
+    "sha256": "8266017f7bae40b34945d8849c16d86c87fea0179af234d93515da1c225cf8f8",
+    "content_type": "application/octet-stream"
+  }
+}

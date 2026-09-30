@@ -1,0 +1,239 @@
+{
+  "rows": [
+    {
+      "world": "meander",
+      "method": "linear_colour",
+      "scenario": "aligned",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 0.0,
+        "familiarity": 1.0
+      },
+      "delta_vs_exhaustive": 0.0,
+      "delta_vs_active": 1.0
+    },
+    {
+      "world": "meander",
+      "method": "linear_colour",
+      "scenario": "left50",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 0.0,
+        "familiarity": 0.0
+      },
+      "delta_vs_exhaustive": -1.0,
+      "delta_vs_active": 0.0
+    },
+    {
+      "world": "meander",
+      "method": "sobel_colour",
+      "scenario": "aligned",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 0.0,
+        "familiarity": 1.0
+      },
+      "delta_vs_exhaustive": 0.0,
+      "delta_vs_active": 1.0
+    },
+    {
+      "world": "meander",
+      "method": "sobel_colour",
+      "scenario": "left50",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 0.0,
+        "familiarity": 0.5
+      },
+      "delta_vs_exhaustive": -0.5,
+      "delta_vs_active": 0.5
+    },
+    {
+      "world": "meander",
+      "method": "ardin_input",
+      "scenario": "aligned",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 0.0,
+        "familiarity": 0.5
+      },
+      "delta_vs_exhaustive": -0.5,
+      "delta_vs_active": 0.5
+    },
+    {
+      "world": "meander",
+      "method": "ardin_input",
+      "scenario": "left50",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 0.0,
+        "familiarity": 0.0
+      },
+      "delta_vs_exhaustive": -1.0,
+      "delta_vs_active": 0.0
+    },
+    {
+      "world": "bend",
+      "method": "linear_colour",
+      "scenario": "aligned",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 1.0,
+        "familiarity": 1.0
+      },
+      "delta_vs_exhaustive": 0.0,
+      "delta_vs_active": 0.0
+    },
+    {
+      "world": "bend",
+      "method": "linear_colour",
+      "scenario": "left50",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 0.0,
+        "active": 0.0,
+        "familiarity": 0.0
+      },
+      "delta_vs_exhaustive": 0.0,
+      "delta_vs_active": 0.0
+    },
+    {
+      "world": "bend",
+      "method": "sobel_colour",
+      "scenario": "aligned",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 0.0,
+        "familiarity": 0.5
+      },
+      "delta_vs_exhaustive": -0.5,
+      "delta_vs_active": 0.5
+    },
+    {
+      "world": "bend",
+      "method": "sobel_colour",
+      "scenario": "left50",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 0.0,
+        "active": 0.0,
+        "familiarity": 0.0
+      },
+      "delta_vs_exhaustive": 0.0,
+      "delta_vs_active": 0.0
+    },
+    {
+      "world": "bend",
+      "method": "ardin_input",
+      "scenario": "aligned",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 0.0,
+        "familiarity": 0.5
+      },
+      "delta_vs_exhaustive": -0.5,
+      "delta_vs_active": 0.5
+    },
+    {
+      "world": "bend",
+      "method": "ardin_input",
+      "scenario": "left50",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 0.0,
+        "active": 0.0,
+        "familiarity": 0.0
+      },
+      "delta_vs_exhaustive": 0.0,
+      "delta_vs_active": 0.0
+    },
+    {
+      "world": "hairpin",
+      "method": "linear_colour",
+      "scenario": "aligned",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 0.0,
+        "familiarity": 0.5
+      },
+      "delta_vs_exhaustive": -0.5,
+      "delta_vs_active": 0.5
+    },
+    {
+      "world": "hairpin",
+      "method": "linear_colour",
+      "scenario": "left50",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 0.0,
+        "active": 0.0,
+        "familiarity": 0.0
+      },
+      "delta_vs_exhaustive": 0.0,
+      "delta_vs_active": 0.0
+    },
+    {
+      "world": "hairpin",
+      "method": "sobel_colour",
+      "scenario": "aligned",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 0.0,
+        "familiarity": 0.5
+      },
+      "delta_vs_exhaustive": -0.5,
+      "delta_vs_active": 0.5
+    },
+    {
+      "world": "hairpin",
+      "method": "sobel_colour",
+      "scenario": "left50",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 0.0,
+        "active": 0.0,
+        "familiarity": 0.0
+      },
+      "delta_vs_exhaustive": 0.0,
+      "delta_vs_active": 0.0
+    },
+    {
+      "world": "hairpin",
+      "method": "ardin_input",
+      "scenario": "aligned",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 1.0,
+        "active": 0.0,
+        "familiarity": 0.0
+      },
+      "delta_vs_exhaustive": -1.0,
+      "delta_vs_active": 0.0
+    },
+    {
+      "world": "hairpin",
+      "method": "ardin_input",
+      "scenario": "left50",
+      "seed": 19,
+      "arrival": {
+        "exhaustive": 0.0,
+        "active": 0.0,
+        "familiarity": 0.0
+      },
+      "delta_vs_exhaustive": 0.0,
+      "delta_vs_active": 0.0
+    }
+  ],
+  "unit": "Phase-averaged arrival within each world/seed/method/scenario. No significance claim."
+}

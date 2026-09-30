@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ApiaViz · Navigation through the ant's eyes</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08141b;--card:#11242d;--line:#29404a;--ink:#eef6f5;--muted:#a3bac1;--mint:#5ae6c3;--gold:#ffc170}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top left,#12353b 0,transparent 48%),var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    main{max-width:1460px;margin:auto;padding:48px 30px 70px}header{max-width:930px;margin-bottom:32px}.eyebrow{letter-spacing:.16em;font-size:12px;font-weight:700;color:var(--mint)}h1{font-size:clamp(28px,4vw,48px);letter-spacing:-.035em;line-height:1.16;margin:14px 0 20px}p{color:var(--muted);margin:10px 0}a{color:var(--mint)}
+    .choices{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
+    .choice{text-align:left;border:1px solid var(--line);border-radius:14px;padding:18px 21px;background:var(--card);color:var(--ink);transition:border-color .15s,background .15s}.choice:hover{border-color:var(--muted)}.choice[aria-pressed=true]{border-color:var(--mint);background:#173b3e}.choice strong{display:block;font-size:21px}.choice span{display:block;color:var(--muted);font-size:14px;margin-top:3px}.choice small{display:block;color:var(--mint);font-size:12px;margin-top:9px}.choice:last-child small{color:var(--gold)}
+    .player{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#050e13;box-shadow:0 24px 70px #0005}video{display:block;width:100%;aspect-ratio:16/9;background:#050e13}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:15px 20px;background:var(--card)}.rate{border:1px solid var(--line);border-radius:7px;color:var(--muted);background:transparent;padding:4px 12px;margin-left:5px;font-size:14px}.rate[aria-pressed=true]{border-color:var(--mint);color:var(--mint)}.speed-label{color:var(--muted);font-size:14px}.download{font-size:14px;text-decoration:none}
+    .caption{display:flex;justify-content:space-between;gap:24px;margin:21px 0 35px}.caption h2{font-size:23px;margin:0 0 7px}.caption p{max-width:800px;margin:0}.numbers{white-space:nowrap;text-align:right;color:var(--mint);font-size:16px;padding-top:4px}.numbers span{color:var(--muted);display:block;font-size:13px}
+    .guide{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;border-top:1px solid var(--line);padding-top:25px}.guide b{color:var(--mint);font-size:12px;letter-spacing:.09em}.guide h3{font-size:16px;margin:5px 0}.guide p{font-size:14px;margin:0}.notes{max-width:1050px;margin-top:35px;padding-top:22px;border-top:1px solid var(--line);font-size:14px}.notes strong{color:var(--ink)}footer{margin-top:30px;color:var(--muted);font-size:13px}footer a{margin-right:22px}
+    @media(max-width:750px){main{padding:28px 16px}.choices{grid-template-columns:1fr}.choice{padding:12px 16px}.choice small{margin-top:3px}.guide{grid-template-columns:1fr 1fr}.caption{display:block}.numbers{text-align:left;margin-top:14px}.toolbar{padding:12px}.choice strong{font-size:18px}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">APIA VIZ / NAVIGATION FILMS</div>
+    <h1>A route through the ant's eyes.</h1>
+    <p>Watch the agent look around, turn each view into a sparse pattern of firing cells,
+      and choose the direction that best matches its route memory. These are recorded
+      evaluation runs using <strong>linear colour and the original form pathway</strong>.</p>
+  </header>
+  <nav class="choices" aria-label="Choose an ant">
+    <button class="choice" data-clip="4" aria-pressed="true"><strong>Ant 04</strong><span>A close return along the route · 1:37</span><small>Nest reached · 82 steps</small></button>
+    <button class="choice" data-clip="7" aria-pressed="false"><strong>Ant 07</strong><span>A less direct return · 2:23</span><small>Nest reached · 128 steps</small></button>
+    <button class="choice" data-clip="13" aria-pressed="false"><strong>Ant 13</strong><span>A difficult run · 3:35</span><small>Step limit reached · 200 steps</small></button>
+  </nav>
+  <div class="player">
+    <video id="video" controls playsinline preload="metadata" poster="ant-04-linear-colour.png" aria-label="Ant 4 navigation replay">
+      <source src="ant-04-linear-colour.mp4" type="video/mp4">
+      Your browser cannot play this video. <a href="ant-04-linear-colour.mp4">Download the MP4.</a>
+    </video>
+    <div class="toolbar">
+      <div><span class="speed-label">Playback</span><button class="rate" data-rate="0.5" aria-pressed="false">0.5×</button><button class="rate" data-rate="1" aria-pressed="true">1×</button><button class="rate" data-rate="2" aria-pressed="false">2×</button></div>
+      <a class="download" id="download" href="ant-04-linear-colour.mp4" download>Download this video · 1080p MP4</a>
+    </div>
+  </div>
+  <section class="caption" aria-live="polite">
+    <div><h2 id="clip-title">Ant 04 · A close return</h2><p id="clip-description">The agent stays close to the taught route and reaches the nest after 82 steps. Start here to follow the sequence from image to steering decision.</p></div>
+    <div class="numbers"><strong id="deviation">3.35 cm</strong><span>Mean deviation from the route</span></div>
+  </section>
+  <section class="guide" aria-label="Understanding the panels">
+    <div><b>01 / VIEW</b><h3>At the ant's position</h3><p>A detailed panorama shows the scene and turns with each scan direction.</p></div>
+    <div><b>02 / FEATURES</b><h3>What the model receives</h3><p>The actual 74 × 18 input becomes three form maps and two colour maps.</p></div>
+    <div><b>03 / CELLS</b><h3>A sparse visual code</h3><p>Lit dots are cells that fired for the current view. Each stream has 4,000 cells.</p></div>
+    <div><b>04 / ROUTE</b><h3>Where the agent goes</h3><p>The map shows the taught route, the travelled path and distance to the nest.</p></div>
+    <div><b>05 / SCAN</b><h3>Choose the familiar view</h3><p>Thirteen headings are compared with route memory before each 10 cm step.</p></div>
+  </section>
+  <section class="notes">
+    <p><strong>Reading the replay.</strong> All three use wiring seed 19 and the same learning and navigation settings.
+      Each video contains the full trial. The first two steps are slowed threefold; the remainder plays at one decision per second.
+      This is an explanatory playback pace, not a measured walking speed. The videos are silent and include on-screen explanations.</p>
+    <p><strong>Detailed view versus model input.</strong> The large panorama is rendered separately for viewing.
+      It never enters the model. The small input panel, feature maps, firing cells and heading scores come from the original low-resolution computation.
+      During movement, the sensor panels hold the last evaluated view. The map is also for the viewer; it does not guide the agent.</p>
+    <p><strong>Why include a difficult run?</strong> These examples show different behaviours, including a failure, rather than suggesting that every route succeeds.
+      The conclusions about performance come from the full evaluation, not these three clips.</p>
+  </section>
+  <footer><a href="README.md">Reproduction and technical notes</a><a href="../frontend-factorial/report.md">Full performance evaluation</a><span>Everything on this page works locally.</span></footer>
+</main>
+<script>
+  const clips={
+    4:{stem:'ant-04-linear-colour',title:'Ant 04 · A close return',description:'The agent stays close to the taught route and reaches the nest after 82 steps. Start here to follow the sequence from image to steering decision.',deviation:'3.35 cm'},
+    7:{stem:'ant-07-linear-colour',title:'Ant 07 · A less direct return',description:'The agent reaches the nest after 128 steps, with a less direct path and larger deviations. The changing familiarity scores show how its heading decisions develop along the run.',deviation:'18.08 cm'},
+    13:{stem:'ant-13-linear-colour',title:'Ant 13 · A difficult run',description:'The agent does not reach the nest within 200 steps. This example shows the limitations of the same frontend, memory and steering system used in the two successful runs.',deviation:'65.38 cm'}
+  };
+  const video=document.getElementById('video');let rate=1;
+  document.querySelectorAll('.choice').forEach(button=>button.addEventListener('click',()=>{
+    const clip=clips[button.dataset.clip];video.pause();video.poster=clip.stem+'.png';video.src=clip.stem+'.mp4';video.setAttribute('aria-label','Ant '+button.dataset.clip+' navigation replay');video.load();video.playbackRate=rate;
+    document.getElementById('clip-title').textContent=clip.title;document.getElementById('clip-description').textContent=clip.description;document.getElementById('deviation').textContent=clip.deviation;document.getElementById('download').href=clip.stem+'.mp4';
+    document.querySelectorAll('.choice').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+  }));
+  document.querySelectorAll('.rate').forEach(button=>button.addEventListener('click',()=>{
+    rate=Number(button.dataset.rate);video.playbackRate=rate;document.querySelectorAll('.rate').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+  }));
+</script>
+</body>
+</html>

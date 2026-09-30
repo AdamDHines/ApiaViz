@@ -4,10 +4,10 @@ import numpy as np
 import torch
 from tqdm import tqdm
 
-from mbant.config import NetworkConfig, NavigationConfig, ImageConfig
-from mbant.network import MushroomBodyNetwork
-from mbant.renderer import render_panorama
-from mbant.preprocessing import preprocess_single_for_network, to_torch_input
+from .config import NetworkConfig, NavigationConfig, ImageConfig
+from .network import MushroomBodyNetwork
+from .renderer import render_panorama
+from .preprocessing import preprocess_single_for_network, to_torch_input
 
 
 class NavigationAgent:

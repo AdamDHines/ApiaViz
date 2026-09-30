@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "trials": 9,
+  "teaching_views": 693,
+  "exact_replayed_decisions": 684,
+  "exact_replayed_scan_scores": 8892,
+  "panoramas": 1247,
+  "calibration": {
+    "cardinal_directions_passed": true,
+    "periodicity_passed": true,
+    "centre_rgb": [
+      [
+        0.8921712636947632,
+        0.28336670994758606,
+        0.1956464946269989
+      ],
+      [
+        0.48482269048690796,
+        0.8013163208961487,
+        0.3828619122505188
+      ],
+      [
+        0.1873447597026825,
+        0.37612396478652954,
+        0.8545553684234619
+      ],
+      [
+        0.8090612888336182,
+        0.7846763134002686,
+        0.4801980257034302
+      ]
+    ]
+  },
+  "cache_only_replay": true,
+  "training_images_identical": true,
+  "shared_wiring": true,
+  "no_corrective_resets": true,
+  "scan_positions_inside_conservative_stone_footprints": 0,
+  "elapsed_s": 41.559345208108425
+}

@@ -1,0 +1,36 @@
+{
+  "videos": [
+    {
+      "ant": 4,
+      "file": "ant-04-linear-colour.mp4",
+      "bytes": 26955837,
+      "seconds": 97.0,
+      "frames": 2910,
+      "exact_heading_scores": 1066,
+      "fully_decoded": true
+    },
+    {
+      "ant": 7,
+      "file": "ant-07-linear-colour.mp4",
+      "bytes": 41180583,
+      "seconds": 143.0,
+      "frames": 4290,
+      "exact_heading_scores": 1664,
+      "fully_decoded": true
+    },
+    {
+      "ant": 13,
+      "file": "ant-13-linear-colour.mp4",
+      "bytes": 65233630,
+      "seconds": 215.0,
+      "frames": 6450,
+      "exact_heading_scores": 2600,
+      "fully_decoded": true
+    }
+  ],
+  "navigation_decisions": 410,
+  "heading_scores": 5330,
+  "decoded_frames": 13650,
+  "errors": [],
+  "scope": "Every encoded frame decoded without ffprobe errors; H.264/fps/dimensions/durations checked; video/source/input/checkpoint hashes verified; saved result rows matched. Exact scan recomputation and trajectory checks were performed by the video builder."
+}

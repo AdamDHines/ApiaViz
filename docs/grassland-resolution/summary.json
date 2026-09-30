@@ -1,0 +1,382 @@
+{
+  "groups": [
+    {
+      "resolution": "149x39",
+      "mode": "angles",
+      "method": "linear_colour",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 2.564488311174633,
+      "sd_cm": 0.806327155641022,
+      "per_seed_cm": [
+        2.4529220360533803,
+        1.819753986954557,
+        3.420788910515961
+      ],
+      "polyline_mean_cm": 1.9943262221552711,
+      "active_fraction": 0.050593974689642586
+    },
+    {
+      "resolution": "149x39",
+      "mode": "angles",
+      "method": "sobel_colour",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 4.012504252496885,
+      "sd_cm": 1.383913070947754,
+      "per_seed_cm": [
+        3.7065707565692216,
+        5.523785732027798,
+        2.807156268893635
+      ],
+      "polyline_mean_cm": 3.594683942236085,
+      "active_fraction": 0.05031535650293032
+    },
+    {
+      "resolution": "149x39",
+      "mode": "pixels",
+      "method": "ardin_input",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 2.748437240714035,
+      "sd_cm": 0.688033115350727,
+      "per_seed_cm": [
+        3.52179412741769,
+        2.2041868704200978,
+        2.519330724304318
+      ],
+      "polyline_mean_cm": 2.3551311496933724,
+      "active_fraction": 0.05482816199461619
+    },
+    {
+      "resolution": "149x39",
+      "mode": "pixels",
+      "method": "linear_colour",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 4.220033144207674,
+      "sd_cm": 0.5139158161792512,
+      "per_seed_cm": [
+        4.222817944485737,
+        4.732550901377043,
+        3.704730586760243
+      ],
+      "polyline_mean_cm": 3.952037554899888,
+      "active_fraction": 0.048216390113035835
+    },
+    {
+      "resolution": "149x39",
+      "mode": "pixels",
+      "method": "sobel_colour",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 2.429065637684442,
+      "sd_cm": 1.0743716783302486,
+      "per_seed_cm": [
+        2.131334508021128,
+        3.620903701683844,
+        1.5349587033483556
+      ],
+      "polyline_mean_cm": 2.0757534966809237,
+      "active_fraction": 0.04956812163194021
+    },
+    {
+      "resolution": "199x51",
+      "mode": "angles",
+      "method": "linear_colour",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 2.128908336376163,
+      "sd_cm": 0.849765315171307,
+      "per_seed_cm": [
+        2.1261616664885112,
+        2.98004365724404,
+        1.280519685395938
+      ],
+      "polyline_mean_cm": 1.6012404143866503,
+      "active_fraction": 0.05061297615369161
+    },
+    {
+      "resolution": "199x51",
+      "mode": "angles",
+      "method": "sobel_colour",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 3.284007090523241,
+      "sd_cm": 0.9897974572520322,
+      "per_seed_cm": [
+        2.718787960506288,
+        4.426904111955294,
+        2.706329199108141
+      ],
+      "polyline_mean_cm": 2.739350217678662,
+      "active_fraction": 0.05031812315185865
+    },
+    {
+      "resolution": "199x51",
+      "mode": "pixels",
+      "method": "ardin_input",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 4.829662032549458,
+      "sd_cm": 3.8737541195448983,
+      "per_seed_cm": [
+        9.280278714450068,
+        2.2170820275413865,
+        2.99162535565692
+      ],
+      "polyline_mean_cm": 4.270618962578808,
+      "active_fraction": 0.055372294038534164
+    },
+    {
+      "resolution": "199x51",
+      "mode": "pixels",
+      "method": "linear_colour",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 3.553948461460203,
+      "sd_cm": 1.013423689763197,
+      "per_seed_cm": [
+        3.0460615743720183,
+        4.720890129217332,
+        2.8948936807912595
+      ],
+      "polyline_mean_cm": 3.31937392830496,
+      "active_fraction": 0.0481179046134154
+    },
+    {
+      "resolution": "199x51",
+      "mode": "pixels",
+      "method": "sobel_colour",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 3.643836072242394,
+      "sd_cm": 0.345832002987888,
+      "per_seed_cm": [
+        4.038214483117966,
+        3.392341930868189,
+        3.500951802741028
+      ],
+      "polyline_mean_cm": 3.1666147542118073,
+      "active_fraction": 0.049384559194246926
+    },
+    {
+      "resolution": "74x18",
+      "mode": "pixels",
+      "method": "ardin_input",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 4.725246782980718,
+      "sd_cm": 0.2771039716125535,
+      "per_seed_cm": [
+        5.044945557479337,
+        4.55394613940243,
+        4.576848652060388
+      ],
+      "polyline_mean_cm": 3.732967162610956,
+      "active_fraction": 0.054173460851113
+    },
+    {
+      "resolution": "74x18",
+      "mode": "pixels",
+      "method": "linear_colour",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 3.13097446034125,
+      "sd_cm": 0.3816856124208067,
+      "per_seed_cm": [
+        2.721730510291288,
+        3.193915636597753,
+        3.4772772341347102
+      ],
+      "polyline_mean_cm": 1.997871863921689,
+      "active_fraction": 0.05037055040399233
+    },
+    {
+      "resolution": "74x18",
+      "mode": "pixels",
+      "method": "sobel_colour",
+      "n": 3,
+      "reached": 3,
+      "mean_cm": 3.163799568965143,
+      "sd_cm": 0.49602335080794036,
+      "per_seed_cm": [
+        2.885526240407536,
+        2.869390237406319,
+        3.7364822290815733
+      ],
+      "polyline_mean_cm": 2.509937059721165,
+      "active_fraction": 0.05028463155031204
+    }
+  ],
+  "paired_effects": [
+    {
+      "resolution": "149x39",
+      "mode": "angles",
+      "method": "linear_colour",
+      "comparison": "minus 74x18",
+      "mean_delta_cm": -0.5664861491666171,
+      "paired_seed_deltas_cm": [
+        -0.26880847423790755,
+        -1.3741616496431959,
+        -0.05648832361874945
+      ]
+    },
+    {
+      "resolution": "149x39",
+      "mode": "angles",
+      "method": "linear_colour",
+      "comparison": "fixed angles minus fixed pixels",
+      "mean_delta_cm": -1.6555448330330411,
+      "paired_seed_deltas_cm": [
+        -1.7698959084323564,
+        -2.9127969144224863,
+        -0.28394167624428235
+      ]
+    },
+    {
+      "resolution": "149x39",
+      "mode": "angles",
+      "method": "sobel_colour",
+      "comparison": "minus 74x18",
+      "mean_delta_cm": 0.8487046835317416,
+      "paired_seed_deltas_cm": [
+        0.8210445161616855,
+        2.6543954946214785,
+        -0.9293259601879384
+      ]
+    },
+    {
+      "resolution": "149x39",
+      "mode": "angles",
+      "method": "sobel_colour",
+      "comparison": "fixed angles minus fixed pixels",
+      "mean_delta_cm": 1.5834386148124424,
+      "paired_seed_deltas_cm": [
+        1.5752362485480935,
+        1.9028820303439535,
+        1.2721975655452793
+      ]
+    },
+    {
+      "resolution": "149x39",
+      "mode": "pixels",
+      "method": "ardin_input",
+      "comparison": "minus 74x18",
+      "mean_delta_cm": -1.976809542266683,
+      "paired_seed_deltas_cm": [
+        -1.5231514300616467,
+        -2.349759268982332,
+        -2.05751792775607
+      ]
+    },
+    {
+      "resolution": "149x39",
+      "mode": "pixels",
+      "method": "linear_colour",
+      "comparison": "minus 74x18",
+      "mean_delta_cm": 1.089058683866424,
+      "paired_seed_deltas_cm": [
+        1.501087434194449,
+        1.5386352647792902,
+        0.2274533526255329
+      ]
+    },
+    {
+      "resolution": "149x39",
+      "mode": "pixels",
+      "method": "sobel_colour",
+      "comparison": "minus 74x18",
+      "mean_delta_cm": -0.7347339312807009,
+      "paired_seed_deltas_cm": [
+        -0.754191732386408,
+        0.751513464277525,
+        -2.2015235257332177
+      ]
+    },
+    {
+      "resolution": "199x51",
+      "mode": "angles",
+      "method": "linear_colour",
+      "comparison": "minus 74x18",
+      "mean_delta_cm": -1.0020661239650872,
+      "paired_seed_deltas_cm": [
+        -0.5955688438027766,
+        -0.21387197935371294,
+        -2.1967575487387725
+      ]
+    },
+    {
+      "resolution": "199x51",
+      "mode": "angles",
+      "method": "linear_colour",
+      "comparison": "fixed angles minus fixed pixels",
+      "mean_delta_cm": -1.42504012508404,
+      "paired_seed_deltas_cm": [
+        -0.9198999078835071,
+        -1.740846471973292,
+        -1.6143739953953216
+      ]
+    },
+    {
+      "resolution": "199x51",
+      "mode": "angles",
+      "method": "sobel_colour",
+      "comparison": "minus 74x18",
+      "mean_delta_cm": 0.12020752155809777,
+      "paired_seed_deltas_cm": [
+        -0.166738279901248,
+        1.5575138745489752,
+        -1.0301530299734325
+      ]
+    },
+    {
+      "resolution": "199x51",
+      "mode": "angles",
+      "method": "sobel_colour",
+      "comparison": "fixed angles minus fixed pixels",
+      "mean_delta_cm": -0.35982898171915334,
+      "paired_seed_deltas_cm": [
+        -1.319426522611678,
+        1.0345621810871055,
+        -0.7946226036328872
+      ]
+    },
+    {
+      "resolution": "199x51",
+      "mode": "pixels",
+      "method": "ardin_input",
+      "comparison": "minus 74x18",
+      "mean_delta_cm": 0.10441524956874026,
+      "paired_seed_deltas_cm": [
+        4.235333156970731,
+        -2.3368641118610434,
+        -1.585223296403468
+      ]
+    },
+    {
+      "resolution": "199x51",
+      "mode": "pixels",
+      "method": "linear_colour",
+      "comparison": "minus 74x18",
+      "mean_delta_cm": 0.4229740011189529,
+      "paired_seed_deltas_cm": [
+        0.3243310640807304,
+        1.526974492619579,
+        -0.5823835533434507
+      ]
+    },
+    {
+      "resolution": "199x51",
+      "mode": "pixels",
+      "method": "sobel_colour",
+      "comparison": "minus 74x18",
+      "mean_delta_cm": 0.4800365032772511,
+      "paired_seed_deltas_cm": [
+        1.15268824271043,
+        0.5229516934618696,
+        -0.23553042634054533
+      ]
+    }
+  ]
+}

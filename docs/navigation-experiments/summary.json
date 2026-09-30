@@ -1,0 +1,2049 @@
+{
+  "stage1": [
+    {
+      "bank": "centre",
+      "method": "linear_colour",
+      "memory_views": 77,
+      "per_seed_polyline_cm": [
+        1.2231484057559714,
+        3.9291204286439103,
+        0.9397643877240107
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 2.030677740707964,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    },
+    {
+      "bank": "centre",
+      "method": "sobel_colour",
+      "memory_views": 77,
+      "per_seed_polyline_cm": [
+        1.8025259766860398,
+        3.5580369069369295,
+        2.7037294312432234
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 2.6880974382887306,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    },
+    {
+      "bank": "centre",
+      "method": "ardin_input",
+      "memory_views": 77,
+      "per_seed_polyline_cm": [
+        2.1327169157021175,
+        1.1497796505537714,
+        4.902345150706941
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 2.728280572320943,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    },
+    {
+      "bank": "spread_equal",
+      "method": "linear_colour",
+      "memory_views": 77,
+      "per_seed_polyline_cm": [
+        3.9924815189229945,
+        2.7350226706090637,
+        4.966688517610423
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 3.8980642357141604,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    },
+    {
+      "bank": "spread_equal",
+      "method": "sobel_colour",
+      "memory_views": 77,
+      "per_seed_polyline_cm": [
+        3.1072838107754843,
+        6.608881869558955,
+        3.2828916704186915
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 4.33301911691771,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    },
+    {
+      "bank": "spread_equal",
+      "method": "ardin_input",
+      "memory_views": 77,
+      "per_seed_polyline_cm": [
+        5.439586346726566,
+        4.3655972244857155,
+        4.211047738671297
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 4.672077103294526,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    },
+    {
+      "bank": "corridor3",
+      "method": "linear_colour",
+      "memory_views": 231,
+      "per_seed_polyline_cm": [
+        1.2231484057559714,
+        3.1721523047711435,
+        0.9397643877240107
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 1.7783550327503752,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    },
+    {
+      "bank": "corridor3",
+      "method": "sobel_colour",
+      "memory_views": 231,
+      "per_seed_polyline_cm": [
+        1.8025259766860398,
+        1.5782757480686793,
+        1.2883517009030692
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 1.5563844752192626,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    },
+    {
+      "bank": "corridor3",
+      "method": "ardin_input",
+      "memory_views": 231,
+      "per_seed_polyline_cm": [
+        2.1327169157021175,
+        1.7076933444320455,
+        4.856480693598576
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 2.8989636512442463,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    },
+    {
+      "bank": "corridor9",
+      "method": "linear_colour",
+      "memory_views": 693,
+      "per_seed_polyline_cm": [
+        1.121276890077313,
+        2.6945725725461536,
+        0.9878717805364846
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 1.6012404143866503,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    },
+    {
+      "bank": "corridor9",
+      "method": "sobel_colour",
+      "memory_views": 693,
+      "per_seed_polyline_cm": [
+        2.2100414236510093,
+        4.170332739661507,
+        1.8376764897234696
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 2.7393502176786617,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    },
+    {
+      "bank": "corridor9",
+      "method": "ardin_input",
+      "memory_views": 693,
+      "per_seed_polyline_cm": [
+        8.903248553046552,
+        1.906852739885168,
+        2.0017555948047043
+      ],
+      "n": 3,
+      "valid": 3,
+      "arrived": 3,
+      "mean_polyline_cm": 4.270618962578808,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3
+      }
+    }
+  ],
+  "stage2": [
+    {
+      "scenario": "aligned",
+      "method": "linear_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 9,
+      "mean_polyline_cm": 1.9375417356234548,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 9
+      }
+    },
+    {
+      "scenario": "aligned",
+      "method": "sobel_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 9,
+      "mean_polyline_cm": 2.492826607341171,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 9
+      }
+    },
+    {
+      "scenario": "aligned",
+      "method": "ardin_input",
+      "n": 9,
+      "valid": 9,
+      "arrived": 9,
+      "mean_polyline_cm": 2.8753831858063643,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 9
+      }
+    },
+    {
+      "scenario": "left50",
+      "method": "linear_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 3,
+      "mean_polyline_cm": 34.515427881681006,
+      "recovered": 3,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 3,
+      "terminations": {
+        "arrival": 3,
+        "rock_collision": 6
+      }
+    },
+    {
+      "scenario": "left50",
+      "method": "sobel_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 3,
+      "mean_polyline_cm": 35.25566620958993,
+      "recovered": 3,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 3,
+      "terminations": {
+        "arrival": 3,
+        "rock_collision": 6
+      }
+    },
+    {
+      "scenario": "left50",
+      "method": "ardin_input",
+      "n": 9,
+      "valid": 9,
+      "arrived": 3,
+      "mean_polyline_cm": 41.52472730084453,
+      "recovered": 3,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 3,
+      "terminations": {
+        "arrival": 3,
+        "rock_collision": 6
+      }
+    },
+    {
+      "scenario": "right50",
+      "method": "linear_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 1,
+      "mean_polyline_cm": 147.40813071094226,
+      "recovered": 1,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "rock_collision": 6,
+        "field_boundary": 2,
+        "arrival": 1
+      }
+    },
+    {
+      "scenario": "right50",
+      "method": "sobel_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 1,
+      "mean_polyline_cm": 67.29026315110318,
+      "recovered": 1,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "rock_collision": 7,
+        "field_boundary": 1,
+        "arrival": 1
+      }
+    },
+    {
+      "scenario": "right50",
+      "method": "ardin_input",
+      "n": 9,
+      "valid": 9,
+      "arrived": 2,
+      "mean_polyline_cm": 46.08819825936903,
+      "recovered": 1,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "field_boundary": 1,
+        "rock_collision": 6,
+        "arrival": 2
+      }
+    },
+    {
+      "scenario": "yaw_left40",
+      "method": "linear_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 9,
+      "mean_polyline_cm": 1.9375417356234548,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 9
+      }
+    },
+    {
+      "scenario": "yaw_left40",
+      "method": "sobel_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 9,
+      "mean_polyline_cm": 2.492826607341171,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 9
+      }
+    },
+    {
+      "scenario": "yaw_left40",
+      "method": "ardin_input",
+      "n": 9,
+      "valid": 9,
+      "arrived": 9,
+      "mean_polyline_cm": 2.8753831858063643,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 9
+      }
+    },
+    {
+      "scenario": "yaw_right40",
+      "method": "linear_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 9,
+      "mean_polyline_cm": 1.9375417356234548,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 9
+      }
+    },
+    {
+      "scenario": "yaw_right40",
+      "method": "sobel_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 9,
+      "mean_polyline_cm": 2.492826607341171,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 9
+      }
+    },
+    {
+      "scenario": "yaw_right40",
+      "method": "ardin_input",
+      "n": 9,
+      "valid": 9,
+      "arrived": 9,
+      "mean_polyline_cm": 2.8753831858063643,
+      "recovered": 0,
+      "recovery_eligible": 0,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 9
+      }
+    },
+    {
+      "scenario": "kick_left50",
+      "method": "linear_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 4,
+      "mean_polyline_cm": 10.40782920525042,
+      "recovered": 3,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 3,
+      "terminations": {
+        "arrival": 4,
+        "rock_collision": 2,
+        "displacement_into_rock": 3
+      }
+    },
+    {
+      "scenario": "kick_left50",
+      "method": "sobel_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 3,
+      "mean_polyline_cm": 9.768282270356996,
+      "recovered": 1,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "rock_collision": 3,
+        "arrival": 3,
+        "displacement_into_rock": 3
+      }
+    },
+    {
+      "scenario": "kick_left50",
+      "method": "ardin_input",
+      "n": 9,
+      "valid": 9,
+      "arrived": 3,
+      "mean_polyline_cm": 9.107410491389963,
+      "recovered": 2,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 2,
+      "terminations": {
+        "rock_collision": 3,
+        "arrival": 3,
+        "displacement_into_rock": 3
+      }
+    },
+    {
+      "scenario": "kick_right50",
+      "method": "linear_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 2,
+      "mean_polyline_cm": 54.461984427327245,
+      "recovered": 0,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "field_boundary": 5,
+        "arrival": 2,
+        "rock_collision": 2
+      }
+    },
+    {
+      "scenario": "kick_right50",
+      "method": "sobel_colour",
+      "n": 9,
+      "valid": 9,
+      "arrived": 1,
+      "mean_polyline_cm": 54.22134389268868,
+      "recovered": 1,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "field_boundary": 4,
+        "rock_collision": 4,
+        "arrival": 1
+      }
+    },
+    {
+      "scenario": "kick_right50",
+      "method": "ardin_input",
+      "n": 9,
+      "valid": 9,
+      "arrived": 1,
+      "mean_polyline_cm": 34.937932302403226,
+      "recovered": 1,
+      "recovery_eligible": 9,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "field_boundary": 3,
+        "rock_collision": 5,
+        "arrival": 1
+      }
+    }
+  ],
+  "stage3": [
+    {
+      "controller": "exhaustive",
+      "method": "linear_colour",
+      "median_views_per_m": 130.0,
+      "successful_mean_views": 1042.7857142857142,
+      "successful_mean_time_s": 239.75039682539656,
+      "n": 27,
+      "valid": 27,
+      "arrived": 14,
+      "mean_polyline_cm": 29.778679281526767,
+      "recovered": 3,
+      "recovery_eligible": 18,
+      "recovered_and_arrived": 3,
+      "terminations": {
+        "arrival": 14,
+        "field_boundary": 5,
+        "rock_collision": 8
+      }
+    },
+    {
+      "controller": "exhaustive",
+      "method": "sobel_colour",
+      "median_views_per_m": 130.0,
+      "successful_mean_views": 1048.0,
+      "successful_mean_time_s": 240.9769230769229,
+      "n": 27,
+      "valid": 27,
+      "arrived": 13,
+      "mean_polyline_cm": 30.081730489908676,
+      "recovered": 4,
+      "recovery_eligible": 18,
+      "recovered_and_arrived": 4,
+      "terminations": {
+        "arrival": 13,
+        "field_boundary": 4,
+        "rock_collision": 10
+      }
+    },
+    {
+      "controller": "exhaustive",
+      "method": "ardin_input",
+      "median_views_per_m": 130.0,
+      "successful_mean_views": 1049.0,
+      "successful_mean_time_s": 241.189316239316,
+      "n": 27,
+      "valid": 27,
+      "arrived": 13,
+      "mean_polyline_cm": 24.561175133289726,
+      "recovered": 4,
+      "recovery_eligible": 18,
+      "recovered_and_arrived": 4,
+      "terminations": {
+        "arrival": 13,
+        "field_boundary": 3,
+        "rock_collision": 11
+      }
+    },
+    {
+      "controller": "active",
+      "method": "linear_colour",
+      "median_views_per_m": 12.876838235294116,
+      "successful_mean_views": 106.66666666666667,
+      "successful_mean_time_s": 105.26067976272884,
+      "n": 27,
+      "valid": 27,
+      "arrived": 3,
+      "mean_polyline_cm": 66.76275829579296,
+      "recovered": 4,
+      "recovery_eligible": 18,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "rock_collision": 19,
+        "field_boundary": 5,
+        "arrival": 3
+      }
+    },
+    {
+      "controller": "active",
+      "method": "sobel_colour",
+      "median_views_per_m": 11.376008064516128,
+      "successful_mean_views": 85.33333333333333,
+      "successful_mean_time_s": 88.27988892530023,
+      "n": 27,
+      "valid": 27,
+      "arrived": 3,
+      "mean_polyline_cm": 37.70015184889014,
+      "recovered": 6,
+      "recovery_eligible": 18,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "rock_collision": 19,
+        "field_boundary": 5,
+        "arrival": 3
+      }
+    },
+    {
+      "controller": "active",
+      "method": "ardin_input",
+      "median_views_per_m": 11.008771929824562,
+      "successful_mean_views": null,
+      "successful_mean_time_s": null,
+      "n": 27,
+      "valid": 27,
+      "arrived": 0,
+      "mean_polyline_cm": 44.76911220068939,
+      "recovered": 6,
+      "recovery_eligible": 17,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "rock_collision": 24,
+        "field_boundary": 3
+      }
+    }
+  ],
+  "worlds": [
+    {
+      "stage": 2,
+      "world": "meander",
+      "method": "linear_colour",
+      "controller": "exhaustive",
+      "n": 21,
+      "valid": 21,
+      "arrived": 16,
+      "mean_polyline_cm": 33.87184969463758,
+      "recovered": 5,
+      "recovery_eligible": 12,
+      "recovered_and_arrived": 5,
+      "terminations": {
+        "arrival": 16,
+        "rock_collision": 2,
+        "field_boundary": 3
+      }
+    },
+    {
+      "stage": 2,
+      "world": "meander",
+      "method": "sobel_colour",
+      "controller": "exhaustive",
+      "n": 21,
+      "valid": 21,
+      "arrived": 12,
+      "mean_polyline_cm": 22.37143925606768,
+      "recovered": 3,
+      "recovery_eligible": 12,
+      "recovered_and_arrived": 3,
+      "terminations": {
+        "arrival": 12,
+        "rock_collision": 5,
+        "field_boundary": 4
+      }
+    },
+    {
+      "stage": 2,
+      "world": "meander",
+      "method": "ardin_input",
+      "controller": "exhaustive",
+      "n": 21,
+      "valid": 21,
+      "arrived": 12,
+      "mean_polyline_cm": 20.822018276195877,
+      "recovered": 3,
+      "recovery_eligible": 12,
+      "recovered_and_arrived": 3,
+      "terminations": {
+        "arrival": 12,
+        "field_boundary": 3,
+        "rock_collision": 6
+      }
+    },
+    {
+      "stage": 2,
+      "world": "bend",
+      "method": "linear_colour",
+      "controller": "exhaustive",
+      "n": 21,
+      "valid": 21,
+      "arrived": 11,
+      "mean_polyline_cm": 44.26749719955918,
+      "recovered": 2,
+      "recovery_eligible": 12,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "arrival": 11,
+        "rock_collision": 7,
+        "field_boundary": 3
+      }
+    },
+    {
+      "stage": 2,
+      "world": "bend",
+      "method": "sobel_colour",
+      "controller": "exhaustive",
+      "n": 21,
+      "valid": 21,
+      "arrived": 13,
+      "mean_polyline_cm": 23.295773684276426,
+      "recovered": 2,
+      "recovery_eligible": 12,
+      "recovered_and_arrived": 2,
+      "terminations": {
+        "arrival": 13,
+        "rock_collision": 8
+      }
+    },
+    {
+      "stage": 2,
+      "world": "bend",
+      "method": "ardin_input",
+      "controller": "exhaustive",
+      "n": 21,
+      "valid": 21,
+      "arrived": 14,
+      "mean_polyline_cm": 23.29600584077615,
+      "recovered": 3,
+      "recovery_eligible": 12,
+      "recovered_and_arrived": 3,
+      "terminations": {
+        "arrival": 14,
+        "rock_collision": 6,
+        "field_boundary": 1
+      }
+    },
+    {
+      "stage": 2,
+      "world": "hairpin",
+      "method": "linear_colour",
+      "controller": "exhaustive",
+      "n": 21,
+      "valid": 21,
+      "arrived": 10,
+      "mean_polyline_cm": 5.783801088842674,
+      "recovered": 0,
+      "recovery_eligible": 12,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 10,
+        "rock_collision": 7,
+        "displacement_into_rock": 3,
+        "field_boundary": 1
+      }
+    },
+    {
+      "stage": 2,
+      "world": "hairpin",
+      "method": "sobel_colour",
+      "controller": "exhaustive",
+      "n": 21,
+      "valid": 21,
+      "arrived": 10,
+      "mean_polyline_cm": 22.922957589603648,
+      "recovered": 1,
+      "recovery_eligible": 12,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "arrival": 10,
+        "rock_collision": 7,
+        "displacement_into_rock": 3,
+        "field_boundary": 1
+      }
+    },
+    {
+      "stage": 2,
+      "world": "hairpin",
+      "method": "ardin_input",
+      "controller": "exhaustive",
+      "n": 21,
+      "valid": 21,
+      "arrived": 10,
+      "mean_polyline_cm": 4.882831871051955,
+      "recovered": 1,
+      "recovery_eligible": 12,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "arrival": 10,
+        "rock_collision": 8,
+        "displacement_into_rock": 3
+      }
+    },
+    {
+      "stage": 3,
+      "world": "meander",
+      "method": "linear_colour",
+      "controller": "exhaustive",
+      "n": 9,
+      "valid": 9,
+      "arrived": 7,
+      "mean_polyline_cm": 13.972864949161712,
+      "recovered": 3,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 3,
+      "terminations": {
+        "arrival": 7,
+        "field_boundary": 2
+      }
+    },
+    {
+      "stage": 3,
+      "world": "meander",
+      "method": "linear_colour",
+      "controller": "active",
+      "n": 9,
+      "valid": 9,
+      "arrived": 0,
+      "mean_polyline_cm": 73.24278803278017,
+      "recovered": 3,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "rock_collision": 6,
+        "field_boundary": 3
+      }
+    },
+    {
+      "stage": 3,
+      "world": "meander",
+      "method": "sobel_colour",
+      "controller": "exhaustive",
+      "n": 9,
+      "valid": 9,
+      "arrived": 6,
+      "mean_polyline_cm": 15.830275286316493,
+      "recovered": 3,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 3,
+      "terminations": {
+        "arrival": 6,
+        "field_boundary": 3
+      }
+    },
+    {
+      "stage": 3,
+      "world": "meander",
+      "method": "sobel_colour",
+      "controller": "active",
+      "n": 9,
+      "valid": 9,
+      "arrived": 0,
+      "mean_polyline_cm": 34.2056818001593,
+      "recovered": 5,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "rock_collision": 8,
+        "field_boundary": 1
+      }
+    },
+    {
+      "stage": 3,
+      "world": "meander",
+      "method": "ardin_input",
+      "controller": "exhaustive",
+      "n": 9,
+      "valid": 9,
+      "arrived": 6,
+      "mean_polyline_cm": 16.325532174326195,
+      "recovered": 3,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 3,
+      "terminations": {
+        "arrival": 6,
+        "field_boundary": 2,
+        "rock_collision": 1
+      }
+    },
+    {
+      "stage": 3,
+      "world": "meander",
+      "method": "ardin_input",
+      "controller": "active",
+      "n": 9,
+      "valid": 9,
+      "arrived": 0,
+      "mean_polyline_cm": 28.72067656231621,
+      "recovered": 6,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "rock_collision": 7,
+        "field_boundary": 2
+      }
+    },
+    {
+      "stage": 3,
+      "world": "bend",
+      "method": "linear_colour",
+      "controller": "exhaustive",
+      "n": 9,
+      "valid": 9,
+      "arrived": 3,
+      "mean_polyline_cm": 57.298153925594775,
+      "recovered": 0,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3,
+        "rock_collision": 4,
+        "field_boundary": 2
+      }
+    },
+    {
+      "stage": 3,
+      "world": "bend",
+      "method": "linear_colour",
+      "controller": "active",
+      "n": 9,
+      "valid": 9,
+      "arrived": 2,
+      "mean_polyline_cm": 61.37772773953613,
+      "recovered": 1,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "arrival": 2,
+        "rock_collision": 6,
+        "field_boundary": 1
+      }
+    },
+    {
+      "stage": 3,
+      "world": "bend",
+      "method": "sobel_colour",
+      "controller": "exhaustive",
+      "n": 9,
+      "valid": 9,
+      "arrived": 3,
+      "mean_polyline_cm": 31.316794689440837,
+      "recovered": 0,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3,
+        "rock_collision": 6
+      }
+    },
+    {
+      "stage": 3,
+      "world": "bend",
+      "method": "sobel_colour",
+      "controller": "active",
+      "n": 9,
+      "valid": 9,
+      "arrived": 3,
+      "mean_polyline_cm": 46.815045666924036,
+      "recovered": 1,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "rock_collision": 5,
+        "arrival": 3,
+        "field_boundary": 1
+      }
+    },
+    {
+      "stage": 3,
+      "world": "bend",
+      "method": "ardin_input",
+      "controller": "exhaustive",
+      "n": 9,
+      "valid": 9,
+      "arrived": 3,
+      "mean_polyline_cm": 43.85412036135093,
+      "recovered": 0,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 3,
+        "rock_collision": 5,
+        "field_boundary": 1
+      }
+    },
+    {
+      "stage": 3,
+      "world": "bend",
+      "method": "ardin_input",
+      "controller": "active",
+      "n": 9,
+      "valid": 9,
+      "arrived": 0,
+      "mean_polyline_cm": 62.69825669977268,
+      "recovered": 0,
+      "recovery_eligible": 5,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "rock_collision": 8,
+        "field_boundary": 1
+      }
+    },
+    {
+      "stage": 3,
+      "world": "hairpin",
+      "method": "linear_colour",
+      "controller": "exhaustive",
+      "n": 9,
+      "valid": 9,
+      "arrived": 4,
+      "mean_polyline_cm": 12.208188813972333,
+      "recovered": 0,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "arrival": 4,
+        "rock_collision": 4,
+        "field_boundary": 1
+      }
+    },
+    {
+      "stage": 3,
+      "world": "hairpin",
+      "method": "linear_colour",
+      "controller": "active",
+      "n": 9,
+      "valid": 9,
+      "arrived": 1,
+      "mean_polyline_cm": 65.12025952469737,
+      "recovered": 0,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "rock_collision": 7,
+        "field_boundary": 1,
+        "arrival": 1
+      }
+    },
+    {
+      "stage": 3,
+      "world": "hairpin",
+      "method": "sobel_colour",
+      "controller": "exhaustive",
+      "n": 9,
+      "valid": 9,
+      "arrived": 4,
+      "mean_polyline_cm": 49.60631699599872,
+      "recovered": 1,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "arrival": 4,
+        "rock_collision": 4,
+        "field_boundary": 1
+      }
+    },
+    {
+      "stage": 3,
+      "world": "hairpin",
+      "method": "sobel_colour",
+      "controller": "active",
+      "n": 9,
+      "valid": 9,
+      "arrived": 0,
+      "mean_polyline_cm": 29.26951619493554,
+      "recovered": 0,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "field_boundary": 3,
+        "rock_collision": 6
+      }
+    },
+    {
+      "stage": 3,
+      "world": "hairpin",
+      "method": "ardin_input",
+      "controller": "exhaustive",
+      "n": 9,
+      "valid": 9,
+      "arrived": 4,
+      "mean_polyline_cm": 7.97522172964324,
+      "recovered": 1,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 1,
+      "terminations": {
+        "arrival": 4,
+        "rock_collision": 5
+      }
+    },
+    {
+      "stage": 3,
+      "world": "hairpin",
+      "method": "ardin_input",
+      "controller": "active",
+      "n": 9,
+      "valid": 9,
+      "arrived": 0,
+      "mean_polyline_cm": 41.94804890962424,
+      "recovered": 0,
+      "recovery_eligible": 6,
+      "recovered_and_arrived": 0,
+      "terminations": {
+        "rock_collision": 9
+      }
+    }
+  ],
+  "paired_controller": [
+    {
+      "method": "linear_colour",
+      "pairs": 27,
+      "both_arrived": 2,
+      "mean_active_minus_exhaustive_views": -985.5,
+      "mean_active_minus_exhaustive_time_s": -139.50665804196103,
+      "active_only_arrival": 1,
+      "exhaustive_only_arrival": 12
+    },
+    {
+      "method": "sobel_colour",
+      "pairs": 27,
+      "both_arrived": 2,
+      "mean_active_minus_exhaustive_views": -902.0,
+      "mean_active_minus_exhaustive_time_s": -138.37083059590918,
+      "active_only_arrival": 1,
+      "exhaustive_only_arrival": 11
+    },
+    {
+      "method": "ardin_input",
+      "pairs": 27,
+      "both_arrived": 0,
+      "mean_active_minus_exhaustive_views": null,
+      "mean_active_minus_exhaustive_time_s": null,
+      "active_only_arrival": 0,
+      "exhaustive_only_arrival": 13
+    }
+  ],
+  "geometric_validity_sensitivity": {
+    "2": {
+      "invalid_trials": [
+        {
+          "id": "hairpin-19-linear_colour-kick_left50-exhaustive",
+          "reason": "displacement_into_rock"
+        },
+        {
+          "id": "hairpin-19-sobel_colour-kick_left50-exhaustive",
+          "reason": "displacement_into_rock"
+        },
+        {
+          "id": "hairpin-19-ardin_input-kick_left50-exhaustive",
+          "reason": "displacement_into_rock"
+        },
+        {
+          "id": "hairpin-31-linear_colour-kick_left50-exhaustive",
+          "reason": "displacement_into_rock"
+        },
+        {
+          "id": "hairpin-31-sobel_colour-kick_left50-exhaustive",
+          "reason": "displacement_into_rock"
+        },
+        {
+          "id": "hairpin-31-ardin_input-kick_left50-exhaustive",
+          "reason": "displacement_into_rock"
+        },
+        {
+          "id": "hairpin-43-linear_colour-kick_left50-exhaustive",
+          "reason": "displacement_into_rock"
+        },
+        {
+          "id": "hairpin-43-sobel_colour-kick_left50-exhaustive",
+          "reason": "displacement_into_rock"
+        },
+        {
+          "id": "hairpin-43-ardin_input-kick_left50-exhaustive",
+          "reason": "displacement_into_rock"
+        }
+      ],
+      "paired_cases_excluded": [
+        [
+          "hairpin",
+          19,
+          "kick_left50"
+        ],
+        [
+          "hairpin",
+          31,
+          "kick_left50"
+        ],
+        [
+          "hairpin",
+          43,
+          "kick_left50"
+        ]
+      ],
+      "scope": "Post hoc sensitivity; conditions on valid imposed displacements, not an unbiased replacement for the full trial analysis.",
+      "groups": [
+        {
+          "method": "linear_colour",
+          "controller": "exhaustive",
+          "n": 60,
+          "valid": 60,
+          "arrived": 37,
+          "mean_polyline_cm": 31.88173049422072,
+          "recovered": 7,
+          "recovery_eligible": 33,
+          "recovered_and_arrived": 6,
+          "terminations": {
+            "arrival": 37,
+            "rock_collision": 16,
+            "field_boundary": 7
+          }
+        },
+        {
+          "method": "sobel_colour",
+          "controller": "exhaustive",
+          "n": 60,
+          "valid": 60,
+          "arrived": 35,
+          "mean_polyline_cm": 24.025934262173077,
+          "recovered": 6,
+          "recovery_eligible": 33,
+          "recovered_and_arrived": 6,
+          "terminations": {
+            "arrival": 35,
+            "rock_collision": 20,
+            "field_boundary": 5
+          }
+        },
+        {
+          "method": "ardin_input",
+          "controller": "exhaustive",
+          "n": 60,
+          "valid": 60,
+          "arrived": 36,
+          "mean_polyline_cm": 18.399525556285464,
+          "recovered": 7,
+          "recovery_eligible": 33,
+          "recovered_and_arrived": 7,
+          "terminations": {
+            "arrival": 36,
+            "field_boundary": 4,
+            "rock_collision": 20
+          }
+        }
+      ]
+    },
+    "3": {
+      "invalid_trials": [],
+      "paired_cases_excluded": [],
+      "scope": "Post hoc sensitivity; conditions on valid imposed displacements, not an unbiased replacement for the full trial analysis.",
+      "groups": [
+        {
+          "method": "linear_colour",
+          "controller": "exhaustive",
+          "n": 27,
+          "valid": 27,
+          "arrived": 14,
+          "mean_polyline_cm": 29.778679281526767,
+          "recovered": 3,
+          "recovery_eligible": 18,
+          "recovered_and_arrived": 3,
+          "terminations": {
+            "arrival": 14,
+            "field_boundary": 5,
+            "rock_collision": 8
+          }
+        },
+        {
+          "method": "linear_colour",
+          "controller": "active",
+          "n": 27,
+          "valid": 27,
+          "arrived": 3,
+          "mean_polyline_cm": 66.76275829579296,
+          "recovered": 4,
+          "recovery_eligible": 18,
+          "recovered_and_arrived": 1,
+          "terminations": {
+            "rock_collision": 19,
+            "field_boundary": 5,
+            "arrival": 3
+          }
+        },
+        {
+          "method": "sobel_colour",
+          "controller": "exhaustive",
+          "n": 27,
+          "valid": 27,
+          "arrived": 13,
+          "mean_polyline_cm": 30.081730489908676,
+          "recovered": 4,
+          "recovery_eligible": 18,
+          "recovered_and_arrived": 4,
+          "terminations": {
+            "arrival": 13,
+            "field_boundary": 4,
+            "rock_collision": 10
+          }
+        },
+        {
+          "method": "sobel_colour",
+          "controller": "active",
+          "n": 27,
+          "valid": 27,
+          "arrived": 3,
+          "mean_polyline_cm": 37.70015184889014,
+          "recovered": 6,
+          "recovery_eligible": 18,
+          "recovered_and_arrived": 1,
+          "terminations": {
+            "rock_collision": 19,
+            "field_boundary": 5,
+            "arrival": 3
+          }
+        },
+        {
+          "method": "ardin_input",
+          "controller": "exhaustive",
+          "n": 27,
+          "valid": 27,
+          "arrived": 13,
+          "mean_polyline_cm": 24.561175133289726,
+          "recovered": 4,
+          "recovery_eligible": 18,
+          "recovered_and_arrived": 4,
+          "terminations": {
+            "arrival": 13,
+            "field_boundary": 3,
+            "rock_collision": 11
+          }
+        },
+        {
+          "method": "ardin_input",
+          "controller": "active",
+          "n": 27,
+          "valid": 27,
+          "arrived": 0,
+          "mean_polyline_cm": 44.76911220068939,
+          "recovered": 6,
+          "recovery_eligible": 17,
+          "recovered_and_arrived": 0,
+          "terminations": {
+            "rock_collision": 24,
+            "field_boundary": 3
+          }
+        }
+      ]
+    }
+  },
+  "calibration_diagnostics": [
+    {
+      "world": "meander",
+      "seed": 19,
+      "method": "linear_colour",
+      "low": 0.6888823509216309,
+      "high": 0.8766210675239563,
+      "range": 0.18773871660232544,
+      "degenerate": false
+    },
+    {
+      "world": "meander",
+      "seed": 19,
+      "method": "sobel_colour",
+      "low": 0.7024667263031006,
+      "high": 0.8859915137290955,
+      "range": 0.18352478742599487,
+      "degenerate": false
+    },
+    {
+      "world": "meander",
+      "seed": 19,
+      "method": "ardin_input",
+      "low": 0.49902400374412537,
+      "high": 0.8753648400306702,
+      "range": 0.3763408362865448,
+      "degenerate": false
+    },
+    {
+      "world": "meander",
+      "seed": 31,
+      "method": "linear_colour",
+      "low": 0.7256492376327515,
+      "high": 0.8937137126922607,
+      "range": 0.16806447505950928,
+      "degenerate": false
+    },
+    {
+      "world": "meander",
+      "seed": 31,
+      "method": "sobel_colour",
+      "low": 0.7102488279342651,
+      "high": 0.8916985988616943,
+      "range": 0.1814497709274292,
+      "degenerate": false
+    },
+    {
+      "world": "meander",
+      "seed": 31,
+      "method": "ardin_input",
+      "low": 0.5028173327445984,
+      "high": 0.8845396637916565,
+      "range": 0.3817223310470581,
+      "degenerate": false
+    },
+    {
+      "world": "meander",
+      "seed": 43,
+      "method": "linear_colour",
+      "low": 0.7048604488372803,
+      "high": 0.878122091293335,
+      "range": 0.1732616424560547,
+      "degenerate": false
+    },
+    {
+      "world": "meander",
+      "seed": 43,
+      "method": "sobel_colour",
+      "low": 0.7008126974105835,
+      "high": 0.8856316804885864,
+      "range": 0.18481898307800293,
+      "degenerate": false
+    },
+    {
+      "world": "meander",
+      "seed": 43,
+      "method": "ardin_input",
+      "low": 0.5007598400115967,
+      "high": 0.8804052472114563,
+      "range": 0.3796454071998596,
+      "degenerate": false
+    },
+    {
+      "world": "bend",
+      "seed": 19,
+      "method": "linear_colour",
+      "low": 0.6881599426269531,
+      "high": 0.894244372844696,
+      "range": 0.20608443021774292,
+      "degenerate": false
+    },
+    {
+      "world": "bend",
+      "seed": 19,
+      "method": "sobel_colour",
+      "low": 0.7065228223800659,
+      "high": 0.9059338569641113,
+      "range": 0.1994110345840454,
+      "degenerate": false
+    },
+    {
+      "world": "bend",
+      "seed": 19,
+      "method": "ardin_input",
+      "low": 0.63608717918396,
+      "high": 0.897444486618042,
+      "range": 0.26135730743408203,
+      "degenerate": false
+    },
+    {
+      "world": "bend",
+      "seed": 31,
+      "method": "linear_colour",
+      "low": 0.7109151482582092,
+      "high": 0.9042898416519165,
+      "range": 0.19337469339370728,
+      "degenerate": false
+    },
+    {
+      "world": "bend",
+      "seed": 31,
+      "method": "sobel_colour",
+      "low": 0.7158056497573853,
+      "high": 0.9034055471420288,
+      "range": 0.18759989738464355,
+      "degenerate": false
+    },
+    {
+      "world": "bend",
+      "seed": 31,
+      "method": "ardin_input",
+      "low": 0.6371392607688904,
+      "high": 0.8980912566184998,
+      "range": 0.2609519958496094,
+      "degenerate": false
+    },
+    {
+      "world": "bend",
+      "seed": 43,
+      "method": "linear_colour",
+      "low": 0.7100859880447388,
+      "high": 0.9060331583023071,
+      "range": 0.19594717025756836,
+      "degenerate": false
+    },
+    {
+      "world": "bend",
+      "seed": 43,
+      "method": "sobel_colour",
+      "low": 0.7105844616889954,
+      "high": 0.9048197269439697,
+      "range": 0.19423526525497437,
+      "degenerate": false
+    },
+    {
+      "world": "bend",
+      "seed": 43,
+      "method": "ardin_input",
+      "low": 0.6434171199798584,
+      "high": 0.8942652344703674,
+      "range": 0.25084811449050903,
+      "degenerate": false
+    },
+    {
+      "world": "hairpin",
+      "seed": 19,
+      "method": "linear_colour",
+      "low": 0.6917261481285095,
+      "high": 0.8831884860992432,
+      "range": 0.19146233797073364,
+      "degenerate": false
+    },
+    {
+      "world": "hairpin",
+      "seed": 19,
+      "method": "sobel_colour",
+      "low": 0.7173542976379395,
+      "high": 0.899628758430481,
+      "range": 0.1822744607925415,
+      "degenerate": false
+    },
+    {
+      "world": "hairpin",
+      "seed": 19,
+      "method": "ardin_input",
+      "low": 0.7040712833404541,
+      "high": 0.8849790692329407,
+      "range": 0.18090778589248657,
+      "degenerate": false
+    },
+    {
+      "world": "hairpin",
+      "seed": 31,
+      "method": "linear_colour",
+      "low": 0.7115562558174133,
+      "high": 0.894183337688446,
+      "range": 0.18262708187103271,
+      "degenerate": false
+    },
+    {
+      "world": "hairpin",
+      "seed": 31,
+      "method": "sobel_colour",
+      "low": 0.7305693626403809,
+      "high": 0.9038960933685303,
+      "range": 0.17332673072814941,
+      "degenerate": false
+    },
+    {
+      "world": "hairpin",
+      "seed": 31,
+      "method": "ardin_input",
+      "low": 0.704679548740387,
+      "high": 0.892307698726654,
+      "range": 0.1876281499862671,
+      "degenerate": false
+    },
+    {
+      "world": "hairpin",
+      "seed": 43,
+      "method": "linear_colour",
+      "low": 0.716936469078064,
+      "high": 0.8942724466323853,
+      "range": 0.1773359775543213,
+      "degenerate": false
+    },
+    {
+      "world": "hairpin",
+      "seed": 43,
+      "method": "sobel_colour",
+      "low": 0.72024005651474,
+      "high": 0.8987975716590881,
+      "range": 0.17855751514434814,
+      "degenerate": false
+    },
+    {
+      "world": "hairpin",
+      "seed": 43,
+      "method": "ardin_input",
+      "low": 0.6941137313842773,
+      "high": 0.8896603584289551,
+      "range": 0.19554662704467773,
+      "degenerate": false
+    }
+  ],
+  "initial_steering_after_lateral_release": [
+    {
+      "id": "meander-19-linear_colour-left50-exhaustive",
+      "world": "meander",
+      "method": "linear_colour",
+      "seed": 19,
+      "scenario": "left50",
+      "inward_displacement_cm": -1.7364817766693033,
+      "classification": "outward",
+      "recovered": true,
+      "arrived": true
+    },
+    {
+      "id": "meander-19-linear_colour-right50-exhaustive",
+      "world": "meander",
+      "method": "linear_colour",
+      "seed": 19,
+      "scenario": "right50",
+      "inward_displacement_cm": -3.420201433256687,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "meander-19-sobel_colour-left50-exhaustive",
+      "world": "meander",
+      "method": "sobel_colour",
+      "seed": 19,
+      "scenario": "left50",
+      "inward_displacement_cm": -3.420201433256687,
+      "classification": "outward",
+      "recovered": true,
+      "arrived": true
+    },
+    {
+      "id": "meander-19-sobel_colour-right50-exhaustive",
+      "world": "meander",
+      "method": "sobel_colour",
+      "seed": 19,
+      "scenario": "right50",
+      "inward_displacement_cm": -1.7364817766693033,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "meander-19-ardin_input-left50-exhaustive",
+      "world": "meander",
+      "method": "ardin_input",
+      "seed": 19,
+      "scenario": "left50",
+      "inward_displacement_cm": 3.420201433256687,
+      "classification": "inward",
+      "recovered": true,
+      "arrived": true
+    },
+    {
+      "id": "meander-19-ardin_input-right50-exhaustive",
+      "world": "meander",
+      "method": "ardin_input",
+      "seed": 19,
+      "scenario": "right50",
+      "inward_displacement_cm": -3.420201433256687,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "meander-31-linear_colour-left50-exhaustive",
+      "world": "meander",
+      "method": "linear_colour",
+      "seed": 31,
+      "scenario": "left50",
+      "inward_displacement_cm": -1.7364817766693033,
+      "classification": "outward",
+      "recovered": true,
+      "arrived": true
+    },
+    {
+      "id": "meander-31-linear_colour-right50-exhaustive",
+      "world": "meander",
+      "method": "linear_colour",
+      "seed": 31,
+      "scenario": "right50",
+      "inward_displacement_cm": -1.7364817766693033,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "meander-31-sobel_colour-left50-exhaustive",
+      "world": "meander",
+      "method": "sobel_colour",
+      "seed": 31,
+      "scenario": "left50",
+      "inward_displacement_cm": -3.420201433256687,
+      "classification": "outward",
+      "recovered": true,
+      "arrived": true
+    },
+    {
+      "id": "meander-31-sobel_colour-right50-exhaustive",
+      "world": "meander",
+      "method": "sobel_colour",
+      "seed": 31,
+      "scenario": "right50",
+      "inward_displacement_cm": -1.7364817766693033,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "meander-31-ardin_input-left50-exhaustive",
+      "world": "meander",
+      "method": "ardin_input",
+      "seed": 31,
+      "scenario": "left50",
+      "inward_displacement_cm": 3.420201433256687,
+      "classification": "inward",
+      "recovered": true,
+      "arrived": true
+    },
+    {
+      "id": "meander-31-ardin_input-right50-exhaustive",
+      "world": "meander",
+      "method": "ardin_input",
+      "seed": 31,
+      "scenario": "right50",
+      "inward_displacement_cm": -3.420201433256687,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "meander-43-linear_colour-left50-exhaustive",
+      "world": "meander",
+      "method": "linear_colour",
+      "seed": 43,
+      "scenario": "left50",
+      "inward_displacement_cm": -1.7364817766693033,
+      "classification": "outward",
+      "recovered": true,
+      "arrived": true
+    },
+    {
+      "id": "meander-43-linear_colour-right50-exhaustive",
+      "world": "meander",
+      "method": "linear_colour",
+      "seed": 43,
+      "scenario": "right50",
+      "inward_displacement_cm": -1.7364817766693033,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "meander-43-sobel_colour-left50-exhaustive",
+      "world": "meander",
+      "method": "sobel_colour",
+      "seed": 43,
+      "scenario": "left50",
+      "inward_displacement_cm": -3.420201433256687,
+      "classification": "outward",
+      "recovered": true,
+      "arrived": true
+    },
+    {
+      "id": "meander-43-sobel_colour-right50-exhaustive",
+      "world": "meander",
+      "method": "sobel_colour",
+      "seed": 43,
+      "scenario": "right50",
+      "inward_displacement_cm": -1.7364817766693033,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "meander-43-ardin_input-left50-exhaustive",
+      "world": "meander",
+      "method": "ardin_input",
+      "seed": 43,
+      "scenario": "left50",
+      "inward_displacement_cm": 3.420201433256687,
+      "classification": "inward",
+      "recovered": true,
+      "arrived": true
+    },
+    {
+      "id": "meander-43-ardin_input-right50-exhaustive",
+      "world": "meander",
+      "method": "ardin_input",
+      "seed": 43,
+      "scenario": "right50",
+      "inward_displacement_cm": -3.420201433256687,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-19-linear_colour-left50-exhaustive",
+      "world": "bend",
+      "method": "linear_colour",
+      "seed": 19,
+      "scenario": "left50",
+      "inward_displacement_cm": -3.420201433256687,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-19-linear_colour-right50-exhaustive",
+      "world": "bend",
+      "method": "linear_colour",
+      "seed": 19,
+      "scenario": "right50",
+      "inward_displacement_cm": 0.0,
+      "classification": "parallel",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-19-sobel_colour-left50-exhaustive",
+      "world": "bend",
+      "method": "sobel_colour",
+      "seed": 19,
+      "scenario": "left50",
+      "inward_displacement_cm": 3.420201433256687,
+      "classification": "inward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-19-sobel_colour-right50-exhaustive",
+      "world": "bend",
+      "method": "sobel_colour",
+      "seed": 19,
+      "scenario": "right50",
+      "inward_displacement_cm": 0.0,
+      "classification": "parallel",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-19-ardin_input-left50-exhaustive",
+      "world": "bend",
+      "method": "ardin_input",
+      "seed": 19,
+      "scenario": "left50",
+      "inward_displacement_cm": -6.4278760968653925,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-19-ardin_input-right50-exhaustive",
+      "world": "bend",
+      "method": "ardin_input",
+      "seed": 19,
+      "scenario": "right50",
+      "inward_displacement_cm": 3.420201433256687,
+      "classification": "inward",
+      "recovered": true,
+      "arrived": true
+    },
+    {
+      "id": "bend-31-linear_colour-left50-exhaustive",
+      "world": "bend",
+      "method": "linear_colour",
+      "seed": 31,
+      "scenario": "left50",
+      "inward_displacement_cm": -3.420201433256687,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-31-linear_colour-right50-exhaustive",
+      "world": "bend",
+      "method": "linear_colour",
+      "seed": 31,
+      "scenario": "right50",
+      "inward_displacement_cm": 4.999999999999999,
+      "classification": "inward",
+      "recovered": false,
+      "arrived": true
+    },
+    {
+      "id": "bend-31-sobel_colour-left50-exhaustive",
+      "world": "bend",
+      "method": "sobel_colour",
+      "seed": 31,
+      "scenario": "left50",
+      "inward_displacement_cm": -6.4278760968653925,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-31-sobel_colour-right50-exhaustive",
+      "world": "bend",
+      "method": "sobel_colour",
+      "seed": 31,
+      "scenario": "right50",
+      "inward_displacement_cm": 4.999999999999999,
+      "classification": "inward",
+      "recovered": true,
+      "arrived": true
+    },
+    {
+      "id": "bend-31-ardin_input-left50-exhaustive",
+      "world": "bend",
+      "method": "ardin_input",
+      "seed": 31,
+      "scenario": "left50",
+      "inward_displacement_cm": -6.4278760968653925,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-31-ardin_input-right50-exhaustive",
+      "world": "bend",
+      "method": "ardin_input",
+      "seed": 31,
+      "scenario": "right50",
+      "inward_displacement_cm": 8.660254037844386,
+      "classification": "inward",
+      "recovered": false,
+      "arrived": true
+    },
+    {
+      "id": "bend-43-linear_colour-left50-exhaustive",
+      "world": "bend",
+      "method": "linear_colour",
+      "seed": 43,
+      "scenario": "left50",
+      "inward_displacement_cm": -3.420201433256687,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-43-linear_colour-right50-exhaustive",
+      "world": "bend",
+      "method": "linear_colour",
+      "seed": 43,
+      "scenario": "right50",
+      "inward_displacement_cm": 1.7364817766693033,
+      "classification": "inward",
+      "recovered": true,
+      "arrived": false
+    },
+    {
+      "id": "bend-43-sobel_colour-left50-exhaustive",
+      "world": "bend",
+      "method": "sobel_colour",
+      "seed": 43,
+      "scenario": "left50",
+      "inward_displacement_cm": -6.4278760968653925,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-43-sobel_colour-right50-exhaustive",
+      "world": "bend",
+      "method": "sobel_colour",
+      "seed": 43,
+      "scenario": "right50",
+      "inward_displacement_cm": 8.660254037844386,
+      "classification": "inward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-43-ardin_input-left50-exhaustive",
+      "world": "bend",
+      "method": "ardin_input",
+      "seed": 43,
+      "scenario": "left50",
+      "inward_displacement_cm": -6.4278760968653925,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "bend-43-ardin_input-right50-exhaustive",
+      "world": "bend",
+      "method": "ardin_input",
+      "seed": 43,
+      "scenario": "right50",
+      "inward_displacement_cm": 8.660254037844386,
+      "classification": "inward",
+      "recovered": false,
+      "arrived": false
+    },
+    {
+      "id": "hairpin-31-sobel_colour-right50-exhaustive",
+      "world": "hairpin",
+      "method": "sobel_colour",
+      "seed": 31,
+      "scenario": "right50",
+      "inward_displacement_cm": -1.7364817766693033,
+      "classification": "outward",
+      "recovered": false,
+      "arrived": false
+    }
+  ]
+}

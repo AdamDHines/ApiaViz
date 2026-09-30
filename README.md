@@ -1,144 +1,95 @@
-<p align="center">
-  <img src="./assets/logo.png" alt="ApiaViz Logo" width="894"/>
-</p>
+# ApiaViz
 
-![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
-[![Documentation Status](https://readthedocs.org/projects/apiaviz/badge/?version=latest&style=flat)](https://apiaviz.readthedocs.io/en/latest/?badge=latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
-[![Pixi Badge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/prefix-dev/pixi/main/assets/badge/v0.json)](https://pixi.sh)
-[![GitHub repo size](https://img.shields.io/github/repo-size/AdamDHines/ApiaViz.svg?style=flat-square)](./README.md)
+ApiaViz is an insect-inspired visual encoder with fixed colour/contrast processing and associative memory for navigation and flower reward choice. The visual encoder needs no training. Route and reward memories **do learn** through deterministic one-shot updates.
 
-This respository contains code for ApiaViz, a neural network model of insect vision using [Python](https://www.python.org/) and [PyTorch](https://pytorch.org/) for understanding natural scenes and environments. There are two versions of the model provided:
+The repository contains the historical ANN evaluation and a controlled study runner with deterministic spiking projection neurons and Kenyon cells, adaptive firing, and finite graded feedback inhibition. The spiking implementation uses ordinary PyTorch; it does not require surrogate gradients or SNNTorch.
 
-- An Artificial Neural Network (**ANN**) 
-- A Spiking Neural Network (**SNN**) implemented in [SNNTorch](https://open-neuromorphic.org/neuromorphic-computing/software/snn-frameworks/snntorch/)
+**Current handoff:** see [AGENTS.md](AGENTS.md) and the [workstation handoff](docs/HANDOFF.md). The expanded navigation run was cancelled at 145/378 trials pending collision-geometry fixes. Large scenes, caches and videos are local artifacts excluded from Git.
 
-Get started easily by following our simple installation and quickstart instructions, below. _For more information, please visit the [ApiaViz documentation](https://apianet.readthedocs.io/en/latest/)._
+## Setup
 
-## Installation
-ApiaNet uses [pixi](https://prefix.dev/) to install and manage Python and dependencies. If you have not already installed it, run the following in your command terminal:
+Install [pixi](https://pixi.sh), then run `pixi install`. Existing local navigation data belongs in `apiaviz/mbant/data/antview/`; flower data belongs in `apiaviz/dataset/17flowers/<class>/*.jpg`. The study runner never downloads datasets or model weights implicitly.
 
-#### Linux/macOS
-```console
-curl -fsSL https://pixi.sh/install.sh | sh
+```sh
+pixi run test
+pixi run study --help
+pixi run study --list
 ```
 
-#### Windows
-```console
-powershell -ExecutionPolicy ByPass -c "irm -useb https://pixi.sh/install.ps1 | iex"
+## Controlled experiments
+
+`--code-dim` is the **total** KC population, divided equally between form and colour streams. All encoders receive the same views, and representations can be crossed with the same memories and navigation protocols.
+
+```sh
+# Small end-to-end flower experiment (validation, not a publication benchmark).
+pixi run study --task flowers --representations gray apiaviz --modes kwta adaptive --code-dim 256 --pool 4 16 --per-class 6 --folds 2 --fixations 1 2 --calibration-views 8 --bootstrap 50
+
+# Navigation: calibration uses ants 1–3; evaluation uses other ants.
+pixi run study --task nav --ants 4 --routes 1 --representations gray apiaviz --modes kwta adaptive --protocols offline reset free --viewpoints 1 9
 ```
 
-_For more information, please refer to the [pixi documentation](https://pixi.sh/latest/)._
+`offline` tests heading selection at fixed positions; `reset` adds corrective replacements onto the route; `free` evaluates navigation without replacements. Both moving-agent protocols use visual feedback. The controlled reset protocol is explicit in the new runner; use the historical command below to reproduce the older reset implementation.
 
-### Get the code
-Once installed, download the ApiaViz repository and navigate to the project directory:
+Each run writes a manifest, encoder configuration and fixed weights, development/evaluation splits, JSONL results, and navigation traces or per-image flower predictions. Navigation intervals resample ants; flower intervals resample original images with repeated observations kept together. Single-ant runs do not estimate between-ant uncertainty.
 
-```console
-git clone git@github.com:AdamDHines/ApiaViz.git
-cd ApiaViz
-```
+See [the study protocol](docs/spiking-study.md) for mechanisms, calibration, complete experiment commands, limitations, citations and deep baseline setup.
 
-### Get the pre-trained models and evaluation datasets
+See [implementation validation](docs/validation.md) for tests and the local pilot results.
 
-We provide pre-trained models for the artificial and spiking versions of our vision model, as well as some evaluation datasets, from [Hugging Face](https://huggingface.co/). Run the following in your command terminal to get both:
+The current research priority is [spiking navigation without corrective resets](docs/openloop-spiking.md). The [expanded 440-trial study](docs/mechanism-study/report.md) compares six preprocessing baselines and five component interventions on eight routes and five wiring seeds, with identical learning, neural settings and control. ApiaViz and Sobel plus colour each completed 29/40 trials; mean deviation was 55.2 cm and 50.4 cm, respectively. The earlier pilot's accuracy advantage did not replicate, and no baseline comparison was significant after multiple-comparison correction. A [three-page illustrated report](docs/mechanism-study/mechanism-report.pdf), [data and reproduction instructions](docs/mechanism-study/README.md) explain the representation findings and limitations. The [earlier four-route note](docs/mini-paper/apiaviz-mini-paper.pdf) is retained as a pilot. The development runner includes directional acquisition, lateralized memories, sequence-context diagnostics and a LIF latency reference for the historical feature currents.
 
-```console
-pixi run get_models
-pixi run get_evaldata
-```
+A [280-trial implementation follow-up](docs/frontend-deep-dive/report.md) tests five fixed frontend refinements and reproduces both references exactly. Oriented form filters and linear colour processing are promising development candidates; simple channel balancing worsened performance. Neither candidate has a corrected significant advantage or independent-world validation, and the original defaults remain unchanged. [Code, data and reproduction](docs/frontend-deep-dive/README.md) accompany the analysis.
 
-## Quickstart
+A [240-trial factorial evaluation](docs/frontend-factorial/report.md) compares oriented form and linear colour separately and together against the unchanged original, Sobel-plus-colour and Ardin-style preprocessing. Linear colour gives the lowest mean deviation (29.9 cm), oriented form the most nest arrivals (32/40), and their combination gives 44.6 cm and 28/40 arrivals. All variants are opt-in; [reproduction commands](docs/frontend-factorial/README.md) and paired uncertainty accompany these development results.
 
-To run the evaluation, we can use the **pre-trained models and downloaded evaluation datasets** to assess the network quickly and easily:
+[Navigation videos](docs/navigation-videos/index.html) show three full linear-colour runs with the ant's panoramic view, actual model input, visual features, firing cells, heading scans and route progress. The [video notes](docs/navigation-videos/README.md) include direct MP4 links, reproduction commands and the distinction between the display panorama and the 74 × 18 model input.
 
-```console
-pixi run eval
-pixi run eval -s
-```
-By default, the system will use the **ANN**. Using the `-s` argument will run the **SNN**.
+[Terrain concepts](docs/terrain-concepts/README.md) explore four procedural environments with natural material palettes, solid landmarks and directional sunlight. Ant-height PNGs, matching 296° panoramas and editable Blender scenes are provided for feedback; these worlds have not been used in navigation evaluations.
 
-To evaluate a different dataset, the `-d` argument can be used:
+[Grassland smoke test](docs/grassland-smoke/README.md) evaluates a generated grassland at the original world's scale. All nine runs reached the nest: mean deviation was 3.13 cm for linear-colour ApiaViz, 3.16 cm for Sobel + colour and 4.73 cm for Ardin-style preprocessing. The scene and panorama cache are saved for reuse; all trajectories and scan scores reproduced exactly without rendering again.
 
-```console
-pixi run eval -d variety
-```
-To change the evaluation method from the full image to a **scanning view**, we can use the `-sc` argument which will run a **smaller patch over the image** and temporally accumulate output:
+[Input-resolution comparison](docs/grassland-resolution/README.md) tests 74 × 18, 149 × 39 and 199 × 51 inputs while retaining the same teaching poses, projection wiring, spiking circuit, memory and controller. All 39 runs reached the nest. ApiaViz at 199 × 51 with filter offsets fixed in degrees gave 2.13 cm mean deviation, versus 3.13 cm at the original resolution; increasing resolution with unchanged pixel filters did not give that improvement. This is a one-route development result, with three paired wiring seeds and explicit filter-scale controls.
 
-```console
-pixi run eval -sc
-```
-_For a full list of command line arguments, please visit the [ApiaViz documentation](https://apiaviz.readthedocs.io/en/latest/)._
+The [training and movement audit](docs/navigation-regime/README.md) qualifies these arrival results: under the original collision-free evaluator, an agent that simply maintains its starting heading also reaches the endpoint, with 26.80 cm mean deviation. The smaller visual route deviations remain informative; arrival alone does not establish robust navigation on that route.
 
-## Using the vision model externally
+[Teaching, recovery and active-sensing experiments](docs/navigation-experiments/INTERPRETATION.md) follow that audit with 387 trials. A single taught traversal sufficed for the original route, but positional recovery was weak across all three preprocessing methods. ApiaViz did not show a consistent advantage across the three scene–route pairs. The tested active controller substantially reduced observations but also reduced arrival rates; it remains an experimental alternative, not a replacement for the reference controller.
 
-To use the vision model in your experimental paradigm, we simply need to load the relevant model and pre-trained weights:
+[Familiarity-guided controller development](docs/familiarity-controller/README.md) adds matched-view comparisons before and after movement, sideways casting, and physical reorientation scans. It includes controlled-field tests, a separate development runner and recorded-view replays. The original navigation controllers remain intact.
 
-```python
-from apiaviz.src.modules import VisionModel, SNNVisionModel
-
-# ANN
-visionmodel = VisionModel()
-state_dict = torch.load('./apiaviz/models/VisionModel.pth', weights_only=True) # modify model path to your external program
-visionmodel.load_state_dict(state_dict, strict=False)
-visionmodel.eval()
-
-# SNN
-snnmodel = SNNVisionModel()
-state_dict = torch.load('./apiaviz/models/SNNVisionModel.pth', weights_only=True) # modify model path to your external program
-snnvisionmodel.load_state_dict(state_dict, strict=False)
-snnvisionmodel.eval()
-```
-The **ANN** uses single image tensors of shape `[B, C, W, H]` whereas the **SNN** uses temporal sequences of image tensors of shape `[T, B, C, W, H]`, where `T` is the timesteps, `B` is the batch, `C` is the channel, and `W/H` is the width and height. Importantly, the vision systems only process **Blue** and **Green** channels, so if working with RGB images please ensure you are selecting the appropriate color channels:
+## Using the spiking encoder
 
 ```python
 import torch
+from apiaviz.research.encoders import VisualEncoder, EncoderConfig
+from apiaviz.research.circuit import CircuitConfig
 
-# Generate random input
-ann_input = torch.randn(128, 2, 75, 75) # shape [B, C, W, H]
-snn_input = torch.randn(25, 128, 2, 75, 75) # shape [T, B, C, W, H]
-
-# Pass through corresponding model
-KC_output_ann = visionmodel(ann_input)
-KC_output_snn = snnvisionmodel(snn_input) 
-```
-This will return a sparse Kenyon Cell output of size `[B, 1024]` and `[T, B, 1024]` for the **ANN** and **SNN**, respectively.
-
-For more details and a full guide, please visit the [ApiaViz documentation](https://apiaviz.readthedocs.io/en/latest/).
-
-### Training new models
-We provide pre-trained models for ApiaViz using the [Tiny ImageNet dataset](https://huggingface.co/datasets/zh-plus/tiny-imagenet), however if you would wish to train on another dataset or try different hyperparameters you can easily re-train the **ANN** and **SNN** models.
-
-```console
-# Optional: download the Tiny ImageNet dataset
-pixi run get_tinyimg
-
-# Run the training (CUDA enabled)
-pixi run -e cuda train
-
-# Train the SNN (CUDA enabled)
-pixi run -e cuda train -s
-```
-_If not using `CUDA` as your device, a warning will be shown indicating that training will be very slow. Training the SNN requires a GPU device with a high amount of memory (>30GB) and is recommended to use a high performance computing (HPC) cluster._
-
-
-
-For more information, please refer to the [ApiaViz documentation](https://apiaviz.readthedocs.io/en/latest/).
-
-## License and citation
-This code is licensed under the permissive [MIT license](./LICENSE). If you use our code, please cite our [paper]():
-
-```
-@article{,
-      title={}, 
-      author={},
-      journal={},
-      year={},
-      volume={},
-      number={},
-      doi={},
-      url={}, 
-}
+encoder = VisualEncoder(
+    EncoderConfig(mode="adaptive", code_dim=4000, sparsity=0.05, seed=7),
+    CircuitConfig(duration_ms=50, dt_ms=1),
+)
+# Inputs: RGB or G/B, [batch, channels, height, width], float in [0, 1].
+# Calibrate only on separate development images; this uses no task labels.
+encoder.calibrate(development_images)
+codes = encoder(test_images)  # [batch, 4000], binary KC activity by default
+trace = encoder.diagnostics(test_images, record=True)
+# trace["streams"] contains PN/KC rasters, spike counts, first-spike times,
+# feedback traces and explicit continuation state.
 ```
 
-## Issues, bugs, and feature requests
-If you encounter problems whilst running the code or if you have a suggestion for a feature or improvement, please report it as an [issue](https://github.com/AdamDHines/ApiaViz/issues).
+Independent calls reset all neural state. Connectivity is fixed and seeded; noise and stochastic spike sampling are absent. Reproducibility is tested on CPU, not promised bit-for-bit across different devices or library versions. Default circuit settings are modelling assumptions; measured activity can differ from the calibration target.
+
+## Historical evaluations
+
+```sh
+pixi run flowers
+pixi run nav --ant 4 --routes 1
+pixi run nav --ant 4 --routes 1 --without-resets
+```
+
+These preserve the earlier representation/readout pairings. In historical navigation, `--code_dim 4000` means **4,000 KCs per stream**, or 8,000 total. CLAHE with cosine template memory is a preprocessing/template baseline, not the complete Ardin spiking network. The older Izhikevich simulator remains under `apiaviz/mbant/`; its default membrane noise is nonzero.
+
+The earlier pretrained `VisionModel`/`SNNVisionModel` instructions described removed code and no longer apply.
+
+## License
+
+See [LICENSE](LICENSE).

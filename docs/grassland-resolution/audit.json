@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "trials": 39,
+  "reference_trials_reproduced": 9,
+  "exact_decisions": 2962,
+  "exact_scan_scores": 38506,
+  "teaching_views_per_resolution": 693,
+  "unique_cached_positions": 2740,
+  "cache_only_replay": true,
+  "shared_wiring_and_circuit": true,
+  "training_reconstructed_exactly": true,
+  "physical_cardinal_calibration": [
+    {
+      "resolution": "74x18",
+      "passed": true
+    },
+    {
+      "resolution": "149x39",
+      "passed": true
+    },
+    {
+      "resolution": "199x51",
+      "passed": true
+    }
+  ],
+  "movement_max_error_m": 0.0,
+  "elapsed_s": 267.6567871249281
+}

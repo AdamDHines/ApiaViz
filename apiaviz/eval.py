@@ -1,17 +1,8 @@
-"""Navigation evaluation: mushroom-body route following with the MBON population readout.
+"""Historical evaluations retained for comparison.
 
-On the colour-landmark ant world, memory is stored on the clean world; the agent then free-navigates
-(familiarity-based heading scan) while every glimpse is optionally hit by a chroma-preserving
-luminance perturbation (models lighting/weather: the opponent-colour landmarks survive; grayscale
-luminance does not). Three readouts are compared:
-
-  - CLAHE                     the Ardin/Webb grayscale template (baseline)
-  - MBON single (S=1)         one anti-Hebbian novelty neuron over the colour KC code
-  - MBON population (S)        ours: a small population, one MBON per route segment
-
-Reports reached-nest fraction and off-route error_rate (fraction of steps corrected back to the route).
-The headline: under corruption the single MBON drifts, but the population homes as well as the template
-bank and beats CLAHE -- the biologically faithful readout, no episodic per-view memory.
+CLAHE uses cosine template memory; ApiaViz navigation uses an MBON population.
+These pairings compare complete systems, not isolated visual encoders. Use
+``python -m apiaviz.research`` for matched representation/readout experiments.
 """
 
 from __future__ import annotations
@@ -41,7 +32,7 @@ from apiaviz.src.flowers import (
 
 
 def free_navigate(img_pos_np, heading_np, scorer, nav_config, max_steps=None):
-    """Open-loop route following: scan headings, step toward the most-familiar one, and repeat -- with
+    """Route following without corrective resets: scan headings, step toward the most-familiar one, and repeat -- with
     NO snap-back to the route (unlike ``navigate_torch``). The honest test of the view code alone: the
     agent flies on its own familiarity gradient and either homes or drifts. Returns reached_nest and the
     final route progress (nearest route index reached / route length)."""
@@ -94,7 +85,7 @@ def build_landmark_color(triangle_grey: torch.Tensor, fraction: float, chroma: f
 
 
 def luminance_corrupt(raw: torch.Tensor, severity: float, seed: int, device: torch.device) -> torch.Tensor:
-    """Add a multi-scale luminance shift to all channels equally (G-B preserved)."""
+    """Add a common-mode intensity shift; clipping can change G-B."""
     if severity <= 0:
         return raw
     n, _, h, w = raw.shape
@@ -194,7 +185,7 @@ class NavEval:
         self.freenav = bool(getattr(self, "freenav", False))
         self.viewpoints = max(1, int(getattr(self, "viewpoints", 1)))
         self.corridor_width = float(getattr(self, "corridor_width", 0.2))
-        loop = "open-loop free navigation" if self.freenav else "corrected route-following"
+        loop = "navigation without corrective resets" if self.freenav else "corrected route-following"
         # The route-corridor memory (multiple laterally-shifted viewpoints per route index) is what
         # rescues open-loop navigation, so it is only engaged in the freenav paradigm.
         self.memory_viewpoints = self.viewpoints if self.freenav else 1
@@ -312,7 +303,7 @@ class NavEval:
         else:
             ant_label = f"Ant{self.ant}"
         metric_name = "progress" if self.freenav else "error_rate"
-        loop_kind = "open-loop free navigation" if self.freenav else "corrected route-following"
+        loop_kind = "navigation without corrective resets" if self.freenav else "corrected route-following"
         for cond in getattr(self, "_cond_labels", ["clean"]):
             rows = []
             for method in methods:
@@ -331,8 +322,8 @@ class NavEval:
                 self.logger.info(line)
         if len(getattr(self, "_cond_labels", ["clean"])) > 1:
             self.logger.info("")
-            self.logger.info("Under corruption the single MBON drifts; the MBON population homes as often as the "
-                             "colour code allows and beats the colour-blind CLAHE baseline.")
+            self.logger.info("Interpret these rows as system comparisons: the preprocessing and "
+                             "memory readouts differ.")
 
 class EvalVision:
     """Evaluate the frozen VisionBackbone on a downstream identification task."""
@@ -482,8 +473,8 @@ class EvalVision:
             ["severity", f"CLAHE dAUC(K1->K{kmax})", f"chroma dAUC(K1->K{kmax})"], grows,
             title="\nScan benefit: AUC recovered by accumulating fixations"))
         self.logger.info("")
-        self.logger.info("Under isoluminant corruption the opponent-colour code holds while grayscale CLAHE "
-                         "falls; accumulating fixations recovers AUC as independent corruption averages out.")
+        self.logger.info("Corruption effects and scan benefits must be read from the measured rows; "
+                         "clipping can also change opponent colour.")
 
     def _report_ablation(self, reps, kmax, metrics, base_rate, n_folds) -> None:
         # Which sub-channel of the chromatic feature carries the reward discrimination (clean).
@@ -494,8 +485,8 @@ class EvalVision:
             title=f"\nChannel ablation: reward go/no-go AUC  ({n_folds}-fold CV; "
                   f"P(reward)={base_rate:.3f}, chance 0.5)"))
         self.logger.info("")
-        self.logger.info("Opponent-only tracks the full chromatic code; achromatic-only sits near CLAHE; "
-                         "zeroing chroma (ablate_chromatic) falls to chance -- the signal is the opponent colour.")
+        self.logger.info("This panel compares channel contributions using the reported AUC values; "
+                         "the zero-input condition is a no-evidence control.")
 
     def _report_ablation_corruption(self, reps, kmax, grid, corruption, base_rate, n_folds) -> None:
         # Each sub-channel's robustness: AUC at the longest scan across corruption severities.
@@ -506,8 +497,8 @@ class EvalVision:
             title=f"\nChannel ablation under '{corruption}' corruption: AUC@K{kmax}  ({n_folds}-fold CV; "
                   f"P(reward)={base_rate:.3f}, chance 0.5)"))
         self.logger.info("")
-        self.logger.info("The opponent-only channel survives isoluminant corruption (G-B is spared); the "
-                         "achromatic-only channel collapses with CLAHE -- the robustness is specifically the colour opponency.")
+        self.logger.info("The common-mode corruption targets intensity; examine the rows for "
+                         "measured effects on each channel condition.")
 
     def _report_gonogo(self, reps, ks, kmax, metrics, base_rate, n_folds) -> None:
         rows = []
@@ -535,7 +526,7 @@ class EvalVision:
             title="\nPaired advantage over CLAHE (aligned folds)"))
         self.logger.info("")
         self.logger.info("Reward-gated approach MBON on both representations, so only the code differs: the "
-                         "opponent-colour code learns which flowers pay; the grayscale CLAHE code cannot.")
+                         "table measures the difference between visual representations.")
 
     # ------------------------------------------------------------------ flower identification
     def _sample_dataset(self, rng):
@@ -640,8 +631,8 @@ class EvalVision:
             self.logger.info(f"saved {path}")
         self.logger.info("")
         self.logger.info("Same per-class MBON readout on both representations, so only the code differs: "
-                         "the full vision KC code (form + colour, all backbone stages) identifies flowers; "
-                         "the grayscale CLAHE KC code cannot.")
+                         "the table measures identification from the full visual KC code "
+                         "and the grayscale CLAHE KC code.")
 
     def _report_mbon_sweep(self, snapshots, labels, folds, kmax, chance) -> None:
         """Readout-robustness check: CV top-1 at the longest scan across MBON depression / graded settings."""

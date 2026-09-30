@@ -1,0 +1,1334 @@
+{
+  "protocol": {
+    "version": 1,
+    "status": "fixed before new outcome inspection",
+    "date": "2026-09-29",
+    "ants": [
+      4,
+      6,
+      7,
+      9,
+      10,
+      12,
+      13,
+      15
+    ],
+    "route": 2,
+    "wiring_seeds": [
+      19,
+      31,
+      43,
+      59,
+      71
+    ],
+    "environment_seed": 99,
+    "baseline_methods": [
+      "apiaviz",
+      "gray",
+      "raw_colour",
+      "opponent",
+      "sobel_colour",
+      "ardin_input"
+    ],
+    "mechanism_methods": [
+      "no_hex",
+      "no_adapt",
+      "no_dog",
+      "apia_simple_colour",
+      "sobel_apia_colour"
+    ],
+    "navigation_trials": 440,
+    "learning": "Same nine lateral views +/-0.2 m, tangent headings, 0.1 m route spacing; same binary spike-overlap template memory.",
+    "neural_parameters": "Unchanged finite LIF candidate: 8000 total KCs, fan-in 10, trigger fraction .02825 per stream, current gain .1, time bins 1 ms, inhibition delay 1 ms; no calibration.",
+    "controller": "Unchanged 13 headings +/-60 degrees, 0.1 m steps, 200-step cap, success radius 0.2 m, no resets.",
+    "primary_endpoint": "Mean distance to nearest taught route sample over the complete trajectory, INCLUDING failed runs; average equally over five wiring seeds within each ant.",
+    "primary_comparisons": "ApiaViz versus each of the five baselines, paired by ant and wiring seed. Two-sided exact sign-flip tests on eight ant-level mean differences, Holm correction across five comparisons. This tests a conditional benchmark contrast under route-level exchangeability, not biological or between-world generalization.",
+    "uncertainty": "Report paired effects in cm, route bootstrap 95% intervals conditional on these seeds, and crossed route-by-seed bootstrap intervals. Report per-seed effects and all raw trials. No individual navigation step is an independent replicate.",
+    "secondary_endpoints": [
+      "completion",
+      "mean distance to continuous route polyline",
+      "first 50 steps mean polyline error",
+      "median trajectory deviation",
+      "path length"
+    ],
+    "mechanism_probes": "Eight interstitial positions per route (midpoints between teaching samples), five lateral offsets [-.3,-.1,0,.1,.3] m, same 13 scan headings. Clean and multiplicative brightness 0.6 queries; teaching is clean. All inputs rendered once and reused across methods/seeds.",
+    "mechanism_metrics": [
+      "absolute heading error at route centre",
+      "correct-versus-wrong heading familiarity margin",
+      "off-route restoring-turn fraction",
+      "KC neighbour versus distant-view overlap",
+      "effective rank of centred learning codes",
+      "KC activity and lifetime recruitment",
+      "heading stability after brightness change"
+    ],
+    "mechanism_inference": "Five planned input-only interventions are tested online as well as on common-pose probes. Their navigation effects use a separate Holm-corrected family of five exploratory contrasts. Probe metrics and relationships to navigation are explanatory, not additional confirmatory endpoints. No parameter search or favourable-subset selection.",
+    "limits": "One world geometry, one colour assignment, eight ant routes; earlier four-route pilot is excluded from this new analysis. Neural parameters were previously selected for ApiaViz. Repeating an identical deterministic seed is not extra evidence. Stop after the fixed matrix irrespective of p-values."
+  },
+  "summary": [
+    {
+      "method": "apiaviz",
+      "label": "ApiaViz",
+      "trials": 40,
+      "completed": 29,
+      "route_deviation_mean_m": 0.552199293408137,
+      "polyline_mean_m": 0.5489970607741487,
+      "first50_polyline_mean_m": 0.16108596450472884,
+      "deviation_median_m": 0.44885120605709694,
+      "memory_active_fraction": 0.049166721291840076,
+      "clean_heading_error_deg": 12.1875,
+      "clean_tangent_margin": 0.01405481044203043,
+      "clean_restoring_fraction": 0.3546875,
+      "brightness_heading_error_deg": 12.96875,
+      "brightness_heading_change_deg": 2.98125,
+      "neighbour_overlap": 0.5523130044341087,
+      "distant_overlap": 0.43206515461206435,
+      "effective_rank": 53.450648593902585,
+      "lifetime_recruited_fraction": 0.6961781233549118
+    },
+    {
+      "method": "gray",
+      "label": "Grayscale",
+      "trials": 40,
+      "completed": 25,
+      "route_deviation_mean_m": 0.6337544921001483,
+      "polyline_mean_m": 0.6310095018525936,
+      "first50_polyline_mean_m": 0.19915567579644594,
+      "deviation_median_m": 0.5539564879057955,
+      "memory_active_fraction": 0.05718416478484869,
+      "clean_heading_error_deg": 14.65625,
+      "clean_tangent_margin": 0.006760301720350981,
+      "clean_restoring_fraction": 0.36171875,
+      "brightness_heading_error_deg": 14.65625,
+      "brightness_heading_change_deg": 0.0,
+      "neighbour_overlap": 0.6742772489786149,
+      "distant_overlap": 0.5516302645206451,
+      "effective_rank": 40.53879270553589,
+      "lifetime_recruited_fraction": 0.5151093743741513
+    },
+    {
+      "method": "raw_colour",
+      "label": "Raw colour",
+      "trials": 40,
+      "completed": 26,
+      "route_deviation_mean_m": 0.3799824751815716,
+      "polyline_mean_m": 0.3774324993248756,
+      "first50_polyline_mean_m": 0.13933655652650584,
+      "deviation_median_m": 0.33282967785068757,
+      "memory_active_fraction": 0.05568301053717732,
+      "clean_heading_error_deg": 15.125,
+      "clean_tangent_margin": 0.005377447977662086,
+      "clean_restoring_fraction": 0.3625,
+      "brightness_heading_error_deg": 15.125,
+      "brightness_heading_change_deg": 0.00625,
+      "neighbour_overlap": 0.6497960537672043,
+      "distant_overlap": 0.5417065903544426,
+      "effective_rank": 47.44478054046631,
+      "lifetime_recruited_fraction": 0.5826562494039536
+    },
+    {
+      "method": "opponent",
+      "label": "Simple opponency",
+      "trials": 40,
+      "completed": 27,
+      "route_deviation_mean_m": 0.6987723879422922,
+      "polyline_mean_m": 0.6961689059794769,
+      "first50_polyline_mean_m": 0.21484044171958727,
+      "deviation_median_m": 0.7283615884004528,
+      "memory_active_fraction": 0.055173671990633014,
+      "clean_heading_error_deg": 13.15625,
+      "clean_tangent_margin": 0.004108995757997036,
+      "clean_restoring_fraction": 0.3625,
+      "brightness_heading_error_deg": 13.1875,
+      "brightness_heading_change_deg": 0.06875,
+      "neighbour_overlap": 0.5910559296607971,
+      "distant_overlap": 0.4904067493975163,
+      "effective_rank": 54.72869138717651,
+      "lifetime_recruited_fraction": 0.6432562455534935
+    },
+    {
+      "method": "sobel_colour",
+      "label": "Sobel + colour",
+      "trials": 40,
+      "completed": 29,
+      "route_deviation_mean_m": 0.5039473639593309,
+      "polyline_mean_m": 0.5010883765428993,
+      "first50_polyline_mean_m": 0.15494922454569188,
+      "deviation_median_m": 0.449516440837891,
+      "memory_active_fraction": 0.050814348179847,
+      "clean_heading_error_deg": 11.1875,
+      "clean_tangent_margin": 0.017428587190806866,
+      "clean_restoring_fraction": 0.35078125,
+      "brightness_heading_error_deg": 11.1875,
+      "brightness_heading_change_deg": 0.0125,
+      "neighbour_overlap": 0.5277440100908279,
+      "distant_overlap": 0.4067137621343136,
+      "effective_rank": 56.26399192810059,
+      "lifetime_recruited_fraction": 0.6946562483906746
+    },
+    {
+      "method": "ardin_input",
+      "label": "Ardin-style input",
+      "trials": 40,
+      "completed": 6,
+      "route_deviation_mean_m": 1.0472243479872474,
+      "polyline_mean_m": 1.0455237800419364,
+      "first50_polyline_mean_m": 0.2631045271088077,
+      "deviation_median_m": 0.9226210139133109,
+      "memory_active_fraction": 0.05561688654124737,
+      "clean_heading_error_deg": 16.875,
+      "clean_tangent_margin": 0.003489075507968664,
+      "clean_restoring_fraction": 0.39375,
+      "brightness_heading_error_deg": 16.875,
+      "brightness_heading_change_deg": 0.10625,
+      "neighbour_overlap": 0.6800908863544464,
+      "distant_overlap": 0.5726909652352333,
+      "effective_rank": 41.30744409561157,
+      "lifetime_recruited_fraction": 0.4884874977171421
+    },
+    {
+      "method": "no_hex",
+      "label": "Without hex smoothing",
+      "trials": 40,
+      "completed": 23,
+      "route_deviation_mean_m": 0.6510936036895997,
+      "polyline_mean_m": 0.648926500110352,
+      "first50_polyline_mean_m": 0.18288641833776847,
+      "deviation_median_m": 0.5410229676081666,
+      "memory_active_fraction": 0.049827363528311255,
+      "clean_heading_error_deg": 12.46875,
+      "clean_tangent_margin": 0.013617333024740219,
+      "clean_restoring_fraction": 0.3640625,
+      "brightness_heading_error_deg": 12.6875,
+      "brightness_heading_change_deg": 4.3625,
+      "neighbour_overlap": 0.4953106701374054,
+      "distant_overlap": 0.3837727397680283,
+      "effective_rank": 59.34302644729614,
+      "lifetime_recruited_fraction": 0.7318750008940696
+    },
+    {
+      "method": "no_adapt",
+      "label": "Without adaptation",
+      "trials": 40,
+      "completed": 24,
+      "route_deviation_mean_m": 0.7484599408926723,
+      "polyline_mean_m": 0.7456280256035519,
+      "first50_polyline_mean_m": 0.1920389915811544,
+      "deviation_median_m": 0.5614879025545718,
+      "memory_active_fraction": 0.05205064686015248,
+      "clean_heading_error_deg": 16.25,
+      "clean_tangent_margin": -0.0015658095479011535,
+      "clean_restoring_fraction": 0.37890625,
+      "brightness_heading_error_deg": 27.71875,
+      "brightness_heading_change_deg": 23.29375,
+      "neighbour_overlap": 0.7072961941361428,
+      "distant_overlap": 0.6111298695206642,
+      "effective_rank": 43.20716924667359,
+      "lifetime_recruited_fraction": 0.5125281229615212
+    },
+    {
+      "method": "no_dog",
+      "label": "Without form filter bank",
+      "trials": 40,
+      "completed": 24,
+      "route_deviation_mean_m": 0.6598112200730858,
+      "polyline_mean_m": 0.6574342238453237,
+      "first50_polyline_mean_m": 0.14141330619999604,
+      "deviation_median_m": 0.5859935940784635,
+      "memory_active_fraction": 0.051129288505762815,
+      "clean_heading_error_deg": 13.8125,
+      "clean_tangent_margin": 0.013171127531677485,
+      "clean_restoring_fraction": 0.35390625,
+      "brightness_heading_error_deg": 13.625,
+      "brightness_heading_change_deg": 2.8375,
+      "neighbour_overlap": 0.5231033839285374,
+      "distant_overlap": 0.4068766713142395,
+      "effective_rank": 55.92801961898804,
+      "lifetime_recruited_fraction": 0.7464093744754792
+    },
+    {
+      "method": "apia_simple_colour",
+      "label": "Apia form + simple colour",
+      "trials": 40,
+      "completed": 23,
+      "route_deviation_mean_m": 0.7919728631600232,
+      "polyline_mean_m": 0.789506447317849,
+      "first50_polyline_mean_m": 0.18117656794722914,
+      "deviation_median_m": 0.7182337525980727,
+      "memory_active_fraction": 0.04922331059351563,
+      "clean_heading_error_deg": 11.46875,
+      "clean_tangent_margin": 0.016322921868413685,
+      "clean_restoring_fraction": 0.3546875,
+      "brightness_heading_error_deg": 11.65625,
+      "brightness_heading_change_deg": 1.11875,
+      "neighbour_overlap": 0.49563817083835604,
+      "distant_overlap": 0.3806621879339218,
+      "effective_rank": 58.54027118682861,
+      "lifetime_recruited_fraction": 0.7172093778848648
+    },
+    {
+      "method": "sobel_apia_colour",
+      "label": "Sobel form + Apia colour",
+      "trials": 40,
+      "completed": 26,
+      "route_deviation_mean_m": 0.5377184918133521,
+      "polyline_mean_m": 0.5350625835819693,
+      "first50_polyline_mean_m": 0.17968062650660424,
+      "deviation_median_m": 0.4456186463181121,
+      "memory_active_fraction": 0.05075775850564242,
+      "clean_heading_error_deg": 11.84375,
+      "clean_tangent_margin": 0.015713011659681798,
+      "clean_restoring_fraction": 0.3625,
+      "brightness_heading_error_deg": 12.03125,
+      "brightness_heading_change_deg": 2.475,
+      "neighbour_overlap": 0.5828241348266602,
+      "distant_overlap": 0.45661981627345083,
+      "effective_rank": 50.94296255111694,
+      "lifetime_recruited_fraction": 0.6736250042915344
+    }
+  ],
+  "baseline": [
+    {
+      "method": "gray",
+      "label": "Grayscale",
+      "endpoint": "route_deviation_mean_m",
+      "effect": 8.15551986920114,
+      "route_ci95": [
+        -17.903892853635288,
+        32.66858921428583
+      ],
+      "crossed_ci95": [
+        -28.476651738321838,
+        43.87178372587837
+      ],
+      "p_raw": 0.578125,
+      "route_effects": [
+        -3.394737237539272,
+        -62.96394334427189,
+        65.37835298921895,
+        36.45486413895232,
+        -2.3809178529975483,
+        32.93313352765648,
+        15.891064796484347,
+        -16.67365806389426
+      ],
+      "seed_effects": [
+        -23.09713455104874,
+        -2.2197067919983207,
+        48.1011634088704,
+        8.717704641311848,
+        9.27557263887052
+      ],
+      "routes_favouring_apia": 4,
+      "seeds_favouring_apia": 3,
+      "p_holm": 1.0
+    },
+    {
+      "method": "raw_colour",
+      "label": "Raw colour",
+      "endpoint": "route_deviation_mean_m",
+      "effect": -17.221681822656542,
+      "route_ci95": [
+        -49.015889879166174,
+        9.237055806203802
+      ],
+      "crossed_ci95": [
+        -77.92226850970934,
+        23.7677323075603
+      ],
+      "p_raw": 0.3515625,
+      "route_effects": [
+        -0.16924175995984428,
+        -52.95209690052077,
+        -108.41447126935991,
+        27.122546431932925,
+        -2.160191403580297,
+        15.072644353323048,
+        18.193007086044425,
+        -34.46565111913187
+      ],
+      "seed_effects": [
+        -54.30572750342172,
+        2.120189575750429,
+        33.533991961541794,
+        -20.19868076497559,
+        -47.25818238217761
+      ],
+      "routes_favouring_apia": 3,
+      "seeds_favouring_apia": 2,
+      "p_holm": 1.0
+    },
+    {
+      "method": "opponent",
+      "label": "Simple opponency",
+      "endpoint": "route_deviation_mean_m",
+      "effect": 14.657309453415522,
+      "route_ci95": [
+        -18.531719082473394,
+        57.418321385350595
+      ],
+      "crossed_ci95": [
+        -31.367178678519668,
+        83.21084596444199
+      ],
+      "p_raw": 0.6015625,
+      "route_effects": [
+        -10.455963151871057,
+        -17.94290890513659,
+        144.35993880305318,
+        3.032606665437342,
+        19.888113884414583,
+        22.212922658105335,
+        16.431066473900053,
+        -60.26730080057864
+      ],
+      "seed_effects": [
+        -8.844029363154167,
+        52.87844198535517,
+        58.61072156583051,
+        -15.335236171020336,
+        -14.023350749933554
+      ],
+      "routes_favouring_apia": 5,
+      "seeds_favouring_apia": 2,
+      "p_holm": 1.0
+    },
+    {
+      "method": "sobel_colour",
+      "label": "Sobel + colour",
+      "endpoint": "route_deviation_mean_m",
+      "effect": -4.825192944880599,
+      "route_ci95": [
+        -31.561090693047458,
+        21.999748846815077
+      ],
+      "crossed_ci95": [
+        -58.18858819993245,
+        56.15996801926115
+      ],
+      "p_raw": 0.828125,
+      "route_effects": [
+        7.236047460951563,
+        -50.42567187853651,
+        65.77239798948025,
+        -13.82287059598679,
+        -6.513424549050114,
+        11.219625507432948,
+        17.164220265281966,
+        -69.2318677586181
+      ],
+      "seed_effects": [
+        -10.718270305351624,
+        50.96484299755133,
+        25.349046324011987,
+        -23.802984798242747,
+        -65.91859894237194
+      ],
+      "routes_favouring_apia": 4,
+      "seeds_favouring_apia": 2,
+      "p_holm": 1.0
+    },
+    {
+      "method": "ardin_input",
+      "label": "Ardin-style input",
+      "endpoint": "route_deviation_mean_m",
+      "effect": 49.50250545791107,
+      "route_ci95": [
+        13.351953157493691,
+        86.16698087222285
+      ],
+      "crossed_ci95": [
+        -21.180684394910305,
+        104.30246007794003
+      ],
+      "p_raw": 0.0390625,
+      "route_effects": [
+        50.579911081609296,
+        15.775180769750113,
+        -47.0610934692927,
+        148.13928232258408,
+        81.66604614410149,
+        42.442866078639675,
+        65.19752362498117,
+        39.280327110915394
+      ],
+      "seed_effects": [
+        -9.899875861021986,
+        89.27567582143058,
+        94.37310970357072,
+        66.0401380098199,
+        7.7234796157561005
+      ],
+      "routes_favouring_apia": 7,
+      "seeds_favouring_apia": 4,
+      "p_holm": 0.1953125
+    }
+  ],
+  "ablation": [
+    {
+      "method": "no_hex",
+      "label": "Without hex smoothing",
+      "endpoint": "route_deviation_mean_m",
+      "effect": 9.889431028146275,
+      "route_ci95": [
+        -18.814280928765648,
+        32.504422443871746
+      ],
+      "crossed_ci95": [
+        -45.09295914655066,
+        70.68412689092507
+      ],
+      "p_raw": 0.515625,
+      "route_effects": [
+        58.876562801442674,
+        -76.65908978481954,
+        31.546019023439975,
+        16.935405221574143,
+        -4.0986200396644925,
+        7.476867917856329,
+        17.434953284213645,
+        27.60334980112748
+      ],
+      "seed_effects": [
+        -38.19589791220188,
+        -5.522086919699512,
+        37.942286243891985,
+        86.14828724894409,
+        -30.925433520203335
+      ],
+      "routes_favouring_apia": 6,
+      "seeds_favouring_apia": 2,
+      "p_holm": 1.0
+    },
+    {
+      "method": "no_adapt",
+      "label": "Without adaptation",
+      "endpoint": "route_deviation_mean_m",
+      "effect": 19.626064748453533,
+      "route_ci95": [
+        -5.865437563351735,
+        45.1175670602588
+      ],
+      "crossed_ci95": [
+        -39.44891950080314,
+        79.64774618986306
+      ],
+      "p_raw": 0.1796875,
+      "route_effects": [
+        32.078410976745985,
+        -31.074183420902994,
+        33.498984166684295,
+        62.202638842433444,
+        8.951172446533972,
+        77.5464194262042,
+        6.913852354830889,
+        -33.10877680490152
+      ],
+      "seed_effects": [
+        9.704124088584642,
+        6.574159761255348,
+        102.91253467241236,
+        13.852055874502838,
+        -34.91255065448753
+      ],
+      "routes_favouring_apia": 6,
+      "seeds_favouring_apia": 4,
+      "p_holm": 0.71875
+    },
+    {
+      "method": "no_dog",
+      "label": "Without form filter bank",
+      "endpoint": "route_deviation_mean_m",
+      "effect": 10.761192666494885,
+      "route_ci95": [
+        -16.557484730082123,
+        37.597098629150395
+      ],
+      "crossed_ci95": [
+        -43.1880793676083,
+        61.29067558612508
+      ],
+      "p_raw": 0.5078125,
+      "route_effects": [
+        38.13825307188861,
+        -56.09957234039763,
+        -29.89351730955402,
+        31.650818822695562,
+        -1.8411067111261772,
+        80.08236291774921,
+        17.384617593020906,
+        6.667685287682621
+      ],
+      "seed_effects": [
+        -33.72400563440868,
+        42.53201740661249,
+        67.03996246677639,
+        -33.428823625962316,
+        11.386812719456547
+      ],
+      "routes_favouring_apia": 5,
+      "seeds_favouring_apia": 3,
+      "p_holm": 1.0
+    },
+    {
+      "method": "apia_simple_colour",
+      "label": "Apia form + simple colour",
+      "endpoint": "route_deviation_mean_m",
+      "effect": 23.97735697518864,
+      "route_ci95": [
+        8.084518692314537,
+        45.990748944965105
+      ],
+      "crossed_ci95": [
+        -30.005204022188355,
+        92.66989149034472
+      ],
+      "p_raw": 0.0234375,
+      "route_effects": [
+        12.621991576121644,
+        -6.0318694235952846,
+        92.45046301533493,
+        21.56374306915319,
+        25.479483365518767,
+        13.686752907435794,
+        2.7957927937046527,
+        29.25249849783544
+      ],
+      "seed_effects": [
+        0.3261405366990573,
+        111.63018616704522,
+        36.41224831991867,
+        21.892731085524307,
+        -50.374521233244046
+      ],
+      "routes_favouring_apia": 7,
+      "seeds_favouring_apia": 4,
+      "p_holm": 0.1171875
+    },
+    {
+      "method": "sobel_apia_colour",
+      "label": "Sobel form + Apia colour",
+      "endpoint": "route_deviation_mean_m",
+      "effect": -1.4480801594784958,
+      "route_ci95": [
+        -24.323225533159093,
+        20.55203197615351
+      ],
+      "crossed_ci95": [
+        -49.06119294232487,
+        39.95530317566444
+      ],
+      "p_raw": 0.9140625,
+      "route_effects": [
+        53.973576488160155,
+        -63.67980172646527,
+        -14.10636646109142,
+        -12.027054218787892,
+        26.92886699876023,
+        -0.26338972579713305,
+        12.561874026066715,
+        -14.972346656673352
+      ],
+      "seed_effects": [
+        -13.936775096653424,
+        29.426005273655313,
+        30.01338224684756,
+        -12.929917281476383,
+        -39.813095939765525
+      ],
+      "routes_favouring_apia": 3,
+      "seeds_favouring_apia": 2,
+      "p_holm": 1.0
+    }
+  ],
+  "secondary": {
+    "polyline_mean_m": [
+      {
+        "method": "gray",
+        "label": "Grayscale",
+        "endpoint": "polyline_mean_m",
+        "effect": 8.201244107844492,
+        "route_ci95": [
+          -17.873209233934205,
+          32.744043788989565
+        ],
+        "crossed_ci95": [
+          -28.448642161834016,
+          43.925117689186365
+        ],
+        "p_raw": 0.578125,
+        "route_effects": [
+          -3.5258911057640887,
+          -63.00291626134866,
+          65.44187736402318,
+          36.77622136761529,
+          -2.4519820200504325,
+          32.87898830394688,
+          16.103160931514402,
+          -16.609505717180657
+        ],
+        "seed_effects": [
+          -23.06761083524726,
+          -2.2992510152913486,
+          48.236630817794946,
+          8.884938375215015,
+          9.251513196751102
+        ],
+        "routes_favouring_apia": 4,
+        "seeds_favouring_apia": 3,
+        "p_holm": 1.0
+      },
+      {
+        "method": "raw_colour",
+        "label": "Raw colour",
+        "endpoint": "polyline_mean_m",
+        "effect": -17.15645614492732,
+        "route_ci95": [
+          -48.99238525436525,
+          9.321684573653231
+        ],
+        "crossed_ci95": [
+          -77.88578035661489,
+          23.89541269597829
+        ],
+        "p_raw": 0.3515625,
+        "route_effects": [
+          -0.14356792836428484,
+          -52.99135403797644,
+          -108.41411579123198,
+          27.38207796156477,
+          -2.1733000845617556,
+          15.185241040547217,
+          18.322547172425185,
+          -34.41917749182123
+        ],
+        "seed_effects": [
+          -54.22667286739207,
+          2.0248937176040873,
+          33.61896575667002,
+          -19.969426472121043,
+          -47.23004085939757
+        ],
+        "routes_favouring_apia": 3,
+        "seeds_favouring_apia": 2,
+        "p_holm": 1.0
+      },
+      {
+        "method": "opponent",
+        "label": "Simple opponency",
+        "endpoint": "polyline_mean_m",
+        "effect": 14.717184520532816,
+        "route_ci95": [
+          -18.489055161850626,
+          57.51374022301368
+        ],
+        "crossed_ci95": [
+          -31.401257168826707,
+          83.31694077067418
+        ],
+        "p_raw": 0.6015625,
+        "route_effects": [
+          -10.507186421875025,
+          -18.057822574725627,
+          144.5333056664176,
+          3.2562383327541453,
+          19.934913061827153,
+          22.29536512372767,
+          16.601938187150957,
+          -60.319275211014336
+        ],
+        "seed_effects": [
+          -8.713049555961295,
+          52.89575289384422,
+          58.68572267899668,
+          -15.204733971095115,
+          -14.077769443120403
+        ],
+        "routes_favouring_apia": 5,
+        "seeds_favouring_apia": 2,
+        "p_holm": 1.0
+      },
+      {
+        "method": "sobel_colour",
+        "label": "Sobel + colour",
+        "endpoint": "polyline_mean_m",
+        "effect": -4.790868423124944,
+        "route_ci95": [
+          -31.602487279300092,
+          22.06358807668775
+        ],
+        "crossed_ci95": [
+          -58.236633370839876,
+          56.22630512947527
+        ],
+        "p_raw": 0.8359375,
+        "route_effects": [
+          7.15041030585733,
+          -50.575831564604975,
+          65.92556207002441,
+          -13.69767353463997,
+          -6.6551415913406995,
+          11.437604571954626,
+          17.374976681562497,
+          -69.28685432381276
+        ],
+        "seed_effects": [
+          -10.688917925351689,
+          50.92184043935095,
+          25.45674624780046,
+          -23.685668867791783,
+          -65.95834200963266
+        ],
+        "routes_favouring_apia": 4,
+        "seeds_favouring_apia": 2,
+        "p_holm": 1.0
+      },
+      {
+        "method": "ardin_input",
+        "label": "Ardin-style input",
+        "endpoint": "polyline_mean_m",
+        "effect": 49.65267192677876,
+        "route_ci95": [
+          13.503914889609609,
+          86.38466116129244
+        ],
+        "crossed_ci95": [
+          -21.07118831646428,
+          104.50651043610318
+        ],
+        "p_raw": 0.0390625,
+        "route_effects": [
+          50.734388645785245,
+          15.782461747834159,
+          -46.92486309096573,
+          148.4944555281636,
+          81.79780148520925,
+          42.561000218624564,
+          65.4271163448798,
+          39.3490145346992
+        ],
+        "seed_effects": [
+          -9.735210182500978,
+          89.26182901228997,
+          94.63269923636503,
+          66.35354412556131,
+          7.750497442178488
+        ],
+        "routes_favouring_apia": 7,
+        "seeds_favouring_apia": 4,
+        "p_holm": 0.1953125
+      }
+    ],
+    "first50_polyline_mean_m": [
+      {
+        "method": "gray",
+        "label": "Grayscale",
+        "endpoint": "first50_polyline_mean_m",
+        "effect": 3.806971129171708,
+        "route_ci95": [
+          -0.5564971915441579,
+          8.299252403498523
+        ],
+        "crossed_ci95": [
+          -3.7060309647460485,
+          14.691550475490967
+        ],
+        "p_raw": 0.171875,
+        "route_effects": [
+          2.4342268616878098,
+          -7.63628709721187,
+          15.769277273769012,
+          8.920984195814064,
+          -0.7956039140617934,
+          4.259485184218098,
+          2.8424848025053584,
+          4.6612017266529815
+        ],
+        "seed_effects": [
+          2.9906973485825534,
+          -1.3465848753134286,
+          14.898744570532578,
+          -1.9593071613533213,
+          4.451305763410154
+        ],
+        "routes_favouring_apia": 6,
+        "seeds_favouring_apia": 3,
+        "p_holm": 0.6875
+      },
+      {
+        "method": "raw_colour",
+        "label": "Raw colour",
+        "endpoint": "first50_polyline_mean_m",
+        "effect": -2.174940797822301,
+        "route_ci95": [
+          -11.824429001834957,
+          4.016680937682445
+        ],
+        "crossed_ci95": [
+          -18.53814356089586,
+          6.512186276563293
+        ],
+        "p_raw": 0.921875,
+        "route_effects": [
+          -0.4966003019240574,
+          -0.4591980517757584,
+          -33.64651936578123,
+          1.2055686067607716,
+          -1.024826164731699,
+          7.119181994334779,
+          2.97876434514672,
+          6.9241025553920625
+        ],
+        "seed_effects": [
+          8.473773600714994,
+          -9.446285292074496,
+          4.525966440465925,
+          -2.768254848251465,
+          -11.659903889966467
+        ],
+        "routes_favouring_apia": 4,
+        "seeds_favouring_apia": 2,
+        "p_holm": 1.0
+      },
+      {
+        "method": "opponent",
+        "label": "Simple opponency",
+        "endpoint": "first50_polyline_mean_m",
+        "effect": 5.375447721485842,
+        "route_ci95": [
+          -3.25198183619262,
+          18.074435632398963
+        ],
+        "crossed_ci95": [
+          -5.273927983677834,
+          23.83636427033374
+        ],
+        "p_raw": 0.578125,
+        "route_effects": [
+          -6.607570863798918,
+          -7.259552746886155,
+          45.90797698967618,
+          -2.538216107960828,
+          -2.4755501757553455,
+          5.174981105228349,
+          1.4726922312171673,
+          9.32882134016628
+        ],
+        "seed_effects": [
+          12.6437246400406,
+          9.210311199676479,
+          13.210211774031766,
+          -6.874377181354638,
+          -1.3126318249650022
+        ],
+        "routes_favouring_apia": 4,
+        "seeds_favouring_apia": 3,
+        "p_holm": 1.0
+      },
+      {
+        "method": "sobel_colour",
+        "label": "Sobel + colour",
+        "endpoint": "first50_polyline_mean_m",
+        "effect": -0.6136739959036991,
+        "route_ci95": [
+          -4.457363311535971,
+          4.290379258969142
+        ],
+        "crossed_ci95": [
+          -11.981188517572363,
+          13.050693758665808
+        ],
+        "p_raw": 0.8359375,
+        "route_effects": [
+          2.4979735115645325,
+          -7.423841526499997,
+          14.275140042912597,
+          -5.102174711591867,
+          -4.2108628440542875,
+          -0.8439728030318158,
+          1.0605161789636606,
+          -5.162169815492417
+        ],
+        "seed_effects": [
+          9.7802858743655,
+          -3.000171609582846,
+          7.015829022862683,
+          2.0817943856388466,
+          -18.94610765280268
+        ],
+        "routes_favouring_apia": 3,
+        "seeds_favouring_apia": 3,
+        "p_holm": 1.0
+      },
+      {
+        "method": "ardin_input",
+        "label": "Ardin-style input",
+        "endpoint": "first50_polyline_mean_m",
+        "effect": 10.201856260407885,
+        "route_ci95": [
+          1.8966211004244775,
+          17.519641730776367
+        ],
+        "crossed_ci95": [
+          -3.825298542197883,
+          22.36441964289795
+        ],
+        "p_raw": 0.0703125,
+        "route_effects": [
+          20.391793471493052,
+          10.174566594503448,
+          -13.964965339917688,
+          26.54042779471367,
+          13.8429117929294,
+          12.85521527880303,
+          10.060369190058298,
+          1.7145313006798748
+        ],
+        "seed_effects": [
+          11.178976721087114,
+          20.75322022980662,
+          16.612187708391694,
+          7.155154179367857,
+          -4.69025753661386
+        ],
+        "routes_favouring_apia": 7,
+        "seeds_favouring_apia": 4,
+        "p_holm": 0.3515625
+      }
+    ],
+    "deviation_median_m": [
+      {
+        "method": "gray",
+        "label": "Grayscale",
+        "endpoint": "deviation_median_m",
+        "effect": 10.51052818486986,
+        "route_ci95": [
+          -13.43856143007823,
+          31.751071109541094
+        ],
+        "crossed_ci95": [
+          -17.60850750733599,
+          40.62628406531317
+        ],
+        "p_raw": 0.4375,
+        "route_effects": [
+          -2.700506976333206,
+          -59.703713730499885,
+          63.23561972796671,
+          25.12866729067316,
+          -1.3359369659606182,
+          24.30623887037411,
+          18.642327126235333,
+          16.511530136503296
+        ],
+        "seed_effects": [
+          4.721901444921775,
+          -2.7619036634018035,
+          35.64581203630235,
+          12.33658070027126,
+          2.610250406255724
+        ],
+        "routes_favouring_apia": 5,
+        "seeds_favouring_apia": 4,
+        "p_holm": 1.0
+      },
+      {
+        "method": "raw_colour",
+        "label": "Raw colour",
+        "endpoint": "deviation_median_m",
+        "effect": -11.60215282064093,
+        "route_ci95": [
+          -45.473198845382285,
+          13.564158584082612
+        ],
+        "crossed_ci95": [
+          -73.86701672048895,
+          27.110599083172502
+        ],
+        "p_raw": 0.65625,
+        "route_effects": [
+          0.6231720420681814,
+          -41.27910624640428,
+          -117.82281208748752,
+          26.101058414916473,
+          0.17448023385066697,
+          11.629235294474473,
+          21.3071205400917,
+          6.4496292433628595
+        ],
+        "seed_effects": [
+          -20.830366319393086,
+          8.921679610343245,
+          36.65725940784878,
+          -20.762425668901646,
+          -61.99691113310195
+        ],
+        "routes_favouring_apia": 6,
+        "seeds_favouring_apia": 2,
+        "p_holm": 1.0
+      },
+      {
+        "method": "opponent",
+        "label": "Simple opponency",
+        "endpoint": "deviation_median_m",
+        "effect": 27.95103823433559,
+        "route_ci95": [
+          -3.7465611022588456,
+          75.72889873970067
+        ],
+        "crossed_ci95": [
+          -11.267882638782224,
+          104.61304970237373
+        ],
+        "p_raw": 0.234375,
+        "route_effects": [
+          -6.8299189914370775,
+          17.221208703740512,
+          181.807007607261,
+          -0.2927051106022304,
+          17.687511042079986,
+          16.135700567458947,
+          27.62194529381828,
+          -29.74244323763469
+        ],
+        "seed_effects": [
+          30.35841007528035,
+          58.15052283362137,
+          74.48684276494865,
+          -18.614663221960004,
+          -4.625921280212396
+        ],
+        "routes_favouring_apia": 5,
+        "seeds_favouring_apia": 3,
+        "p_holm": 0.9375
+      },
+      {
+        "method": "sobel_colour",
+        "label": "Sobel + colour",
+        "endpoint": "deviation_median_m",
+        "effect": 0.06652347807941794,
+        "route_ci95": [
+          -14.266678948688243,
+          15.580429895275765
+        ],
+        "crossed_ci95": [
+          -55.87074258378873,
+          63.28918156987092
+        ],
+        "p_raw": 0.984375,
+        "route_effects": [
+          4.940577728760184,
+          -21.254847984447956,
+          41.83221346320231,
+          -16.25792944574633,
+          -4.221838788318283,
+          7.342994638951817,
+          18.567781578531264,
+          -30.416763366297708
+        ],
+        "seed_effects": [
+          39.973071616704964,
+          41.13654730002243,
+          25.611964707866207,
+          -26.923032122007086,
+          -79.46593411218944
+        ],
+        "routes_favouring_apia": 4,
+        "seeds_favouring_apia": 3,
+        "p_holm": 1.0
+      },
+      {
+        "method": "ardin_input",
+        "label": "Ardin-style input",
+        "endpoint": "deviation_median_m",
+        "effect": 47.37698078562138,
+        "route_ci95": [
+          6.370378456604332,
+          86.34950852347409
+        ],
+        "crossed_ci95": [
+          -21.712674725891034,
+          99.57068480398914
+        ],
+        "p_raw": 0.0625,
+        "route_effects": [
+          40.82480328335957,
+          11.784619452716962,
+          -66.48806720838932,
+          147.11691623032362,
+          86.96025066553952,
+          33.221147857580874,
+          67.20741844483874,
+          58.388757559001064
+        ],
+        "seed_effects": [
+          21.619505071244298,
+          88.59847171114036,
+          86.89320850425965,
+          39.64680364602803,
+          0.1269149954345572
+        ],
+        "routes_favouring_apia": 7,
+        "seeds_favouring_apia": 5,
+        "p_holm": 0.3125
+      }
+    ]
+  },
+  "factorial_exploratory": {
+    "processed_colour_benefit_with_apia_form": {
+      "effect": 23.977356975188634,
+      "route_ci95": [
+        8.084518692314536,
+        45.990748944965105
+      ],
+      "crossed_ci95": [
+        -30.005204022188362,
+        92.66989149034475
+      ],
+      "p_raw": 0.0234375,
+      "route_effects": [
+        12.621991576121644,
+        -6.031869423595287,
+        92.45046301533493,
+        21.56374306915319,
+        25.479483365518767,
+        13.686752907435794,
+        2.7957927937046527,
+        29.25249849783544
+      ],
+      "seed_effects": [
+        0.3261405366990573,
+        111.63018616704522,
+        36.41224831991867,
+        21.892731085524304,
+        -50.37452123324405
+      ],
+      "routes_favouring_apia": 7,
+      "seeds_favouring_apia": 4
+    },
+    "processed_colour_benefit_with_sobel_form": {
+      "effect": -3.377112785402106,
+      "route_ci95": [
+        -29.305260523783602,
+        26.062014962009997
+      ],
+      "crossed_ci95": [
+        -38.4001597325633,
+        42.08833108387895
+      ],
+      "p_raw": 0.8515625,
+      "route_effects": [
+        -46.73752902720859,
+        13.254129847928743,
+        79.87876445057165,
+        -1.7958163771989,
+        -33.44229154781034,
+        11.48301523323008,
+        4.602346239215246,
+        -54.25952110194474
+      ],
+      "seed_effects": [
+        3.2185047913017963,
+        21.53883772389601,
+        -4.664335922835567,
+        -10.873067516766366,
+        -26.10550300260641
+      ],
+      "routes_favouring_apia": 4,
+      "seeds_favouring_apia": 2
+    },
+    "apia_form_benefit_with_processed_colour": {
+      "effect": -1.4480801594784936,
+      "route_ci95": [
+        -24.32322553315909,
+        20.55203197615351
+      ],
+      "crossed_ci95": [
+        -49.06119294232487,
+        39.95530317566443
+      ],
+      "p_raw": 0.9140625,
+      "route_effects": [
+        53.973576488160155,
+        -63.67980172646527,
+        -14.10636646109142,
+        -12.027054218787892,
+        26.92886699876023,
+        -0.2633897257971329,
+        12.561874026066716,
+        -14.972346656673343
+      ],
+      "seed_effects": [
+        -13.936775096653424,
+        29.426005273655317,
+        30.01338224684756,
+        -12.929917281476381,
+        -39.813095939765525
+      ],
+      "routes_favouring_apia": 3,
+      "seeds_favouring_apia": 2
+    },
+    "apia_form_benefit_with_simple_colour": {
+      "effect": -28.802549920069236,
+      "route_ci95": [
+        -52.60175259159039,
+        -8.476502106638552
+      ],
+      "crossed_ci95": [
+        -69.48221028110433,
+        1.604157479488833
+      ],
+      "p_raw": 0.0390625,
+      "route_effects": [
+        -5.385944115170076,
+        -44.39380245494122,
+        -26.678065025854686,
+        -35.38661366513998,
+        -31.99290791456888,
+        -2.4671274000028474,
+        14.36842747157731,
+        -98.48436625645351
+      ],
+      "seed_effects": [
+        -11.044410842050674,
+        -60.66534316949391,
+        -11.063201995906674,
+        -45.69571588376705,
+        -15.544077709127894
+      ],
+      "routes_favouring_apia": 1,
+      "seeds_favouring_apia": 0
+    },
+    "colour_by_form_interaction": {
+      "effect": 27.354469760590746,
+      "route_ci95": [
+        5.047410831537799,
+        50.88554027528694
+      ],
+      "crossed_ci95": [
+        -27.12008017184385,
+        91.78483963463434
+      ],
+      "p_raw": 0.078125,
+      "route_effects": [
+        59.35952060333024,
+        -19.285999271524037,
+        12.571698564763267,
+        23.3595594463521,
+        58.921774913329116,
+        2.2037376742057164,
+        -1.8065534455105947,
+        83.51201959978019
+      ],
+      "seed_effects": [
+        -2.8923642546027466,
+        90.0913484431492,
+        41.07658424275424,
+        32.76579860229067,
+        -24.269018230637638
+      ],
+      "routes_favouring_apia": 6,
+      "seeds_favouring_apia": 3
+    }
+  },
+  "interpretation": "Positive effects favour ApiaViz. P-values use 8 route clusters, conditional on the five wiring seeds. Holm families are separate for five baselines and five mechanistic interventions. Secondary endpoint families are exploratory. Bootstrap intervals are unadjusted percentile 95% intervals; crossed intervals resample both route and seed axes. One simulated world and fixed colour assignment."
+}

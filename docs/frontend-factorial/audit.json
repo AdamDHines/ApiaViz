@@ -1,0 +1,8 @@
+{
+  "trajectories": 240,
+  "steering_decisions": 31733,
+  "probe_decisions": 19200,
+  "exact_reference_reruns": 120,
+  "errors": [],
+  "scope": "Source, stimulus, checkpoint and dataset hashes; reconstructed navigation and probes; exact stored-score, probe and trajectory reproduction for all reference runs. Not a full independent recalculation of all neural computations."
+}

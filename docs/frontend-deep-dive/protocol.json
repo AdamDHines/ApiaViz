@@ -1,0 +1,22 @@
+{
+  "date": "2026-09-29",
+  "role": "Exploratory development on previously inspected routes; no held-out superiority claim",
+  "status": "Candidate definitions fixed before candidate outcome inspection",
+  "ants": [4, 6, 7, 9, 10, 12, 13, 15],
+  "wiring_seeds": [19, 31, 43, 59, 71],
+  "environment_seed": 99,
+  "methods": ["apiaviz", "sobel_colour", "unit_dc", "balanced_form", "oriented_form", "linear_colour", "balanced_linear"],
+  "navigation_trials": 280,
+  "shared": "Reuse saved learning and probe images, saved weights, spiking parameters, memory and controller from the 440-trial study. Re-run both references and demand exact trajectories and steering scores. Only named input operations change.",
+  "primary_descriptive_endpoint": "Whole-trajectory mean route deviation including failures; equally average routes and seeds.",
+  "secondary": ["completion", "continuous-polyline deviation", "first50_polyline_mean_m", "centreline heading error", "stream-specific heading error", "brightness heading change", "off-route restoring fraction"],
+  "inference": "Report paired route/seed effects and crossed bootstrap uncertainty. Any p-values are exploratory, sign-flip tests on eight route means conditional on these five seeds, Holm across five candidates per comparator. No result-guided parameter search or extra candidates in this matrix.",
+  "stop": "Complete all 280 trials regardless of rankings. Do not promote a new default automatically. New worlds and independently fixed evaluation are needed to validate a candidate.",
+  "candidates": {
+    "unit_dc": "Divide only the third form plane by its Gaussian kernel sum.",
+    "balanced_form": "Equalise pooled form-plane RMS with floor 0.05 times shared form RMS; retain normal downstream standardisation.",
+    "oriented_form": "Replace form filter bank with Gaussian sigma=1 (5x5) then signed Sobel x/y/magnitude after existing hex and local adaptation; processed colour unchanged.",
+    "linear_colour": "Rectify hex-smoothed raw G-B difference without pre-opponent tanh; form unchanged.",
+    "balanced_linear": "Predefined combination of balanced_form and linear_colour."
+  }
+}

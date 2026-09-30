@@ -1,0 +1,913 @@
+{
+  "summary": [
+    {
+      "method": "apiaviz",
+      "label": "ApiaViz",
+      "n": 40,
+      "completed": 29,
+      "route_deviation_mean_m": 0.552199293408137,
+      "polyline_mean_m": 0.5489970607741487,
+      "first50_polyline_mean_m": 0.16108596450472884,
+      "deviation_median_m": 0.44885120605709694,
+      "clean_heading_error_deg": 12.1875,
+      "clean_tangent_margin": 0.01405481044203043,
+      "clean_restoring_fraction": 0.3546875,
+      "brightness_heading_change_deg": 2.98125,
+      "memory_active_fraction": 0.049166721291840076,
+      "form_heading_error_deg": 12.90625,
+      "colour_heading_error_deg": 25.46875,
+      "form_tangent_margin": 0.01818263400346041,
+      "colour_tangent_margin": -0.02641177847981453,
+      "form_matched_progress_error_m": 0.545,
+      "colour_matched_progress_error_m": 1.4387500000000002
+    },
+    {
+      "method": "sobel_colour",
+      "label": "Sobel + colour",
+      "n": 40,
+      "completed": 29,
+      "route_deviation_mean_m": 0.5039473639593309,
+      "polyline_mean_m": 0.5010883765428993,
+      "first50_polyline_mean_m": 0.15494922454569188,
+      "deviation_median_m": 0.449516440837891,
+      "clean_heading_error_deg": 11.1875,
+      "clean_tangent_margin": 0.017428587190806866,
+      "clean_restoring_fraction": 0.35078125,
+      "brightness_heading_change_deg": 0.0125,
+      "memory_active_fraction": 0.050814348179847,
+      "form_heading_error_deg": 11.875,
+      "colour_heading_error_deg": 23.875,
+      "form_tangent_margin": 0.022982114367187022,
+      "colour_tangent_margin": -0.023474941775202752,
+      "form_matched_progress_error_m": 0.47687500000000005,
+      "colour_matched_progress_error_m": 1.470625
+    },
+    {
+      "method": "unit_dc",
+      "label": "Unit-gain low-pass",
+      "n": 40,
+      "completed": 28,
+      "route_deviation_mean_m": 0.5309500349741294,
+      "polyline_mean_m": 0.5283701275799808,
+      "first50_polyline_mean_m": 0.16332590530933558,
+      "deviation_median_m": 0.4847683733021708,
+      "clean_heading_error_deg": 14.5625,
+      "clean_tangent_margin": 0.009718463430181146,
+      "clean_restoring_fraction": 0.353125,
+      "brightness_heading_change_deg": 3.3625,
+      "memory_active_fraction": 0.05056013306602836,
+      "form_heading_error_deg": 15.4375,
+      "colour_heading_error_deg": 25.46875,
+      "form_tangent_margin": 0.009795944392681121,
+      "colour_tangent_margin": -0.02641177847981453,
+      "form_matched_progress_error_m": 0.6553125,
+      "colour_matched_progress_error_m": 1.4387500000000002
+    },
+    {
+      "method": "balanced_form",
+      "label": "Balanced form",
+      "n": 40,
+      "completed": 27,
+      "route_deviation_mean_m": 0.7275629879283644,
+      "polyline_mean_m": 0.7247150861616758,
+      "first50_polyline_mean_m": 0.17565515689842578,
+      "deviation_median_m": 0.7102791730985195,
+      "clean_heading_error_deg": 13.96875,
+      "clean_tangent_margin": 0.01039781984873116,
+      "clean_restoring_fraction": 0.346875,
+      "brightness_heading_change_deg": 3.2,
+      "memory_active_fraction": 0.050535923521965745,
+      "form_heading_error_deg": 14.34375,
+      "colour_heading_error_deg": 25.46875,
+      "form_tangent_margin": 0.011012065038084985,
+      "colour_tangent_margin": -0.02641177847981453,
+      "form_matched_progress_error_m": 0.6021875,
+      "colour_matched_progress_error_m": 1.4387500000000002
+    },
+    {
+      "method": "oriented_form",
+      "label": "Oriented form",
+      "n": 40,
+      "completed": 32,
+      "route_deviation_mean_m": 0.3932803001254313,
+      "polyline_mean_m": 0.38962311253858434,
+      "first50_polyline_mean_m": 0.16487130789914003,
+      "deviation_median_m": 0.3567500948362604,
+      "clean_heading_error_deg": 10.75,
+      "clean_tangent_margin": 0.018607664667069913,
+      "clean_restoring_fraction": 0.35234375,
+      "brightness_heading_change_deg": 2.65625,
+      "memory_active_fraction": 0.050911654531955716,
+      "form_heading_error_deg": 11.59375,
+      "colour_heading_error_deg": 25.46875,
+      "form_tangent_margin": 0.023373136296868324,
+      "colour_tangent_margin": -0.02641177847981453,
+      "form_matched_progress_error_m": 0.3825,
+      "colour_matched_progress_error_m": 1.4387500000000002
+    },
+    {
+      "method": "linear_colour",
+      "label": "Linear colour",
+      "n": 40,
+      "completed": 29,
+      "route_deviation_mean_m": 0.2987419132186803,
+      "polyline_mean_m": 0.29574157142264956,
+      "first50_polyline_mean_m": 0.11825476983149574,
+      "deviation_median_m": 0.2212387193987715,
+      "clean_heading_error_deg": 12.46875,
+      "clean_tangent_margin": 0.01234923517331481,
+      "clean_restoring_fraction": 0.35859375,
+      "brightness_heading_change_deg": 1.35625,
+      "memory_active_fraction": 0.04896018728613853,
+      "form_heading_error_deg": 12.90625,
+      "colour_heading_error_deg": 24.53125,
+      "form_tangent_margin": 0.01818263400346041,
+      "colour_tangent_margin": -0.028289523161947727,
+      "form_matched_progress_error_m": 0.545,
+      "colour_matched_progress_error_m": 1.3703125
+    },
+    {
+      "method": "balanced_linear",
+      "label": "Balanced + linear colour",
+      "n": 40,
+      "completed": 28,
+      "route_deviation_mean_m": 0.5860047805210832,
+      "polyline_mean_m": 0.5834007057966423,
+      "first50_polyline_mean_m": 0.17696163741788057,
+      "deviation_median_m": 0.5772231162220853,
+      "clean_heading_error_deg": 14.3125,
+      "clean_tangent_margin": 0.008265799237415194,
+      "clean_restoring_fraction": 0.35390625,
+      "brightness_heading_change_deg": 1.03125,
+      "memory_active_fraction": 0.05032938988879323,
+      "form_heading_error_deg": 14.34375,
+      "colour_heading_error_deg": 24.53125,
+      "form_tangent_margin": 0.011012065038084985,
+      "colour_tangent_margin": -0.028289523161947727,
+      "form_matched_progress_error_m": 0.6021875,
+      "colour_matched_progress_error_m": 1.3703125
+    }
+  ],
+  "comparisons": {
+    "apiaviz": [
+      {
+        "method": "unit_dc",
+        "reference": "apiaviz",
+        "effect": -2.1249258434007574,
+        "route_ci95": [
+          -31.652417119188662,
+          29.99715173074167
+        ],
+        "crossed_ci95": [
+          -64.19046278827956,
+          56.96651818211331
+        ],
+        "p_raw": 0.890625,
+        "route_effects": [
+          -12.124327147115924,
+          -72.7520401827903,
+          -39.330559155041826,
+          -8.656479305295013,
+          31.057844965677816,
+          89.30884090265269,
+          11.515215073842931,
+          -16.017901899136437
+        ],
+        "seed_effects": [
+          -2.2189578977634206,
+          50.36282974375799,
+          24.160838744207098,
+          -31.103457987731005,
+          -51.82588181947446
+        ],
+        "leave_one_route_out_effect_range_cm": [
+          -15.186892521408394,
+          7.964661919369176
+        ],
+        "routes_with_lower_error": 5,
+        "seeds_with_lower_error": 3,
+        "p_holm_exploratory": 1.0
+      },
+      {
+        "method": "balanced_form",
+        "reference": "apiaviz",
+        "effect": 17.53636945202273,
+        "route_ci95": [
+          -13.805900186440283,
+          60.26654083609287
+        ],
+        "crossed_ci95": [
+          -32.58940202544683,
+          76.98321634323823
+        ],
+        "p_raw": 0.59375,
+        "route_effects": [
+          30.335038076249354,
+          -46.784364143147926,
+          151.03913731742205,
+          -9.21821821563913,
+          17.360854742409828,
+          7.021267705430878,
+          -8.140619680810987,
+          -1.3221401857322348
+        ],
+        "seed_effects": [
+          -11.0370061718129,
+          30.300692319651,
+          55.73362028445939,
+          25.314562122988928,
+          -12.630021295172783
+        ],
+        "leave_one_route_out_effect_range_cm": [
+          -1.5354545287486019,
+          26.72504567990425
+        ],
+        "routes_with_lower_error": 4,
+        "seeds_with_lower_error": 2,
+        "p_holm_exploratory": 1.0
+      },
+      {
+        "method": "oriented_form",
+        "reference": "apiaviz",
+        "effect": -15.891899328270563,
+        "route_ci95": [
+          -28.359147429311093,
+          -5.441695540637265
+        ],
+        "crossed_ci95": [
+          -79.17788823153471,
+          34.77250310601579
+        ],
+        "p_raw": 0.03125,
+        "route_effects": [
+          -10.878733043053233,
+          -48.29533338634919,
+          -38.01870711372352,
+          -10.813274671946255,
+          -6.9344265612045906,
+          0.49233075660521963,
+          0.7395655262371171,
+          -13.42661613273007
+        ],
+        "seed_effects": [
+          -65.27932234254293,
+          34.043107966854144,
+          15.325040864286072,
+          28.04049570685519,
+          -91.58881883680532
+        ],
+        "leave_one_route_out_effect_range_cm": [
+          -18.26782287891452,
+          -11.262837319973617
+        ],
+        "routes_with_lower_error": 6,
+        "seeds_with_lower_error": 2,
+        "p_holm_exploratory": 0.15625
+      },
+      {
+        "method": "linear_colour",
+        "reference": "apiaviz",
+        "effect": -25.345738018945664,
+        "route_ci95": [
+          -61.61196013002872,
+          4.67823439761178
+        ],
+        "crossed_ci95": [
+          -87.51837262956299,
+          12.129223211707462
+        ],
+        "p_raw": 0.203125,
+        "route_effects": [
+          -1.0406968990520646,
+          -52.08946812511588,
+          -130.8482965678999,
+          -12.15811371327614,
+          2.3736006249982773,
+          12.9465392067933,
+          32.132507565163294,
+          -54.081976243176236
+        ],
+        "seed_effects": [
+          -31.093664810454285,
+          -7.998914770089314,
+          28.397416248367648,
+          -43.95853848113103,
+          -72.07498828142135
+        ],
+        "leave_one_route_out_effect_range_cm": [
+          -33.55691595953267,
+          -10.273943940523639
+        ],
+        "routes_with_lower_error": 5,
+        "seeds_with_lower_error": 4,
+        "p_holm_exploratory": 0.8125
+      },
+      {
+        "method": "balanced_linear",
+        "reference": "apiaviz",
+        "effect": 3.3805487112946238,
+        "route_ci95": [
+          -13.163359573025629,
+          21.84127502818187
+        ],
+        "crossed_ci95": [
+          -50.351348827378914,
+          57.19981397642979
+        ],
+        "p_raw": 0.71875,
+        "route_effects": [
+          -5.582556122008799,
+          -23.99930545570574,
+          32.08118137063123,
+          -9.335636552034517,
+          -7.375282738978456,
+          50.61024652949245,
+          16.861894022326705,
+          -26.21615136336589
+        ],
+        "seed_effects": [
+          10.841902131858717,
+          8.145131250949117,
+          47.664545118935074,
+          4.844907046404786,
+          -54.59374199167459
+        ],
+        "leave_one_route_out_effect_range_cm": [
+          -3.366550977019352,
+          7.608648721960411
+        ],
+        "routes_with_lower_error": 5,
+        "seeds_with_lower_error": 1,
+        "p_holm_exploratory": 1.0
+      }
+    ],
+    "sobel_colour": [
+      {
+        "method": "unit_dc",
+        "reference": "sobel_colour",
+        "effect": 2.7002671014798394,
+        "route_ci95": [
+          -35.29716210277736,
+          36.63702061629388
+        ],
+        "crossed_ci95": [
+          -42.862281984442944,
+          42.74661791557405
+        ],
+        "p_raw": 0.8984375,
+        "route_effects": [
+          -19.360374608067488,
+          -22.326368304253783,
+          -105.10295714452207,
+          5.166391290691779,
+          37.57126951472793,
+          78.08921539521974,
+          -5.6490051914390325,
+          53.21396585948164
+        ],
+        "seed_effects": [
+          8.499312407588205,
+          -0.6020132537933254,
+          -1.188207579804887,
+          -7.30047318948826,
+          14.092717122897472
+        ],
+        "leave_one_route_out_effect_range_cm": [
+          -8.069582654768714,
+          18.100727708051544
+        ],
+        "routes_with_lower_error": 4,
+        "seeds_with_lower_error": 3,
+        "p_holm_exploratory": 1.0
+      },
+      {
+        "method": "balanced_form",
+        "reference": "sobel_colour",
+        "effect": 22.36156239690333,
+        "route_ci95": [
+          -0.026459614949528643,
+          47.36614694740065
+        ],
+        "crossed_ci95": [
+          -17.378370972007417,
+          70.29745922365915
+        ],
+        "p_raw": 0.1484375,
+        "route_effects": [
+          23.0989906152978,
+          3.641307735388608,
+          85.26673932794179,
+          4.6046523803476616,
+          23.874279291459946,
+          -4.198357802002069,
+          -25.304839946092955,
+          67.90972757288586
+        ],
+        "seed_effects": [
+          -0.31873586646127094,
+          -20.664150677900324,
+          30.384573960447415,
+          49.11754692123168,
+          53.288577647199155
+        ],
+        "leave_one_route_out_effect_range_cm": [
+          13.375108549612122,
+          29.1710484459028
+        ],
+        "routes_with_lower_error": 2,
+        "seeds_with_lower_error": 2,
+        "p_holm_exploratory": 0.7421875
+      },
+      {
+        "method": "oriented_form",
+        "reference": "sobel_colour",
+        "effect": -11.066706383389963,
+        "route_ci95": [
+          -42.75058581021178,
+          15.3021668274239
+        ],
+        "crossed_ci95": [
+          -63.35946638294346,
+          32.66946312204294
+        ],
+        "p_raw": 0.5546875,
+        "route_effects": [
+          -18.1147805040048,
+          2.1303384921873327,
+          -103.79110510320375,
+          3.0095959240405374,
+          -0.4210020121544761,
+          -10.727294750827728,
+          -16.424654739044847,
+          55.80525162588801
+        ],
+        "seed_effects": [
+          -54.56105203719128,
+          -16.92173503069718,
+          -10.024005459725913,
+          51.84348050509794,
+          -25.670219894433377
+        ],
+        "leave_one_route_out_effect_range_cm": [
+          -20.619843241858245,
+          2.1796362908691487
+        ],
+        "routes_with_lower_error": 5,
+        "seeds_with_lower_error": 4,
+        "p_holm_exploratory": 1.0
+      },
+      {
+        "method": "linear_colour",
+        "reference": "sobel_colour",
+        "effect": -20.520545074065062,
+        "route_ci95": [
+          -72.24514872792547,
+          8.841476217659448
+        ],
+        "crossed_ci95": [
+          -84.05580952247217,
+          16.54009767856958
+        ],
+        "p_raw": 0.921875,
+        "route_effects": [
+          -8.276744360003628,
+          -1.6637962465793579,
+          -196.6206945573801,
+          1.6647568827106511,
+          8.887025174048391,
+          1.7269136993603542,
+          14.968287299881329,
+          15.149891515441857
+        ],
+        "seed_effects": [
+          -20.37539450510266,
+          -58.96375776764065,
+          3.0483699243556615,
+          -20.155553682888282,
+          -6.156389339049399
+        ],
+        "leave_one_route_out_effect_range_cm": [
+          -25.616321729708908,
+          4.636619137837085
+        ],
+        "routes_with_lower_error": 3,
+        "seeds_with_lower_error": 4,
+        "p_holm_exploratory": 1.0
+      },
+      {
+        "method": "balanced_linear",
+        "reference": "sobel_colour",
+        "effect": 8.205741656175224,
+        "route_ci95": [
+          -8.897322850797398,
+          25.044981316775445
+        ],
+        "crossed_ci95": [
+          -36.52658992700637,
+          41.926358628129584
+        ],
+        "p_raw": 0.4453125,
+        "route_effects": [
+          -12.81860358296036,
+          26.426366422830775,
+          -33.691216618849,
+          4.487234043952272,
+          -0.8618581899283415,
+          39.390621022059506,
+          -0.30232624295525845,
+          43.0157163952522
+        ],
+        "seed_effects": [
+          21.560172437210348,
+          -42.81971174660221,
+          22.315498794923087,
+          28.64789184464754,
+          11.32485695069736
+        ],
+        "leave_one_route_out_effect_range_cm": [
+          3.2328881220213708,
+          14.191021409750112
+        ],
+        "routes_with_lower_error": 4,
+        "seeds_with_lower_error": 1,
+        "p_holm_exploratory": 1.0
+      }
+    ]
+  },
+  "protocol": {
+    "date": "2026-09-29",
+    "role": "Exploratory development on previously inspected routes; no held-out superiority claim",
+    "status": "Candidate definitions fixed before candidate outcome inspection",
+    "ants": [
+      4,
+      6,
+      7,
+      9,
+      10,
+      12,
+      13,
+      15
+    ],
+    "wiring_seeds": [
+      19,
+      31,
+      43,
+      59,
+      71
+    ],
+    "environment_seed": 99,
+    "methods": [
+      "apiaviz",
+      "sobel_colour",
+      "unit_dc",
+      "balanced_form",
+      "oriented_form",
+      "linear_colour",
+      "balanced_linear"
+    ],
+    "navigation_trials": 280,
+    "shared": "Reuse saved learning and probe images, saved weights, spiking parameters, memory and controller from the 440-trial study. Re-run both references and demand exact trajectories and steering scores. Only named input operations change.",
+    "primary_descriptive_endpoint": "Whole-trajectory mean route deviation including failures; equally average routes and seeds.",
+    "secondary": [
+      "completion",
+      "continuous-polyline deviation",
+      "first50_polyline_mean_m",
+      "centreline heading error",
+      "stream-specific heading error",
+      "brightness heading change",
+      "off-route restoring fraction"
+    ],
+    "inference": "Report paired route/seed effects and crossed bootstrap uncertainty. Any p-values are exploratory, sign-flip tests on eight route means conditional on these five seeds, Holm across five candidates per comparator. No result-guided parameter search or extra candidates in this matrix.",
+    "stop": "Complete all 280 trials regardless of rankings. Do not promote a new default automatically. New worlds and independently fixed evaluation are needed to validate a candidate.",
+    "candidates": {
+      "unit_dc": "Divide only the third form plane by its Gaussian kernel sum.",
+      "balanced_form": "Equalise pooled form-plane RMS with floor 0.05 times shared form RMS; retain normal downstream standardisation.",
+      "oriented_form": "Replace form filter bank with Gaussian sigma=1 (5x5) then signed Sobel x/y/magnitude after existing hex and local adaptation; processed colour unchanged.",
+      "linear_colour": "Rectify hex-smoothed raw G-B difference without pre-opponent tanh; form unchanged.",
+      "balanced_linear": "Predefined combination of balanced_form and linear_colour."
+    }
+  },
+  "reference_first_disagreement": [
+    {
+      "ant": 4,
+      "seed": 19,
+      "first_different_step": 10,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.013837695121765137,
+      "sobel_colour_score_gap": 0.046534061431884766
+    },
+    {
+      "ant": 4,
+      "seed": 31,
+      "first_different_step": 14,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.04187256097793579,
+      "sobel_colour_score_gap": 0.026323378086090088
+    },
+    {
+      "ant": 4,
+      "seed": 43,
+      "first_different_step": 10,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.015452027320861816,
+      "sobel_colour_score_gap": 0.0028173327445983887
+    },
+    {
+      "ant": 4,
+      "seed": 59,
+      "first_different_step": 19,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.02615112066268921,
+      "sobel_colour_score_gap": 0.0021486282348632812
+    },
+    {
+      "ant": 4,
+      "seed": 71,
+      "first_different_step": 10,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.021427631378173828,
+      "sobel_colour_score_gap": 0.0022507309913635254
+    },
+    {
+      "ant": 6,
+      "seed": 19,
+      "first_different_step": 21,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.008290767669677734,
+      "sobel_colour_score_gap": 0.039567530155181885
+    },
+    {
+      "ant": 6,
+      "seed": 31,
+      "first_different_step": 8,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.01558905839920044,
+      "sobel_colour_score_gap": 0.007946491241455078
+    },
+    {
+      "ant": 6,
+      "seed": 43,
+      "first_different_step": 7,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.025813162326812744,
+      "sobel_colour_score_gap": 0.004649460315704346
+    },
+    {
+      "ant": 6,
+      "seed": 59,
+      "first_different_step": 7,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.007353603839874268,
+      "sobel_colour_score_gap": 0.002138495445251465
+    },
+    {
+      "ant": 6,
+      "seed": 71,
+      "first_different_step": 8,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.0028786659240722656,
+      "sobel_colour_score_gap": 0.05020934343338013
+    },
+    {
+      "ant": 7,
+      "seed": 19,
+      "first_different_step": 2,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.012440621852874756,
+      "sobel_colour_score_gap": 0.004189670085906982
+    },
+    {
+      "ant": 7,
+      "seed": 31,
+      "first_different_step": 2,
+      "turn_difference_deg": 20.0,
+      "apiaviz_score_gap": 0.022827625274658203,
+      "sobel_colour_score_gap": 0.010945260524749756
+    },
+    {
+      "ant": 7,
+      "seed": 43,
+      "first_different_step": 2,
+      "turn_difference_deg": 30.0,
+      "apiaviz_score_gap": 0.008703052997589111,
+      "sobel_colour_score_gap": 0.003922820091247559
+    },
+    {
+      "ant": 7,
+      "seed": 59,
+      "first_different_step": 4,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.012658298015594482,
+      "sobel_colour_score_gap": 0.01817917823791504
+    },
+    {
+      "ant": 7,
+      "seed": 71,
+      "first_different_step": 3,
+      "turn_difference_deg": 70.0,
+      "apiaviz_score_gap": 0.005413532257080078,
+      "sobel_colour_score_gap": 0.006698131561279297
+    },
+    {
+      "ant": 9,
+      "seed": 19,
+      "first_different_step": 8,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.01634204387664795,
+      "sobel_colour_score_gap": 0.055023133754730225
+    },
+    {
+      "ant": 9,
+      "seed": 31,
+      "first_different_step": 11,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.08921587467193604,
+      "sobel_colour_score_gap": 0.005419313907623291
+    },
+    {
+      "ant": 9,
+      "seed": 43,
+      "first_different_step": 24,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.0025557875633239746,
+      "sobel_colour_score_gap": 0.0437467098236084
+    },
+    {
+      "ant": 9,
+      "seed": 59,
+      "first_different_step": 19,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.016872107982635498,
+      "sobel_colour_score_gap": 0.007950961589813232
+    },
+    {
+      "ant": 9,
+      "seed": 71,
+      "first_different_step": 27,
+      "turn_difference_deg": 60.0,
+      "apiaviz_score_gap": 0.01640075445175171,
+      "sobel_colour_score_gap": 0.0362514853477478
+    },
+    {
+      "ant": 10,
+      "seed": 19,
+      "first_different_step": 13,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.011435091495513916,
+      "sobel_colour_score_gap": 0.02963930368423462
+    },
+    {
+      "ant": 10,
+      "seed": 31,
+      "first_different_step": 13,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.003077864646911621,
+      "sobel_colour_score_gap": 0.0005698204040527344
+    },
+    {
+      "ant": 10,
+      "seed": 43,
+      "first_different_step": 40,
+      "turn_difference_deg": 50.0,
+      "apiaviz_score_gap": 0.06914055347442627,
+      "sobel_colour_score_gap": 0.0004800558090209961
+    },
+    {
+      "ant": 10,
+      "seed": 59,
+      "first_different_step": 57,
+      "turn_difference_deg": 20.0,
+      "apiaviz_score_gap": 0.000995039939880371,
+      "sobel_colour_score_gap": 0.025498569011688232
+    },
+    {
+      "ant": 10,
+      "seed": 71,
+      "first_different_step": 13,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.02233344316482544,
+      "sobel_colour_score_gap": 0.03770393133163452
+    },
+    {
+      "ant": 12,
+      "seed": 19,
+      "first_different_step": 17,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.013221383094787598,
+      "sobel_colour_score_gap": 0.0025857090950012207
+    },
+    {
+      "ant": 12,
+      "seed": 31,
+      "first_different_step": 17,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.056098222732543945,
+      "sobel_colour_score_gap": 0.033213019371032715
+    },
+    {
+      "ant": 12,
+      "seed": 43,
+      "first_different_step": 17,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.03251075744628906,
+      "sobel_colour_score_gap": 0.01849806308746338
+    },
+    {
+      "ant": 12,
+      "seed": 59,
+      "first_different_step": 12,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.00913846492767334,
+      "sobel_colour_score_gap": 0.01650911569595337
+    },
+    {
+      "ant": 12,
+      "seed": 71,
+      "first_different_step": 12,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.014527082443237305,
+      "sobel_colour_score_gap": 0.012897133827209473
+    },
+    {
+      "ant": 13,
+      "seed": 19,
+      "first_different_step": 27,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.03985542058944702,
+      "sobel_colour_score_gap": 0.006254017353057861
+    },
+    {
+      "ant": 13,
+      "seed": 31,
+      "first_different_step": 42,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.029761850833892822,
+      "sobel_colour_score_gap": 0.005707740783691406
+    },
+    {
+      "ant": 13,
+      "seed": 43,
+      "first_different_step": 18,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.02663201093673706,
+      "sobel_colour_score_gap": 0.005566120147705078
+    },
+    {
+      "ant": 13,
+      "seed": 59,
+      "first_different_step": 24,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.011133015155792236,
+      "sobel_colour_score_gap": 0.03331255912780762
+    },
+    {
+      "ant": 13,
+      "seed": 71,
+      "first_different_step": 24,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.004570662975311279,
+      "sobel_colour_score_gap": 0.05142056941986084
+    },
+    {
+      "ant": 15,
+      "seed": 19,
+      "first_different_step": 7,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.0015764832496643066,
+      "sobel_colour_score_gap": 0.01783442497253418
+    },
+    {
+      "ant": 15,
+      "seed": 31,
+      "first_different_step": 5,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.014299273490905762,
+      "sobel_colour_score_gap": 0.019562840461730957
+    },
+    {
+      "ant": 15,
+      "seed": 43,
+      "first_different_step": 7,
+      "turn_difference_deg": 40.0,
+      "apiaviz_score_gap": 0.01766073703765869,
+      "sobel_colour_score_gap": 0.009150087833404541
+    },
+    {
+      "ant": 15,
+      "seed": 59,
+      "first_different_step": 7,
+      "turn_difference_deg": 20.0,
+      "apiaviz_score_gap": 0.012425541877746582,
+      "sobel_colour_score_gap": 0.010938942432403564
+    },
+    {
+      "ant": 15,
+      "seed": 71,
+      "first_different_step": 7,
+      "turn_difference_deg": 10.0,
+      "apiaviz_score_gap": 0.031324684619903564,
+      "sobel_colour_score_gap": 0.00499492883682251
+    }
+  ],
+  "inference": "Exploratory paired effects on known routes. Negative differences favour the candidate. Eight route-mean sign-flip tests condition on the five seeds; Holm over five candidates for each reference separately. Unadjusted crossed bootstrap intervals. No held-out or between-world significance claim."
+}

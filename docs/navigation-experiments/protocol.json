@@ -1,0 +1,164 @@
+{
+  "role": "Ordered exploratory experiments; no tuning on evaluated outcomes.",
+  "encoder_environment": "/Users/adam/repo/apiaviz/apiaviz/output/grassland-smoke",
+  "shape": [
+    51,
+    199
+  ],
+  "methods": [
+    "linear_colour",
+    "sobel_colour",
+    "ardin_input"
+  ],
+  "modes": {
+    "linear_colour": "angles",
+    "sobel_colour": "angles",
+    "ardin_input": "pixels"
+  },
+  "wiring_seeds": [
+    19,
+    31,
+    43
+  ],
+  "worlds": [
+    {
+      "name": "meander",
+      "environment": "/Users/adam/repo/apiaviz/apiaviz/output/grassland-smoke",
+      "new": false,
+      "protocol_sha256": "6d760f1c87f9ea5533dcb239f1044dabbb61fe3848a49f5456fceaf194817523"
+    },
+    {
+      "name": "bend",
+      "environment": "/Users/adam/repo/apiaviz/apiaviz/output/navigation-regime/bend",
+      "new": true,
+      "protocol_sha256": "896cab0f73a7648a6f3dcbdb06cc5c4b053045abeab8c7cef7c4415571d73409"
+    },
+    {
+      "name": "hairpin",
+      "environment": "/Users/adam/repo/apiaviz/apiaviz/output/navigation-regime/hairpin",
+      "new": true,
+      "protocol_sha256": "c77d158239407b9f0261c7902ee6a9f3a2da334528d5cc1fb7d33cf867b0c6bb"
+    }
+  ],
+  "stage1": {
+    "world": "meander",
+    "banks": [
+      "centre",
+      "spread_equal",
+      "corridor3",
+      "corridor9"
+    ],
+    "trials": 36,
+    "max_steps": 200,
+    "equal_budget": "One view per station: centre versus deterministic nine-offset cycle; neither claims natural acquisition."
+  },
+  "stage2": {
+    "bank": "centre",
+    "scenarios": [
+      {
+        "name": "aligned",
+        "lateral": 0.0,
+        "heading": 0.0,
+        "kick": 0.0
+      },
+      {
+        "name": "left50",
+        "lateral": 0.5,
+        "heading": 0.0,
+        "kick": 0.0
+      },
+      {
+        "name": "right50",
+        "lateral": -0.5,
+        "heading": 0.0,
+        "kick": 0.0
+      },
+      {
+        "name": "yaw_left40",
+        "lateral": 0.0,
+        "heading": 40.0,
+        "kick": 0.0
+      },
+      {
+        "name": "yaw_right40",
+        "lateral": 0.0,
+        "heading": -40.0,
+        "kick": 0.0
+      },
+      {
+        "name": "kick_left50",
+        "lateral": 0.0,
+        "heading": 0.0,
+        "kick": 0.5
+      },
+      {
+        "name": "kick_right50",
+        "lateral": 0.0,
+        "heading": 0.0,
+        "kick": -0.5
+      }
+    ],
+    "trials": 189,
+    "max_steps": 200,
+    "kick_before_step": 36,
+    "recovery_radius_m": 0.1,
+    "recovery_consecutive_steps": 3,
+    "termination": "Endpoint .2 m, 200 movement steps, field boundary or conservative rock collision."
+  },
+  "stage3": {
+    "bank": "centre",
+    "scenarios": [
+      "aligned",
+      "left50",
+      "kick_right50"
+    ],
+    "controllers": [
+      "exhaustive",
+      "active"
+    ],
+    "trials": 162,
+    "max_steps": 200,
+    "speed_m_s": 0.1,
+    "yaw_speed_deg_s": 180.0,
+    "observation_s": 0.05,
+    "time_budget_s": 360.0,
+    "observation_budget": 2600,
+    "active": {
+      "min_turn_deg": 2.0,
+      "max_turn_deg": 30.0,
+      "scan_threshold": 0.25,
+      "poor_views": 3,
+      "scan_cooldown_steps": 6,
+      "scan_offsets": [
+        -60.0,
+        -30.0,
+        30.0,
+        60.0
+      ]
+    },
+    "calibration": "Positive: median leave-one-out teaching-code overlap. Negative: median overlap for +/-60 degree teaching rotations at up to 12 evenly spaced stations. Clip linear confidence to [0,1]; minimum range .05.",
+    "timing": "Both controllers pay for every observed view, physical yaw excursion and translation. No observations or turns past shared time/sensory budgets.",
+    "limitations": "Finite-rate piecewise turns and straight moves; no full body dynamics, optic-flow controller or continuous spiking state."
+  },
+  "primary_metrics": [
+    "arrival",
+    "whole_run_polyline_mean_m",
+    "recovery_path_m",
+    "recovery_time_s"
+  ],
+  "secondary_metrics": [
+    "historical_nearest_station_mean_m",
+    "observations",
+    "scan_bouts",
+    "time_s",
+    "path_length_m",
+    "termination"
+  ],
+  "statistics": "Paired effects within scene/seed/scenario. Only three scene-route pairs; report descriptive effects, not significance from technical repeats.",
+  "scope": "Stage 1 on the original world; stages 2 and 3 on it and two new independently seeded worlds, one bent route each. No sun change.",
+  "checkpoint_sha256": {
+    "19": "09d2c8fbf8854865480b06037dbe4931845ffaec69700715fa1af35470d1b804",
+    "31": "84e12a43af3b76870fc92cdd4d2f664d71a74f6983266d99c14038460bb7e570",
+    "43": "a6abae108306cec7ad214e4d368b946c74ae1688e3be18ebb574e17afa86bda7"
+  }
+}

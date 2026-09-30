@@ -1,0 +1,3 @@
+# Keep research figures alongside their reports. Raw renders and video files
+# remain excluded by the repository rules and apiaviz/output/ exclusion.
+!*.png

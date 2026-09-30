@@ -1,0 +1,15 @@
+{
+  "excluded_failed_launches": [
+    "apiaviz/output/mechanisms/20260929T022030.971733Z-63761",
+    "apiaviz/output/mechanisms/20260929T022032.116380Z-63763",
+    "apiaviz/output/mechanisms/20260929T022033.409117Z-63764",
+    "apiaviz/output/mechanisms/20260929T022034.506165Z-63766"
+  ],
+  "exclusion_reason": "All four launches stopped before writing any result row because a NumPy probe boolean was not JSON serializable; fixed conversion and repeated the identical matrix.",
+  "runs": [
+    "apiaviz/output/mechanisms/20260929T022211.602025Z-63811",
+    "apiaviz/output/mechanisms/20260929T022212.829824Z-63812",
+    "apiaviz/output/mechanisms/20260929T022214.077846Z-63813",
+    "apiaviz/output/mechanisms/20260929T022215.257048Z-63815"
+  ]
+}

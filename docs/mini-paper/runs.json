@@ -1,0 +1,14 @@
+{
+  "runs": [
+    "apiaviz/output/paper-baselines/20260929T014349.800124Z-62986",
+    "apiaviz/output/paper-baselines/20260929T014349.800138Z-62988",
+    "apiaviz/output/paper-baselines/20260929T014349.800161Z-62987",
+    "apiaviz/output/paper-baselines/20260929T014349.800124Z-62989"
+  ],
+  "protocol": "All six frontends use identical learning images, projection weights, spiking parameters, memory construction and open-loop control. Only preprocessing differs.",
+  "evaluation_cases": "Ants 5, 8, 11 and 14, Route 2. Exploratory paired comparison; ApiaViz cases had already been inspected before running these baselines.",
+  "source_papers": [
+    "https://doi.org/10.1371/journal.pcbi.1004683",
+    "https://doi.org/10.1038/s41467-025-62327-3"
+  ]
+}

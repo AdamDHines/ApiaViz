@@ -2,7 +2,7 @@
 
 import torch
 
-from mbant.config import STDPParams
+from .config import STDPParams
 
 
 def stdp(delta_t: torch.Tensor, params: STDPParams = None) -> torch.Tensor:

@@ -1,30 +1,17 @@
-"""Core ApiaViz vision backbone modules.
-
-The active code uses computational names for the model stages. Older backbone
-checkpoints used previous attribute names; ``VisionBackbone.load_state_dict``
-remaps those keys before strict loading.
-"""
+"""Fixed analytical colour and contrast stages for the ApiaViz visual front end."""
 
 from __future__ import annotations
-
-from collections.abc import Mapping
-from pathlib import Path
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 def load_vision_backbone(device="cpu", logger=None):
-    """Load a frozen ``VisionBackbone`` for inference.
+    """Construct the fixed, training-free visual front end for inference.
 
-    The front end is **training-free**: a random-initialised, biologically-structured backbone works as
-    well as the released checkpoint (the learning ablation shows trained ~= random-init). So if
-    ``untrained`` is set, or no checkpoint exists at ``model_path``, the random-initialised backbone is
-    used and the whole pipeline runs with **no trained model at all**. Either way the backbone is frozen.
+    All active filters use analytical initial values. No checkpoint is loaded;
+    downstream associative memories are learned separately from this encoder.
     """
-    def _log(message):
-        (logger.info if logger is not None else print)(message)
-
     backbone = VisionBackbone().to(device)
     backbone.eval()
     for param in backbone.parameters():
@@ -45,8 +32,10 @@ class VisionBackbone(nn.Module):
     readout (navigation, flower choice). Both photoreceptor channels pass through the shared
     ommatidial (hex) sampling; the streams then diverge into a luminance form pathway (light
     adaptation -> DoG center-surround) and a spectral-opponency colour pathway (a photoreceptor
-    difference, deliberately not luminance-normalized so it stays invariant to isoluminant
-    corruption). The two are concatenated into one retinotopic *view code*::
+    difference after shared subtractive adaptation and nonlinear compression).
+    Shared subtraction would cancel in a linear opponent difference; the per-channel
+    tanh means this implementation is not exactly invariant to common luminance changes.
+    The two are concatenated into one retinotopic *view code*::
 
         input (G,B) -> hex sample ->  light adapt -> DoG contrast (form)  ┐
                                   ->  spectral opponency (G-B / B-G)      ┘ -> [contrast|chroma]
@@ -110,8 +99,8 @@ class VisionBackbone(nn.Module):
 
         # --- diverge: spectral-opponency colour pathway (subtractive light adaptation) ---
         # The colour path is light-adapted too (so an "adapt" ablation reaches it), but only
-        # subtractively: the opponent difference (G-B) cancels the shared local-luminance baseline and
-        # so stays invariant to the isoluminant luminance corruption the navigation code must survive.
+        # subtractively. The shared baseline cancels for linear G-B, but the adapter's
+        # per-channel tanh occurs before subtraction and breaks exact cancellation.
         adapted_chromatic = sampled if ablate == "adapt" else self.chromatic_adapter(sampled)
         chromatic_feature = self.chromatic_encoder(adapted_chromatic)  # [achromatic, G-B, B-G]
         if ablate == "opponency":  # remove colour opponency, keep the achromatic sum
@@ -185,8 +174,8 @@ class LocalLuminanceAdapter(nn.Module):
     """Parameter-free local light-adaptation (luminance gain control) shared across receptor channels.
 
     Photoreceptor adaptation is a **shared luminance** gain: every channel is baselined and divided by
-    the same local luminance (the mean across channels), not by its own channel mean. This is what gives
-    colour constancy -- a per-channel divisive normalization would subtract each channel's own local DC
+    the same local luminance (the mean across channels), not by its own channel mean.
+    A per-channel divisive normalization would subtract each channel's own local DC
     and annihilate the opponent signal ``G-B`` on uniform isoluminant patches (the landmark-colour cue
     the navigation opponent-colour code depends on). With a shared denominator the opponent difference
     survives (both channels share the subtracted baseline and the gain), so the stage can sit upstream of
@@ -204,8 +193,8 @@ class LocalLuminanceAdapter(nn.Module):
         # ``divisive`` = Weber-law gain control (divide by local luminance): the standard light
         # adaptation for the luminance/form pathway. The colour pathway uses ``divisive=False``
         # (subtractive only): dividing the opponent channels by the corruptible local luminance
-        # would destroy their invariance to isoluminant corruption, so there we only remove the
-        # shared local DC (which cancels in ``G-B`` and keeps the opponent cue corruption-invariant).
+        # would make them depend on local luminance, so there we only remove the
+        # shared local DC. Exact cancellation in G-B holds before tanh, not after it.
         self.divisive = bool(divisive)
 
     def forward(self, x):

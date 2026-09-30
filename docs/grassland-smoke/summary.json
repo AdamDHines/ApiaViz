@@ -1,0 +1,32 @@
+{
+  "linear_colour": {
+    "success": 3,
+    "mean_deviation_cm": 3.13097446034125,
+    "per_seed_deviation_cm": [
+      2.721730510291288,
+      3.193915636597753,
+      3.4772772341347102
+    ],
+    "mean_polyline_cm": 1.997871863921689
+  },
+  "sobel_colour": {
+    "success": 3,
+    "mean_deviation_cm": 3.163799568965143,
+    "per_seed_deviation_cm": [
+      2.885526240407536,
+      2.869390237406319,
+      3.7364822290815733
+    ],
+    "mean_polyline_cm": 2.509937059721165
+  },
+  "ardin_input": {
+    "success": 3,
+    "mean_deviation_cm": 4.725246782980718,
+    "per_seed_deviation_cm": [
+      5.044945557479337,
+      4.55394613940243,
+      4.576848652060388
+    ],
+    "mean_polyline_cm": 3.732967162610956
+  }
+}

@@ -2,7 +2,7 @@
 
 import torch
 
-from mbant.config import PNParams, KCParams, ENParams
+from .config import PNParams, KCParams, ENParams
 
 
 class IzhikevichLayer:
@@ -77,9 +77,11 @@ class IzhikevichLayer:
             self.t_spike[fired] = t
 
         # Noise term — sampled once, reused in both half-steps
-        epsilon = p.epsilon_mean + p.epsilon_std * torch.randn(
-            self.num_neurons, dtype=torch.float32, device=self.device
-        )
+        epsilon = p.epsilon_mean
+        if p.epsilon_std != 0:
+            epsilon = epsilon + p.epsilon_std * torch.randn(
+                self.num_neurons, dtype=torch.float32, device=self.device
+            )
 
         # Half-step voltage update (applied twice, same epsilon)
         dv = (

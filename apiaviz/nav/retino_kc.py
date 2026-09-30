@@ -224,6 +224,7 @@ class AntiHebbianMBON(nn.Module):
         if not 0.0 < depression <= 1.0:
             raise ValueError(f"depression must be in (0, 1], got {depression}")
         self.depression = float(depression)
+        self.w0 = float(w0)
         self.graded = bool(graded)
         self.register_buffer("weight", torch.full((int(code_dim),), float(w0)))
 
@@ -243,7 +244,10 @@ class AntiHebbianMBON(nn.Module):
 
     def forward(self, codes: torch.Tensor) -> torch.Tensor:
         activity = self._activity(codes)
-        return (activity * self.weight).sum(dim=1) / activity.sum(dim=1).clamp_min(1e-6)
+        total = activity.sum(dim=1)
+        novelty = (activity * self.weight).sum(dim=1) / total.clamp_min(1e-6)
+        # A silent code contains no familiarity evidence, even after memory saturation.
+        return torch.where(total > 0, novelty, torch.full_like(novelty, self.w0))
 
 
 class RewardMBON(nn.Module):

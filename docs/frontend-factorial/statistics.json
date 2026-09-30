@@ -1,0 +1,917 @@
+{
+  "protocol": {
+    "date": "2026-09-29",
+    "role": "Exploratory factorial follow-up on previously inspected routes; no held-out superiority claim",
+    "status": "Combination and analysis fixed before its navigation outcomes were inspected",
+    "ants": [
+      4,
+      6,
+      7,
+      9,
+      10,
+      12,
+      13,
+      15
+    ],
+    "wiring_seeds": [
+      19,
+      31,
+      43,
+      59,
+      71
+    ],
+    "environment_seed": 99,
+    "methods": [
+      "apiaviz",
+      "oriented_form",
+      "linear_colour",
+      "oriented_linear",
+      "sobel_colour",
+      "ardin_input"
+    ],
+    "navigation_trials": 240,
+    "shared": "Reuse saved teaching/probe images and wiring checkpoints from the mechanism study. Keep all pooling, standardisation, spiking, memory, scan, movement, stopping and scoring settings unchanged. Rerun original, Sobel and Ardin-style references and demand exact trajectories and steering scores.",
+    "primary_descriptive_endpoint": "Whole-trajectory mean route deviation including failures, equally averaged over routes and seeds; lower is better.",
+    "secondary": [
+      "completion",
+      "continuous-polyline deviation",
+      "first50_polyline_mean_m",
+      "centreline heading error",
+      "stream-specific heading error",
+      "brightness heading change",
+      "off-route restoring fraction"
+    ],
+    "inference": "Paired crossed route/seed bootstrap intervals and exact route-mean sign-flip tests conditional on five seeds. One Holm family of 12 contrasts: three candidates versus each of three references (original, Sobel, Ardin-style), combined versus each single change, and the factorial interaction. Report all outcomes, route/seed effects and leave-one-route-out sensitivity. Completion and probe outcomes are descriptive.",
+    "interaction": "combined - oriented - linear + original in cm; negative means the combined deviation reduction exceeds the sum of the two separate reductions on this scale. This is a behavioural interaction, not evidence for a cellular mechanism.",
+    "stop": "Complete all 240 trials regardless of rankings, with no retuning and no automatic default change.",
+    "candidates": {
+      "oriented_form": "Retain hex averaging and local adaptation; replace the form bank with Gaussian sigma=1 (5x5) followed by signed Sobel x/y/magnitude. Original colour unchanged.",
+      "linear_colour": "Original form unchanged; colour is rectified G-B/B-G after existing hex averaging, omitting pre-opponency tanh.",
+      "oriented_linear": "Combine exactly the form stream from oriented_form and colour stream from linear_colour."
+    },
+    "limitations": "Eight routes in one synthetic environment; five wiring seeds are crossed technical repeats. Routes and separate-variant results were previously inspected. Ardin-style refers only to adapted image preprocessing, not a reproduction of the original full Ardin model."
+  },
+  "summary": [
+    {
+      "method": "apiaviz",
+      "label": "Original ApiaViz",
+      "n": 40,
+      "completed": 29,
+      "deviation_mean_cm": 55.2199293408137,
+      "deviation_trial_median_cm": 12.58456699621145,
+      "deviation_trial_q90_cm": 143.3766937771015,
+      "route_means_cm": [
+        15.56331298254461,
+        109.30283250431998,
+        181.5451994519113,
+        17.67460688916371,
+        10.073641786756415,
+        3.6039874665653664,
+        13.753481894490651,
+        90.2423717507576
+      ],
+      "seed_means_cm": [
+        75.46230683474516,
+        35.39080508107573,
+        11.087023859977,
+        56.07652371914077,
+        98.08298720912981
+      ],
+      "polyline_mean_m": 0.5489970607741487,
+      "first50_polyline_mean_m": 0.16108596450472884,
+      "deviation_median_m": 0.44885120605709694,
+      "clean_heading_error_deg": 12.1875,
+      "clean_restoring_fraction": 0.3546875,
+      "brightness_heading_change_deg": 2.98125,
+      "memory_active_fraction": 0.049166721291840076,
+      "form_heading_error_deg": 12.90625,
+      "colour_heading_error_deg": 25.46875,
+      "form_matched_progress_error_m": 0.545,
+      "colour_matched_progress_error_m": 1.4387500000000002
+    },
+    {
+      "method": "oriented_form",
+      "label": "Oriented form",
+      "n": 40,
+      "completed": 32,
+      "deviation_mean_cm": 39.32803001254313,
+      "deviation_trial_median_cm": 4.84531023234722,
+      "deviation_trial_q90_cm": 164.89889605574533,
+      "route_means_cm": [
+        4.6845799394913765,
+        61.007499117970795,
+        143.52649233818775,
+        6.861332217217455,
+        3.1392152255518226,
+        4.096318223170586,
+        14.493047420727766,
+        76.81575561802751
+      ],
+      "seed_means_cm": [
+        10.182984492202262,
+        69.43391304792988,
+        26.412064724263075,
+        84.11701942599596,
+        6.494168372324495
+      ],
+      "polyline_mean_m": 0.38962311253858434,
+      "first50_polyline_mean_m": 0.16487130789914003,
+      "deviation_median_m": 0.3567500948362604,
+      "clean_heading_error_deg": 10.75,
+      "clean_restoring_fraction": 0.35234375,
+      "brightness_heading_change_deg": 2.65625,
+      "memory_active_fraction": 0.050911654531955716,
+      "form_heading_error_deg": 11.59375,
+      "colour_heading_error_deg": 25.46875,
+      "form_matched_progress_error_m": 0.3825,
+      "colour_matched_progress_error_m": 1.4387500000000002
+    },
+    {
+      "method": "linear_colour",
+      "label": "Linear colour",
+      "n": 40,
+      "completed": 29,
+      "deviation_mean_cm": 29.874191321868032,
+      "deviation_trial_median_cm": 12.667420240624695,
+      "deviation_trial_q90_cm": 71.36796743537997,
+      "route_means_cm": [
+        14.522616083492546,
+        57.21336437920411,
+        50.69690288401139,
+        5.516493175887569,
+        12.44724241175469,
+        16.550526673358668,
+        45.88598945965394,
+        36.16039550758137
+      ],
+      "seed_means_cm": [
+        44.36864202429089,
+        27.391890310986415,
+        39.48444010834465,
+        12.11798523800974,
+        26.00799892770847
+      ],
+      "polyline_mean_m": 0.29574157142264956,
+      "first50_polyline_mean_m": 0.11825476983149574,
+      "deviation_median_m": 0.2212387193987715,
+      "clean_heading_error_deg": 12.46875,
+      "clean_restoring_fraction": 0.35859375,
+      "brightness_heading_change_deg": 1.35625,
+      "memory_active_fraction": 0.04896018728613853,
+      "form_heading_error_deg": 12.90625,
+      "colour_heading_error_deg": 24.53125,
+      "form_matched_progress_error_m": 0.545,
+      "colour_matched_progress_error_m": 1.3703125
+    },
+    {
+      "method": "oriented_linear",
+      "label": "Both changes",
+      "n": 40,
+      "completed": 28,
+      "deviation_mean_cm": 44.59596831426268,
+      "deviation_trial_median_cm": 7.094875555360186,
+      "deviation_trial_q90_cm": 122.11150342042056,
+      "route_means_cm": [
+        21.34889543392274,
+        2.7741055360845044,
+        170.36855094571592,
+        23.957147122583514,
+        27.124292081372648,
+        26.895662220994524,
+        24.674899443800232,
+        59.6241937296273
+      ],
+      "seed_means_cm": [
+        38.31596483567495,
+        34.85687490000263,
+        58.02609746279516,
+        48.20917288307675,
+        43.57173148976389
+      ],
+      "polyline_mean_m": 0.44320240101065245,
+      "first50_polyline_mean_m": 0.16034123240764778,
+      "deviation_median_m": 0.40759324284674525,
+      "clean_heading_error_deg": 10.65625,
+      "clean_restoring_fraction": 0.35546875,
+      "brightness_heading_change_deg": 1.3125,
+      "memory_active_fraction": 0.050705121271312235,
+      "form_heading_error_deg": 11.59375,
+      "colour_heading_error_deg": 24.53125,
+      "form_matched_progress_error_m": 0.3825,
+      "colour_matched_progress_error_m": 1.3703125
+    },
+    {
+      "method": "sobel_colour",
+      "label": "Sobel + colour",
+      "n": 40,
+      "completed": 29,
+      "deviation_mean_cm": 50.394736395933094,
+      "deviation_trial_median_cm": 6.338104325878101,
+      "deviation_trial_q90_cm": 132.3090436766419,
+      "route_means_cm": [
+        22.799360443496177,
+        58.87716062578346,
+        247.31759744139148,
+        3.8517362931769177,
+        3.5602172377062984,
+        14.823612973998317,
+        30.917702159772613,
+        21.01050399213951
+      ],
+      "seed_means_cm": [
+        64.74403652939354,
+        86.35564807862706,
+        36.43607018398898,
+        32.27353892089801,
+        32.164388266757875
+      ],
+      "polyline_mean_m": 0.5010883765428993,
+      "first50_polyline_mean_m": 0.15494922454569188,
+      "deviation_median_m": 0.449516440837891,
+      "clean_heading_error_deg": 11.1875,
+      "clean_restoring_fraction": 0.35078125,
+      "brightness_heading_change_deg": 0.0125,
+      "memory_active_fraction": 0.050814348179847,
+      "form_heading_error_deg": 11.875,
+      "colour_heading_error_deg": 23.875,
+      "form_matched_progress_error_m": 0.47687500000000005,
+      "colour_matched_progress_error_m": 1.470625
+    },
+    {
+      "method": "ardin_input",
+      "label": "Ardin-style input",
+      "n": 40,
+      "completed": 6,
+      "deviation_mean_cm": 104.72243479872478,
+      "deviation_trial_median_cm": 66.10242371604181,
+      "deviation_trial_q90_cm": 222.69810876570358,
+      "route_means_cm": [
+        66.14322406415391,
+        125.0780132740701,
+        134.48410598261853,
+        165.81388921174778,
+        91.73968793085791,
+        46.04685354520504,
+        78.95100551947182,
+        129.52269886167298
+      ],
+      "seed_means_cm": [
+        65.5624309737232,
+        124.66648090250631,
+        105.46013356354771,
+        122.11666172896068,
+        105.80646682488592
+      ],
+      "polyline_mean_m": 1.0455237800419364,
+      "first50_polyline_mean_m": 0.2631045271088077,
+      "deviation_median_m": 0.9226210139133109,
+      "clean_heading_error_deg": 16.875,
+      "clean_restoring_fraction": 0.39375,
+      "brightness_heading_change_deg": 0.10625,
+      "memory_active_fraction": 0.05561688654124737,
+      "form_heading_error_deg": 18.65625,
+      "colour_heading_error_deg": 19.3125,
+      "form_matched_progress_error_m": 0.9096875000000001,
+      "colour_matched_progress_error_m": 0.9059375000000001
+    }
+  ],
+  "comparisons": [
+    {
+      "candidate": "oriented_form",
+      "reference": "apiaviz",
+      "kind": "pairwise",
+      "effect": -15.891899328270569,
+      "route_ci95": [
+        -28.359147429311093,
+        -5.441695540637265
+      ],
+      "crossed_ci95": [
+        -79.17788823153471,
+        34.77250310601579
+      ],
+      "p_raw": 0.03125,
+      "route_effects": [
+        -10.878733043053234,
+        -48.29533338634919,
+        -38.01870711372352,
+        -10.813274671946255,
+        -6.9344265612045906,
+        0.49233075660521974,
+        0.7395655262371171,
+        -13.426616132730066
+      ],
+      "seed_effects": [
+        -65.27932234254293,
+        34.043107966854144,
+        15.325040864286072,
+        28.04049570685519,
+        -91.58881883680532
+      ],
+      "routes_with_negative_effect": 6,
+      "seeds_with_negative_effect": 2,
+      "leave_one_route_out_effects_cm": [
+        -16.608065940444472,
+        -11.262837319973622,
+        -12.730926787491573,
+        -16.617417136316895,
+        -17.171538294994278,
+        -18.232503626109963,
+        -18.267822878914522,
+        -16.24408264191921
+      ],
+      "leave_one_seed_out_effects_cm": [
+        -3.545043574702479,
+        -28.375651152051745,
+        -23.696134376409727,
+        -26.874998087052006,
+        3.0323305488631185
+      ],
+      "p_holm_exploratory": 0.28125
+    },
+    {
+      "candidate": "linear_colour",
+      "reference": "apiaviz",
+      "kind": "pairwise",
+      "effect": -25.345738018945664,
+      "route_ci95": [
+        -61.61196013002871,
+        4.67823439761178
+      ],
+      "crossed_ci95": [
+        -87.51837262956299,
+        12.129223211707457
+      ],
+      "p_raw": 0.203125,
+      "route_effects": [
+        -1.0406968990520653,
+        -52.08946812511588,
+        -130.84829656789987,
+        -12.15811371327614,
+        2.3736006249982764,
+        12.9465392067933,
+        32.132507565163294,
+        -54.08197624317622
+      ],
+      "seed_effects": [
+        -31.093664810454285,
+        -7.998914770089316,
+        28.39741624836765,
+        -43.95853848113103,
+        -72.07498828142135
+      ],
+      "routes_with_negative_effect": 5,
+      "seeds_with_negative_effect": 4,
+      "leave_one_route_out_effects_cm": [
+        -28.817886750359037,
+        -21.525205146635635,
+        -10.273943940523635,
+        -27.229684348327023,
+        -29.305643539509084,
+        -30.81606333690837,
+        -33.55691595953266,
+        -21.24056112976987
+      ],
+      "leave_one_seed_out_effects_cm": [
+        -23.908756321068513,
+        -29.682443831159755,
+        -38.781526585773996,
+        -20.692537903399327,
+        -13.663425453326745
+      ],
+      "p_holm_exploratory": 1.0
+    },
+    {
+      "candidate": "oriented_linear",
+      "reference": "apiaviz",
+      "kind": "pairwise",
+      "effect": -10.623961026551024,
+      "route_ci95": [
+        -41.472066003255165,
+        11.438018022328468
+      ],
+      "crossed_ci95": [
+        -64.8027480824218,
+        33.44438054789227
+      ],
+      "p_raw": 0.65625,
+      "route_effects": [
+        5.7855824513781275,
+        -106.52872696823547,
+        -11.176648506195335,
+        6.282540233419802,
+        17.050650294616236,
+        23.291674754429152,
+        10.92141754930958,
+        -30.618178021130284
+      ],
+      "seed_effects": [
+        -37.14634199907023,
+        -0.5339301810730976,
+        46.939073602818155,
+        -7.867350836064017,
+        -54.511255719365934
+      ],
+      "routes_with_negative_effect": 3,
+      "seeds_with_negative_effect": 4,
+      "leave_one_route_out_effects_cm": [
+        -12.968181523398044,
+        3.0767198222610426,
+        -10.54500567231612,
+        -13.03917549226114,
+        -14.577476929574916,
+        -15.469051852405332,
+        -13.701872251673965,
+        -7.767644313039699
+      ],
+      "leave_one_seed_out_effects_cm": [
+        -3.9933657834212237,
+        -13.146468737920507,
+        -25.01471968389332,
+        -11.313113574172776,
+        0.34786264665270217
+      ],
+      "p_holm_exploratory": 1.0
+    },
+    {
+      "candidate": "oriented_form",
+      "reference": "sobel_colour",
+      "kind": "pairwise",
+      "effect": -11.066706383389965,
+      "route_ci95": [
+        -42.75058581021178,
+        15.302166827423896
+      ],
+      "crossed_ci95": [
+        -63.35946638294346,
+        32.66946312204294
+      ],
+      "p_raw": 0.5546875,
+      "route_effects": [
+        -18.114780504004795,
+        2.1303384921873216,
+        -103.79110510320375,
+        3.009595924040537,
+        -0.421002012154476,
+        -10.727294750827728,
+        -16.424654739044847,
+        55.80525162588801
+      ],
+      "seed_effects": [
+        -54.56105203719128,
+        -16.92173503069718,
+        -10.024005459725913,
+        51.843480505097936,
+        -25.670219894433377
+      ],
+      "routes_with_negative_effect": 5,
+      "seeds_with_negative_effect": 4,
+      "leave_one_route_out_effects_cm": [
+        -10.059838651873562,
+        -12.951998508472437,
+        2.1796362908691447,
+        -13.077606713022897,
+        -12.587521293566466,
+        -11.115193759470287,
+        -10.301285189724982,
+        -20.619843241858252
+      ],
+      "leave_one_seed_out_effects_cm": [
+        -0.19311996993963554,
+        -9.602949221563161,
+        -11.327381614305978,
+        -26.79425310551194,
+        -7.415828005629112
+      ],
+      "p_holm_exploratory": 1.0
+    },
+    {
+      "candidate": "linear_colour",
+      "reference": "sobel_colour",
+      "kind": "pairwise",
+      "effect": -20.520545074065062,
+      "route_ci95": [
+        -72.24514872792547,
+        8.841476217659448
+      ],
+      "crossed_ci95": [
+        -84.05580952247217,
+        16.540097678569577
+      ],
+      "p_raw": 0.921875,
+      "route_effects": [
+        -8.276744360003628,
+        -1.6637962465793603,
+        -196.6206945573801,
+        1.6647568827106511,
+        8.887025174048391,
+        1.7269136993603535,
+        14.968287299881329,
+        15.149891515441857
+      ],
+      "seed_effects": [
+        -20.37539450510266,
+        -58.96375776764065,
+        3.0483699243556615,
+        -20.155553682888275,
+        -6.156389339049399
+      ],
+      "routes_with_negative_effect": 3,
+      "seeds_with_negative_effect": 4,
+      "leave_one_route_out_effects_cm": [
+        -22.269659461788127,
+        -23.21436633513445,
+        4.636619137837085,
+        -23.689873925033023,
+        -24.72162653808127,
+        -23.69875347026869,
+        -25.590378270343116,
+        -25.616321729708908
+      ],
+      "leave_one_seed_out_effects_cm": [
+        -20.55683271630566,
+        -10.909741900671163,
+        -26.412773823670243,
+        -20.611792921859255,
+        -24.111584007818976
+      ],
+      "p_holm_exploratory": 1.0
+    },
+    {
+      "candidate": "oriented_linear",
+      "reference": "sobel_colour",
+      "kind": "pairwise",
+      "effect": -5.798768081670422,
+      "route_ci95": [
+        -33.71637005119075,
+        18.13639730037168
+      ],
+      "crossed_ci95": [
+        -65.23546385987838,
+        28.21684126674658
+      ],
+      "p_raw": 0.6796875,
+      "route_effects": [
+        -1.4504650095734348,
+        -56.103055089698955,
+        -76.94904649567556,
+        20.10541082940659,
+        23.564074843666347,
+        12.07204924699621,
+        -6.242802715972384,
+        38.61368973748779
+      ],
+      "seed_effects": [
+        -26.4280716937186,
+        -51.49877317862443,
+        21.59002727880617,
+        15.93563396217873,
+        11.407343223006011
+      ],
+      "routes_with_negative_effect": 4,
+      "seeds_with_negative_effect": 2,
+      "leave_one_route_out_effects_cm": [
+        -6.419954234827137,
+        1.3875586337622232,
+        4.365557406044595,
+        -9.49936506896714,
+        -9.993459928147105,
+        -8.351741985765658,
+        -5.7353345624844305,
+        -12.14340491297874
+      ],
+      "leave_one_seed_out_effects_cm": [
+        -0.6414421786583784,
+        5.62623319256808,
+        -12.64596692178957,
+        -11.23236859263271,
+        -10.10029590783953
+      ],
+      "p_holm_exploratory": 1.0
+    },
+    {
+      "candidate": "oriented_form",
+      "reference": "ardin_input",
+      "kind": "pairwise",
+      "effect": -65.39440478618162,
+      "route_ci95": [
+        -98.2358752427189,
+        -36.53303700637209
+      ],
+      "crossed_ci95": [
+        -111.21266985543525,
+        -21.987595688810543
+      ],
+      "p_raw": 0.015625,
+      "route_effects": [
+        -61.458644124662534,
+        -64.0705141560993,
+        9.042386355569196,
+        -158.9525569945303,
+        -88.60047270530609,
+        -41.95053532203446,
+        -64.45795809874406,
+        -52.706943243645455
+      ],
+      "seed_effects": [
+        -55.37944648152093,
+        -55.23256785457643,
+        -79.04806883928465,
+        -37.999642302964716,
+        -99.31229845256144
+      ],
+      "routes_with_negative_effect": 7,
+      "seeds_with_negative_effect": 5,
+      "leave_one_route_out_effects_cm": [
+        -65.95665630925578,
+        -65.58353201905052,
+        -76.02823209214603,
+        -52.02895447070324,
+        -62.07925222630671,
+        -68.7435289953455,
+        -65.528182884387,
+        -67.20689929225821
+      ],
+      "leave_one_seed_out_effects_cm": [
+        -67.89814436234681,
+        -67.93486401908294,
+        -61.980988772905874,
+        -72.24309540698586,
+        -56.91493136958668
+      ],
+      "p_holm_exploratory": 0.171875
+    },
+    {
+      "candidate": "linear_colour",
+      "reference": "ardin_input",
+      "kind": "pairwise",
+      "effect": -74.84824347685672,
+      "route_ci95": [
+        -104.10530243466778,
+        -50.689176034668755
+      ],
+      "crossed_ci95": [
+        -121.71419794008071,
+        -31.425882656573158
+      ],
+      "p_raw": 0.0078125,
+      "route_effects": [
+        -51.62060798066136,
+        -67.864648894866,
+        -83.78720309860715,
+        -160.29739603586023,
+        -79.29244551910321,
+        -29.496326871846385,
+        -33.065016059817886,
+        -93.36230335409161
+      ],
+      "seed_effects": [
+        -21.193788949432296,
+        -97.27459059151988,
+        -65.97569345520307,
+        -109.99867649095091,
+        -79.79846789717745
+      ],
+      "routes_with_negative_effect": 8,
+      "seeds_with_negative_effect": 5,
+      "leave_one_route_out_effects_cm": [
+        -78.16647711917035,
+        -75.84589984571254,
+        -73.5712492451781,
+        -62.641221682713365,
+        -74.2133574708215,
+        -81.32708870614393,
+        -80.81727596500512,
+        -72.20337778010888
+      ],
+      "leave_one_seed_out_effects_cm": [
+        -88.26185710871283,
+        -69.24165669819094,
+        -77.06638098227015,
+        -66.06063522333318,
+        -73.61068737177655
+      ],
+      "p_holm_exploratory": 0.09375
+    },
+    {
+      "candidate": "oriented_linear",
+      "reference": "ardin_input",
+      "kind": "pairwise",
+      "effect": -60.126466484462085,
+      "route_ci95": [
+        -95.93212218654615,
+        -23.399670705520975
+      ],
+      "crossed_ci95": [
+        -109.479315740146,
+        -6.143656685844018
+      ],
+      "p_raw": 0.0234375,
+      "route_effects": [
+        -44.79432863023117,
+        -122.30390773798558,
+        35.88444496309739,
+        -141.85674208916427,
+        -64.61539584948525,
+        -19.151191324210522,
+        -54.2761060756716,
+        -69.89850513204568
+      ],
+      "seed_effects": [
+        -27.246466138048245,
+        -89.80960600250366,
+        -47.43403610075257,
+        -73.90748884588392,
+        -62.234735335122025
+      ],
+      "routes_with_negative_effect": 7,
+      "seeds_with_negative_effect": 5,
+      "leave_one_route_out_effects_cm": [
+        -62.31677189220936,
+        -51.24397487681587,
+        -73.84231097697058,
+        -48.45071282664748,
+        -59.48519086088735,
+        -65.98007722164088,
+        -60.96223225714645,
+        -58.73046096337872
+      ],
+      "leave_one_seed_out_effects_cm": [
+        -68.34646657106555,
+        -52.70568160495169,
+        -63.29957408038946,
+        -56.68121089410663,
+        -59.5993992717971
+      ],
+      "p_holm_exploratory": 0.234375
+    },
+    {
+      "candidate": "oriented_linear",
+      "reference": "oriented_form",
+      "kind": "pairwise",
+      "effect": 5.267938301719537,
+      "route_ci95": [
+        -15.549522845787884,
+        20.901233061174366
+      ],
+      "crossed_ci95": [
+        -38.64650339297806,
+        44.67328036294771
+      ],
+      "p_raw": 0.65625,
+      "route_effects": [
+        16.664315494431364,
+        -58.23339358188629,
+        26.842058607528184,
+        17.09581490536606,
+        23.98507685582082,
+        22.799343997823932,
+        10.181852023072466,
+        -17.191561888400223
+      ],
+      "seed_effects": [
+        28.132980343472685,
+        -34.57703814792725,
+        31.61403273853208,
+        -35.9078465429192,
+        37.07756311743939
+      ],
+      "routes_with_negative_effect": 2,
+      "seeds_with_negative_effect": 2,
+      "leave_one_route_out_effects_cm": [
+        3.6398844170464213,
+        14.339557142234657,
+        2.185921115175447,
+        3.5782416440557507,
+        2.594061365419356,
+        2.763451773704626,
+        4.565950627240549,
+        8.476438328879505
+      ],
+      "leave_one_seed_out_effects_cm": [
+        -0.4483222087187446,
+        15.229182414131238,
+        -1.3185853074835938,
+        15.561884512879228,
+        -2.6844679022104208
+      ],
+      "p_holm_exploratory": 1.0
+    },
+    {
+      "candidate": "oriented_linear",
+      "reference": "linear_colour",
+      "kind": "pairwise",
+      "effect": 14.721776992394638,
+      "route_ci95": [
+        -14.287505574196778,
+        50.049822179159186
+      ],
+      "crossed_ci95": [
+        -24.3524674926175,
+        57.26874082414661
+      ],
+      "p_raw": 0.5078125,
+      "route_effects": [
+        6.826279350430193,
+        -54.43925884311959,
+        119.67164806170453,
+        18.44065394669594,
+        14.677049669617961,
+        10.345135547635854,
+        -21.21109001585371,
+        23.46379822204593
+      ],
+      "seed_effects": [
+        -6.052677188615941,
+        7.4649845890162165,
+        18.5416573544505,
+        36.09118764506701,
+        17.563732562055407
+      ],
+      "routes_with_negative_effect": 2,
+      "seeds_with_negative_effect": 1,
+      "leave_one_route_out_effects_cm": [
+        15.849705226960987,
+        24.60192496889667,
+        -0.27106173179248977,
+        14.19050885606588,
+        14.728166609934163,
+        15.347011484503037,
+        19.855043707858687,
+        13.472916816730166
+      ],
+      "leave_one_seed_out_effects_cm": [
+        19.915390537647284,
+        16.535975093239244,
+        13.766806901880672,
+        9.379424329226545,
+        14.011288099979446
+      ],
+      "p_holm_exploratory": 1.0
+    },
+    {
+      "kind": "interaction",
+      "definition": "combined - oriented - linear + original (cm)",
+      "effect": 30.613676320665206,
+      "route_ci95": [
+        2.752292271242168,
+        71.01626972588454
+      ],
+      "crossed_ci95": [
+        -14.41971009483279,
+        114.25166463069827
+      ],
+      "p_raw": 0.0859375,
+      "route_effects": [
+        17.70501239348343,
+        -6.143925456770407,
+        157.69035517542807,
+        29.2539286186422,
+        21.611476230822547,
+        9.852804791030636,
+        -21.95065554209083,
+        36.890414354776
+      ],
+      "seed_effects": [
+        59.22664515392697,
+        -26.57812337783793,
+        3.216616490164428,
+        8.05069193821182,
+        109.15255139886072
+      ],
+      "routes_with_negative_effect": 2,
+      "seeds_with_negative_effect": 1,
+      "leave_one_route_out_effects_cm": [
+        32.45777116740546,
+        35.864762288870295,
+        12.459865055699083,
+        30.80792599238278,
+        31.899704904928445,
+        33.579515110613,
+        38.12286658677321,
+        29.71699945864938
+      ],
+      "leave_one_seed_out_effects_cm": [
+        23.46043411234976,
+        44.91162624529098,
+        37.462941278290394,
+        36.254422416278544,
+        10.97895755111632
+      ],
+      "p_holm_exploratory": 0.6875
+    }
+  ],
+  "previous_reproduction": {
+    "exact_previous_trials": 160,
+    "scope": "Every saved trajectory, scan score, probe and result field except elapsed time, for original, Sobel and both separate variants."
+  },
+  "joint_probe_diagnostics": {
+    "centreline_probes": 320,
+    "combination_better_than_both_singles": 7,
+    "combination_worse_than_both_singles": 8,
+    "all_three_equal_error": 231,
+    "combination_changed_turn_from_original": 89,
+    "scope": "Descriptive post hoc diagnostic at 320 fixed route/seed probe poses; no additional significance tests."
+  },
+  "stream_composition": "Exact agreement for all 40 paired stream-specific heading and matched-progress probe results.",
+  "inference": "Exploratory: one 12-test Holm family. Exact sign flips of eight route means conditional on the five wiring seeds. Unadjusted 95% crossed route/seed bootstrap intervals. No independent-world or held-out inference."
+}

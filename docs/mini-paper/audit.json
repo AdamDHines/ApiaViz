@@ -1,0 +1,56 @@
+{
+  "runs": [
+    {
+      "run": "apiaviz/output/paper-baselines/20260929T014349.800124Z-62986",
+      "status": "complete",
+      "result_rows": 6,
+      "trajectories_checked": 6,
+      "source_archive_verified": true,
+      "scan_controller_steps_verified": 646,
+      "encoder_fingerprint_verified": true,
+      "encoder_config_verified": true,
+      "checkpoint": "apiaviz/output/paper-baselines/20260929T014349.800124Z-62986/encoder.pt",
+      "dataset_verified": true
+    },
+    {
+      "run": "apiaviz/output/paper-baselines/20260929T014349.800138Z-62988",
+      "status": "complete",
+      "result_rows": 6,
+      "trajectories_checked": 6,
+      "source_archive_verified": true,
+      "scan_controller_steps_verified": 762,
+      "encoder_fingerprint_verified": true,
+      "encoder_config_verified": true,
+      "checkpoint": "apiaviz/output/paper-baselines/20260929T014349.800138Z-62988/encoder.pt",
+      "dataset_verified": true
+    },
+    {
+      "run": "apiaviz/output/paper-baselines/20260929T014349.800161Z-62987",
+      "status": "complete",
+      "result_rows": 6,
+      "trajectories_checked": 6,
+      "source_archive_verified": true,
+      "scan_controller_steps_verified": 1059,
+      "encoder_fingerprint_verified": true,
+      "encoder_config_verified": true,
+      "checkpoint": "apiaviz/output/paper-baselines/20260929T014349.800161Z-62987/encoder.pt",
+      "dataset_verified": true
+    },
+    {
+      "run": "apiaviz/output/paper-baselines/20260929T014349.800124Z-62989",
+      "status": "complete",
+      "result_rows": 6,
+      "trajectories_checked": 6,
+      "source_archive_verified": true,
+      "scan_controller_steps_verified": 792,
+      "encoder_fingerprint_verified": true,
+      "encoder_config_verified": true,
+      "checkpoint": "apiaviz/output/paper-baselines/20260929T014349.800124Z-62989/encoder.pt",
+      "dataset_verified": true
+    }
+  ],
+  "errors": [],
+  "trajectories_checked": 24,
+  "scan_controller_steps_verified": 3259,
+  "scope": "Saved trajectory metrics, free-motion kinematics, available scan decisions, checkpoints, datasets and available source archives; not an independent renderer/encoder reproduction. Lateralized-policy decisions and older missing decision records are not reconstructed."
+}

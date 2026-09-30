@@ -1,0 +1,6 @@
+{
+  "exposure": 0.09255943492054935,
+  "transform": "(x/(x+exposure))**(1/2.2)",
+  "mapping": "UV->red, blue->green, green->blue",
+  "note": "Identical exposure and channel gains for every displayed image; linear data kept separately."
+}

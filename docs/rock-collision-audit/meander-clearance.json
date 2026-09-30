@@ -1,0 +1,146 @@
+{
+  "world": "meander",
+  "scene_sha256": "2fd0c7365be383f55ea337ef669f4d9902ca82a134dbcb6314609f8712b25640",
+  "maximum_stride_m": 0.02,
+  "reflex_clearance_setting_m": 0.045,
+  "component_centre_relative_error_max": 0.0020097845604033957,
+  "trials": [
+    {
+      "trial": "meander-19-linear_colour-right50-familiarity-1",
+      "position": [
+        2.9048583631883083,
+        4.555826253741575
+      ],
+      "heading_deg": 382.0,
+      "executed_avoidance_substeps": 124,
+      "candidates": [
+        {
+          "rock_index": 96,
+          "disc_radius_m": 0.4126865242628559,
+          "current_projected_hull_clearance_m": 0.16660145102119575,
+          "clearance_lower_bound_after_max_stride_m": 0.14660145102119576
+        }
+      ]
+    },
+    {
+      "trial": "meander-19-linear_colour-right50-familiarity--1",
+      "position": [
+        3.1587744337830226,
+        4.7159924241099835
+      ],
+      "heading_deg": -388.0,
+      "executed_avoidance_substeps": 93,
+      "candidates": [
+        {
+          "rock_index": 96,
+          "disc_radius_m": 0.4126865242628559,
+          "current_projected_hull_clearance_m": 0.10151592448481978,
+          "clearance_lower_bound_after_max_stride_m": 0.08151592448481977
+        }
+      ]
+    },
+    {
+      "trial": "meander-19-sobel_colour-kick_left50-familiarity-1",
+      "position": [
+        6.0828251935718995,
+        2.3971525733146772
+      ],
+      "heading_deg": 222.0,
+      "executed_avoidance_substeps": 110,
+      "candidates": [
+        {
+          "rock_index": 105,
+          "disc_radius_m": 0.4946504287163954,
+          "current_projected_hull_clearance_m": 0.1909338712259977,
+          "clearance_lower_bound_after_max_stride_m": 0.1709338712259977
+        }
+      ]
+    },
+    {
+      "trial": "meander-19-ardin_input-left50-familiarity-1",
+      "position": [
+        6.1359828597859885,
+        2.424884705111078
+      ],
+      "heading_deg": -48.0,
+      "executed_avoidance_substeps": 142,
+      "candidates": [
+        {
+          "rock_index": 105,
+          "disc_radius_m": 0.4946504287163954,
+          "current_projected_hull_clearance_m": 0.1925877835193692,
+          "clearance_lower_bound_after_max_stride_m": 0.1725877835193692
+        }
+      ]
+    },
+    {
+      "trial": "meander-19-ardin_input-right50-familiarity--1",
+      "position": [
+        3.3307676376038335,
+        4.7136520462848255
+      ],
+      "heading_deg": -878.0,
+      "executed_avoidance_substeps": 139,
+      "candidates": [
+        {
+          "rock_index": 96,
+          "disc_radius_m": 0.4126865242628559,
+          "current_projected_hull_clearance_m": 0.06404293935609325,
+          "clearance_lower_bound_after_max_stride_m": 0.04404293935609324
+        }
+      ]
+    },
+    {
+      "trial": "meander-19-ardin_input-kick_left50-familiarity-1",
+      "position": [
+        6.649111117758483,
+        5.272729165435099
+      ],
+      "heading_deg": -118.0,
+      "executed_avoidance_substeps": 2,
+      "candidates": [
+        {
+          "rock_index": 57,
+          "disc_radius_m": 0.10464251083260967,
+          "current_projected_hull_clearance_m": 0.05288507434619024,
+          "clearance_lower_bound_after_max_stride_m": 0.03288507434619024
+        }
+      ]
+    },
+    {
+      "trial": "meander-19-ardin_input-kick_left50-familiarity--1",
+      "position": [
+        5.93002477970895,
+        2.2753936169038997
+      ],
+      "heading_deg": -8.0,
+      "executed_avoidance_substeps": 113,
+      "candidates": [
+        {
+          "rock_index": 105,
+          "disc_radius_m": 0.4946504287163954,
+          "current_projected_hull_clearance_m": 0.15327417550217054,
+          "clearance_lower_bound_after_max_stride_m": 0.13327417550217055
+        }
+      ]
+    },
+    {
+      "trial": "meander-31-sobel_colour-left50-familiarity-1",
+      "position": [
+        6.05299732862597,
+        4.4041987053950535
+      ],
+      "heading_deg": -8.0,
+      "executed_avoidance_substeps": 192,
+      "candidates": [
+        {
+          "rock_index": 106,
+          "disc_radius_m": 0.217955189079392,
+          "current_projected_hull_clearance_m": 0.049304424052338876,
+          "clearance_lower_bound_after_max_stride_m": 0.029304424052338875
+        }
+      ]
+    }
+  ],
+  "caveat": "2D convex hull covers the complete projected rock, including vertices below ground. This is a conservative geometric comparison, not a rerun. Final proposed stride/decision was not logged. Candidate discs are intersected within the maximum 2 cm step. No new controller outcome is inferred."
+}

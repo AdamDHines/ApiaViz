@@ -1,0 +1,2364 @@
+{
+  "directories": {
+    "sampling": "route-sampling-control",
+    "restart": "visual-avoidance-smoke-v2",
+    "pause": "route-detour",
+    "continuous": "route-motor-feedback-v2",
+    "transfer": "route-motor-feedback-meander"
+  },
+  "arrivals": {
+    "sampling": 2,
+    "restart": 0,
+    "pause": 1,
+    "continuous": 4,
+    "transfer": 1
+  },
+  "groups": {
+    "sampling": [
+      {
+        "id": "hairpin-19-linear_colour-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "linear_colour",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "b8b8f2457481f98ad8430decff545b29bfa77777038cbad104505c834e0305bc",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-linear_colour-aligned-familiarity-1.json",
+        "reached_nest": true,
+        "termination": "arrival",
+        "final_nest_distance_m": 0.17052846889929,
+        "steps": 117,
+        "path_length_m": 11.69999999999984,
+        "time_s": 226.59444444444583,
+        "observations": 1013,
+        "avoidance_observations": 656,
+        "scan_bouts": 23,
+        "rotation_deg": 10610.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 0,
+        "detour_completions": 0,
+        "detour_transitions": [],
+        "polyline_mean_m": 0.14058322422333014,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 153.39792558318004
+      },
+      {
+        "id": "hairpin-19-linear_colour-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "linear_colour",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "b8b8f2457481f98ad8430decff545b29bfa77777038cbad104505c834e0305bc",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-linear_colour-left50-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "rock_collision",
+        "final_nest_distance_m": 3.3180417712636032,
+        "steps": 0,
+        "path_length_m": 0.025,
+        "time_s": 2.711111111111111,
+        "observations": 17,
+        "avoidance_observations": 3,
+        "scan_bouts": 1,
+        "rotation_deg": 290.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 0,
+        "detour_completions": 0,
+        "detour_transitions": [],
+        "polyline_mean_m": 0.4963533882689945,
+        "recovered": false,
+        "recovery_applicable": true,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 0.7240735411178321
+      },
+      {
+        "id": "hairpin-19-sobel_colour-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "sobel_colour",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "a2bd23e77543f2840a982cdfff2191e92cec337b3373f2483f6bea1d5bae4e06",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-sobel_colour-aligned-familiarity-1.json",
+        "reached_nest": true,
+        "termination": "arrival",
+        "final_nest_distance_m": 0.18466388891827853,
+        "steps": 112,
+        "path_length_m": 11.19999999999985,
+        "time_s": 204.350000000001,
+        "observations": 897,
+        "avoidance_observations": 636,
+        "scan_bouts": 20,
+        "rotation_deg": 8550.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 0,
+        "detour_completions": 0,
+        "detour_transitions": [],
+        "polyline_mean_m": 0.07240568338732996,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 187.26300137513317
+      },
+      {
+        "id": "hairpin-19-sobel_colour-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "sobel_colour",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "a2bd23e77543f2840a982cdfff2191e92cec337b3373f2483f6bea1d5bae4e06",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-sobel_colour-left50-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "rock_collision",
+        "final_nest_distance_m": 3.3180417712636032,
+        "steps": 0,
+        "path_length_m": 0.025,
+        "time_s": 2.711111111111111,
+        "observations": 17,
+        "avoidance_observations": 3,
+        "scan_bouts": 1,
+        "rotation_deg": 290.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 0,
+        "detour_completions": 0,
+        "detour_transitions": [],
+        "polyline_mean_m": 0.4963533882689945,
+        "recovered": false,
+        "recovery_applicable": true,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 0.18205541605129838
+      },
+      {
+        "id": "hairpin-19-ardin_input-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "ardin_input",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "23f6b4984761c636a6cf5304b1b9ffa8b2afdb7247ff4bde02837ead6c7e4bf1",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-ardin_input-aligned-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "uninformative_views",
+        "final_nest_distance_m": 2.613913728318683,
+        "steps": 82,
+        "path_length_m": 8.199999999999914,
+        "time_s": 182.2055555555559,
+        "observations": 903,
+        "avoidance_observations": 466,
+        "scan_bouts": 23,
+        "rotation_deg": 9910.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 0,
+        "detour_completions": 0,
+        "detour_transitions": [],
+        "polyline_mean_m": 0.04845404326975989,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 29.813450125046074
+      },
+      {
+        "id": "hairpin-19-ardin_input-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "ardin_input",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "23f6b4984761c636a6cf5304b1b9ffa8b2afdb7247ff4bde02837ead6c7e4bf1",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-ardin_input-left50-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "rock_collision",
+        "final_nest_distance_m": 3.3051388676608497,
+        "steps": 0,
+        "path_length_m": 0.025,
+        "time_s": 2.5444444444444443,
+        "observations": 17,
+        "avoidance_observations": 3,
+        "scan_bouts": 1,
+        "rotation_deg": 260.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 0,
+        "detour_completions": 0,
+        "detour_transitions": [],
+        "polyline_mean_m": 0.5071824230098386,
+        "recovered": false,
+        "recovery_applicable": true,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 0.532397500006482
+      }
+    ],
+    "restart": [
+      {
+        "id": "hairpin-19-linear_colour-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "linear_colour",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "b8b8f2457481f98ad8430decff545b29bfa77777038cbad104505c834e0305bc",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-linear_colour-aligned-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "time_budget",
+        "final_nest_distance_m": 5.785663995602167,
+        "steps": 149,
+        "path_length_m": 14.899999999999771,
+        "time_s": 359.65555555555693,
+        "observations": 1912,
+        "avoidance_observations": 882,
+        "scan_bouts": 48,
+        "rotation_deg": 20710.0,
+        "motor_state_resets": 27,
+        "corrective_resets": 0,
+        "polyline_mean_m": 0.6166815145816346,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 20.42257387493737
+      },
+      {
+        "id": "hairpin-19-linear_colour-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "linear_colour",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "b8b8f2457481f98ad8430decff545b29bfa77777038cbad104505c834e0305bc",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-linear_colour-left50-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "time_budget",
+        "final_nest_distance_m": 7.4864371672077095,
+        "steps": 145,
+        "path_length_m": 14.49999999999978,
+        "time_s": 359.5944444444462,
+        "observations": 1973,
+        "avoidance_observations": 879,
+        "scan_bouts": 64,
+        "rotation_deg": 20870.0,
+        "motor_state_resets": 37,
+        "corrective_resets": 0,
+        "polyline_mean_m": 1.3896509180954226,
+        "recovered": true,
+        "recovery_applicable": true,
+        "recovery_path_m": 2.900000000000002,
+        "recovery_time_s": 70.811111111111,
+        "disturbance_applied": false,
+        "elapsed_s": 206.52888250001706
+      },
+      {
+        "id": "hairpin-19-sobel_colour-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "sobel_colour",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "a2bd23e77543f2840a982cdfff2191e92cec337b3373f2483f6bea1d5bae4e06",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-sobel_colour-aligned-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "time_budget",
+        "final_nest_distance_m": 5.759159862377582,
+        "steps": 134,
+        "path_length_m": 13.479999999999846,
+        "time_s": 359.96111111111304,
+        "observations": 1931,
+        "avoidance_observations": 880,
+        "scan_bouts": 44,
+        "rotation_deg": 23150.0,
+        "motor_state_resets": 31,
+        "corrective_resets": 0,
+        "polyline_mean_m": 0.74555859174168,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 187.8242710409686
+      },
+      {
+        "id": "hairpin-19-sobel_colour-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "sobel_colour",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "a2bd23e77543f2840a982cdfff2191e92cec337b3373f2483f6bea1d5bae4e06",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-sobel_colour-left50-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "time_budget",
+        "final_nest_distance_m": 3.7817276434757234,
+        "steps": 151,
+        "path_length_m": 15.099999999999788,
+        "time_s": 359.96666666666954,
+        "observations": 1866,
+        "avoidance_observations": 904,
+        "scan_bouts": 58,
+        "rotation_deg": 20820.0,
+        "motor_state_resets": 20,
+        "corrective_resets": 0,
+        "polyline_mean_m": 0.19207579044963474,
+        "recovered": true,
+        "recovery_applicable": true,
+        "recovery_path_m": 1.9000000000000012,
+        "recovery_time_s": 45.472222222222285,
+        "disturbance_applied": false,
+        "elapsed_s": 256.2114961249754
+      },
+      {
+        "id": "hairpin-19-ardin_input-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "ardin_input",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "23f6b4984761c636a6cf5304b1b9ffa8b2afdb7247ff4bde02837ead6c7e4bf1",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-ardin_input-aligned-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "time_budget",
+        "final_nest_distance_m": 0.6884241811617446,
+        "steps": 138,
+        "path_length_m": 13.879999999999793,
+        "time_s": 359.80000000000206,
+        "observations": 1910,
+        "avoidance_observations": 818,
+        "scan_bouts": 52,
+        "rotation_deg": 22590.0,
+        "motor_state_resets": 24,
+        "corrective_resets": 0,
+        "polyline_mean_m": 0.20185734219260887,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 264.2137466671411
+      },
+      {
+        "id": "hairpin-19-ardin_input-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "ardin_input",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "23f6b4984761c636a6cf5304b1b9ffa8b2afdb7247ff4bde02837ead6c7e4bf1",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-ardin_input-left50-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "uninformative_views",
+        "final_nest_distance_m": 3.792446281779544,
+        "steps": 68,
+        "path_length_m": 6.799999999999943,
+        "time_s": 215.40000000000043,
+        "observations": 1298,
+        "avoidance_observations": 415,
+        "scan_bouts": 37,
+        "rotation_deg": 14850.0,
+        "motor_state_resets": 17,
+        "corrective_resets": 0,
+        "polyline_mean_m": 0.22675424852267625,
+        "recovered": true,
+        "recovery_applicable": true,
+        "recovery_path_m": 3.5000000000000027,
+        "recovery_time_s": 129.16111111111064,
+        "disturbance_applied": false,
+        "elapsed_s": 144.87515483400784
+      }
+    ],
+    "pause": [
+      {
+        "id": "hairpin-19-linear_colour-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "linear_colour",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "b8b8f2457481f98ad8430decff545b29bfa77777038cbad104505c834e0305bc",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-linear_colour-aligned-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "uninformative_views",
+        "final_nest_distance_m": 4.8573679507256164,
+        "steps": 102,
+        "path_length_m": 10.199999999999903,
+        "time_s": 263.7333333333361,
+        "observations": 1108,
+        "avoidance_observations": 741,
+        "scan_bouts": 29,
+        "rotation_deg": 19140.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 9,
+        "detour_episodes": 11,
+        "detour_completions": 11,
+        "detour_transitions": [
+          {
+            "kind": "detour_start",
+            "path_m": 0.8800000000000004,
+            "heading": -58.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 1.0400000000000005,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.16,
+            "heading": -58.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 2.3200000000000016,
+            "heading": -148.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 2.4200000000000017,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.1,
+            "heading": -148.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 2.780000000000002,
+            "heading": -58.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 2.860000000000002,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.08,
+            "heading": -58.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 6.439999999999951,
+            "heading": -8.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 6.599999999999947,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.16,
+            "heading": -8.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 6.95999999999994,
+            "heading": 2.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 8.45999999999994,
+            "reason": "visual_clearance",
+            "detour_path_m": 1.4999999999999958,
+            "heading": 2.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 8.47999999999994,
+            "heading": 2.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 8.819999999999933,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.34,
+            "heading": 2.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 9.199999999999925,
+            "heading": -4028.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 9.299999999999923,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.1,
+            "heading": -4028.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 9.319999999999922,
+            "heading": -3698.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 9.43999999999992,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.12000000000000001,
+            "heading": -3698.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 9.479999999999919,
+            "heading": -3698.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 9.699999999999914,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.21999999999999997,
+            "heading": -3698.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 9.699999999999914,
+            "heading": -3688.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 9.799999999999912,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.1,
+            "heading": -3688.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 9.799999999999912,
+            "heading": -3308.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 10.139999999999905,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.34,
+            "heading": -3308.0
+          }
+        ],
+        "polyline_mean_m": 0.388336806416853,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 208.16439462499693
+      },
+      {
+        "id": "hairpin-19-linear_colour-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "linear_colour",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "b8b8f2457481f98ad8430decff545b29bfa77777038cbad104505c834e0305bc",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-linear_colour-left50-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "field_boundary",
+        "final_nest_distance_m": 2.085429810918563,
+        "steps": 127,
+        "path_length_m": 12.719999999999837,
+        "time_s": 254.9166666666688,
+        "observations": 1221,
+        "avoidance_observations": 756,
+        "scan_bouts": 44,
+        "rotation_deg": 12000.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 7,
+        "detour_episodes": 8,
+        "detour_completions": 8,
+        "detour_transitions": [
+          {
+            "kind": "detour_start",
+            "path_m": 0.005,
+            "heading": -108.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 0.27999999999999997,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.27499999999999997,
+            "heading": -108.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 8.019999999999918,
+            "heading": 72.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 8.159999999999915,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.14,
+            "heading": 72.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 9.279999999999891,
+            "heading": 102.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 9.579999999999904,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.3,
+            "heading": 102.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 10.559999999999883,
+            "heading": 472.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 10.659999999999881,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.1,
+            "heading": 472.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 10.73999999999988,
+            "heading": 452.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 10.859999999999877,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.12000000000000001,
+            "heading": 452.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 11.079999999999872,
+            "heading": 452.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 11.379999999999866,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.3,
+            "heading": 452.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 11.379999999999866,
+            "heading": 452.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 11.63999999999986,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.25999999999999995,
+            "heading": 452.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 11.899999999999855,
+            "heading": 482.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 11.979999999999853,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.08,
+            "heading": 482.0
+          }
+        ],
+        "polyline_mean_m": 0.3085214239636201,
+        "recovered": true,
+        "recovery_applicable": true,
+        "recovery_path_m": 2.4000000000000017,
+        "recovery_time_s": 51.20555555555558,
+        "disturbance_applied": false,
+        "elapsed_s": 229.50326920906082
+      },
+      {
+        "id": "hairpin-19-sobel_colour-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "sobel_colour",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "a2bd23e77543f2840a982cdfff2191e92cec337b3373f2483f6bea1d5bae4e06",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-sobel_colour-aligned-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "rock_collision",
+        "final_nest_distance_m": 6.086939669229498,
+        "steps": 123,
+        "path_length_m": 12.33999999999993,
+        "time_s": 328.9611111111159,
+        "observations": 1409,
+        "avoidance_observations": 930,
+        "scan_bouts": 34,
+        "rotation_deg": 24320.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 12,
+        "detour_episodes": 14,
+        "detour_completions": 13,
+        "detour_transitions": [
+          {
+            "kind": "detour_start",
+            "path_m": 2.1200000000000014,
+            "heading": -28.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 2.3000000000000016,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.18,
+            "heading": -28.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 3.5400000000000027,
+            "heading": -48.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 3.6200000000000028,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.08,
+            "heading": -48.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 4.379999999999995,
+            "heading": -78.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 4.559999999999991,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.18,
+            "heading": -78.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 5.219999999999977,
+            "heading": -58.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 5.579999999999969,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.36000000000000004,
+            "heading": -58.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 5.659999999999967,
+            "heading": 242.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 5.819999999999964,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.16,
+            "heading": 242.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 5.959999999999961,
+            "heading": 622.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 6.3999999999999515,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.4400000000000001,
+            "heading": 622.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 7.439999999999929,
+            "heading": 582.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 7.779999999999922,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.34,
+            "heading": 582.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 7.919999999999919,
+            "heading": 1052.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 8.099999999999916,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.18,
+            "heading": 1052.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 9.079999999999895,
+            "heading": 1112.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 9.31999999999989,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.23999999999999996,
+            "heading": 1112.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 9.559999999999885,
+            "heading": 1172.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 10.739999999999965,
+            "reason": "visual_clearance",
+            "detour_path_m": 1.1800000000000008,
+            "heading": 1172.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 11.139999999999956,
+            "heading": -4788.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 11.319999999999952,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.18,
+            "heading": -4788.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 11.41999999999995,
+            "heading": -4788.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 11.719999999999944,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.3,
+            "heading": -4788.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 12.139999999999935,
+            "heading": -4468.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 12.33999999999993,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.19999999999999998,
+            "heading": -4468.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 12.33999999999993,
+            "heading": -4468.0
+          }
+        ],
+        "polyline_mean_m": 0.9372257538950994,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 239.30110866599716
+      },
+      {
+        "id": "hairpin-19-sobel_colour-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "sobel_colour",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "a2bd23e77543f2840a982cdfff2191e92cec337b3373f2483f6bea1d5bae4e06",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-sobel_colour-left50-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "time_budget",
+        "final_nest_distance_m": 1.9423835080677117,
+        "steps": 172,
+        "path_length_m": 17.23999999999972,
+        "time_s": 359.77222222222423,
+        "observations": 1783,
+        "avoidance_observations": 1014,
+        "scan_bouts": 63,
+        "rotation_deg": 17680.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 15,
+        "detour_episodes": 16,
+        "detour_completions": 16,
+        "detour_transitions": [
+          {
+            "kind": "detour_start",
+            "path_m": 0.005,
+            "heading": -108.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 0.27999999999999997,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.27499999999999997,
+            "heading": -108.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 6.779999999999943,
+            "heading": -8.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 6.93999999999994,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.16,
+            "heading": -8.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 7.579999999999926,
+            "heading": 42.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 7.679999999999924,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.1,
+            "heading": 42.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 8.259999999999913,
+            "heading": 2.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 8.8199999999999,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.5600000000000002,
+            "heading": 2.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 9.199999999999893,
+            "heading": 62.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 9.29999999999989,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.1,
+            "heading": 62.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 9.399999999999888,
+            "heading": 422.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 9.539999999999885,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.14,
+            "heading": 422.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 10.419999999999867,
+            "heading": 832.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 10.859999999999857,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.4400000000000001,
+            "heading": 832.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 10.919999999999856,
+            "heading": 812.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 11.039999999999853,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.12000000000000001,
+            "heading": 812.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 11.559999999999842,
+            "heading": 822.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 11.719999999999839,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.16,
+            "heading": 822.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 12.439999999999824,
+            "heading": 822.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 12.719999999999818,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.27999999999999997,
+            "heading": 822.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 12.879999999999814,
+            "heading": 802.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 12.999999999999812,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.12000000000000001,
+            "heading": 802.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 12.999999999999812,
+            "heading": 812.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 13.159999999999808,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.16,
+            "heading": 812.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 13.159999999999808,
+            "heading": 812.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 13.499999999999801,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.34,
+            "heading": 812.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 13.499999999999801,
+            "heading": 812.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 13.759999999999796,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.25999999999999995,
+            "heading": 812.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 14.279999999999784,
+            "heading": 972.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 14.659999999999776,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.38000000000000006,
+            "heading": 972.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 14.95999999999977,
+            "heading": 982.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 15.059999999999768,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.1,
+            "heading": 982.0
+          }
+        ],
+        "polyline_mean_m": 0.46778421724470315,
+        "recovered": true,
+        "recovery_applicable": true,
+        "recovery_path_m": 6.599999999999947,
+        "recovery_time_s": 131.0722222222222,
+        "disturbance_applied": false,
+        "elapsed_s": 351.5345927500166
+      },
+      {
+        "id": "hairpin-19-ardin_input-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "ardin_input",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "23f6b4984761c636a6cf5304b1b9ffa8b2afdb7247ff4bde02837ead6c7e4bf1",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-ardin_input-aligned-familiarity-1.json",
+        "reached_nest": true,
+        "termination": "arrival",
+        "final_nest_distance_m": 0.18010173305018348,
+        "steps": 107,
+        "path_length_m": 10.69999999999986,
+        "time_s": 226.70000000000107,
+        "observations": 1124,
+        "avoidance_observations": 606,
+        "scan_bouts": 35,
+        "rotation_deg": 11430.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 3,
+        "detour_episodes": 3,
+        "detour_completions": 3,
+        "detour_transitions": [
+          {
+            "kind": "detour_start",
+            "path_m": 7.059999999999937,
+            "heading": 1442.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 7.239999999999934,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.18,
+            "heading": 1442.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 8.139999999999915,
+            "heading": 1502.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 8.219999999999914,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.08,
+            "heading": 1502.0
+          },
+          {
+            "kind": "detour_start",
+            "path_m": 9.959999999999877,
+            "heading": 1932.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 10.099999999999874,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.14,
+            "heading": 1932.0
+          }
+        ],
+        "polyline_mean_m": 0.06779745611662884,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 114.97000312502496
+      },
+      {
+        "id": "hairpin-19-ardin_input-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "ardin_input",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "23f6b4984761c636a6cf5304b1b9ffa8b2afdb7247ff4bde02837ead6c7e4bf1",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-ardin_input-left50-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "uninformative_views",
+        "final_nest_distance_m": 3.003778632067348,
+        "steps": 9,
+        "path_length_m": 0.9000000000000006,
+        "time_s": 29.627777777777922,
+        "observations": 167,
+        "avoidance_observations": 69,
+        "scan_bouts": 5,
+        "rotation_deg": 2210.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 1,
+        "detour_episodes": 1,
+        "detour_completions": 1,
+        "detour_transitions": [
+          {
+            "kind": "detour_start",
+            "path_m": 0.005,
+            "heading": -78.0
+          },
+          {
+            "kind": "detour_end",
+            "path_m": 0.34000000000000014,
+            "reason": "visual_clearance",
+            "detour_path_m": 0.33500000000000013,
+            "heading": -78.0
+          }
+        ],
+        "polyline_mean_m": 0.7133802407771311,
+        "recovered": false,
+        "recovery_applicable": true,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 32.38996441708878
+      }
+    ],
+    "continuous": [
+      {
+        "id": "hairpin-19-linear_colour-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "linear_colour",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "b8b8f2457481f98ad8430decff545b29bfa77777038cbad104505c834e0305bc",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-linear_colour-aligned-familiarity-1.json",
+        "reached_nest": true,
+        "termination": "arrival",
+        "final_nest_distance_m": 0.19520639485625435,
+        "steps": 117,
+        "path_length_m": 11.699999999999864,
+        "time_s": 230.59444444444634,
+        "observations": 1033,
+        "avoidance_observations": 728,
+        "scan_bouts": 25,
+        "rotation_deg": 11150.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 10,
+        "detour_completions": 10,
+        "detour_transitions": [
+          {
+            "kind": "steering_start",
+            "path_m": 0.8800000000000004,
+            "heading": -58.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.9000000000000005,
+            "heading": -138.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 4.59999999999999,
+            "heading": -98.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 4.679999999999988,
+            "heading": -98.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 5.019999999999981,
+            "heading": -18.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 5.05999999999998,
+            "heading": -18.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 7.539999999999927,
+            "heading": -18.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 7.599999999999926,
+            "heading": 82.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 7.819999999999921,
+            "heading": 82.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 8.179999999999914,
+            "heading": 42.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 8.184999999999915,
+            "heading": 42.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 8.299999999999933,
+            "heading": 22.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 9.199999999999918,
+            "heading": 42.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 9.239999999999917,
+            "heading": 42.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 9.299999999999915,
+            "heading": 102.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 9.379999999999914,
+            "heading": 102.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 9.759999999999906,
+            "heading": 2.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 9.799999999999905,
+            "heading": 122.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 10.619999999999887,
+            "heading": 102.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 10.739999999999885,
+            "heading": 102.0
+          }
+        ],
+        "polyline_mean_m": 0.11403649545970931,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 83.44504762487486
+      },
+      {
+        "id": "hairpin-19-linear_colour-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "linear_colour",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "b8b8f2457481f98ad8430decff545b29bfa77777038cbad104505c834e0305bc",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-linear_colour-left50-familiarity-1.json",
+        "reached_nest": true,
+        "termination": "arrival",
+        "final_nest_distance_m": 0.18645371120965246,
+        "steps": 113,
+        "path_length_m": 11.299999999999848,
+        "time_s": 215.677777777779,
+        "observations": 948,
+        "avoidance_observations": 661,
+        "scan_bouts": 18,
+        "rotation_deg": 9950.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 7,
+        "detour_completions": 7,
+        "detour_transitions": [
+          {
+            "kind": "steering_start",
+            "path_m": 0.005,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.16,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 0.18,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.21999999999999997,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 1.520000000000001,
+            "heading": -38.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 1.600000000000001,
+            "heading": -158.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 2.820000000000002,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 2.880000000000002,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 6.2599999999999545,
+            "heading": -58.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 6.299999999999954,
+            "heading": 62.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 8.699999999999903,
+            "heading": 82.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 8.899999999999899,
+            "heading": 42.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 10.219999999999871,
+            "heading": 42.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 10.23999999999987,
+            "heading": 42.0
+          }
+        ],
+        "polyline_mean_m": 0.13204081408830895,
+        "recovered": true,
+        "recovery_applicable": true,
+        "recovery_path_m": 3.2000000000000024,
+        "recovery_time_s": 65.51111111111106,
+        "disturbance_applied": false,
+        "elapsed_s": 205.87358308397233
+      },
+      {
+        "id": "hairpin-19-sobel_colour-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "sobel_colour",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "a2bd23e77543f2840a982cdfff2191e92cec337b3373f2483f6bea1d5bae4e06",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-sobel_colour-aligned-familiarity-1.json",
+        "reached_nest": true,
+        "termination": "arrival",
+        "final_nest_distance_m": 0.19113605495463032,
+        "steps": 118,
+        "path_length_m": 11.799999999999837,
+        "time_s": 226.15555555555696,
+        "observations": 962,
+        "avoidance_observations": 695,
+        "scan_bouts": 16,
+        "rotation_deg": 10810.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 7,
+        "detour_completions": 7,
+        "detour_transitions": [
+          {
+            "kind": "steering_start",
+            "path_m": 2.1200000000000014,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 2.2400000000000015,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 3.5400000000000027,
+            "heading": -48.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 3.5600000000000027,
+            "heading": -48.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 7.259999999999933,
+            "heading": -18.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 7.299999999999932,
+            "heading": 82.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 7.439999999999929,
+            "heading": -38.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 7.499999999999928,
+            "heading": 82.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 8.479999999999908,
+            "heading": -18.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 8.499999999999908,
+            "heading": 102.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 10.219999999999871,
+            "heading": 72.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 10.339999999999868,
+            "heading": 132.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 10.359999999999868,
+            "heading": 132.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 10.479999999999865,
+            "heading": 52.0
+          }
+        ],
+        "polyline_mean_m": 0.08765434931366295,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 183.27051199995913
+      },
+      {
+        "id": "hairpin-19-sobel_colour-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "sobel_colour",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "a2bd23e77543f2840a982cdfff2191e92cec337b3373f2483f6bea1d5bae4e06",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-sobel_colour-left50-familiarity-1.json",
+        "reached_nest": true,
+        "termination": "arrival",
+        "final_nest_distance_m": 0.1886946624473712,
+        "steps": 112,
+        "path_length_m": 11.19999999999985,
+        "time_s": 215.7444444444457,
+        "observations": 956,
+        "avoidance_observations": 658,
+        "scan_bouts": 22,
+        "rotation_deg": 10070.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 16,
+        "detour_completions": 16,
+        "detour_transitions": [
+          {
+            "kind": "steering_start",
+            "path_m": 0.005,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.16,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 0.18,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.32,
+            "heading": -88.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 2.0400000000000014,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 2.1600000000000015,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 3.4800000000000026,
+            "heading": -128.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 3.5200000000000027,
+            "heading": -128.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 3.5400000000000027,
+            "heading": -128.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 3.6000000000000028,
+            "heading": -48.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 3.920000000000003,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 4.040000000000002,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 4.2399999999999975,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 4.299999999999996,
+            "heading": -18.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 5.1799999999999775,
+            "heading": -58.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 5.199999999999977,
+            "heading": 42.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 5.359999999999974,
+            "heading": -78.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 5.399999999999973,
+            "heading": 42.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 6.659999999999946,
+            "heading": -48.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 6.699999999999945,
+            "heading": 72.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 6.95999999999994,
+            "heading": 22.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 6.999999999999939,
+            "heading": 42.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 7.139999999999936,
+            "heading": 2.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 7.1999999999999345,
+            "heading": 62.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 7.579999999999926,
+            "heading": -38.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 7.599999999999926,
+            "heading": 82.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 8.35999999999991,
+            "heading": 2.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 8.39999999999991,
+            "heading": 102.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 9.659999999999883,
+            "heading": 122.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 9.699999999999882,
+            "heading": 122.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 9.839999999999879,
+            "heading": 122.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 9.859999999999879,
+            "heading": 122.0
+          }
+        ],
+        "polyline_mean_m": 0.16359624598242517,
+        "recovered": true,
+        "recovery_applicable": true,
+        "recovery_path_m": 2.1000000000000014,
+        "recovery_time_s": 38.83888888888892,
+        "disturbance_applied": false,
+        "elapsed_s": 235.39534633303992
+      },
+      {
+        "id": "hairpin-19-ardin_input-aligned-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "ardin_input",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "23f6b4984761c636a6cf5304b1b9ffa8b2afdb7247ff4bde02837ead6c7e4bf1",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-ardin_input-aligned-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "uninformative_views",
+        "final_nest_distance_m": 2.625649476181249,
+        "steps": 85,
+        "path_length_m": 8.499999999999908,
+        "time_s": 189.07222222222276,
+        "observations": 927,
+        "avoidance_observations": 490,
+        "scan_bouts": 22,
+        "rotation_deg": 10390.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 2,
+        "detour_completions": 2,
+        "detour_transitions": [
+          {
+            "kind": "steering_start",
+            "path_m": 7.059999999999937,
+            "heading": 1442.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 7.099999999999937,
+            "heading": 1502.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 7.939999999999919,
+            "heading": 1802.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 8.039999999999917,
+            "heading": 1862.0
+          }
+        ],
+        "polyline_mean_m": 0.05950717493806392,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 30.875230124918744
+      },
+      {
+        "id": "hairpin-19-ardin_input-left50-familiarity-1",
+        "world": "hairpin",
+        "seed": 19,
+        "method": "ardin_input",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 91,
+        "memory_fingerprint": "23f6b4984761c636a6cf5304b1b9ffa8b2afdb7247ff4bde02837ead6c7e4bf1",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "f67e7c2727811422fa6af09230f4aa5066a31710a4b56f5989f3ab85fa5c403a",
+        "trace": "hairpin-19-ardin_input-left50-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "uninformative_views",
+        "final_nest_distance_m": 3.1797084742387383,
+        "steps": 18,
+        "path_length_m": 1.8000000000000014,
+        "time_s": 52.81666666666662,
+        "observations": 233,
+        "avoidance_observations": 128,
+        "scan_bouts": 3,
+        "rotation_deg": 4170.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 6,
+        "detour_completions": 6,
+        "detour_transitions": [
+          {
+            "kind": "steering_start",
+            "path_m": 0.005,
+            "heading": -78.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.16,
+            "heading": -78.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 0.18,
+            "heading": -78.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.32000000000000006,
+            "heading": 262.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 0.3400000000000001,
+            "heading": 262.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.40000000000000013,
+            "heading": 262.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 0.4800000000000002,
+            "heading": 262.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.6000000000000003,
+            "heading": 242.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 1.5200000000000011,
+            "heading": 602.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 1.6000000000000012,
+            "heading": 702.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 1.6600000000000013,
+            "heading": 702.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 1.7000000000000013,
+            "heading": 582.0
+          }
+        ],
+        "polyline_mean_m": 0.7581505506482533,
+        "recovered": false,
+        "recovery_applicable": true,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 28.785941417096183
+      }
+    ],
+    "transfer": [
+      {
+        "id": "meander-19-linear_colour-aligned-familiarity-1",
+        "world": "meander",
+        "seed": 19,
+        "method": "linear_colour",
+        "scenario": "aligned",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 77,
+        "memory_fingerprint": "c4d308c821f7a6ac3b63fa4a33ac13597da13eebcb7ba141013c1ba1c65aad8f",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "576ee0618360d1954851bd0f2a29c696019f9826cb83e81ffaacc581901afe29",
+        "trace": "meander-19-linear_colour-aligned-familiarity-1.json",
+        "reached_nest": false,
+        "termination": "field_boundary",
+        "final_nest_distance_m": 1.3350630039505338,
+        "steps": 115,
+        "path_length_m": 11.539999999999843,
+        "time_s": 220.55000000000132,
+        "observations": 933,
+        "avoidance_observations": 692,
+        "scan_bouts": 19,
+        "rotation_deg": 10530.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 18,
+        "detour_completions": 18,
+        "detour_transitions": [
+          {
+            "kind": "steering_start",
+            "path_m": 0.7600000000000003,
+            "heading": -38.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.8000000000000004,
+            "heading": -158.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 4.8999999999999835,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 5.019999999999981,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 5.1799999999999775,
+            "heading": -148.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 5.199999999999977,
+            "heading": -88.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 5.379999999999973,
+            "heading": -168.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 5.399999999999973,
+            "heading": -68.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 6.079999999999958,
+            "heading": -138.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 6.099999999999958,
+            "heading": -78.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 6.239999999999955,
+            "heading": -158.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 6.339999999999953,
+            "heading": -158.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 6.6799999999999455,
+            "heading": -178.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 6.699999999999945,
+            "heading": -98.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 7.099999999999937,
+            "heading": -58.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 7.179999999999935,
+            "heading": -58.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 8.979999999999897,
+            "heading": -88.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 9.079999999999895,
+            "heading": -88.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 9.119999999999894,
+            "heading": -88.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 9.35999999999989,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 9.499999999999886,
+            "heading": -128.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 9.519999999999886,
+            "heading": -128.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 9.699999999999882,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 9.79999999999988,
+            "heading": -148.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 9.959999999999877,
+            "heading": -148.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 10.099999999999874,
+            "heading": -148.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 10.199999999999871,
+            "heading": -148.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 10.379999999999868,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 10.439999999999866,
+            "heading": -88.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 10.559999999999864,
+            "heading": -88.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 10.579999999999863,
+            "heading": -88.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 10.73999999999986,
+            "heading": -68.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 10.859999999999857,
+            "heading": -68.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 10.879999999999857,
+            "heading": -68.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 10.919999999999856,
+            "heading": -148.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 10.999999999999854,
+            "heading": -48.0
+          }
+        ],
+        "polyline_mean_m": 0.20859649183206777,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false,
+        "elapsed_s": 215.36151020904072
+      },
+      {
+        "id": "meander-19-linear_colour-left50-familiarity-1",
+        "world": "meander",
+        "seed": 19,
+        "method": "linear_colour",
+        "scenario": "left50",
+        "controller": "familiarity",
+        "phase": 1,
+        "memory_views": 77,
+        "memory_fingerprint": "c4d308c821f7a6ac3b63fa4a33ac13597da13eebcb7ba141013c1ba1c65aad8f",
+        "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+        "training_images_sha256": "576ee0618360d1954851bd0f2a29c696019f9826cb83e81ffaacc581901afe29",
+        "trace": "meander-19-linear_colour-left50-familiarity-1.json",
+        "reached_nest": true,
+        "termination": "arrival",
+        "final_nest_distance_m": 0.1727213897549692,
+        "steps": 92,
+        "path_length_m": 9.199999999999893,
+        "time_s": 176.3666666666673,
+        "observations": 804,
+        "avoidance_observations": 534,
+        "scan_bouts": 24,
+        "rotation_deg": 7950.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 10,
+        "detour_completions": 9,
+        "detour_transitions": [
+          {
+            "kind": "steering_start",
+            "path_m": 0.23999999999999996,
+            "heading": -88.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.3,
+            "heading": -128.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 0.5200000000000001,
+            "heading": -128.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.6800000000000003,
+            "heading": -88.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 1.0800000000000005,
+            "heading": -68.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 1.1400000000000006,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 2.4800000000000018,
+            "heading": -128.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 2.5000000000000018,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 2.880000000000002,
+            "heading": -28.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 2.900000000000002,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 3.2400000000000024,
+            "heading": -108.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 3.3000000000000025,
+            "heading": -88.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 3.900000000000003,
+            "heading": -48.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 4.000000000000003,
+            "heading": -168.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 6.339999999999953,
+            "heading": -178.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 6.3999999999999515,
+            "heading": -58.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 7.1999999999999345,
+            "heading": -58.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 7.279999999999933,
+            "heading": -58.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 9.139999999999894,
+            "heading": -58.0
+          }
+        ],
+        "polyline_mean_m": 0.14911895256277627,
+        "recovered": true,
+        "recovery_applicable": true,
+        "recovery_path_m": 2.0000000000000013,
+        "recovery_time_s": 39.25555555555556,
+        "disturbance_applied": false,
+        "elapsed_s": 153.37697062501684
+      }
+    ]
+  }
+}

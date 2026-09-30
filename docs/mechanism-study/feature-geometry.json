@@ -1,0 +1,2206 @@
+{
+  "rows": [
+    {
+      "ant": 4,
+      "method": "apiaviz",
+      "stream": "form",
+      "neighbour_cosine": 0.7049959897994995,
+      "distant_cosine": 0.5259630680084229,
+      "effective_rank": 25.329206466674805,
+      "plane_energy_shares": [
+        0.05036751180887222,
+        0.04620082303881645,
+        0.9034316539764404
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "apiaviz",
+      "stream": "colour",
+      "neighbour_cosine": 0.8090205192565918,
+      "distant_cosine": 0.7647842764854431,
+      "effective_rank": 23.89947509765625,
+      "plane_energy_shares": [
+        0.7626763582229614,
+        0.23732364177703857
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "gray",
+      "stream": "form",
+      "neighbour_cosine": 0.8982778191566467,
+      "distant_cosine": 0.8059370517730713,
+      "effective_rank": 16.108434677124023,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "gray",
+      "stream": "colour",
+      "neighbour_cosine": 0.8982771635055542,
+      "distant_cosine": 0.8059371113777161,
+      "effective_rank": 16.108434677124023,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "raw_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8800663948059082,
+      "distant_cosine": 0.7939533591270447,
+      "effective_rank": 20.87710952758789,
+      "plane_energy_shares": [
+        0.2920977473258972,
+        0.14808955788612366,
+        0.5598127245903015
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "raw_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.872650146484375,
+      "distant_cosine": 0.7890805602073669,
+      "effective_rank": 22.80864715576172,
+      "plane_energy_shares": [
+        0.20892876386642456,
+        0.7910712361335754
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "opponent",
+      "stream": "form",
+      "neighbour_cosine": 0.8982778191566467,
+      "distant_cosine": 0.8059370517730713,
+      "effective_rank": 16.108434677124023,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "opponent",
+      "stream": "colour",
+      "neighbour_cosine": 0.7151272296905518,
+      "distant_cosine": 0.6633549928665161,
+      "effective_rank": 37.240516662597656,
+      "plane_energy_shares": [
+        0.7624975442886353,
+        0.23750241100788116
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "sobel_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8207991123199463,
+      "distant_cosine": 0.6818069219589233,
+      "effective_rank": 22.112146377563477,
+      "plane_energy_shares": [
+        0.08526423573493958,
+        0.4244612753391266,
+        0.49027445912361145
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "sobel_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7151272296905518,
+      "distant_cosine": 0.6633549928665161,
+      "effective_rank": 37.240516662597656,
+      "plane_energy_shares": [
+        0.7624975442886353,
+        0.23750241100788116
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "ardin_input",
+      "stream": "form",
+      "neighbour_cosine": 0.9015788435935974,
+      "distant_cosine": 0.8213005661964417,
+      "effective_rank": 16.03030776977539,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "ardin_input",
+      "stream": "colour",
+      "neighbour_cosine": 0.901578962802887,
+      "distant_cosine": 0.8213005661964417,
+      "effective_rank": 16.030305862426758,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "no_hex",
+      "stream": "form",
+      "neighbour_cosine": 0.6726045608520508,
+      "distant_cosine": 0.4874298572540283,
+      "effective_rank": 28.262351989746094,
+      "plane_energy_shares": [
+        0.08137629181146622,
+        0.07777202874422073,
+        0.8408516645431519
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "no_hex",
+      "stream": "colour",
+      "neighbour_cosine": 0.7489538192749023,
+      "distant_cosine": 0.7034202218055725,
+      "effective_rank": 34.86762619018555,
+      "plane_energy_shares": [
+        0.7701740264892578,
+        0.22982600331306458
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "no_adapt",
+      "stream": "form",
+      "neighbour_cosine": 0.9651212692260742,
+      "distant_cosine": 0.9168841242790222,
+      "effective_rank": 9.000653266906738,
+      "plane_energy_shares": [
+        0.07230619341135025,
+        0.07137010991573334,
+        0.8563235998153687
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "no_adapt",
+      "stream": "colour",
+      "neighbour_cosine": 0.8012650012969971,
+      "distant_cosine": 0.757266104221344,
+      "effective_rank": 24.085153579711914,
+      "plane_energy_shares": [
+        0.7682704925537109,
+        0.23172958195209503
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "no_dog",
+      "stream": "form",
+      "neighbour_cosine": 0.6800010204315186,
+      "distant_cosine": 0.5057036280632019,
+      "effective_rank": 28.66037940979004,
+      "plane_energy_shares": [
+        0.13983842730522156,
+        0.283403217792511,
+        0.5767583847045898
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "no_dog",
+      "stream": "colour",
+      "neighbour_cosine": 0.8090205192565918,
+      "distant_cosine": 0.7647842764854431,
+      "effective_rank": 23.89947509765625,
+      "plane_energy_shares": [
+        0.7626763582229614,
+        0.23732364177703857
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "apia_simple_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.7049959897994995,
+      "distant_cosine": 0.5259630680084229,
+      "effective_rank": 25.329206466674805,
+      "plane_energy_shares": [
+        0.05036751180887222,
+        0.04620082303881645,
+        0.9034316539764404
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "apia_simple_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7151272296905518,
+      "distant_cosine": 0.6633549928665161,
+      "effective_rank": 37.240516662597656,
+      "plane_energy_shares": [
+        0.7624975442886353,
+        0.23750241100788116
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "sobel_apia_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8207991123199463,
+      "distant_cosine": 0.6818069219589233,
+      "effective_rank": 22.112146377563477,
+      "plane_energy_shares": [
+        0.08526423573493958,
+        0.4244612753391266,
+        0.49027445912361145
+      ]
+    },
+    {
+      "ant": 4,
+      "method": "sobel_apia_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8090205192565918,
+      "distant_cosine": 0.7647842764854431,
+      "effective_rank": 23.89947509765625,
+      "plane_energy_shares": [
+        0.7626763582229614,
+        0.23732364177703857
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "apiaviz",
+      "stream": "form",
+      "neighbour_cosine": 0.6670284867286682,
+      "distant_cosine": 0.5065948963165283,
+      "effective_rank": 26.197507858276367,
+      "plane_energy_shares": [
+        0.051431816071271896,
+        0.046684782952070236,
+        0.9018833637237549
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "apiaviz",
+      "stream": "colour",
+      "neighbour_cosine": 0.7909053564071655,
+      "distant_cosine": 0.7221277952194214,
+      "effective_rank": 22.427440643310547,
+      "plane_energy_shares": [
+        0.7906804084777832,
+        0.2093195915222168
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "gray",
+      "stream": "form",
+      "neighbour_cosine": 0.867214024066925,
+      "distant_cosine": 0.7914247512817383,
+      "effective_rank": 19.666057586669922,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "gray",
+      "stream": "colour",
+      "neighbour_cosine": 0.8672147989273071,
+      "distant_cosine": 0.7914246320724487,
+      "effective_rank": 19.666059494018555,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "raw_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8501399159431458,
+      "distant_cosine": 0.775272011756897,
+      "effective_rank": 23.593706130981445,
+      "plane_energy_shares": [
+        0.29143667221069336,
+        0.14560720324516296,
+        0.5629561543464661
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "raw_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8433660268783569,
+      "distant_cosine": 0.7688840627670288,
+      "effective_rank": 24.941648483276367,
+      "plane_energy_shares": [
+        0.20535291731357574,
+        0.7946470975875854
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "opponent",
+      "stream": "form",
+      "neighbour_cosine": 0.867214024066925,
+      "distant_cosine": 0.7914247512817383,
+      "effective_rank": 19.666057586669922,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "opponent",
+      "stream": "colour",
+      "neighbour_cosine": 0.7039589881896973,
+      "distant_cosine": 0.6257617473602295,
+      "effective_rank": 33.38649368286133,
+      "plane_energy_shares": [
+        0.789314866065979,
+        0.21068516373634338
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "sobel_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.7901069521903992,
+      "distant_cosine": 0.6636438965797424,
+      "effective_rank": 24.250490188598633,
+      "plane_energy_shares": [
+        0.09520699083805084,
+        0.42012545466423035,
+        0.48466750979423523
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "sobel_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7039589881896973,
+      "distant_cosine": 0.6257617473602295,
+      "effective_rank": 33.38649368286133,
+      "plane_energy_shares": [
+        0.789314866065979,
+        0.21068516373634338
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "ardin_input",
+      "stream": "form",
+      "neighbour_cosine": 0.8729343414306641,
+      "distant_cosine": 0.8053593635559082,
+      "effective_rank": 19.073158264160156,
+      "plane_energy_shares": [
+        0.3333333730697632,
+        0.3333333730697632,
+        0.3333333730697632
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "ardin_input",
+      "stream": "colour",
+      "neighbour_cosine": 0.8729339838027954,
+      "distant_cosine": 0.8053593635559082,
+      "effective_rank": 19.073162078857422,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "no_hex",
+      "stream": "form",
+      "neighbour_cosine": 0.6319869756698608,
+      "distant_cosine": 0.46539774537086487,
+      "effective_rank": 29.378448486328125,
+      "plane_energy_shares": [
+        0.08155246824026108,
+        0.07770036906003952,
+        0.8407471179962158
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "no_hex",
+      "stream": "colour",
+      "neighbour_cosine": 0.7369866371154785,
+      "distant_cosine": 0.6636648178100586,
+      "effective_rank": 30.892953872680664,
+      "plane_energy_shares": [
+        0.7957497835159302,
+        0.20425014197826385
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "no_adapt",
+      "stream": "form",
+      "neighbour_cosine": 0.947645366191864,
+      "distant_cosine": 0.9078518152236938,
+      "effective_rank": 11.332235336303711,
+      "plane_energy_shares": [
+        0.07176464796066284,
+        0.07097691297531128,
+        0.8572584390640259
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "no_adapt",
+      "stream": "colour",
+      "neighbour_cosine": 0.7834417223930359,
+      "distant_cosine": 0.7145586609840393,
+      "effective_rank": 22.690073013305664,
+      "plane_energy_shares": [
+        0.7972323298454285,
+        0.20276756584644318
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "no_dog",
+      "stream": "form",
+      "neighbour_cosine": 0.6462590098381042,
+      "distant_cosine": 0.4883018136024475,
+      "effective_rank": 29.513717651367188,
+      "plane_energy_shares": [
+        0.14316923916339874,
+        0.2769789397716522,
+        0.5798518061637878
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "no_dog",
+      "stream": "colour",
+      "neighbour_cosine": 0.7909053564071655,
+      "distant_cosine": 0.7221277952194214,
+      "effective_rank": 22.427440643310547,
+      "plane_energy_shares": [
+        0.7906804084777832,
+        0.2093195915222168
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "apia_simple_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.6670284867286682,
+      "distant_cosine": 0.5065948963165283,
+      "effective_rank": 26.197507858276367,
+      "plane_energy_shares": [
+        0.051431816071271896,
+        0.046684782952070236,
+        0.9018833637237549
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "apia_simple_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7039589881896973,
+      "distant_cosine": 0.6257617473602295,
+      "effective_rank": 33.38649368286133,
+      "plane_energy_shares": [
+        0.789314866065979,
+        0.21068516373634338
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "sobel_apia_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.7901069521903992,
+      "distant_cosine": 0.6636438965797424,
+      "effective_rank": 24.250490188598633,
+      "plane_energy_shares": [
+        0.09520699083805084,
+        0.42012545466423035,
+        0.48466750979423523
+      ]
+    },
+    {
+      "ant": 6,
+      "method": "sobel_apia_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7909053564071655,
+      "distant_cosine": 0.7221277952194214,
+      "effective_rank": 22.427440643310547,
+      "plane_energy_shares": [
+        0.7906804084777832,
+        0.2093195915222168
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "apiaviz",
+      "stream": "form",
+      "neighbour_cosine": 0.7227286100387573,
+      "distant_cosine": 0.5277166962623596,
+      "effective_rank": 24.059873580932617,
+      "plane_energy_shares": [
+        0.049552079290151596,
+        0.04497577250003815,
+        0.9054721593856812
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "apiaviz",
+      "stream": "colour",
+      "neighbour_cosine": 0.8141860961914062,
+      "distant_cosine": 0.7365925312042236,
+      "effective_rank": 22.195810317993164,
+      "plane_energy_shares": [
+        0.7668491005897522,
+        0.2331508994102478
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "gray",
+      "stream": "form",
+      "neighbour_cosine": 0.8967521786689758,
+      "distant_cosine": 0.8091251254081726,
+      "effective_rank": 17.55126953125,
+      "plane_energy_shares": [
+        0.3333333730697632,
+        0.3333333730697632,
+        0.3333333730697632
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "gray",
+      "stream": "colour",
+      "neighbour_cosine": 0.8967517018318176,
+      "distant_cosine": 0.8091250061988831,
+      "effective_rank": 17.551271438598633,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "raw_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8775292038917542,
+      "distant_cosine": 0.7906972765922546,
+      "effective_rank": 22.316011428833008,
+      "plane_energy_shares": [
+        0.29209375381469727,
+        0.14903095364570618,
+        0.558875322341919
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "raw_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8699171543121338,
+      "distant_cosine": 0.7835394740104675,
+      "effective_rank": 24.08515739440918,
+      "plane_energy_shares": [
+        0.21021945774555206,
+        0.7897804975509644
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "opponent",
+      "stream": "form",
+      "neighbour_cosine": 0.8967521786689758,
+      "distant_cosine": 0.8091251254081726,
+      "effective_rank": 17.55126953125,
+      "plane_energy_shares": [
+        0.3333333730697632,
+        0.3333333730697632,
+        0.3333333730697632
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "opponent",
+      "stream": "colour",
+      "neighbour_cosine": 0.7283762693405151,
+      "distant_cosine": 0.6459546685218811,
+      "effective_rank": 35.87197494506836,
+      "plane_energy_shares": [
+        0.7639937996864319,
+        0.23600620031356812
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "sobel_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.823712944984436,
+      "distant_cosine": 0.6780388355255127,
+      "effective_rank": 21.739513397216797,
+      "plane_energy_shares": [
+        0.08343515545129776,
+        0.42683786153793335,
+        0.4897269606590271
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "sobel_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7283762693405151,
+      "distant_cosine": 0.6459546685218811,
+      "effective_rank": 35.87197494506836,
+      "plane_energy_shares": [
+        0.7639937996864319,
+        0.23600620031356812
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "ardin_input",
+      "stream": "form",
+      "neighbour_cosine": 0.9025738835334778,
+      "distant_cosine": 0.8237266540527344,
+      "effective_rank": 17.41107177734375,
+      "plane_energy_shares": [
+        0.3333333730697632,
+        0.3333333730697632,
+        0.3333333730697632
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "ardin_input",
+      "stream": "colour",
+      "neighbour_cosine": 0.9025737643241882,
+      "distant_cosine": 0.8237266540527344,
+      "effective_rank": 17.411073684692383,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "no_hex",
+      "stream": "form",
+      "neighbour_cosine": 0.682462215423584,
+      "distant_cosine": 0.4843392074108124,
+      "effective_rank": 27.70262336730957,
+      "plane_energy_shares": [
+        0.08059428632259369,
+        0.07597228139638901,
+        0.8434333801269531
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "no_hex",
+      "stream": "colour",
+      "neighbour_cosine": 0.759157657623291,
+      "distant_cosine": 0.6809367537498474,
+      "effective_rank": 33.309261322021484,
+      "plane_energy_shares": [
+        0.7724570035934448,
+        0.22754301130771637
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "no_adapt",
+      "stream": "form",
+      "neighbour_cosine": 0.9649142026901245,
+      "distant_cosine": 0.9209559559822083,
+      "effective_rank": 10.276124954223633,
+      "plane_energy_shares": [
+        0.07322350144386292,
+        0.07240363210439682,
+        0.8543729186058044
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "no_adapt",
+      "stream": "colour",
+      "neighbour_cosine": 0.8086901903152466,
+      "distant_cosine": 0.7293835282325745,
+      "effective_rank": 22.325397491455078,
+      "plane_energy_shares": [
+        0.7726908922195435,
+        0.22730910778045654
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "no_dog",
+      "stream": "form",
+      "neighbour_cosine": 0.696776807308197,
+      "distant_cosine": 0.506434440612793,
+      "effective_rank": 27.399269104003906,
+      "plane_energy_shares": [
+        0.1386163830757141,
+        0.2843261659145355,
+        0.577057421207428
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "no_dog",
+      "stream": "colour",
+      "neighbour_cosine": 0.8141860961914062,
+      "distant_cosine": 0.7365925312042236,
+      "effective_rank": 22.195810317993164,
+      "plane_energy_shares": [
+        0.7668491005897522,
+        0.2331508994102478
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "apia_simple_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.7227286100387573,
+      "distant_cosine": 0.5277166962623596,
+      "effective_rank": 24.059873580932617,
+      "plane_energy_shares": [
+        0.049552079290151596,
+        0.04497577250003815,
+        0.9054721593856812
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "apia_simple_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7283762693405151,
+      "distant_cosine": 0.6459546685218811,
+      "effective_rank": 35.87197494506836,
+      "plane_energy_shares": [
+        0.7639937996864319,
+        0.23600620031356812
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "sobel_apia_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.823712944984436,
+      "distant_cosine": 0.6780388355255127,
+      "effective_rank": 21.739513397216797,
+      "plane_energy_shares": [
+        0.08343515545129776,
+        0.42683786153793335,
+        0.4897269606590271
+      ]
+    },
+    {
+      "ant": 7,
+      "method": "sobel_apia_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8141860961914062,
+      "distant_cosine": 0.7365925312042236,
+      "effective_rank": 22.195810317993164,
+      "plane_energy_shares": [
+        0.7668491005897522,
+        0.2331508994102478
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "apiaviz",
+      "stream": "form",
+      "neighbour_cosine": 0.7032491564750671,
+      "distant_cosine": 0.5304257869720459,
+      "effective_rank": 25.985443115234375,
+      "plane_energy_shares": [
+        0.050834473222494125,
+        0.04540729522705078,
+        0.9037582874298096
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "apiaviz",
+      "stream": "colour",
+      "neighbour_cosine": 0.8185580968856812,
+      "distant_cosine": 0.7659317851066589,
+      "effective_rank": 26.3761043548584,
+      "plane_energy_shares": [
+        0.760036826133728,
+        0.23996315896511078
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "gray",
+      "stream": "form",
+      "neighbour_cosine": 0.8935378789901733,
+      "distant_cosine": 0.805742621421814,
+      "effective_rank": 15.99602222442627,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "gray",
+      "stream": "colour",
+      "neighbour_cosine": 0.8935373425483704,
+      "distant_cosine": 0.8057425618171692,
+      "effective_rank": 15.996025085449219,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "raw_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8771589398384094,
+      "distant_cosine": 0.7935011982917786,
+      "effective_rank": 20.698137283325195,
+      "plane_energy_shares": [
+        0.29251742362976074,
+        0.15168710052967072,
+        0.555795431137085
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "raw_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8704971075057983,
+      "distant_cosine": 0.7885281443595886,
+      "effective_rank": 22.70061683654785,
+      "plane_energy_shares": [
+        0.21420997381210327,
+        0.7857900261878967
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "opponent",
+      "stream": "form",
+      "neighbour_cosine": 0.8935378789901733,
+      "distant_cosine": 0.805742621421814,
+      "effective_rank": 15.99602222442627,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "opponent",
+      "stream": "colour",
+      "neighbour_cosine": 0.7322494387626648,
+      "distant_cosine": 0.6640874743461609,
+      "effective_rank": 39.59550476074219,
+      "plane_energy_shares": [
+        0.7549673914909363,
+        0.24503260850906372
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "sobel_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8195098638534546,
+      "distant_cosine": 0.6815728545188904,
+      "effective_rank": 21.907917022705078,
+      "plane_energy_shares": [
+        0.0904805138707161,
+        0.4199182391166687,
+        0.4896012246608734
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "sobel_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7322494387626648,
+      "distant_cosine": 0.6640874743461609,
+      "effective_rank": 39.59550476074219,
+      "plane_energy_shares": [
+        0.7549673914909363,
+        0.24503260850906372
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "ardin_input",
+      "stream": "form",
+      "neighbour_cosine": 0.8983386754989624,
+      "distant_cosine": 0.8225681185722351,
+      "effective_rank": 16.227436065673828,
+      "plane_energy_shares": [
+        0.3333333730697632,
+        0.3333333730697632,
+        0.3333333730697632
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "ardin_input",
+      "stream": "colour",
+      "neighbour_cosine": 0.8983386158943176,
+      "distant_cosine": 0.8225680589675903,
+      "effective_rank": 16.227436065673828,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "no_hex",
+      "stream": "form",
+      "neighbour_cosine": 0.6654572486877441,
+      "distant_cosine": 0.48819711804389954,
+      "effective_rank": 29.363298416137695,
+      "plane_energy_shares": [
+        0.08194690942764282,
+        0.07678385823965073,
+        0.8412691950798035
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "no_hex",
+      "stream": "colour",
+      "neighbour_cosine": 0.7632163166999817,
+      "distant_cosine": 0.7019317150115967,
+      "effective_rank": 37.4689826965332,
+      "plane_energy_shares": [
+        0.7653356194496155,
+        0.23466435074806213
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "no_adapt",
+      "stream": "form",
+      "neighbour_cosine": 0.9634033441543579,
+      "distant_cosine": 0.9178811311721802,
+      "effective_rank": 8.769997596740723,
+      "plane_energy_shares": [
+        0.07178714871406555,
+        0.07097151130437851,
+        0.8572413325309753
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "no_adapt",
+      "stream": "colour",
+      "neighbour_cosine": 0.8124648332595825,
+      "distant_cosine": 0.7585069537162781,
+      "effective_rank": 26.409555435180664,
+      "plane_energy_shares": [
+        0.7647841572761536,
+        0.23521581292152405
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "no_dog",
+      "stream": "form",
+      "neighbour_cosine": 0.6769345998764038,
+      "distant_cosine": 0.5090444087982178,
+      "effective_rank": 29.18354606628418,
+      "plane_energy_shares": [
+        0.14130137860774994,
+        0.28053638339042664,
+        0.5781621932983398
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "no_dog",
+      "stream": "colour",
+      "neighbour_cosine": 0.8185580968856812,
+      "distant_cosine": 0.7659317851066589,
+      "effective_rank": 26.3761043548584,
+      "plane_energy_shares": [
+        0.760036826133728,
+        0.23996315896511078
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "apia_simple_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.7032491564750671,
+      "distant_cosine": 0.5304257869720459,
+      "effective_rank": 25.985443115234375,
+      "plane_energy_shares": [
+        0.050834473222494125,
+        0.04540729522705078,
+        0.9037582874298096
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "apia_simple_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7322494387626648,
+      "distant_cosine": 0.6640874743461609,
+      "effective_rank": 39.59550476074219,
+      "plane_energy_shares": [
+        0.7549673914909363,
+        0.24503260850906372
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "sobel_apia_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8195098638534546,
+      "distant_cosine": 0.6815728545188904,
+      "effective_rank": 21.907917022705078,
+      "plane_energy_shares": [
+        0.0904805138707161,
+        0.4199182391166687,
+        0.4896012246608734
+      ]
+    },
+    {
+      "ant": 9,
+      "method": "sobel_apia_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8185580968856812,
+      "distant_cosine": 0.7659317851066589,
+      "effective_rank": 26.3761043548584,
+      "plane_energy_shares": [
+        0.760036826133728,
+        0.23996315896511078
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "apiaviz",
+      "stream": "form",
+      "neighbour_cosine": 0.6537519097328186,
+      "distant_cosine": 0.49481311440467834,
+      "effective_rank": 27.2143497467041,
+      "plane_energy_shares": [
+        0.05183112248778343,
+        0.04604346677660942,
+        0.902125358581543
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "apiaviz",
+      "stream": "colour",
+      "neighbour_cosine": 0.8223674297332764,
+      "distant_cosine": 0.7456533908843994,
+      "effective_rank": 25.080549240112305,
+      "plane_energy_shares": [
+        0.7869163155555725,
+        0.2130836844444275
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "gray",
+      "stream": "form",
+      "neighbour_cosine": 0.8772143125534058,
+      "distant_cosine": 0.7905494570732117,
+      "effective_rank": 20.9525089263916,
+      "plane_energy_shares": [
+        0.3333333730697632,
+        0.3333333730697632,
+        0.3333333730697632
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "gray",
+      "stream": "colour",
+      "neighbour_cosine": 0.8772143125534058,
+      "distant_cosine": 0.7905494570732117,
+      "effective_rank": 20.952512741088867,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "raw_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8616439700126648,
+      "distant_cosine": 0.7770522832870483,
+      "effective_rank": 25.512104034423828,
+      "plane_energy_shares": [
+        0.293301522731781,
+        0.14232687652111053,
+        0.564371645450592
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "raw_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8554046750068665,
+      "distant_cosine": 0.7716301679611206,
+      "effective_rank": 27.209810256958008,
+      "plane_energy_shares": [
+        0.20131143927574158,
+        0.7986885905265808
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "opponent",
+      "stream": "form",
+      "neighbour_cosine": 0.8772143125534058,
+      "distant_cosine": 0.7905494570732117,
+      "effective_rank": 20.9525089263916,
+      "plane_energy_shares": [
+        0.3333333730697632,
+        0.3333333730697632,
+        0.3333333730697632
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "opponent",
+      "stream": "colour",
+      "neighbour_cosine": 0.7315847277641296,
+      "distant_cosine": 0.6528512239456177,
+      "effective_rank": 38.09465789794922,
+      "plane_energy_shares": [
+        0.7895328998565674,
+        0.21046704053878784
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "sobel_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.7913936972618103,
+      "distant_cosine": 0.6555551290512085,
+      "effective_rank": 25.234079360961914,
+      "plane_energy_shares": [
+        0.10373469442129135,
+        0.4090425372123718,
+        0.48722273111343384
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "sobel_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7315847277641296,
+      "distant_cosine": 0.6528512239456177,
+      "effective_rank": 38.09465789794922,
+      "plane_energy_shares": [
+        0.7895328998565674,
+        0.21046704053878784
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "ardin_input",
+      "stream": "form",
+      "neighbour_cosine": 0.8852674961090088,
+      "distant_cosine": 0.80775386095047,
+      "effective_rank": 20.289127349853516,
+      "plane_energy_shares": [
+        0.3333333730697632,
+        0.3333333730697632,
+        0.3333333730697632
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "ardin_input",
+      "stream": "colour",
+      "neighbour_cosine": 0.8852670788764954,
+      "distant_cosine": 0.80775386095047,
+      "effective_rank": 20.28912353515625,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "no_hex",
+      "stream": "form",
+      "neighbour_cosine": 0.6231827735900879,
+      "distant_cosine": 0.45905643701553345,
+      "effective_rank": 30.550086975097656,
+      "plane_energy_shares": [
+        0.08279349654912949,
+        0.07711740583181381,
+        0.8400890827178955
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "no_hex",
+      "stream": "colour",
+      "neighbour_cosine": 0.7658520936965942,
+      "distant_cosine": 0.6900511980056763,
+      "effective_rank": 35.529319763183594,
+      "plane_energy_shares": [
+        0.7948113679885864,
+        0.20518867671489716
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "no_adapt",
+      "stream": "form",
+      "neighbour_cosine": 0.9552149772644043,
+      "distant_cosine": 0.900973916053772,
+      "effective_rank": 11.537846565246582,
+      "plane_energy_shares": [
+        0.07112172991037369,
+        0.07025109231472015,
+        0.8586271405220032
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "no_adapt",
+      "stream": "colour",
+      "neighbour_cosine": 0.8162176609039307,
+      "distant_cosine": 0.7376539707183838,
+      "effective_rank": 25.265893936157227,
+      "plane_energy_shares": [
+        0.793557345867157,
+        0.2064426690340042
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "no_dog",
+      "stream": "form",
+      "neighbour_cosine": 0.63493412733078,
+      "distant_cosine": 0.4809091091156006,
+      "effective_rank": 30.2471923828125,
+      "plane_energy_shares": [
+        0.14470548927783966,
+        0.27635157108306885,
+        0.5789429545402527
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "no_dog",
+      "stream": "colour",
+      "neighbour_cosine": 0.8223674297332764,
+      "distant_cosine": 0.7456533908843994,
+      "effective_rank": 25.080549240112305,
+      "plane_energy_shares": [
+        0.7869163155555725,
+        0.2130836844444275
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "apia_simple_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.6537519097328186,
+      "distant_cosine": 0.49481311440467834,
+      "effective_rank": 27.2143497467041,
+      "plane_energy_shares": [
+        0.05183112248778343,
+        0.04604346677660942,
+        0.902125358581543
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "apia_simple_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7315847277641296,
+      "distant_cosine": 0.6528512239456177,
+      "effective_rank": 38.09465789794922,
+      "plane_energy_shares": [
+        0.7895328998565674,
+        0.21046704053878784
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "sobel_apia_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.7913936972618103,
+      "distant_cosine": 0.6555551290512085,
+      "effective_rank": 25.234079360961914,
+      "plane_energy_shares": [
+        0.10373469442129135,
+        0.4090425372123718,
+        0.48722273111343384
+      ]
+    },
+    {
+      "ant": 10,
+      "method": "sobel_apia_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8223674297332764,
+      "distant_cosine": 0.7456533908843994,
+      "effective_rank": 25.080549240112305,
+      "plane_energy_shares": [
+        0.7869163155555725,
+        0.2130836844444275
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "apiaviz",
+      "stream": "form",
+      "neighbour_cosine": 0.7047564387321472,
+      "distant_cosine": 0.5097858905792236,
+      "effective_rank": 23.38820457458496,
+      "plane_energy_shares": [
+        0.049931563436985016,
+        0.04590582475066185,
+        0.9041626453399658
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "apiaviz",
+      "stream": "colour",
+      "neighbour_cosine": 0.7883352637290955,
+      "distant_cosine": 0.7067180871963501,
+      "effective_rank": 24.58237648010254,
+      "plane_energy_shares": [
+        0.7694545984268188,
+        0.23054538667201996
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "gray",
+      "stream": "form",
+      "neighbour_cosine": 0.8840875029563904,
+      "distant_cosine": 0.7898841500282288,
+      "effective_rank": 14.458775520324707,
+      "plane_energy_shares": [
+        0.3333333730697632,
+        0.3333333730697632,
+        0.3333333730697632
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "gray",
+      "stream": "colour",
+      "neighbour_cosine": 0.8840876817703247,
+      "distant_cosine": 0.7898839712142944,
+      "effective_rank": 14.458781242370605,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "raw_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8643785119056702,
+      "distant_cosine": 0.771411120891571,
+      "effective_rank": 19.022809982299805,
+      "plane_energy_shares": [
+        0.2912370562553406,
+        0.14956393837928772,
+        0.5591989755630493
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "raw_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8564367890357971,
+      "distant_cosine": 0.764005184173584,
+      "effective_rank": 20.87316131591797,
+      "plane_energy_shares": [
+        0.21082831919193268,
+        0.7891716957092285
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "opponent",
+      "stream": "form",
+      "neighbour_cosine": 0.8840875029563904,
+      "distant_cosine": 0.7898841500282288,
+      "effective_rank": 14.458775520324707,
+      "plane_energy_shares": [
+        0.3333333730697632,
+        0.3333333730697632,
+        0.3333333730697632
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "opponent",
+      "stream": "colour",
+      "neighbour_cosine": 0.7034910917282104,
+      "distant_cosine": 0.6144480109214783,
+      "effective_rank": 35.79563522338867,
+      "plane_energy_shares": [
+        0.7670063376426697,
+        0.23299366235733032
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "sobel_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8143934011459351,
+      "distant_cosine": 0.6648063063621521,
+      "effective_rank": 19.866785049438477,
+      "plane_energy_shares": [
+        0.08823664486408234,
+        0.42247405648231506,
+        0.4892893433570862
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "sobel_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7034910917282104,
+      "distant_cosine": 0.6144480109214783,
+      "effective_rank": 35.79563522338867,
+      "plane_energy_shares": [
+        0.7670063376426697,
+        0.23299366235733032
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "ardin_input",
+      "stream": "form",
+      "neighbour_cosine": 0.888459324836731,
+      "distant_cosine": 0.8042322397232056,
+      "effective_rank": 14.219523429870605,
+      "plane_energy_shares": [
+        0.3333333730697632,
+        0.3333333730697632,
+        0.3333333730697632
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "ardin_input",
+      "stream": "colour",
+      "neighbour_cosine": 0.8884596228599548,
+      "distant_cosine": 0.8042322397232056,
+      "effective_rank": 14.219520568847656,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "no_hex",
+      "stream": "form",
+      "neighbour_cosine": 0.669564962387085,
+      "distant_cosine": 0.46972331404685974,
+      "effective_rank": 26.598209381103516,
+      "plane_energy_shares": [
+        0.08005518466234207,
+        0.07559799402952194,
+        0.844346821308136
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "no_hex",
+      "stream": "colour",
+      "neighbour_cosine": 0.7349487543106079,
+      "distant_cosine": 0.6534827351570129,
+      "effective_rank": 33.625850677490234,
+      "plane_energy_shares": [
+        0.7758966088294983,
+        0.22410331666469574
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "no_adapt",
+      "stream": "form",
+      "neighbour_cosine": 0.9499316215515137,
+      "distant_cosine": 0.9034788608551025,
+      "effective_rank": 7.894537448883057,
+      "plane_energy_shares": [
+        0.07117725163698196,
+        0.07031801342964172,
+        0.8585047721862793
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "no_adapt",
+      "stream": "colour",
+      "neighbour_cosine": 0.7813706398010254,
+      "distant_cosine": 0.6975145936012268,
+      "effective_rank": 24.82353973388672,
+      "plane_energy_shares": [
+        0.7746133804321289,
+        0.2253865897655487
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "no_dog",
+      "stream": "form",
+      "neighbour_cosine": 0.6811017394065857,
+      "distant_cosine": 0.4921686053276062,
+      "effective_rank": 26.325855255126953,
+      "plane_energy_shares": [
+        0.14009472727775574,
+        0.2824956476688385,
+        0.5774096846580505
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "no_dog",
+      "stream": "colour",
+      "neighbour_cosine": 0.7883352637290955,
+      "distant_cosine": 0.7067180871963501,
+      "effective_rank": 24.58237648010254,
+      "plane_energy_shares": [
+        0.7694545984268188,
+        0.23054538667201996
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "apia_simple_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.7047564387321472,
+      "distant_cosine": 0.5097858905792236,
+      "effective_rank": 23.38820457458496,
+      "plane_energy_shares": [
+        0.049931563436985016,
+        0.04590582475066185,
+        0.9041626453399658
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "apia_simple_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7034910917282104,
+      "distant_cosine": 0.6144480109214783,
+      "effective_rank": 35.79563522338867,
+      "plane_energy_shares": [
+        0.7670063376426697,
+        0.23299366235733032
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "sobel_apia_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8143934011459351,
+      "distant_cosine": 0.6648063063621521,
+      "effective_rank": 19.866785049438477,
+      "plane_energy_shares": [
+        0.08823664486408234,
+        0.42247405648231506,
+        0.4892893433570862
+      ]
+    },
+    {
+      "ant": 12,
+      "method": "sobel_apia_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7883352637290955,
+      "distant_cosine": 0.7067180871963501,
+      "effective_rank": 24.58237648010254,
+      "plane_energy_shares": [
+        0.7694545984268188,
+        0.23054538667201996
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "apiaviz",
+      "stream": "form",
+      "neighbour_cosine": 0.6731722354888916,
+      "distant_cosine": 0.5000987648963928,
+      "effective_rank": 26.550851821899414,
+      "plane_energy_shares": [
+        0.050740789622068405,
+        0.04756885766983032,
+        0.9016903638839722
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "apiaviz",
+      "stream": "colour",
+      "neighbour_cosine": 0.7978633642196655,
+      "distant_cosine": 0.6941868662834167,
+      "effective_rank": 26.39405059814453,
+      "plane_energy_shares": [
+        0.7710281014442444,
+        0.2289719581604004
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "gray",
+      "stream": "form",
+      "neighbour_cosine": 0.8919076919555664,
+      "distant_cosine": 0.7926658987998962,
+      "effective_rank": 17.22437286376953,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "gray",
+      "stream": "colour",
+      "neighbour_cosine": 0.8919078707695007,
+      "distant_cosine": 0.7926661372184753,
+      "effective_rank": 17.22437286376953,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "raw_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8722946047782898,
+      "distant_cosine": 0.7715949416160583,
+      "effective_rank": 22.59511375427246,
+      "plane_energy_shares": [
+        0.2920709252357483,
+        0.15046577155590057,
+        0.5574633479118347
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "raw_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.8643051981925964,
+      "distant_cosine": 0.7630584836006165,
+      "effective_rank": 24.739709854125977,
+      "plane_energy_shares": [
+        0.21243217587471008,
+        0.7875678539276123
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "opponent",
+      "stream": "form",
+      "neighbour_cosine": 0.8919076919555664,
+      "distant_cosine": 0.7926658987998962,
+      "effective_rank": 17.22437286376953,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "opponent",
+      "stream": "colour",
+      "neighbour_cosine": 0.7042853236198425,
+      "distant_cosine": 0.598541796207428,
+      "effective_rank": 39.838233947753906,
+      "plane_energy_shares": [
+        0.7670866847038269,
+        0.23291327059268951
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "sobel_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8064016103744507,
+      "distant_cosine": 0.6677078604698181,
+      "effective_rank": 24.14932632446289,
+      "plane_energy_shares": [
+        0.09550610929727554,
+        0.4150245189666748,
+        0.48946937918663025
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "sobel_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7042853236198425,
+      "distant_cosine": 0.598541796207428,
+      "effective_rank": 39.838233947753906,
+      "plane_energy_shares": [
+        0.7670866847038269,
+        0.23291327059268951
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "ardin_input",
+      "stream": "form",
+      "neighbour_cosine": 0.8936920166015625,
+      "distant_cosine": 0.805881142616272,
+      "effective_rank": 17.189985275268555,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "ardin_input",
+      "stream": "colour",
+      "neighbour_cosine": 0.8936920166015625,
+      "distant_cosine": 0.805881142616272,
+      "effective_rank": 17.189987182617188,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "no_hex",
+      "stream": "form",
+      "neighbour_cosine": 0.636712908744812,
+      "distant_cosine": 0.4650767743587494,
+      "effective_rank": 30.55315399169922,
+      "plane_energy_shares": [
+        0.08197624236345291,
+        0.07800354063510895,
+        0.8400201797485352
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "no_hex",
+      "stream": "colour",
+      "neighbour_cosine": 0.7368795871734619,
+      "distant_cosine": 0.6366007924079895,
+      "effective_rank": 37.517127990722656,
+      "plane_energy_shares": [
+        0.776598334312439,
+        0.22340165078639984
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "no_adapt",
+      "stream": "form",
+      "neighbour_cosine": 0.9649161696434021,
+      "distant_cosine": 0.9056291580200195,
+      "effective_rank": 9.558903694152832,
+      "plane_energy_shares": [
+        0.07069434970617294,
+        0.06989844143390656,
+        0.8594071865081787
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "no_adapt",
+      "stream": "colour",
+      "neighbour_cosine": 0.7899606227874756,
+      "distant_cosine": 0.6852163076400757,
+      "effective_rank": 26.803380966186523,
+      "plane_energy_shares": [
+        0.7765838503837585,
+        0.22341616451740265
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "no_dog",
+      "stream": "form",
+      "neighbour_cosine": 0.64947110414505,
+      "distant_cosine": 0.48740822076797485,
+      "effective_rank": 30.473485946655273,
+      "plane_energy_shares": [
+        0.13974818587303162,
+        0.2824690043926239,
+        0.5777828097343445
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "no_dog",
+      "stream": "colour",
+      "neighbour_cosine": 0.7978633642196655,
+      "distant_cosine": 0.6941868662834167,
+      "effective_rank": 26.39405059814453,
+      "plane_energy_shares": [
+        0.7710281014442444,
+        0.2289719581604004
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "apia_simple_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.6731722354888916,
+      "distant_cosine": 0.5000987648963928,
+      "effective_rank": 26.550851821899414,
+      "plane_energy_shares": [
+        0.050740789622068405,
+        0.04756885766983032,
+        0.9016903638839722
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "apia_simple_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7042853236198425,
+      "distant_cosine": 0.598541796207428,
+      "effective_rank": 39.838233947753906,
+      "plane_energy_shares": [
+        0.7670866847038269,
+        0.23291327059268951
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "sobel_apia_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8064016103744507,
+      "distant_cosine": 0.6677078604698181,
+      "effective_rank": 24.14932632446289,
+      "plane_energy_shares": [
+        0.09550610929727554,
+        0.4150245189666748,
+        0.48946937918663025
+      ]
+    },
+    {
+      "ant": 13,
+      "method": "sobel_apia_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7978633642196655,
+      "distant_cosine": 0.6941868662834167,
+      "effective_rank": 26.39405059814453,
+      "plane_energy_shares": [
+        0.7710281014442444,
+        0.2289719581604004
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "apiaviz",
+      "stream": "form",
+      "neighbour_cosine": 0.6513253450393677,
+      "distant_cosine": 0.5099995136260986,
+      "effective_rank": 27.546504974365234,
+      "plane_energy_shares": [
+        0.05269400030374527,
+        0.04743447154760361,
+        0.8998715281486511
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "apiaviz",
+      "stream": "colour",
+      "neighbour_cosine": 0.7810209393501282,
+      "distant_cosine": 0.7112491726875305,
+      "effective_rank": 23.634944915771484,
+      "plane_energy_shares": [
+        0.7776595950126648,
+        0.222340390086174
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "gray",
+      "stream": "form",
+      "neighbour_cosine": 0.871928334236145,
+      "distant_cosine": 0.8008051514625549,
+      "effective_rank": 19.821460723876953,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "gray",
+      "stream": "colour",
+      "neighbour_cosine": 0.8719286918640137,
+      "distant_cosine": 0.8008049130439758,
+      "effective_rank": 19.821462631225586,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "raw_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.8528832793235779,
+      "distant_cosine": 0.7820573449134827,
+      "effective_rank": 24.510942459106445,
+      "plane_energy_shares": [
+        0.2937014400959015,
+        0.14679217338562012,
+        0.559506356716156
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "raw_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.845116376876831,
+      "distant_cosine": 0.7744698524475098,
+      "effective_rank": 26.224491119384766,
+      "plane_energy_shares": [
+        0.20772305130958557,
+        0.792276918888092
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "opponent",
+      "stream": "form",
+      "neighbour_cosine": 0.871928334236145,
+      "distant_cosine": 0.8008051514625549,
+      "effective_rank": 19.821460723876953,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "opponent",
+      "stream": "colour",
+      "neighbour_cosine": 0.6885228157043457,
+      "distant_cosine": 0.6170855760574341,
+      "effective_rank": 37.186744689941406,
+      "plane_energy_shares": [
+        0.7782063484191895,
+        0.22179363667964935
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "sobel_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.7863078117370605,
+      "distant_cosine": 0.6730738878250122,
+      "effective_rank": 25.26384735107422,
+      "plane_energy_shares": [
+        0.09877639263868332,
+        0.4147707223892212,
+        0.4864528775215149
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "sobel_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.6885228157043457,
+      "distant_cosine": 0.6170855760574341,
+      "effective_rank": 37.186744689941406,
+      "plane_energy_shares": [
+        0.7782063484191895,
+        0.22179363667964935
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "ardin_input",
+      "stream": "form",
+      "neighbour_cosine": 0.8790392279624939,
+      "distant_cosine": 0.8143821954727173,
+      "effective_rank": 18.497697830200195,
+      "plane_energy_shares": [
+        0.3333333432674408,
+        0.3333333432674408,
+        0.3333333432674408
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "ardin_input",
+      "stream": "colour",
+      "neighbour_cosine": 0.87903892993927,
+      "distant_cosine": 0.8143822550773621,
+      "effective_rank": 18.497695922851562,
+      "plane_energy_shares": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "no_hex",
+      "stream": "form",
+      "neighbour_cosine": 0.614730179309845,
+      "distant_cosine": 0.4701126515865326,
+      "effective_rank": 30.895517349243164,
+      "plane_energy_shares": [
+        0.08365997672080994,
+        0.07782385498285294,
+        0.838516116142273
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "no_hex",
+      "stream": "colour",
+      "neighbour_cosine": 0.7212965488433838,
+      "distant_cosine": 0.6526488661766052,
+      "effective_rank": 34.20136260986328,
+      "plane_energy_shares": [
+        0.784882664680481,
+        0.21511729061603546
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "no_adapt",
+      "stream": "form",
+      "neighbour_cosine": 0.9504357576370239,
+      "distant_cosine": 0.9063724279403687,
+      "effective_rank": 10.722320556640625,
+      "plane_energy_shares": [
+        0.07097043842077255,
+        0.07016368210315704,
+        0.8588659167289734
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "no_adapt",
+      "stream": "colour",
+      "neighbour_cosine": 0.7735847234725952,
+      "distant_cosine": 0.7032575011253357,
+      "effective_rank": 23.91650390625,
+      "plane_energy_shares": [
+        0.7845653891563416,
+        0.21543467044830322
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "no_dog",
+      "stream": "form",
+      "neighbour_cosine": 0.6319916248321533,
+      "distant_cosine": 0.49409252405166626,
+      "effective_rank": 30.949325561523438,
+      "plane_energy_shares": [
+        0.14412352442741394,
+        0.2774757742881775,
+        0.578400731086731
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "no_dog",
+      "stream": "colour",
+      "neighbour_cosine": 0.7810209393501282,
+      "distant_cosine": 0.7112491726875305,
+      "effective_rank": 23.634944915771484,
+      "plane_energy_shares": [
+        0.7776595950126648,
+        0.222340390086174
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "apia_simple_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.6513253450393677,
+      "distant_cosine": 0.5099995136260986,
+      "effective_rank": 27.546504974365234,
+      "plane_energy_shares": [
+        0.05269400030374527,
+        0.04743447154760361,
+        0.8998715281486511
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "apia_simple_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.6885228157043457,
+      "distant_cosine": 0.6170855760574341,
+      "effective_rank": 37.186744689941406,
+      "plane_energy_shares": [
+        0.7782063484191895,
+        0.22179363667964935
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "sobel_apia_colour",
+      "stream": "form",
+      "neighbour_cosine": 0.7863078117370605,
+      "distant_cosine": 0.6730738878250122,
+      "effective_rank": 25.26384735107422,
+      "plane_energy_shares": [
+        0.09877639263868332,
+        0.4147707223892212,
+        0.4864528775215149
+      ]
+    },
+    {
+      "ant": 15,
+      "method": "sobel_apia_colour",
+      "stream": "colour",
+      "neighbour_cosine": 0.7810209393501282,
+      "distant_cosine": 0.7112491726875305,
+      "effective_rank": 23.634944915771484,
+      "plane_energy_shares": [
+        0.7776595950126648,
+        0.222340390086174
+      ]
+    }
+  ],
+  "script_sha256": "594eaf49643db8d4ed4ab098f528224b664d4fc9a238bf43dcfdb5694d36c53e",
+  "scope": "Additional explanatory analysis; fixed pre-projection maps on centreline teaching images. No wiring seed replication because these maps are seed-independent."
+}

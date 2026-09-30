@@ -1,0 +1,193 @@
+{
+  "renderer": "Blender Cycles",
+  "source": "apiaviz/research/terrain_concepts.py",
+  "source_sha256": "7d163c67e43e9d41ecb90ee1e81611dc8cc31d9d4984e4a4fd112b82ba959557",
+  "comparison_sha256": "4dcbbe6f6e86e510c500c02f4d0a0dc1010c9c6ef0d74ee9c854a8e31e05ef3e",
+  "concepts": [
+    {
+      "concept": "grassland",
+      "title": "Dry grassland",
+      "images": [
+        "01-grassland.png",
+        "01-grassland-panorama.png"
+      ],
+      "camera": {
+        "eye_height_above_ground_m": 0.01,
+        "position": [
+          0.0,
+          0.0,
+          0.009999999776482582
+        ],
+        "perspective_hfov_deg": 100,
+        "perspective_pitch_deg": 2.862405226111748,
+        "depth_of_field": false,
+        "heading": "world +Y"
+      },
+      "sun": {
+        "azimuth_deg": 35.0,
+        "elevation_deg": 38.0,
+        "convention": "azimuth counterclockwise from world +X; +Z up",
+        "energy": 4.0,
+        "angle_deg": 0.7
+      },
+      "geometry_seed": 20260930,
+      "files": {
+        "01-grassland.png": {
+          "bytes": 2072794,
+          "sha256": "ca1a7e8f128d5a6e8e01a94e8df44e74687517d8189360fa5c2a7c87fbf58496"
+        },
+        "01-grassland-panorama.png": {
+          "bytes": 892679,
+          "sha256": "7a2d1ea2984b7a4e60579ec6fcdac3f30bcd038b0a0235fd967ca1bf35bd626b"
+        },
+        "01-grassland.blend": {
+          "bytes": 6263910,
+          "sha256": "b7c10e1567faa9e8f527923d747bf240e8d58f3568a59049e12754e0e0d89454"
+        },
+        "01-grassland.json": {
+          "bytes": 1338,
+          "sha256": "59e9112e89fc6990ca9be5f2fb156547d23cd9321089854dc99835f4bead9594"
+        }
+      }
+    },
+    {
+      "concept": "woodland",
+      "title": "Open woodland",
+      "images": [
+        "02-woodland.png",
+        "02-woodland-panorama.png"
+      ],
+      "camera": {
+        "eye_height_above_ground_m": 0.01,
+        "position": [
+          0.0,
+          0.0,
+          0.009999999776482582
+        ],
+        "perspective_hfov_deg": 100,
+        "perspective_pitch_deg": 2.862405226111748,
+        "depth_of_field": false,
+        "heading": "world +Y"
+      },
+      "sun": {
+        "azimuth_deg": 35.0,
+        "elevation_deg": 38.0,
+        "convention": "azimuth counterclockwise from world +X; +Z up",
+        "energy": 4.0,
+        "angle_deg": 0.7
+      },
+      "geometry_seed": 20260931,
+      "files": {
+        "02-woodland.png": {
+          "bytes": 2306829,
+          "sha256": "29f3a8a66035b45219ff11a82a963cfba6e6c06ab128c0cb81e3572b6909674a"
+        },
+        "02-woodland-panorama.png": {
+          "bytes": 876191,
+          "sha256": "764d9cb764d0e0b84f25bce9de6aebac1cf65c5dbbef58904b77a3b4c3829bb0"
+        },
+        "02-woodland.blend": {
+          "bytes": 5303809,
+          "sha256": "d208c8cde78f2ca6fae971277983b1ea52b6cb5e02b9d2e0a40b6acb5dd9add5"
+        },
+        "02-woodland.json": {
+          "bytes": 1339,
+          "sha256": "bd375d5120732a8cfca7593de6fc26f3d6e754e9c515fc9a6042a868c8628b45"
+        }
+      }
+    },
+    {
+      "concept": "dune",
+      "title": "Coastal dune",
+      "images": [
+        "03-dune.png",
+        "03-dune-panorama.png"
+      ],
+      "camera": {
+        "eye_height_above_ground_m": 0.01,
+        "position": [
+          0.0,
+          0.0,
+          0.009999999776482582
+        ],
+        "perspective_hfov_deg": 100,
+        "perspective_pitch_deg": 2.862405226111748,
+        "depth_of_field": false,
+        "heading": "world +Y"
+      },
+      "sun": {
+        "azimuth_deg": 35.0,
+        "elevation_deg": 38.0,
+        "convention": "azimuth counterclockwise from world +X; +Z up",
+        "energy": 4.0,
+        "angle_deg": 0.7
+      },
+      "geometry_seed": 20260932,
+      "files": {
+        "03-dune.png": {
+          "bytes": 1987351,
+          "sha256": "e21e10d658d5834c1010ca2202ef722909c90db21edc22b1ef156f8847aa5e79"
+        },
+        "03-dune-panorama.png": {
+          "bytes": 864888,
+          "sha256": "bc1421a8593e81352fd15d0a726bf18a8bfb013936d2d77c264731043a9874c1"
+        },
+        "03-dune.blend": {
+          "bytes": 4614846,
+          "sha256": "02519ca6fe2bd69485489e41aca1e8a2045299d60dcac8f0377bead55c3a14d3"
+        },
+        "03-dune.json": {
+          "bytes": 1326,
+          "sha256": "efe48c99f8c0984e3c770df2f5c3d41f4d5f33428ebc2884bd4d888f97279ef9"
+        }
+      }
+    },
+    {
+      "concept": "garden",
+      "title": "Garden edge",
+      "images": [
+        "04-garden.png",
+        "04-garden-panorama.png"
+      ],
+      "camera": {
+        "eye_height_above_ground_m": 0.01,
+        "position": [
+          0.0,
+          0.0,
+          0.009999999776482582
+        ],
+        "perspective_hfov_deg": 100,
+        "perspective_pitch_deg": 2.862405226111748,
+        "depth_of_field": false,
+        "heading": "world +Y"
+      },
+      "sun": {
+        "azimuth_deg": 35.0,
+        "elevation_deg": 38.0,
+        "convention": "azimuth counterclockwise from world +X; +Z up",
+        "energy": 4.0,
+        "angle_deg": 0.7
+      },
+      "geometry_seed": 20260933,
+      "files": {
+        "04-garden.png": {
+          "bytes": 2173463,
+          "sha256": "4f1abfc2d7fce35a0073dcaaec9c56f1edd1586eef8c9e3205490ccfa0ad6231"
+        },
+        "04-garden-panorama.png": {
+          "bytes": 875339,
+          "sha256": "8f89e51cc0ebbe5f8b33fb9c8920216ad260780ab2da8b8d1238717a113e1f0b"
+        },
+        "04-garden.blend": {
+          "bytes": 4137333,
+          "sha256": "13d28a2446499524fc1130eb0625e190fac8ddb6895e8b7537e7b5e13d571fe0"
+        },
+        "04-garden.json": {
+          "bytes": 1338,
+          "sha256": "916b8eb7842c9db2ffed326bc90eb4e2f0e8c8a95e738c8e1d61698416577b2b"
+        }
+      }
+    }
+  ],
+  "validation": "All eight PNGs decoded at expected dimensions; shared camera height and sun settings checked; all editable scenes present; file hashes recorded."
+}

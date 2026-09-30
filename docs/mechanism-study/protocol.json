@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "status": "fixed before new outcome inspection",
+  "date": "2026-09-29",
+  "ants": [4, 6, 7, 9, 10, 12, 13, 15],
+  "route": 2,
+  "wiring_seeds": [19, 31, 43, 59, 71],
+  "environment_seed": 99,
+  "baseline_methods": ["apiaviz", "gray", "raw_colour", "opponent", "sobel_colour", "ardin_input"],
+  "mechanism_methods": ["no_hex", "no_adapt", "no_dog", "apia_simple_colour", "sobel_apia_colour"],
+  "navigation_trials": 440,
+  "learning": "Same nine lateral views +/-0.2 m, tangent headings, 0.1 m route spacing; same binary spike-overlap template memory.",
+  "neural_parameters": "Unchanged finite LIF candidate: 8000 total KCs, fan-in 10, trigger fraction .02825 per stream, current gain .1, time bins 1 ms, inhibition delay 1 ms; no calibration.",
+  "controller": "Unchanged 13 headings +/-60 degrees, 0.1 m steps, 200-step cap, success radius 0.2 m, no resets.",
+  "primary_endpoint": "Mean distance to nearest taught route sample over the complete trajectory, INCLUDING failed runs; average equally over five wiring seeds within each ant.",
+  "primary_comparisons": "ApiaViz versus each of the five baselines, paired by ant and wiring seed. Two-sided exact sign-flip tests on eight ant-level mean differences, Holm correction across five comparisons. This tests a conditional benchmark contrast under route-level exchangeability, not biological or between-world generalization.",
+  "uncertainty": "Report paired effects in cm, route bootstrap 95% intervals conditional on these seeds, and crossed route-by-seed bootstrap intervals. Report per-seed effects and all raw trials. No individual navigation step is an independent replicate.",
+  "secondary_endpoints": ["completion", "mean distance to continuous route polyline", "first 50 steps mean polyline error", "median trajectory deviation", "path length"],
+  "mechanism_probes": "Eight interstitial positions per route (midpoints between teaching samples), five lateral offsets [-.3,-.1,0,.1,.3] m, same 13 scan headings. Clean and multiplicative brightness 0.6 queries; teaching is clean. All inputs rendered once and reused across methods/seeds.",
+  "mechanism_metrics": ["absolute heading error at route centre", "correct-versus-wrong heading familiarity margin", "off-route restoring-turn fraction", "KC neighbour versus distant-view overlap", "effective rank of centred learning codes", "KC activity and lifetime recruitment", "heading stability after brightness change"],
+  "mechanism_inference": "Five planned input-only interventions are tested online as well as on common-pose probes. Their navigation effects use a separate Holm-corrected family of five exploratory contrasts. Probe metrics and relationships to navigation are explanatory, not additional confirmatory endpoints. No parameter search or favourable-subset selection.",
+  "limits": "One world geometry, one colour assignment, eight ant routes; earlier four-route pilot is excluded from this new analysis. Neural parameters were previously selected for ApiaViz. Repeating an identical deterministic seed is not extra evidence. Stop after the fixed matrix irrespective of p-values."
+}

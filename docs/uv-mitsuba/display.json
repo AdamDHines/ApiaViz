@@ -1,0 +1,11 @@
+{
+  "mapping": {
+    "red": "UV",
+    "green": "blue",
+    "blue": "green"
+  },
+  "exposure": 0.09095669822394847,
+  "curve": "(radiance / (radiance + exposure)) ** (1/2.2)",
+  "normalization": "One common exposure and channel gain for all four panoramas; no per-image white balance",
+  "raw_data": "/Users/adam/repo/apiaviz/apiaviz/output/uv-mitsuba"
+}

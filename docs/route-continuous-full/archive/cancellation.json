@@ -1,0 +1,33 @@
+{
+  "status": "cancelled",
+  "cancelled_utc": "2026-09-30T01:02:44.936048+00:00",
+  "reason": "User requested cancellation before collision/controller fixes and migration to another machine.",
+  "completed": 145,
+  "planned": 378,
+  "worlds": {
+    "bend": 40,
+    "hairpin": 44,
+    "meander": 61
+  },
+  "interrupted_trials": {
+    "bend": [
+      "bend-19-ardin_input-kick_right50-familiarity-1"
+    ],
+    "hairpin": [
+      "hairpin-31-linear_colour-left50-familiarity-1"
+    ],
+    "meander": [
+      "meander-31-sobel_colour-right50-familiarity--1"
+    ]
+  },
+  "processes_signalled": [
+    78358,
+    78360,
+    78361,
+    78362,
+    78324,
+    78349,
+    78350
+  ],
+  "interpretation": "Incomplete frozen development run using conservative collision discs; not a final physical-avoidance comparison. Preserve results, do not resume without explicit authorization. Corrected evaluation requires a new protocol/output directory."
+}

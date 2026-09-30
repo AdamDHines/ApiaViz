@@ -1,0 +1,22 @@
+{
+  "date": "2026-09-29",
+  "role": "Exploratory factorial follow-up on previously inspected routes; no held-out superiority claim",
+  "status": "Combination and analysis fixed before its navigation outcomes were inspected",
+  "ants": [4, 6, 7, 9, 10, 12, 13, 15],
+  "wiring_seeds": [19, 31, 43, 59, 71],
+  "environment_seed": 99,
+  "methods": ["apiaviz", "oriented_form", "linear_colour", "oriented_linear", "sobel_colour", "ardin_input"],
+  "navigation_trials": 240,
+  "shared": "Reuse saved teaching/probe images and wiring checkpoints from the mechanism study. Keep all pooling, standardisation, spiking, memory, scan, movement, stopping and scoring settings unchanged. Rerun original, Sobel and Ardin-style references and demand exact trajectories and steering scores.",
+  "primary_descriptive_endpoint": "Whole-trajectory mean route deviation including failures, equally averaged over routes and seeds; lower is better.",
+  "secondary": ["completion", "continuous-polyline deviation", "first50_polyline_mean_m", "centreline heading error", "stream-specific heading error", "brightness heading change", "off-route restoring fraction"],
+  "inference": "Paired crossed route/seed bootstrap intervals and exact route-mean sign-flip tests conditional on five seeds. One Holm family of 12 contrasts: three candidates versus each of three references (original, Sobel, Ardin-style), combined versus each single change, and the factorial interaction. Report all outcomes, route/seed effects and leave-one-route-out sensitivity. Completion and probe outcomes are descriptive.",
+  "interaction": "combined - oriented - linear + original in cm; negative means the combined deviation reduction exceeds the sum of the two separate reductions on this scale. This is a behavioural interaction, not evidence for a cellular mechanism.",
+  "stop": "Complete all 240 trials regardless of rankings, with no retuning and no automatic default change.",
+  "candidates": {
+    "oriented_form": "Retain hex averaging and local adaptation; replace the form bank with Gaussian sigma=1 (5x5) followed by signed Sobel x/y/magnitude. Original colour unchanged.",
+    "linear_colour": "Original form unchanged; colour is rectified G-B/B-G after existing hex averaging, omitting pre-opponency tanh.",
+    "oriented_linear": "Combine exactly the form stream from oriented_form and colour stream from linear_colour."
+  },
+  "limitations": "Eight routes in one synthetic environment; five wiring seeds are crossed technical repeats. Routes and separate-variant results were previously inspected. Ardin-style refers only to adapted image preprocessing, not a reproduction of the original full Ardin model."
+}

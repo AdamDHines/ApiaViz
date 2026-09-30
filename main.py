@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-"""ApiaViz entry point: train the vision backbone or evaluate a downstream task.
-
-    pixi run train      # self-supervised backbone training
-    pixi run flowers    # flower identification eval (chromatic KC code vs CLAHE)
-    pixi run nav        # navigation eval (retino_kc vs CLAHE)
-
-See README.md for the full task list.
-"""
+"""Historical downstream evaluations. See `python -m apiaviz.research` for matched studies."""
 
 from __future__ import annotations
 
@@ -49,7 +42,7 @@ def parse_args():
     parser.add_argument("--n_rewarded", type=int, default=5, help="number of rewarded flower classes for the go/no-go task")
     parser.add_argument("--reward_lr", type=float, default=1.0, help="reward-MBON learning rate (approach-synapse gain)")
     parser.add_argument("--corruption", default="none", choices=["none", "luminance", "noise"],
-                        help="per-fixation test-time corruption; 'luminance' is isoluminant (spares opponent colour)")
+                        help="per-fixation test-time corruption; common-mode shifts can affect colour through clipping")
     parser.add_argument("--severities", type=float, nargs="*", default=[],
                         help="corruption severities to sweep (0 = clean is always included)")
     parser.add_argument("--ablation", action="store_true",
@@ -63,8 +56,8 @@ def parse_args():
     parser.add_argument("--segments", type=int, default=80, help="MBON population size (route segments)")
     parser.add_argument("--landmark_fraction", type=float, default=0.5, help="fraction of world triangles that are colour landmarks")
     parser.add_argument("--chroma", type=float, default=60.0, help="landmark opponent-colour strength")
-    parser.add_argument("--freenav", action="store_true",
-                        help="open-loop free navigation (no snap-back to the route) instead of the corrected loop")
+    parser.add_argument("--freenav", "--without-resets", dest="freenav", action="store_true",
+                        help="navigation without corrective resets to the route")
     parser.add_argument("--viewpoints", type=int, default=9,
                         help="number of laterally-shifted corridor viewpoints stored per route index in "
                              "freenav memory (1 = classic single centreline viewpoint)")

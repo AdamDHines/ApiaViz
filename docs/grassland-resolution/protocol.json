@@ -1,0 +1,86 @@
+{
+  "role": "One-route resolution sensitivity study; fixed before new outcomes. No significance/generalisation claim.",
+  "environment": "/Users/adam/repo/apiaviz/apiaviz/output/grassland-smoke",
+  "base_protocol_sha256": "6d760f1c87f9ea5533dcb239f1044dabbb61fe3848a49f5456fceaf194817523",
+  "scene_sha256": "2fd0c7365be383f55ea337ef669f4d9902ca82a134dbcb6314609f8712b25640",
+  "acquisition_sha256": "2b84fd09e659d4745bf9b3f79af11374b9f7089b2bd44a9cbd2289e0bba5b6bf",
+  "wiring_seeds": [
+    19,
+    31,
+    43
+  ],
+  "conditions": [
+    {
+      "shape": [
+        18,
+        74
+      ],
+      "mode": "pixels",
+      "methods": [
+        "linear_colour",
+        "sobel_colour",
+        "ardin_input"
+      ]
+    },
+    {
+      "shape": [
+        39,
+        149
+      ],
+      "mode": "pixels",
+      "methods": [
+        "linear_colour",
+        "sobel_colour",
+        "ardin_input"
+      ]
+    },
+    {
+      "shape": [
+        51,
+        199
+      ],
+      "mode": "pixels",
+      "methods": [
+        "linear_colour",
+        "sobel_colour",
+        "ardin_input"
+      ]
+    },
+    {
+      "shape": [
+        39,
+        149
+      ],
+      "mode": "angles",
+      "methods": [
+        "linear_colour",
+        "sobel_colour"
+      ]
+    },
+    {
+      "shape": [
+        51,
+        199
+      ],
+      "mode": "angles",
+      "methods": [
+        "linear_colour",
+        "sobel_colour"
+      ]
+    }
+  ],
+  "trials": 39,
+  "primary_endpoint": "Whole-trajectory nearest-taught-point mean deviation, including failures, equally averaged over seeds.",
+  "secondary_endpoints": [
+    "completion",
+    "continuous-polyline mean deviation",
+    "maximum deviation",
+    "code sparsity"
+  ],
+  "unchanged": "World, sun, teaching positions/headings, route, 8x64 feature pooling, projection checkpoint, 8000 cells, LIF/inhibition settings, spike-overlap memory, 13-heading scan, 10 cm steps, 20 cm stopping radius, 200-step limit.",
+  "pixels": "Original frontend code and pixel kernels at each input shape; finer angular input AND smaller angular filter footprints.",
+  "angles": "ApiaViz/Sobel discrete spatial tap offsets and weights fixed to the original visual degrees. Fractional offsets use bilinear interpolation; hex row phase anchored to reference angular rows. Same reflected boundaries, gains, nonlinearities and common pooling. Approximate numerical control, not a calibrated bee retina.",
+  "ardin": "Original 10x36 downsampling, L2 normalization and default native-resolution CLAHE retained. No separately scaled Ardin baseline and no redundant angular-control runs.",
+  "optics": "Same 0.5-degree cached renderer panoramas and bilinear ray samples. No new retinal optical-blur model; isolate input sampling/filter scale from optics.",
+  "stopping": "Complete all 39 trials with no performance-based retuning. Low-resolution runs must reproduce the prior smoke exactly."
+}

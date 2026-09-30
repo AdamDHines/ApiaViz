@@ -1,0 +1,29 @@
+{
+  "runs": [
+    {
+      "path": "apiaviz/output/mechanisms/20260929T022211.602025Z-63811",
+      "trials": 110,
+      "provenance_verified": true
+    },
+    {
+      "path": "apiaviz/output/mechanisms/20260929T022212.829824Z-63812",
+      "trials": 110,
+      "provenance_verified": true
+    },
+    {
+      "path": "apiaviz/output/mechanisms/20260929T022214.077846Z-63813",
+      "trials": 110,
+      "provenance_verified": true
+    },
+    {
+      "path": "apiaviz/output/mechanisms/20260929T022215.257048Z-63815",
+      "trials": 110,
+      "provenance_verified": true
+    }
+  ],
+  "trajectories": 440,
+  "steering_decisions": 61091,
+  "probe_decisions": 35200,
+  "errors": [],
+  "scope": "Stored source/checkpoint/stimulus hashes; shared settings and banks; independent reconstruction of scan choices, free-motion trajectories, endpoint metrics and common-pose probe summaries. Not a complete independent rerun of every neural computation."
+}

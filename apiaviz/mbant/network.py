@@ -2,10 +2,10 @@
 
 import torch
 
-from mbant.config import NetworkConfig
-from mbant.neurons import PNLayer, KCLayer, ENLayer
-from mbant.synapses import PNKCSynapse, KCENSynapse
-from mbant.connections import generate_connections
+from .config import NetworkConfig
+from .neurons import PNLayer, KCLayer, ENLayer
+from .synapses import PNKCSynapse, KCENSynapse
+from .connections import generate_connections
 
 
 class MushroomBodyNetwork:

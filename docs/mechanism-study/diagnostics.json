@@ -1,0 +1,286 @@
+{
+  "summary": [
+    {
+      "method": "apiaviz",
+      "off_route_probe_counts": {
+        "inward": 454,
+        "parallel": 508,
+        "outward": 318,
+        "no_evidence": 0
+      },
+      "off_route_probe_fractions": {
+        "inward": 0.3546875,
+        "parallel": 0.396875,
+        "outward": 0.2484375,
+        "no_evidence": 0.0
+      },
+      "activity_fraction_range": [
+        0.04782401770353317,
+        0.05022941902279854
+      ],
+      "mean_activity_fraction": 0.049166721291840076,
+      "first50_polyline_mean_cm": 16.108596450472884,
+      "median_trial_mean_deviation_cm": 12.584566996211452,
+      "successful_trial_mean_cm": 10.476745388566941,
+      "failed_trial_mean_cm": 173.179232487646
+    },
+    {
+      "method": "gray",
+      "off_route_probe_counts": {
+        "inward": 463,
+        "parallel": 484,
+        "outward": 333,
+        "no_evidence": 0
+      },
+      "off_route_probe_fractions": {
+        "inward": 0.36171875,
+        "parallel": 0.378125,
+        "outward": 0.26015625,
+        "no_evidence": 0.0
+      },
+      "activity_fraction_range": [
+        0.05601160228252411,
+        0.058545347303152084
+      ],
+      "mean_activity_fraction": 0.05718416478484869,
+      "first50_polyline_mean_cm": 19.915567579644595,
+      "median_trial_mean_deviation_cm": 28.842728226113707,
+      "successful_trial_mean_cm": 16.579135818975423,
+      "failed_trial_mean_cm": 141.3693048617472
+    },
+    {
+      "method": "raw_colour",
+      "off_route_probe_counts": {
+        "inward": 464,
+        "parallel": 478,
+        "outward": 338,
+        "no_evidence": 0
+      },
+      "off_route_probe_fractions": {
+        "inward": 0.3625,
+        "parallel": 0.3734375,
+        "outward": 0.2640625,
+        "no_evidence": 0.0
+      },
+      "activity_fraction_range": [
+        0.05469274893403053,
+        0.05654698237776756
+      ],
+      "mean_activity_fraction": 0.05568301053717732,
+      "first50_polyline_mean_cm": 13.933655652650584,
+      "median_trial_mean_deviation_cm": 14.914318491346945,
+      "successful_trial_mean_cm": 10.65722433540212,
+      "failed_trial_mean_cm": 88.77443342898793
+    },
+    {
+      "method": "opponent",
+      "off_route_probe_counts": {
+        "inward": 464,
+        "parallel": 482,
+        "outward": 334,
+        "no_evidence": 0
+      },
+      "off_route_probe_fractions": {
+        "inward": 0.3625,
+        "parallel": 0.3765625,
+        "outward": 0.2609375,
+        "no_evidence": 0.0
+      },
+      "activity_fraction_range": [
+        0.053109925240278244,
+        0.05667524039745331
+      ],
+      "mean_activity_fraction": 0.055173671990633014,
+      "first50_polyline_mean_cm": 21.48404417195873,
+      "median_trial_mean_deviation_cm": 12.054862796048429,
+      "successful_trial_mean_cm": 14.037262421704858,
+      "failed_trial_mean_cm": 185.8525743371644
+    },
+    {
+      "method": "sobel_colour",
+      "off_route_probe_counts": {
+        "inward": 449,
+        "parallel": 524,
+        "outward": 307,
+        "no_evidence": 0
+      },
+      "off_route_probe_fractions": {
+        "inward": 0.35078125,
+        "parallel": 0.409375,
+        "outward": 0.23984375,
+        "no_evidence": 0.0
+      },
+      "activity_fraction_range": [
+        0.04961865395307541,
+        0.05224068462848663
+      ],
+      "mean_activity_fraction": 0.050814348179847,
+      "first50_polyline_mean_cm": 15.494922454569188,
+      "median_trial_mean_deviation_cm": 6.338104325878101,
+      "successful_trial_mean_cm": 8.422419233723929,
+      "failed_trial_mean_cm": 161.04902709630272
+    },
+    {
+      "method": "ardin_input",
+      "off_route_probe_counts": {
+        "inward": 504,
+        "parallel": 405,
+        "outward": 371,
+        "no_evidence": 0
+      },
+      "off_route_probe_fractions": {
+        "inward": 0.39375,
+        "parallel": 0.31640625,
+        "outward": 0.28984375,
+        "no_evidence": 0.0
+      },
+      "activity_fraction_range": [
+        0.05336500704288483,
+        0.057199932634830475
+      ],
+      "mean_activity_fraction": 0.05561688654124737,
+      "first50_polyline_mean_cm": 26.31045271088077,
+      "median_trial_mean_deviation_cm": 66.10242371604183,
+      "successful_trial_mean_cm": 21.672932519968356,
+      "failed_trial_mean_cm": 119.3782293185053
+    },
+    {
+      "method": "no_hex",
+      "off_route_probe_counts": {
+        "inward": 466,
+        "parallel": 504,
+        "outward": 310,
+        "no_evidence": 0
+      },
+      "off_route_probe_fractions": {
+        "inward": 0.3640625,
+        "parallel": 0.39375,
+        "outward": 0.2421875,
+        "no_evidence": 0.0
+      },
+      "activity_fraction_range": [
+        0.049032796174287796,
+        0.0509837381541729
+      ],
+      "mean_activity_fraction": 0.049827363528311255,
+      "first50_polyline_mean_cm": 18.288641833776847,
+      "median_trial_mean_deviation_cm": 20.272508585075578,
+      "successful_trial_mean_cm": 8.629205534115595,
+      "failed_trial_mean_cm": 141.5236874984553
+    },
+    {
+      "method": "no_adapt",
+      "off_route_probe_counts": {
+        "inward": 485,
+        "parallel": 455,
+        "outward": 340,
+        "no_evidence": 0
+      },
+      "off_route_probe_fractions": {
+        "inward": 0.37890625,
+        "parallel": 0.35546875,
+        "outward": 0.265625,
+        "no_evidence": 0.0
+      },
+      "activity_fraction_range": [
+        0.04915397986769676,
+        0.053872548043727875
+      ],
+      "mean_activity_fraction": 0.05205064686015248,
+      "first50_polyline_mean_cm": 19.20389915811544,
+      "median_trial_mean_deviation_cm": 33.66202744822535,
+      "successful_trial_mean_cm": 16.958310502547114,
+      "failed_trial_mean_cm": 161.67751946934737
+    },
+    {
+      "method": "no_dog",
+      "off_route_probe_counts": {
+        "inward": 453,
+        "parallel": 513,
+        "outward": 314,
+        "no_evidence": 0
+      },
+      "off_route_probe_fractions": {
+        "inward": 0.35390625,
+        "parallel": 0.40078125,
+        "outward": 0.2453125,
+        "no_evidence": 0.0
+      },
+      "activity_fraction_range": [
+        0.04947155341506004,
+        0.0520288310945034
+      ],
+      "mean_activity_fraction": 0.051129288505762815,
+      "first50_polyline_mean_cm": 14.141330619999604,
+      "median_trial_mean_deviation_cm": 19.98455097388533,
+      "successful_trial_mean_cm": 9.776873870923442,
+      "failed_trial_mean_cm": 150.2874942118863
+    },
+    {
+      "method": "apia_simple_colour",
+      "off_route_probe_counts": {
+        "inward": 454,
+        "parallel": 522,
+        "outward": 304,
+        "no_evidence": 0
+      },
+      "off_route_probe_fractions": {
+        "inward": 0.3546875,
+        "parallel": 0.4078125,
+        "outward": 0.2375,
+        "no_evidence": 0.0
+      },
+      "activity_fraction_range": [
+        0.04766209423542023,
+        0.050346218049526215
+      ],
+      "mean_activity_fraction": 0.04922331059351563,
+      "first50_polyline_mean_cm": 18.117656794722915,
+      "median_trial_mean_deviation_cm": 16.20829963605467,
+      "successful_trial_mean_cm": 7.769591556954078,
+      "failed_trial_mean_cm": 175.83475569589115
+    },
+    {
+      "method": "sobel_apia_colour",
+      "off_route_probe_counts": {
+        "inward": 464,
+        "parallel": 514,
+        "outward": 302,
+        "no_evidence": 0
+      },
+      "off_route_probe_fractions": {
+        "inward": 0.3625,
+        "parallel": 0.4015625,
+        "outward": 0.2359375,
+        "no_evidence": 0.0
+      },
+      "activity_fraction_range": [
+        0.049547549337148666,
+        0.0527280792593956
+      ],
+      "mean_activity_fraction": 0.05075775850564242,
+      "first50_polyline_mean_cm": 17.968062650660425,
+      "median_trial_mean_deviation_cm": 6.802722435689898,
+      "successful_trial_mean_cm": 5.642306812428476,
+      "failed_trial_mean_cm": 143.15528500930486
+    }
+  ],
+  "sobel_minus_apia_by_seed_cm": {
+    "19": -10.718270305351624,
+    "31": 50.96484299755133,
+    "43": 25.349046324011987,
+    "59": -23.802984798242747,
+    "71": -65.91859894237194
+  },
+  "sobel_minus_apia_by_route_cm": {
+    "4": 7.236047460951563,
+    "6": -50.42567187853651,
+    "7": 65.77239798948025,
+    "9": -13.82287059598679,
+    "10": -6.513424549050114,
+    "12": 11.219625507432948,
+    "13": 17.164220265281966,
+    "15": -69.2318677586181
+  },
+  "scope": "Post-outcome descriptive diagnostics, without additional hypothesis tests. Success/failure subsets differ across methods and are not matched comparisons. Probe counts are dependent, not independent sample sizes."
+}

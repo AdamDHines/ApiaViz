@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "trials": 387,
+  "all_action_replayed_steps": 24431,
+  "logged_observations": 267303,
+  "independently_reencoded_scores": 2439,
+  "reencoded_score_max_error": 0.0,
+  "legacy_full_bank_trials_exact": 9,
+  "stage1_to_stage2_aligned_exact": 9,
+  "timed_exhaustive_prefixes_exact": 81,
+  "unique_cache_positions": {
+    "meander": 5469,
+    "bend": 3113,
+    "hairpin": 2113
+  },
+  "source_archive_sha256": {
+    "1": "72dd5595057ceceb14118f1ed96b557b239cf4d7f7d1063d95a5a4a1c8c82d92",
+    "2": "f5ab23b901f3baf22d48996b295cb0bf7a8692632eda8ad5702599c786fe79f1",
+    "3": "07e3055f947e62933fe23db5a2823b8203800fd436acf5c0b01ec463cb353325"
+  },
+  "all_memory_fingerprints_rebuilt": true,
+  "all_calibrations_rebuilt": true,
+  "all_sensor_time_budgets_checked": true,
+  "scope": "All actions/events replayed from logged scores; first/middle/last queries re-encoded per trial; all memories reconstructed. Not a full re-encoding of every sensory query."
+}

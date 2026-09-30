@@ -2,8 +2,8 @@
 
 import torch
 
-from mbant.config import PNKCSynapseParams, KCENSynapseParams, STDPParams
-from mbant.stdp import stdp
+from .config import PNKCSynapseParams, KCENSynapseParams, STDPParams
+from .stdp import stdp
 
 
 def synapse_update(
