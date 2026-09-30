@@ -9,7 +9,7 @@ from apiaviz.research.route_full_audit import check_motion
 
 class FullSuiteTests(unittest.TestCase):
     def test_matrix_has_all_378_unique_conditions_and_both_phases(self):
-        p = json.loads(Path('apiaviz/output/controller-full/protocol.json').read_text())
+        p = json.loads(Path('docs/route-continuous-full/archive/protocol.json').read_text())
         p['controllers'] = [c for c in p['controllers'] if c['name'] == 'familiarity']
         scheduled = list(cases(p))
         self.assertEqual(len(scheduled), 378)

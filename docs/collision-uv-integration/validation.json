@@ -1,0 +1,86 @@
+{
+  "date": "2026-09-30",
+  "scope": "Unit and synthetic integration verification; no historical navigation replay",
+  "unittest": {
+    "command": "pixi run --locked test",
+    "tests": 114,
+    "passed": true
+  },
+  "geometry_and_render": {
+    "passed": true,
+    "scene_sha256": "737c65092d63f60c481c4f6277f10439fee828177ed370507817f41945c4fd60",
+    "scene": "synthetic one-rock integration fixture; not historical study geometry",
+    "rock_triangles": 480,
+    "geometry_max_abs_error_m": 3.8717181793934685e-08,
+    "frames": [
+      {
+        "frame": 0,
+        "shape": [
+          16,
+          32,
+          3
+        ],
+        "intensity_difference": 1.4901161193847656e-08,
+        "max_degree": 0.7494664192199707
+      },
+      {
+        "frame": 1,
+        "shape": [
+          16,
+          32,
+          3
+        ],
+        "intensity_difference": 1.4901161193847656e-08,
+        "max_degree": 0.7494664192199707
+      },
+      {
+        "frame": 2,
+        "shape": [
+          16,
+          32,
+          3
+        ],
+        "intensity_difference": 7.450580596923828e-09,
+        "max_degree": 0.7494664192199707
+      }
+    ]
+  },
+  "spectral_emitters": {
+    "passed": true,
+    "checks": [
+      {
+        "input": "flat",
+        "expected": [
+          0.9999999999999999,
+          1.0,
+          1.0
+        ],
+        "observed": [
+          1.0003570318222046,
+          1.0000395774841309,
+          0.999602735042572
+        ]
+      },
+      {
+        "input": "UV blocked",
+        "expected": [
+          0.09477180701165727,
+          0.750481244293838,
+          0.9232652834256861
+        ],
+        "observed": [
+          0.09481056779623032,
+          0.7504351139068604,
+          0.9228420257568359
+        ]
+      }
+    ],
+    "calibration_sha256": "040d7f95c8e436c1f7df353d5e418f22dc7e18c3a8540a997d55979f9bf9af1d"
+  },
+  "limitations": [
+    "Original study scenes/checkpoints are not present on this machine",
+    "Planar full-mesh projections include buried vertices and overhangs",
+    "Rayleigh UV polarization remains provisional",
+    "Existing RGB model has not been changed to accept spectral data"
+  ]
+}

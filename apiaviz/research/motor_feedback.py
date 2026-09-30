@@ -1,4 +1,4 @@
-"""Continuous route guidance with feedback about executed visual steering.
+"""Continuous route guidance with feedback about commanded visual steering.
 
 Familiarity before/after a detour is still a valid matched-gaze observation.
 Treat it as evidence about the combined motor action, not a fictitious straight
@@ -59,16 +59,20 @@ class FeedbackNavigator(engine.RouteNavigator):
         self.reflex.commands=[]
         feedback=None
         if self.policy.pending is not None:
-            if not commands: raise ValueError('A temporal comparison requires executed motor commands')
+            if not commands: raise ValueError('A temporal comparison requires motor commands')
             requested=self.policy.pending['movement']
             vectors=np.array([[np.cos(np.deg2rad(c['heading'])),np.sin(np.deg2rad(c['heading']))]
                               for c in commands])
             vector=np.sum(vectors*np.array([c['distance_m'] for c in commands])[:,None],axis=0)
-            actual=float(np.rad2deg(np.arctan2(vector[1],vector[0])))
+            magnitude=float(np.linalg.norm(vector))
+            # Opposing commands can cancel exactly. atan2 of floating-point
+            # residue is not evidence for a direction of translation.
+            actual=float(np.rad2deg(np.arctan2(vector[1],vector[0]))) if magnitude>1e-10 else None
             self.policy.pending['movement']=actual
             feedback=dict(requested_heading=float(wrap(requested)),net_heading=actual,
-                net_displacement_m=float(np.linalg.norm(vector)),
+                net_displacement_m=magnitude,direction_defined=actual is not None,
                 walked_m=float(sum(c['distance_m'] for c in commands)),commands=commands,
+                odometry='commanded; walked_m is a legacy field name, not contact feedback',
                 diverted=any(abs(wrap(c['heading']-requested))>1e-8 for c in commands))
         count=len(self.policy.decisions)
         previous_step=self.policy.decisions[-1].get('locomotion_step') if count else None

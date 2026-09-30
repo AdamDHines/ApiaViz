@@ -67,7 +67,7 @@ def retention(trace, scenario, kick_before_step=36, consecutive=3):
     after=[t for t in trace if t['step']>=first]
     streak=0;returned=None
     for i,t in enumerate(after):
-        streak=streak+1 if t['polyline_m']<=.1 else 0
+        streak=streak+1 if t['polyline_m']<=.1 and t.get('translated_m',.1)>1e-12 else 0
         if streak>=consecutive:
             returned=i;break
     if returned is None:return dict(return_found=False,lost_after_return=False)

@@ -120,9 +120,19 @@ def prepare(out, full=False):
 def setup(out):
     deterministic()
     p = json.loads((out/'protocol.json').read_text())
+    if p.get('evaluation_safety'):
+        from .evaluation_safety import EvaluationSafety
+        EvaluationSafety(**p['evaluation_safety'])
+        if not p.get('physics'):
+            raise ValueError('Safe navigation protocol requires explicit versioned mesh physics')
+        if p.get('integration_mode') != 'motor_feedback':
+            raise ValueError('Evaluation safety requires the continuous motor-feedback worker')
     for w in p['worlds']:
         assert file_hash(Path(w['environment'])/'protocol.json') == w['protocol_sha256']
         assert file_hash(Path(w['environment'])/'grassland.blend') == p['scene_sha256'][w['name']]
+        if 'physics' in p:
+            from .collision_geometry import protocol_geometry
+            protocol_geometry(p, w, json.loads((Path(w['environment'])/'world.json').read_text()))
     for seed in p['seeds']:
         assert file_hash(Path(p['encoder_environment'])/f'encoder-{seed}.pt') == p['checkpoint_sha256'][str(seed)]
     sources = {str(f):file_hash(f) for f in Path('apiaviz').rglob('*.py') if 'output' not in f.parts and 'data' not in f.parts}

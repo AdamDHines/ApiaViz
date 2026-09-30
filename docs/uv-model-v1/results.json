@@ -1,0 +1,382 @@
+{
+  "passed": true,
+  "protocol": {
+    "schema": "apiaviz-uv-smoke-v1",
+    "role": "Implementation smoke; not a navigation comparison",
+    "seeds": [
+      19,
+      23,
+      31
+    ],
+    "encoder": {
+      "schema": "apiaviz-uv-v1",
+      "visible_code_dim": 8000,
+      "uv_code_dim": 2000,
+      "seed": 19,
+      "pool_hw": [
+        8,
+        64
+      ],
+      "fan_in": 10,
+      "sparsity": 0.02825,
+      "radiance_scale": 1.0
+    },
+    "offsets_deg": [
+      -60.0,
+      -30.0,
+      0.0,
+      30.0,
+      60.0
+    ],
+    "training_frames": "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-model-v1/frames",
+    "probe_frames": "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-model-v1/repeat",
+    "scene_sha256": "737c65092d63f60c481c4f6277f10439fee828177ed370507817f41945c4fd60",
+    "calibration_sha256": "040d7f95c8e436c1f7df353d5e418f22dc7e18c3a8540a997d55979f9bf9af1d",
+    "shape": [
+      51,
+      199
+    ],
+    "controls": [
+      "UV pathway enabled",
+      "UV pathway disabled with identical allocated populations",
+      "UV-only synthetic patterns",
+      "UV horizontal-roll counterfactual",
+      "common exposure factors 0.5 and 2"
+    ],
+    "limits": "Three correlated poses in one simple scene; no Sobel/Ardin changes, UV polarization, closed-loop navigation or performance tuning"
+  },
+  "results": [
+    {
+      "seed": 19,
+      "encoder_fingerprint": "9c0ca37169ab020bacb697940d9bdb01fbb4baad269c2877feac7cd881219504",
+      "memory_fingerprint": "7eb320cd581818af45afc184f5f7de4f98e78116122be6ea3e7ee67278d06ebe",
+      "stream_activity": {
+        "form": 0.04258333519101143,
+        "colour": 0.03974999859929085,
+        "uv": 0.03883333504199982
+      },
+      "encoding_s": 0.035903125000004366,
+      "encoded_views": 18,
+      "full_uv": {
+        "best_heading_deg": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "correct_heading_margin": [
+          0.5822372436523438,
+          0.5766456127166748,
+          0.564497709274292
+        ],
+        "familiarity": [
+          [
+            0.36999577283859253,
+            0.39811691641807556,
+            0.9803541898727417,
+            0.3955865502357483,
+            0.3643684685230255
+          ],
+          [
+            0.38062477111816406,
+            0.38946038484573364,
+            0.9766894578933716,
+            0.40004387497901917,
+            0.3598257601261139
+          ],
+          [
+            0.37709105014801025,
+            0.419090211391449,
+            0.983587920665741,
+            0.3959900140762329,
+            0.3772454559803009
+          ]
+        ]
+      },
+      "uv_disabled": {
+        "best_heading_deg": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "correct_heading_margin": [
+          0.5728570222854614,
+          0.572866678237915,
+          0.5672929883003235
+        ],
+        "familiarity": [
+          [
+            0.383783221244812,
+            0.4136373996734619,
+            0.9864944219589233,
+            0.3908948600292206,
+            0.38898998498916626
+          ],
+          [
+            0.38964247703552246,
+            0.4135591387748718,
+            0.9864258170127869,
+            0.39463937282562256,
+            0.38076865673065186
+          ],
+          [
+            0.3854292035102844,
+            0.4233663082122803,
+            0.9906592965126038,
+            0.3925853967666626,
+            0.399404376745224
+          ]
+        ]
+      },
+      "fixture_correct": 4,
+      "fixture_n": 4,
+      "fixture_margins": [
+        0.08617496490478516,
+        0.08085721731185913,
+        0.08148360252380371,
+        0.07555091381072998
+      ],
+      "visible_only_fixture": "All four memories tie exactly; the cues exist only in UV",
+      "uv_rolled_overlap": [
+        0.4698939919471741,
+        0.46250003576278687,
+        0.46366775035858154
+      ],
+      "exposure_recall": {
+        "0.5": [
+          0.9269336462020874,
+          0.9316563606262207,
+          0.933951199054718
+        ],
+        "2.0": [
+          0.9565557241439819,
+          0.9305225610733032,
+          0.9408437609672546
+        ]
+      }
+    },
+    {
+      "seed": 23,
+      "encoder_fingerprint": "220ead64d3080175a872187dd3995bc5b54f3ea0a4d6081687f6ac8ef941f9fb",
+      "memory_fingerprint": "387204865be4e286788b2981e818c16dbe6fcdf8f14fce4314e5bc48c3a782e2",
+      "stream_activity": {
+        "form": 0.039250001311302185,
+        "colour": 0.045249998569488525,
+        "uv": 0.0351666659116745
+      },
+      "encoding_s": 0.038832750000437954,
+      "encoded_views": 18,
+      "full_uv": {
+        "best_heading_deg": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "correct_heading_margin": [
+          0.5680596232414246,
+          0.5745552778244019,
+          0.5231777429580688
+        ],
+        "familiarity": [
+          [
+            0.4050856828689575,
+            0.4129200577735901,
+            0.9809796810150146,
+            0.4071057438850403,
+            0.39994534850120544
+          ],
+          [
+            0.40670087933540344,
+            0.4108598530292511,
+            0.9854151010513306,
+            0.3995329439640045,
+            0.39641857147216797
+          ],
+          [
+            0.4015527665615082,
+            0.42285627126693726,
+            0.9460340142250061,
+            0.3974887430667877,
+            0.3854637145996094
+          ]
+        ]
+      },
+      "uv_disabled": {
+        "best_heading_deg": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "correct_heading_margin": [
+          0.5541691780090332,
+          0.5491827726364136,
+          0.50809645652771
+        ],
+        "familiarity": [
+          [
+            0.4302101135253906,
+            0.42879554629325867,
+            0.9843792915344238,
+            0.42572852969169617,
+            0.4266706705093384
+          ],
+          [
+            0.4375191628932953,
+            0.42819666862487793,
+            0.9867019653320312,
+            0.4167163372039795,
+            0.42033228278160095
+          ],
+          [
+            0.4287955164909363,
+            0.4395461082458496,
+            0.9476425647735596,
+            0.41425955295562744,
+            0.407595694065094
+          ]
+        ]
+      },
+      "fixture_correct": 4,
+      "fixture_n": 4,
+      "fixture_margins": [
+        0.07547420263290405,
+        0.07484883069992065,
+        0.07697868347167969,
+        0.07737594842910767
+      ],
+      "visible_only_fixture": "All four memories tie exactly; the cues exist only in UV",
+      "uv_rolled_overlap": [
+        0.47226792573928833,
+        0.4348282217979431,
+        0.47222232818603516
+      ],
+      "exposure_recall": {
+        "0.5": [
+          0.936596691608429,
+          0.9111920595169067,
+          0.9456994533538818
+        ],
+        "2.0": [
+          0.9568061232566833,
+          0.9340294599533081,
+          0.9520964026451111
+        ]
+      }
+    },
+    {
+      "seed": 31,
+      "encoder_fingerprint": "e6c25d40ed485c6c23104850ca95fa151152a3af8b9e92b52c8b3aaaa75723e9",
+      "memory_fingerprint": "d44255130cda1f37c39326c8fbe767bbfa0f63dd287f8d020faa52ade686aa17",
+      "stream_activity": {
+        "form": 0.03816666826605797,
+        "colour": 0.03883333504199982,
+        "uv": 0.03550000116229057
+      },
+      "encoding_s": 0.038219291000132216,
+      "encoded_views": 18,
+      "full_uv": {
+        "best_heading_deg": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "correct_heading_margin": [
+          0.5733426809310913,
+          0.5575391054153442,
+          0.5675305128097534
+        ],
+        "familiarity": [
+          [
+            0.370412677526474,
+            0.38790959119796753,
+            0.9818479418754578,
+            0.40850523114204407,
+            0.38056856393814087
+          ],
+          [
+            0.389757364988327,
+            0.3917270302772522,
+            0.9785840511322021,
+            0.4210449159145355,
+            0.37280187010765076
+          ],
+          [
+            0.3798305094242096,
+            0.3957624137401581,
+            0.9744971394538879,
+            0.40696659684181213,
+            0.3873783051967621
+          ]
+        ]
+      },
+      "uv_disabled": {
+        "best_heading_deg": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "correct_heading_margin": [
+          0.5544052124023438,
+          0.5444626808166504,
+          0.5540416836738586
+        ],
+        "familiarity": [
+          [
+            0.3887079656124115,
+            0.4151970446109772,
+            0.9904809594154358,
+            0.43607574701309204,
+            0.39236944913864136
+          ],
+          [
+            0.40869906544685364,
+            0.4048535227775574,
+            0.9822303056716919,
+            0.4377675950527191,
+            0.38357651233673096
+          ],
+          [
+            0.4026838541030884,
+            0.410110205411911,
+            0.9768424034118652,
+            0.4228007197380066,
+            0.40165871381759644
+          ]
+        ]
+      },
+      "fixture_correct": 4,
+      "fixture_n": 4,
+      "fixture_margins": [
+        0.06979697942733765,
+        0.06618499755859375,
+        0.07441234588623047,
+        0.07368791103363037
+      ],
+      "visible_only_fixture": "All four memories tie exactly; the cues exist only in UV",
+      "uv_rolled_overlap": [
+        0.4489899277687073,
+        0.42106449604034424,
+        0.44015657901763916
+      ],
+      "exposure_recall": {
+        "0.5": [
+          0.9525099396705627,
+          0.9435612559318542,
+          0.9445266723632812
+        ],
+        "2.0": [
+          0.9587642550468445,
+          0.9355373978614807,
+          0.9485129714012146
+        ]
+      }
+    }
+  ],
+  "checks": [
+    "Verified linear frame/calibration hashes and angular sampling",
+    "UV changes leave visible stream codes exactly unchanged",
+    "UV ablation suppresses only the third stream",
+    "Finite spike codes and exact teaching-view retrieval",
+    "Checkpoint reload reproduces codes exactly",
+    "Encoder and learned memory remain frozen during recall"
+  ]
+}

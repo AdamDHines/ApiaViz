@@ -1,0 +1,181 @@
+{
+  "date": "2026-09-30",
+  "standard_tests": {
+    "passed": 139,
+    "command": "pixi run --locked test"
+  },
+  "full_study_started": false,
+  "smoke_output": "apiaviz/output/uv-trials-pipeline-check-v3",
+  "protocol_sha256": "8cbeb24604412b533388cf55c03d5badae73a9bdf933a95fa04471d620723d6a",
+  "audit_sha256": "3be0269edd621812e1c216fc77040902431f145b8cc00bd5c7e8c0b745cc7660",
+  "trial_sha256": {
+    "meander-19-apiaviz_uv-kick_right50-familiarity-1.json": "416d21fb1ba06ff57d3b06080d4cc425cce2a551cd532908125e5244fbaedd62",
+    "meander-19-apiaviz_uv-aligned-familiarity-1.json": "51d4c2393538f6a33beafa5cdc80adae9d9679c21a1008d70c573b91adcbf3ac",
+    "meander-19-sobel_colour-kick_right50-familiarity-1.json": "724fccdfa3a7766e93564985c55577ba0198013f44a408c0803aa5a1dd411a48",
+    "meander-19-ardin_input-aligned-familiarity-1.json": "d99d21733a9af4a14cca914c23ddaf606c4154302bcb4c7ac58867cae0701db2",
+    "meander-19-sobel_colour-aligned-familiarity-1.json": "5eda771c425097d93d3cedfbea1e1fea17319b74c5b2681df5c2b7377c1bd830",
+    "meander-19-ardin_input-kick_right50-familiarity-1.json": "6296aea9f1a1dd78e045beb8cdbe45bbec832526f1e538513587039c07b5eb91"
+  },
+  "resume": {
+    "interrupted_after_completed": 1,
+    "resumed_remaining": 5,
+    "completed_resume_preserved_all_trial_and_movie_hashes": true
+  },
+  "smoke": {
+    "completed": 6,
+    "planned": 6,
+    "terminations": {
+      "step_budget": 6
+    },
+    "all_walked_metres": 0.4,
+    "applied_kicks": 3,
+    "physics_and_accounting_audit_passed": true,
+    "note": "Four-move integration fixture, not a comparative performance study; no blocked proposals occurred here. Collision rejection is covered by dedicated regression tests and the prior 240-placement mesh audit."
+  },
+  "html_link_checks": {
+    "environments.html": 3,
+    "report/index.html": 21
+  },
+  "report_artifacts_verified": 26,
+  "videos_decoded": [
+    {
+      "file": "meander-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "0f88f5f484e92b0ba8d7ae7553790cc4fab8293e1d00b5599795f5bfd8e827fc",
+      "codec_name": "h264",
+      "width": 1200,
+      "height": 700,
+      "duration": "4.000000",
+      "nb_frames": "24"
+    },
+    {
+      "file": "meander-19-apiaviz_uv-kick_right50-familiarity-1.mp4",
+      "sha256": "a2e23f0c1f62cc4cb44de919fe311a19ff2d12c18afeab597555bacdbaef5f48",
+      "codec_name": "h264",
+      "width": 1200,
+      "height": 700,
+      "duration": "4.000000",
+      "nb_frames": "24"
+    },
+    {
+      "file": "meander-19-ardin_input-aligned-familiarity-1.mp4",
+      "sha256": "082ca62dd20bee31e33d982293adbeed4a1024c9f7f7f81901c8793ce681b546",
+      "codec_name": "h264",
+      "width": 1200,
+      "height": 700,
+      "duration": "3.666667",
+      "nb_frames": "22"
+    },
+    {
+      "file": "meander-19-ardin_input-kick_right50-familiarity-1.mp4",
+      "sha256": "582935e2c2367caa0ac6518d7dff2b42a66a8c9680b2fee4b91fdfc1967a5a2c",
+      "codec_name": "h264",
+      "width": 1200,
+      "height": 700,
+      "duration": "4.000000",
+      "nb_frames": "24"
+    },
+    {
+      "file": "meander-19-sobel_colour-aligned-familiarity-1.mp4",
+      "sha256": "62b3c71095a5ef1c4c7012ef6529cbebb3bb88f2e1fca8ceb6691218b8d96f3d",
+      "codec_name": "h264",
+      "width": 1200,
+      "height": 700,
+      "duration": "4.000000",
+      "nb_frames": "24"
+    },
+    {
+      "file": "meander-19-sobel_colour-kick_right50-familiarity-1.mp4",
+      "sha256": "ac318961251c520732c93291496f3c419311672021ccd6d0ba8a16b7c391bf85",
+      "codec_name": "h264",
+      "width": 1200,
+      "height": 700,
+      "duration": "4.000000",
+      "nb_frames": "24"
+    }
+  ],
+  "spectral": {
+    "passed": true,
+    "channels": [
+      "uv",
+      "blue",
+      "green",
+      "visible_red",
+      "visible_green",
+      "visible_blue"
+    ],
+    "checks": [
+      {
+        "input": "flat",
+        "expected": [
+          0.9999999999999999,
+          1.0,
+          1.0,
+          1.0,
+          0.9999999999999999,
+          1.0
+        ],
+        "observed": [
+          1.0017688274383545,
+          1.000002145767212,
+          1.0004549026489258,
+          0.9973331093788147,
+          1.0001219511032104,
+          1.0003191232681274
+        ]
+      },
+      {
+        "input": "uv_only",
+        "expected": [
+          0.9052281929883426,
+          0.24951875570616205,
+          0.07673471657431387,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "observed": [
+          0.9070526957511902,
+          0.24898557364940643,
+          0.07673580944538116,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "calibration_sha256": "040d7f95c8e436c1f7df353d5e418f22dc7e18c3a8540a997d55979f9bf9af1d",
+    "source_sha256": {
+      "scripts/uv_mitsuba/validate_trial_camera.py": "d30cb2c2a926b6b8c220442e9d8d89907cc00cca6f0c4361068836aaa72e11e8",
+      "scripts/uv_mitsuba/render.py": "d63ed839e533ad1e5e50caf65798cc0ee1b6e35f47a1b51626c77025d9ea7c97",
+      "apiaviz/research/dual_camera.py": "5ad787fba01275ea343e0fb73caef45d722d3efb65760fb2da6e0eac2349f9b3"
+    },
+    "camera_benchmark": {
+      "seconds": {
+        "literal": [
+          0.5578122080005414,
+          0.5472239169994282,
+          0.5418118329998833
+        ],
+        "opaque": [
+          0.01965424999980314,
+          0.019044541999392095,
+          0.019521166999766137
+        ]
+      },
+      "max_abs_differences": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "poses": 3,
+      "spp": 4,
+      "shape": [
+        110,
+        240,
+        6
+      ],
+      "geometry_sha256": "1147aca2b67aceef78147ea609c5fbbbaef4b8c76880267721942b15d0dceb56",
+      "interpretation": "Cold first call and two warm calls; tiny fixture benchmark, not a full-scene throughput forecast"
+    }
+  }
+}

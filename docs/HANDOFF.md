@@ -1,5 +1,28 @@
 # Workstation handoff — 30 September 2026
 
+**Studio implementation update:** [mesh contact and UV rendering](collision-uv-integration/README.md)
+documents the new opt-in mesh evaluator, nonterminal blocked contact, calibrated
+spectral render interface and small integration checks. Two
+[synthetic camera/overhead videos](navigation-videos-mesh-v1/README.md) are now
+available. The subsequent [navigation safeguards](navigation-safety-v1/README.md)
+prevent releases/kicks entering or crossing rocks, block field exits, fix arrival
+accounting and record actual perturbation doses. Historical scene transfer and
+a corrected smoke test in those original worlds remain outstanding. The
+cancellation and historical provenance below remain authoritative.
+
+**UV model update:** [ApiaViz UV integration](uv-model-v1/README.md) adds calibrated
+UV receptor input, UV spatial/opponent processing and a third spiking stream.
+Rendered view-memory and UV-only diagnostic smoke tests pass. Sobel/Ardin remain
+RGB-only. The subsequent [two-command UV study](uv-trials/README.md) wires this
+into closed-loop navigation: `pixi run environments` prepares fresh scenes and
+`pixi run trials` runs the user-confirmed 378-trial matrix with collision
+safeguards, progress bars, statistics, figures and movies. The user subsequently
+started `uv-trials-v1` and requested parallel execution. It now uses the separate
+`uv_parallel --workers 6` coordinator, preserving the frozen scientific protocol
+and completed results. See the study notes for monitoring, stopping and resuming;
+check `apiaviz/output/uv-trials-v1/progress.json` for live state. Large checkpoints
+and renders remain local under `apiaviz/output/`.
+
 The user will select the new branch, commit and push. No agent commit or push was
 made during this handoff. Large artifacts remain local and ignored; this is a
 source/documentation handoff, not a complete data migration.
@@ -48,8 +71,7 @@ part of the cancellation/handoff.
   with motor feedback, preserving familiarity comparisons through evasive movement.
 - [Empirical UV calibration](uv-calibration/README.md): honeybee response tables,
   USGS material proxies, source checksums, controlled renders and numerical checks.
-  UV sky polarization remains provisional. This has not been integrated into the
-  navigation trials.
+  UV sky polarization remains provisional and is disabled in the new UV trials.
 - [Training and sensing experiments](navigation-experiments/INTERPRETATION.md):
   earlier evidence about easy acquisition conditions and poor displaced recovery.
 - [Mechanism study](mechanism-study/report.md): the initial ApiaViz advantage did

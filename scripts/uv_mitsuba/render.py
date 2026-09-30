@@ -9,9 +9,16 @@ import json
 import os
 from pathlib import Path
 import time
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-os.environ.setdefault('DRJIT_LIBLLVM_PATH', str(ROOT/'.pixi/envs/default/lib/libLLVM-20.dylib'))
+# Prefer the active environment; preserve an explicitly configured LLVM path.
+if 'DRJIT_LIBLLVM_PATH' not in os.environ:
+    for prefix in (Path(sys.prefix), ROOT/'.pixi/envs/default'):
+        candidates = sorted((prefix/'lib').glob('libLLVM*.dylib')) + sorted((prefix/'lib').glob('libLLVM*.so*'))
+        if candidates:
+            os.environ['DRJIT_LIBLLVM_PATH'] = str(candidates[0])
+            break
 import drjit as dr
 import mitsuba as mi
 import numpy as np
@@ -88,27 +95,34 @@ def register_camera():
     mi.register_sensor('uv_panorama', lambda p: Panorama(p))
 
 
-def build_scene(geometry, pose, width, height, sun_az, sun_el, spp, polarized=False):
-    curves = receptor_spectra()
+def build_scene(geometry, pose, width, height, sun_az, sun_el, spp, polarized=False,
+                receptor_weights=None, material_lookup=None, elevation=(-20.,90.),
+                polarization_max=.75, response_names=None):
+    curves = receptor_spectra() if receptor_weights is None else receptor_weights
+    material_lookup = material_spectrum if material_lookup is None else material_lookup
     film = dict(type='specfilm', width=width, height=height, component_format='float32',
                 rfilter=dict(type='box'))
-    for name, curve in zip(('band1_uv','band2_blue','band3_green'), curves):
+    names=response_names or ('band1_uv','band2_blue','band3_green')
+    if len(names)!=len(curves): raise ValueError('Response labels and curves differ')
+    for name, curve in zip(names, curves):
         film[name] = spectrum(WAVELENGTHS, curve)
     az, el = np.deg2rad([sun_az, sun_el])
     sun = [np.cos(az)*np.cos(el), np.sin(az)*np.cos(el), np.sin(el)]
     scene = dict(type='scene', integrator=dict(type='path', max_depth=5, rr_depth=4),
         sensor=dict(type='uv_panorama', origin=pose['position'], yaw=pose['heading'], film=film,
+                    elevation_min=elevation[0], elevation_max=elevation[1],
                     sampler=dict(type='independent', sample_count=spp)),
         sky=dict(type='sunsky', sun_direction=sun, turbidity=2.5,
-                 albedo=spectrum(WAVELENGTHS, material_spectrum('earth'))))
+                 albedo=spectrum(WAVELENGTHS, material_lookup('earth'))))
     if polarized:
-        scene['sky'] = dict(type='rayleigh_sunsky', nested=scene['sky'], sun_direction=sun)
+        scene['sky'] = dict(type='rayleigh_sunsky', nested=scene['sky'], sun_direction=sun,
+                            polarization_max=polarization_max)
         scene['integrator'] = dict(type='receptor_stokes', component=0)
     meta = json.loads((geometry/'geometry.json').read_text())
     materials = {}
     for i, item in enumerate(meta['meshes']):
         data = np.load(geometry/item['file'])
-        values = material_spectrum(item['material'])
+        values = material_lookup(item['material'])
         materials[item['material']] = values.tolist()
         props = mi.Properties()
         props['bsdf'] = mi.load_dict(dict(type='twosided', nested=dict(type='diffuse', reflectance=spectrum(WAVELENGTHS,values))))

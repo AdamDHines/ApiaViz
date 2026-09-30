@@ -1,0 +1,158 @@
+{
+  "schema": "navigation-safety-v1",
+  "kind": "Placement geometry audit; not navigation outcomes",
+  "archived_completed_trials": 145,
+  "archived_terminations": {
+    "arrival": 74,
+    "rock_collision": 18,
+    "field_boundary": 25,
+    "time_budget": 10,
+    "displacement_into_rock": 4,
+    "uninformative_views": 14
+  },
+  "geometry": {
+    "schema": "rock-mesh-projection-v1",
+    "geometry_sha256": "f3a1bb2102aad99d4ac3205098032aca0243a5e2dab15a3a507b96bb707d13f2",
+    "scene_sha256": "dc86874625c3772f84f770ed4c223487de50fc380cb131508135cb561cae9be2"
+  },
+  "body_radius_m": 0.005,
+  "sampled_displacements": 240,
+  "invalid_grid_anchors_excluded": 0,
+  "adjusted": 91,
+  "limiting_constraints": {
+    "field_boundary": 62,
+    "rock_contact": 29
+  },
+  "passed": true,
+  "examples": [
+    {
+      "name": "endpoint_inside_rock",
+      "requested_endpoint_in_rock": true,
+      "origin": [
+        0.65,
+        -0.24
+      ],
+      "requested_displacement": [
+        0.0,
+        0.25
+      ],
+      "requested_position": [
+        0.65,
+        0.010000000000000009
+      ],
+      "position": [
+        0.65,
+        -0.22850966098427977
+      ],
+      "displacement": [
+        0.0,
+        0.01149033901572023
+      ],
+      "requested_distance_m": 0.25,
+      "applied_distance_m": 0.01149033901572023,
+      "fraction": 0.04596135606288092,
+      "adjusted": true,
+      "constraint": "rock_contact",
+      "schema": "navigation-safety-v1"
+    },
+    {
+      "name": "endpoint_clear_but_sweep_crosses_rock",
+      "requested_endpoint_in_rock": false,
+      "origin": [
+        0.65,
+        -0.24
+      ],
+      "requested_displacement": [
+        0.0,
+        0.5
+      ],
+      "requested_position": [
+        0.65,
+        0.26
+      ],
+      "position": [
+        0.65,
+        -0.22850966098427977
+      ],
+      "displacement": [
+        0.0,
+        0.01149033901572023
+      ],
+      "requested_distance_m": 0.5,
+      "applied_distance_m": 0.01149033901572023,
+      "fraction": 0.02298067803144046,
+      "adjusted": true,
+      "constraint": "rock_contact",
+      "schema": "navigation-safety-v1"
+    },
+    {
+      "name": "unobstructed",
+      "requested_endpoint_in_rock": false,
+      "origin": [
+        0.0,
+        -0.24
+      ],
+      "requested_displacement": [
+        0.0,
+        0.5
+      ],
+      "requested_position": [
+        0.0,
+        0.26
+      ],
+      "position": [
+        0.0,
+        0.26
+      ],
+      "displacement": [
+        0.0,
+        0.5
+      ],
+      "requested_distance_m": 0.5,
+      "applied_distance_m": 0.5,
+      "fraction": 1.0,
+      "adjusted": false,
+      "constraint": null,
+      "schema": "navigation-safety-v1"
+    },
+    {
+      "name": "field_boundary",
+      "requested_endpoint_in_rock": false,
+      "origin": [
+        2.0,
+        0.0
+      ],
+      "requested_displacement": [
+        0.5,
+        0.0
+      ],
+      "requested_position": [
+        2.5,
+        0.0
+      ],
+      "position": [
+        2.094989999999999,
+        0.0
+      ],
+      "displacement": [
+        0.09498999999999887,
+        0.0
+      ],
+      "requested_distance_m": 0.5,
+      "applied_distance_m": 0.09498999999999887,
+      "fraction": 0.18997999999999773,
+      "adjusted": true,
+      "constraint": "field_boundary",
+      "schema": "navigation-safety-v1"
+    }
+  ],
+  "sources": {
+    "docs/route-continuous-full/archive/bend/results.jsonl": "533e6ae52d9e9c5089a25e19df5adfd7ffcd2df981414ebc29fd7705701479ea",
+    "docs/route-continuous-full/archive/hairpin/results.jsonl": "0742589701d5969e006def609a6a0e701900dc5252fb96e9cd549b5fa93bef14",
+    "docs/route-continuous-full/archive/meander/results.jsonl": "a98eca2414b9a0f42c4f7a7eab0705540f94323d623cea761825df415194898a",
+    "scripts/audit_navigation_safety.py": "bc1335b62f006b557bb8b58ce3404fc789c7fc9c96a24e3f52113678ac6db641",
+    "apiaviz/research/evaluation_safety.py": "ee82c5fd1d1b1cc686d46ac7050ba6a1cc8c076d629950a97cb1831c3f21e0ff",
+    "apiaviz/research/collision_geometry.py": "834756e22cec8b726f950e8a2804ea231b983298e8a40f141905f9b39aaa8aac",
+    "apiaviz/research/active_navigation.py": "921040237cf60df4f6d97ae32efdbb225c6290e982cf0b5104bcc6b88094b666"
+  }
+}

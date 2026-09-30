@@ -1,5 +1,6 @@
 """Camera-only avoidance integration; original fixed-step evaluator is intact."""
 import math
+from copy import deepcopy
 
 import numpy as np
 
@@ -10,19 +11,23 @@ from .visual_avoidance import VisualAvoidance, Settings
 
 class VisualLocomotion:
     """Evaluator owns physics; the reflex receives images and own motion only."""
-    def __init__(self, sensor, camera, bounds, obstacles, settings=Settings(), phase=1):
+    def __init__(self, sensor, camera, bounds, obstacles, settings=Settings(), phase=1,
+                 safety=None, arrival_test=None):
         self.sensor, self.camera = sensor, camera
         self.bounds, self.obstacles = bounds, obstacles
+        self.safety, self.arrival_test = safety, arrival_test
         self.policy = VisualAvoidance(settings, phase)
         self.path = 0.
+        self.commanded_path = 0.
+        self.blocked_proposals = 0
         self.trace = []
         self.camera_views = 0
         self.cache = None
 
-    def image(self):
+    def image(self, force=False):
         s = self.sensor
         key = (*s.position, s.heading)
-        if self.cache is not None and self.cache[0] == key:
+        if not force and self.cache is not None and self.cache[0] == key:
             return self.cache[1]
         if s.count >= s.settings['observation_budget']:
             s.termination = 'observation_budget'
@@ -62,24 +67,49 @@ class VisualLocomotion:
             delta = stride*np.array([math.cos(math.radians(heading)), math.sin(math.radians(heading))])
             proposed = s.position+delta
             xmin, xmax, ymin, ymax = self.bounds
-            if not (xmin <= proposed[0] <= xmax and ymin <= proposed[1] <= ymax):
+            if self.safety is not None:
+                from .evaluation_safety import proposal_reason
+                reason = proposal_reason(s.position, proposed, self.bounds, self.obstacles)
+            else:
+                reason = 'rock_contact' if segment_collision(s.position, proposed, self.obstacles) else None
+            if self.safety is None and not (xmin <= proposed[0] <= xmax and ymin <= proposed[1] <= ymax):
                 s.termination = 'field_boundary'
                 return False, diverted
-            # This test ONLY prevents penetration and records failure. It never
-            # chooses a turn, supplies a range, or reveals which side is clear.
-            if segment_collision(s.position, proposed, self.obstacles):
-                s.termination = 'rock_collision'
-                return False, diverted
-            s.position = proposed
+            blocked = reason is not None
+            # Evaluator-only log. Neither contact nor successful displacement
+            # is given to either policy. Their odometry remains commanded motion.
+            if blocked:
+                self.blocked_proposals += 1
+                s.events.append(dict(kind='blocked_proposal', time_s=s.time,
+                    reason=reason,
+                    position=s.position.tolist(), proposed_position=proposed.tolist(),
+                    heading=float(heading), commanded_stride_m=float(stride),
+                    decision=deepcopy(decision), visual_points=self.policy.points.tolist(),
+                    visual_point_ages_m=self.policy.ages.tolist(),
+                    visual_frame_heading=self.policy.frame_heading,
+                    physics=getattr(self.obstacles, 'provenance', {'schema':'legacy-discs'})))
+                if self.safety is None and getattr(self.obstacles, 'contact_response', 'terminate') == 'terminate':
+                    s.termination = 'rock_collision'
+                    return False, diverted
+            else:
+                s.position = proposed
             s.time += duration
-            self.path += stride
+            actual_stride = 0. if blocked else stride
+            self.path += actual_stride
+            self.commanded_path += stride
             moved += stride
-            after = self.image()
+            after = self.image(force=True)
             if after is None:
                 raise AssertionError('Reserved camera observation unavailable')
             diagnostic = self.policy.moved(before, after, heading, stride)
             self.trace.append({**decision, 'position':s.position.tolist(), 'heading':s.heading,
-                'time_s':s.time, 'path_m':self.path, 'stride_m':stride, 'flow':diagnostic})
+                'time_s':s.time, 'path_m':self.path, 'stride_m':actual_stride,
+                'commanded_stride_m':stride, 'commanded_path_m':self.commanded_path,
+                'blocked':blocked, 'flow':diagnostic})
+            # Endpoint belongs only to the evaluator, never the visual policy.
+            if self.arrival_test is not None and self.arrival_test(s.position):
+                s.termination = 'arrival'
+                return False, diverted
         return True, diverted
 
 
@@ -136,6 +166,7 @@ def evaluate(route, headings, scorer, controller_factory, scenario, settings,
         if not controller.step(sensor, episode_step):
             termination = sensor.termination
             break
+        before_path = motion.path
         ok, diverted = motion.advance(sensor.heading)
         if diverted:
             resets += 1
@@ -149,10 +180,11 @@ def evaluate(route, headings, scorer, controller_factory, scenario, settings,
             break
         trace.append(dict(step=step, position=sensor.position.tolist(), heading=sensor.heading,
             time_s=sensor.time, path_m=motion.path, polyline_m=distance,
+            translated_m=motion.path-before_path,
             deviation_m=float(np.linalg.norm(route-sensor.position, axis=1).min()),
             observations=sensor.count, scan_bouts=sensor.scan_bouts, diverted=diverted))
         if recovery_origin is not None and recovered is None:
-            recovery_streak = recovery_streak+1 if distance <= stage2['recovery_radius_m'] else 0
+            recovery_streak = recovery_streak+1 if distance <= stage2['recovery_radius_m'] and motion.path > before_path+1e-12 else 0
             if recovery_streak >= stage2['recovery_consecutive_steps']:
                 recovered = dict(path_m=motion.path-recovery_origin[0], time_s=sensor.time-recovery_origin[1])
     if termination is None:
@@ -163,10 +195,11 @@ def evaluate(route, headings, scorer, controller_factory, scenario, settings,
     return dict(reached_nest=termination == 'arrival', termination=termination,
         final_nest_distance_m=float(np.linalg.norm(sensor.position-route[-1])),
         steps=len(trace), path_length_m=motion.path, time_s=sensor.time,
+        commanded_path_m=motion.commanded_path, blocked_proposals=motion.blocked_proposals,
         observations=sensor.count, avoidance_observations=motion.camera_views,
         scan_bouts=sensor.scan_bouts, rotation_deg=sensor.rotation_deg,
         motor_state_resets=resets, corrective_resets=0,
-        polyline_mean_m=float(np.average(distances, weights=weights)) if len(points) else None,
+        polyline_mean_m=float(np.average(distances, weights=weights)) if sum(weights) > 0 else None,
         recovered=recovered is not None, recovery_applicable=recovery_origin is not None,
         recovery_path_m=recovered['path_m'] if recovered else None,
         recovery_time_s=recovered['time_s'] if recovered else None,

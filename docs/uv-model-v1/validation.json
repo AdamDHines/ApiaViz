@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "unit_tests": 133,
+  "sources": {
+    "apiaviz/src/uv.py": "be23f5131ef3710a41fbbd4ca882919576c31dd8cc6e08186a17642adc31a07b",
+    "apiaviz/src/modules.py": "39117982f9941c74af8c378d7575cdb0b1d52b9debaa4097ad24595bb259ea52",
+    "apiaviz/research/uv_encoder.py": "26a0d03e563940d83d1efa2b6dc8e25db233fd855e032065fdee2ae4ff2f4852",
+    "apiaviz/research/uv_input.py": "c65f15369928bf3cf0f4534a0084bd1f84ba7e4294de8bec29c269a6caa9bad6",
+    "apiaviz/research/spectral_input.py": "8e3aae606b345656701af832f1fd6b7156f563f3f8f3873079a79f6c2de70cac",
+    "apiaviz/research/latency.py": "431aceebed798d1afbe81b112ad6f2110e92c6c29bd2b8121f292edaa9423533",
+    "apiaviz/nav/retino_kc.py": "4b5d9c47ef6f28d9f4ad393a48c3857e59f2afb1f0fdd6476590f57cd80c44ea",
+    "apiaviz/research/spike_overlap.py": "d92e213ed5c4cf78431fc05efa9f582c42f5653048a204f17b0ef77dea8f7dc9",
+    "scripts/smoke_uv_model.py": "11d234487b822311930ae04e50b80c0e35d469e28d0ee35c7a0578f0472327d3"
+  },
+  "inputs": {
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-model-v1/frames/00000.json": {
+      "sidecar_sha256": "bb27d32e80213ee43d506bb86e1657bbd96e8dce8ae2dcfbd6e1a643595f3b76",
+      "arrays": {
+        "intensity": {
+          "file": "00000-intensity.npy",
+          "sha256": "75cc59cdd2d68b0b499f669b9b88e9d0438ebfe3a2396b8505ff62c3d37d31a7"
+        }
+      }
+    },
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-model-v1/frames/00001.json": {
+      "sidecar_sha256": "74840279e9cb560d5fa9355c0fb5c764dd0c2ec1e89008ebcfdc2a5bd7a33702",
+      "arrays": {
+        "intensity": {
+          "file": "00001-intensity.npy",
+          "sha256": "cd548a79774d7333c5e98e64ce4c5e3ebb9ea545d6cb0dc8621e2efb60a429dd"
+        }
+      }
+    },
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-model-v1/frames/00002.json": {
+      "sidecar_sha256": "9122bffe94616db16b2c2d5022ae94a2eb3a23c2227ba95e9525dbca8d6bdaea",
+      "arrays": {
+        "intensity": {
+          "file": "00002-intensity.npy",
+          "sha256": "448343962d8883beeb57ee91b91c3bc9ca5ffd4d5b191eb4454e388baac2848c"
+        }
+      }
+    },
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-model-v1/repeat/00000.json": {
+      "sidecar_sha256": "a4581bec98290dc84bb3aaeec479d65a0aa091779fc9eabf69d9b31075d8659e",
+      "arrays": {
+        "intensity": {
+          "file": "00000-intensity.npy",
+          "sha256": "d035acf7f8f29ec77ff7f5b553eeffc4fa1a9d305b2d0afeafa5a2b9c083354a"
+        }
+      }
+    },
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-model-v1/repeat/00001.json": {
+      "sidecar_sha256": "d298824089d6f0df45dddfd9f1cab50b310124bcd6ea1a65b7f0603b91c16286",
+      "arrays": {
+        "intensity": {
+          "file": "00001-intensity.npy",
+          "sha256": "88aec2260d4a90dfa1df6b0102bb6dec14f3ee6cc81b2ed2fc44374bd868d70c"
+        }
+      }
+    },
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-model-v1/repeat/00002.json": {
+      "sidecar_sha256": "5793a14d8ffeed05296ede35ff4d1b2079c8ecab08f23123c8674bc7302e4962",
+      "arrays": {
+        "intensity": {
+          "file": "00002-intensity.npy",
+          "sha256": "41145b30f48e953f79ab573a2f74859790ed47c247515a37f2c577779a05146f"
+        }
+      }
+    }
+  },
+  "batch_protocol_sha256": {
+    "frames": "65864bc5824c4e4504a605c1074dad3f4cc7bdacc617b9e37ebd420363847da4",
+    "repeat": "40056c913dda59ea877e2c6f3d445531254671ebf858cfe8e609cabd904c6e6f"
+  },
+  "model_protocol_sha256": "02ffc3212d29c27e9e18189bf6dfc6a9fdab99de55c23a1fa0f9a4d66cbb2c2a",
+  "results_sha256": "c04d8bdd38be2ca30172020f381b7eb94cd28a8fe8f9b41eb9677c7649d2b3bb",
+  "diagnostic_sha256": "d007e2c22111482bcc48ecdb1f5e2f92df278d3560fe20972a6122dbaea8fa65"
+}

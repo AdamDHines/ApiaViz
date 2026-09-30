@@ -20,11 +20,14 @@ def register_polarization():
             super().__init__(props)
             self.nested = props['nested']
             self.sun = dr.normalize(mi.Vector3f(props['sun_direction']))
+            self.maximum = float(props.get('polarization_max', .75))
+            if not 0 <= self.maximum <= 1:
+                raise ValueError('Polarization maximum must be in [0,1]')
             self.m_flags = mi.EmitterFlags.Infinite | mi.EmitterFlags.SpatiallyVarying
         def polarize(self, spec, view):
             # view points from observer toward sky; photons propagate in -view.
             cosine = dr.clip(dr.dot(view, self.sun), -1., 1.)
-            p = .75*(1-cosine*cosine)/(1+cosine*cosine)
+            p = self.maximum*(1-cosine*cosine)/(1+cosine*cosine)
             p = dr.select((view.z > 0)&(cosine < np.cos(np.deg2rad(.5358/2))), p, 0.)
             electric = dr.cross(self.sun, view)
             electric *= dr.rsqrt(dr.maximum(dr.squared_norm(electric), 1e-20))
@@ -52,7 +55,7 @@ def register_polarization():
         def bbox(self):
             return mi.ScalarBoundingBox3f()
         def to_string(self):
-            return 'RayleighSky[analytical boundary, maximum DoLP=0.75]'
+            return f'RayleighSky[analytical boundary, maximum DoLP={self.maximum}]'
     mi.register_emitter('rayleigh_sunsky', lambda p: RayleighSky(p))
 
     class ReceptorStokes(mi.SamplingIntegrator):

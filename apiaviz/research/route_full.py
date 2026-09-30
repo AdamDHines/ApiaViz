@@ -5,7 +5,7 @@ Renderers must already be running. Results, audits and a report are generated
 automatically on completion. No original experiment or controller is modified.
 """
 import argparse
-from collections import Counter
+from collections import Counter, defaultdict
 from copy import deepcopy
 import hashlib
 import json
@@ -17,6 +17,8 @@ import time
 import numpy as np
 
 from .controller_experiments import setup
+from .collision_geometry import protocol_geometry
+from .evaluation_safety import EvaluationSafety
 from .controller_full_report import paired_effect, retention
 from .familiarity_controller import (Settings as NavigationSettings,
     FamiliarityController, ControllerAdapter, acquisition_calibration)
@@ -114,7 +116,7 @@ def worker(out):
     w = p['worlds'][0]
     env = Path(w['environment'])
     base = json.loads((env/'protocol.json').read_text())
-    obstacles = json.loads((env/'world.json').read_text())['obstacles']
+    obstacles = protocol_geometry(p, w, json.loads((env/'world.json').read_text()))
     route, headings = np.asarray(base['route']), np.asarray(base['headings'])
     world = ResolutionWorld(env, p['shape'])
     positions, yaw = acquisition_views(route, headings, 1, 0.)
@@ -138,7 +140,8 @@ def worker(out):
         scorer = Scorer(world, model, memory, encode, 'clean', 0., base['geometry_seed'])
         result = evaluate(route, headings, scorer, factory, scenario,
             p['sensor_settings'], p['evaluation'], base['world_bounds_m'], obstacles,
-            AvoidanceSettings(**p['avoidance_settings']), phase=phase)
+            AvoidanceSettings(**p['avoidance_settings']), phase=phase,
+            safety=EvaluationSafety(**p['evaluation_safety']) if p.get('evaluation_safety') else None)
         assert fingerprint(model) == model_hash and fingerprint(memory) == memory_hash
         assert result['observations'] <= p['sensor_settings']['observation_budget']
         assert result['time_s'] <= p['sensor_settings']['time_budget_s']+1e-8
@@ -188,13 +191,59 @@ def collect(out):
     report(out)
 
 
+def perturbation_analysis(rows, p, primary='linear_colour'):
+    """Retain scheduled outcomes; describe actual dose and matched sensitivity.
+
+    Removing a shortened/missed kick from just one method biases the comparison.
+    Remove its entire world/seed/scenario block for the secondary analysis, with
+    all methods and phases. This trajectory-dependent subset is descriptive.
+    """
+    scenarios={s['name']:s for s in p['scenarios']}
+    strata=defaultdict(list)
+    excluded=set()
+    for row in rows:
+        scenario=scenarios[row['scenario']]
+        states=[]
+        for key,requested in (('release',scenario['lateral']),('displacement',scenario['kick'])):
+            record=row[key]
+            state=('not_requested' if not requested else 'not_attempted' if record is None else
+                   'skipped' if record['applied_distance_m']<=1e-12 else
+                   'shortened' if record['adjusted'] else 'full')
+            states.append(state)
+        if any(s in ('not_attempted','skipped','shortened') for s in states):
+            excluded.add((row['world'],row['seed'],row['scenario']))
+        strata[(row['world'],row['method'],row['scenario'],*states)].append(row)
+    records=[]
+    for (world,method,scenario,release,kick),selected in sorted(strata.items()):
+        doses={}
+        for key in ('release','displacement'):
+            values=[r[key]['applied_distance_m'] for r in selected if r[key] is not None]
+            doses[key]=dict(min_m=min(values) if values else None,max_m=max(values) if values else None)
+        records.append(dict(world=world,method=method,scenario=scenario,
+            release_status=release,kick_status=kick,n=len(selected),
+            arrivals=sum(r['reached_nest'] for r in selected),applied_dose=doses,
+            requested_release_m=abs(scenarios[scenario]['lateral']),
+            requested_kick_m=abs(scenarios[scenario]['kick'])))
+    full=[r for r in rows if (r['world'],r['seed'],r['scenario']) not in excluded]
+    return dict(strata=records,full_dose_sensitivity=dict(excluded_blocks=sorted(excluded),
+        remaining_trials=len(full),paired_arrival_effects=[
+            paired_effect(full,'reached_nest',('familiarity',primary),('familiarity',method))
+            for method in ('sobel_colour','ardin_input')]),
+        interpretation='Primary outcomes include every scheduled trial and may have different applied doses. '
+            'The full-dose subset excludes complete paired blocks with any shortened, skipped or missed perturbation. '
+            'This selection depends on trajectories and is descriptive, not an unbiased fixed-dose comparison.')
+
+
 def report(out):
     p, manifest, completed = setup(out)
     assert manifest['status'] == 'complete' and len(completed) == p['trials']
+    docs = Path(p.get('report_directory', DOCS))
     rows = list(completed.values())
     for row in rows:
         detail = json.loads((out/row['trace']).read_text())
         kept = retention(detail['trace'], row['scenario'], p['evaluation']['kick_before_step'])
+        if not row['recovery_applicable']:
+            kept = dict(return_found=False,lost_after_return=False)
         assert kept['return_found'] == row['recovered']
         row.update(kept)
     comparisons = [paired_effect(rows, 'reached_nest', ('familiarity', 'linear_colour'),
@@ -211,12 +260,17 @@ def report(out):
                 mean_deviation_m=float(np.mean(errors)) if errors else None,
                 median_observations=float(np.median([r['observations'] for r in selected])),
                 median_time_s=float(np.median([r['time_s'] for r in selected])),
+                blocked_trials=sum(r.get('blocked_proposals',0)>0 for r in selected),
+                blocked_proposals=sum(r.get('blocked_proposals',0) for r in selected),
+                adjusted_perturbations=sum(r.get('perturbation_adjusted',False) for r in selected),
                 terminations=dict(Counter(r['termination'] for r in selected))))
     summary = dict(trials=len(rows), groups=groups, paired_arrival_effects=comparisons,
                    limitation=p['limitation'], analysis=p['analysis'])
+    if p.get('evaluation_safety'):
+        summary['perturbations']=perturbation_analysis(rows,p)
     write_json(out/'summary.json', summary)
-    DOCS.mkdir(parents=True, exist_ok=True)
-    write_json(DOCS/'results.json', summary)
+    docs.mkdir(parents=True, exist_ok=True)
+    write_json(docs/'results.json', summary)
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -235,14 +289,15 @@ def report(out):
         ax.set(xticks=range(7), xticklabels=[s['name'] for s in p['scenarios']],
                yticks=range(3), yticklabels=[NAMES[m] for m in p['methods']], title=w['name'])
     fig.suptitle('Nest arrivals · continuous route guidance and camera-only avoidance\nThree wiring seeds × two initial search directions per cell')
-    fig.savefig(DOCS/'arrivals.png', dpi=170)
+    fig.savefig(docs/'arrivals.png', dpi=170)
     plt.close(fig)
     lines = ['# Full continuous-navigation suite', '', f'All {len(rows)} scheduled trials completed.', '',
         '![Arrivals by world and release](arrivals.png)', '',
-        '| Input | Arrivals | Mean deviation (cm) | Median views | Median time (s) |',
-        '|---|---:|---:|---:|---:|']
+        '| Input | Arrivals | Mean deviation (cm) | Median views | Median time (s) | Trials with blocked proposals |',
+        '|---|---:|---:|---:|---:|---:|']
     for g in groups[:3]:
-        lines.append(f"| {NAMES[g['method']]} | {g['arrivals']}/{g['n']} | {100*g['mean_deviation_m']:.1f} | {g['median_observations']:.0f} | {g['median_time_s']:.1f} |")
+        deviation=f"{100*g['mean_deviation_m']:.1f}" if g['mean_deviation_m'] is not None else 'n/a (no walked path)'
+        lines.append(f"| {NAMES[g['method']]} | {g['arrivals']}/{g['n']} | {deviation} | {g['median_observations']:.0f} | {g['median_time_s']:.1f} | {g['blocked_trials']}/{g['n']} |")
     lines += ['', 'All failures remain in these denominators. Deviation and cost averages include early failures; '
         'they must be interpreted alongside arrival. Detailed termination counts and paired, world-level '
         'arrival differences are in [results.json](results.json).', '', p['limitation'], '',
@@ -250,7 +305,12 @@ def report(out):
         'accounting, collision-free executed segments, external displacements, and the attribution of '
         'familiarity comparisons to commanded movements. Training-image hashes match across frontends, '
         'with fixed encoder/memory hashes across conditions.', '', '[Frozen protocol](PROTOCOL.md)', '']
-    (DOCS/'README.md').write_text('\n'.join(lines))
+    if p.get('evaluation_safety'):
+        lines += ['Requested 50 cm conditions may contain shortened or skipped displacements. '
+            'The results file separates full, shortened, skipped and unattempted perturbations, records actual dose ranges, '
+            'and supplies a secondary analysis excluding whole paired blocks with any incomplete dose. '
+            'That trajectory-dependent subset is descriptive; all scheduled trials remain in the primary results.', '']
+    (docs/'README.md').write_text('\n'.join(lines))
 
 
 def run(out, stop_renderers=False):

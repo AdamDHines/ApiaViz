@@ -1,0 +1,350 @@
+{
+  "scope": "Two prespecified illustrative synthetic runs; all outcomes retained",
+  "scene_sha256": "dc86874625c3772f84f770ed4c223487de50fc380cb131508135cb561cae9be2",
+  "collision_sha256": "f3a1bb2102aad99d4ac3205098032aca0243a5e2dab15a3a507b96bb707d13f2",
+  "encoder_fingerprint": "c7cac2da39d2c3d8f4cf347255b2d6cf98322eeece62e6d96d252cf794a5541b",
+  "memory_fingerprint": "9a06f7705957985aed349c1d7c552c5a07d44f2f4ceafdee13fdad36f9fa9755",
+  "training_images_sha256": "049be97b037452f0821c23da8d86aa24b7f7342608a9e76d3df44b59998c97af",
+  "rows": [
+    {
+      "id": "clear-lane",
+      "trace": "clear-lane.json",
+      "old_disc_intersections": 3,
+      "reached_nest": true,
+      "termination": "arrival",
+      "final_nest_distance_m": 0.13179891230892554,
+      "steps": 17,
+      "path_length_m": 1.700000000000001,
+      "time_s": 27.73333333333334,
+      "observations": 128,
+      "commanded_path_m": 1.700000000000001,
+      "blocked_proposals": 0,
+      "avoidance_observations": 98,
+      "scan_bouts": 3,
+      "rotation_deg": 780.0,
+      "motor_state_resets": 0,
+      "corrective_resets": 0,
+      "route_reacquisitions": 0,
+      "detour_episodes": 2,
+      "detour_completions": 2,
+      "detour_transitions": [
+        {
+          "kind": "steering_start",
+          "path_m": 0.5400000000000001,
+          "heading": 0.0
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 0.8000000000000004,
+          "heading": -20.0
+        },
+        {
+          "kind": "steering_start",
+          "path_m": 1.600000000000001,
+          "heading": 40.0
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 1.680000000000001,
+          "heading": 40.0
+        }
+      ],
+      "polyline_mean_m": 0.10507474093648508,
+      "recovered": false,
+      "recovery_applicable": false,
+      "recovery_path_m": null,
+      "recovery_time_s": null,
+      "disturbance_applied": false
+    },
+    {
+      "id": "toward-rock",
+      "trace": "toward-rock.json",
+      "old_disc_intersections": 39,
+      "reached_nest": true,
+      "termination": "arrival",
+      "final_nest_distance_m": 0.14674271338360154,
+      "steps": 20,
+      "path_length_m": 2.0000000000000013,
+      "time_s": 42.36111111111114,
+      "observations": 185,
+      "commanded_path_m": 2.0000000000000013,
+      "blocked_proposals": 0,
+      "avoidance_observations": 137,
+      "scan_bouts": 4,
+      "rotation_deg": 2360.0,
+      "motor_state_resets": 0,
+      "corrective_resets": 0,
+      "route_reacquisitions": 0,
+      "detour_episodes": 8,
+      "detour_completions": 8,
+      "detour_transitions": [
+        {
+          "kind": "steering_start",
+          "path_m": 0.14,
+          "heading": -10.0
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 0.27999999999999997,
+          "heading": 10.0
+        },
+        {
+          "kind": "steering_start",
+          "path_m": 0.46000000000000013,
+          "heading": -30.0
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 0.48000000000000015,
+          "heading": -30.0
+        },
+        {
+          "kind": "steering_start",
+          "path_m": 0.5000000000000001,
+          "heading": 30.0
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 0.6200000000000002,
+          "heading": -50.0
+        },
+        {
+          "kind": "steering_start",
+          "path_m": 0.6400000000000002,
+          "heading": -50.0
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 0.8000000000000004,
+          "heading": 50.0
+        },
+        {
+          "kind": "steering_start",
+          "path_m": 0.8200000000000004,
+          "heading": 50.0
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 0.9000000000000005,
+          "heading": -70.0
+        },
+        {
+          "kind": "steering_start",
+          "path_m": 0.9200000000000005,
+          "heading": -70.0
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 0.9400000000000005,
+          "heading": -70.0
+        },
+        {
+          "kind": "steering_start",
+          "path_m": 1.0000000000000004,
+          "heading": 0.0
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 1.2600000000000007,
+          "heading": 0.0
+        },
+        {
+          "kind": "steering_start",
+          "path_m": 1.5000000000000009,
+          "heading": 20.0
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 1.540000000000001,
+          "heading": 20.0
+        }
+      ],
+      "polyline_mean_m": 0.12001126968845036,
+      "recovered": true,
+      "recovery_applicable": true,
+      "recovery_path_m": 1.2000000000000006,
+      "recovery_time_s": 29.10000000000003,
+      "disturbance_applied": false
+    }
+  ],
+  "videos": {
+    "clear-lane": {
+      "result": {
+        "id": "clear-lane",
+        "trace": "clear-lane.json",
+        "old_disc_intersections": 3,
+        "reached_nest": true,
+        "termination": "arrival",
+        "final_nest_distance_m": 0.13179891230892554,
+        "steps": 17,
+        "path_length_m": 1.700000000000001,
+        "time_s": 27.73333333333334,
+        "observations": 128,
+        "commanded_path_m": 1.700000000000001,
+        "blocked_proposals": 0,
+        "avoidance_observations": 98,
+        "scan_bouts": 3,
+        "rotation_deg": 780.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 2,
+        "detour_completions": 2,
+        "detour_transitions": [
+          {
+            "kind": "steering_start",
+            "path_m": 0.5400000000000001,
+            "heading": 0.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.8000000000000004,
+            "heading": -20.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 1.600000000000001,
+            "heading": 40.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 1.680000000000001,
+            "heading": 40.0
+          }
+        ],
+        "polyline_mean_m": 0.10507474093648508,
+        "recovered": false,
+        "recovery_applicable": false,
+        "recovery_path_m": null,
+        "recovery_time_s": null,
+        "disturbance_applied": false
+      },
+      "video_sha256": "b604d74e6916f3fdb74c5f2efa5fc272ca73d2b1467b8afdbd1c9ee1b0e5c6c7",
+      "trace_sha256": "a3abd92b5719f171a21b6952af29086cc6a45db8ff19640343405d7d4a2c38c3",
+      "video_source_sha256": "0ac97de17c8a35092310c680fc01e516fd011a72aaab5909ed617628116d18ba",
+      "fps": 12,
+      "playback_speed": 4.0,
+      "frames": 121,
+      "scope": "Actual synthetic closed-loop navigation, all prespecified outcomes included"
+    },
+    "toward-rock": {
+      "result": {
+        "id": "toward-rock",
+        "trace": "toward-rock.json",
+        "old_disc_intersections": 39,
+        "reached_nest": true,
+        "termination": "arrival",
+        "final_nest_distance_m": 0.14674271338360154,
+        "steps": 20,
+        "path_length_m": 2.0000000000000013,
+        "time_s": 42.36111111111114,
+        "observations": 185,
+        "commanded_path_m": 2.0000000000000013,
+        "blocked_proposals": 0,
+        "avoidance_observations": 137,
+        "scan_bouts": 4,
+        "rotation_deg": 2360.0,
+        "motor_state_resets": 0,
+        "corrective_resets": 0,
+        "route_reacquisitions": 0,
+        "detour_episodes": 8,
+        "detour_completions": 8,
+        "detour_transitions": [
+          {
+            "kind": "steering_start",
+            "path_m": 0.14,
+            "heading": -10.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.27999999999999997,
+            "heading": 10.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 0.46000000000000013,
+            "heading": -30.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.48000000000000015,
+            "heading": -30.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 0.5000000000000001,
+            "heading": 30.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.6200000000000002,
+            "heading": -50.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 0.6400000000000002,
+            "heading": -50.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.8000000000000004,
+            "heading": 50.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 0.8200000000000004,
+            "heading": 50.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.9000000000000005,
+            "heading": -70.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 0.9200000000000005,
+            "heading": -70.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 0.9400000000000005,
+            "heading": -70.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 1.0000000000000004,
+            "heading": 0.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 1.2600000000000007,
+            "heading": 0.0
+          },
+          {
+            "kind": "steering_start",
+            "path_m": 1.5000000000000009,
+            "heading": 20.0
+          },
+          {
+            "kind": "steering_end",
+            "path_m": 1.540000000000001,
+            "heading": 20.0
+          }
+        ],
+        "polyline_mean_m": 0.12001126968845036,
+        "recovered": true,
+        "recovery_applicable": true,
+        "recovery_path_m": 1.2000000000000006,
+        "recovery_time_s": 29.10000000000003,
+        "disturbance_applied": false
+      },
+      "video_sha256": "469c7903f62dd0d068b1d7ffa2dcbfb2558a8e150f2d7fbfa648a03a4b0740d9",
+      "trace_sha256": "b5785839eab20b9f4c1d109435bfa38b8170202680400ade0473963ba199597a",
+      "video_source_sha256": "0ac97de17c8a35092310c680fc01e516fd011a72aaab5909ed617628116d18ba",
+      "fps": 12,
+      "playback_speed": 4.0,
+      "frames": 165,
+      "scope": "Actual synthetic closed-loop navigation, all prespecified outcomes included"
+    }
+  }
+}

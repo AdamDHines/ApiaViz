@@ -20,7 +20,10 @@ def wrap(angle):
 
 
 def segment_collision(a, b, obstacles):
-    """Conservative 2D rock discs from scene metadata, including segment interior."""
+    """Versioned mesh physics, or historical discs for original protocols."""
+    from .collision_geometry import RockGeometry
+    if isinstance(obstacles, RockGeometry):
+        return obstacles.intersects(a, b)
     a, b = np.asarray(a), np.asarray(b)
     delta = b - a
     for rock in obstacles:
@@ -54,9 +57,19 @@ def calibrate(model, memory, codes, world, positions, headings):
 class Observations:
     """Own-state and sensor interface; no endpoint or learned-route geometry."""
     def __init__(self, scorer, position, heading, settings, timed=True):
+        for name in ('speed_m_s','yaw_speed_deg_s','observation_s'):
+            if not np.isfinite(settings[name]) or settings[name]<=0:
+                raise ValueError(f'{name} must be finite and positive')
+        if not np.isfinite(settings['time_budget_s']) or settings['time_budget_s']<0:
+            raise ValueError('Time budget must be finite and nonnegative')
+        budget=settings['observation_budget']
+        if not np.isfinite(budget) or budget<0 or int(budget)!=budget:
+            raise ValueError('Observation budget must be a nonnegative integer')
         self.scorer = scorer
         self.position = np.asarray(position, dtype=float).copy()
         self.heading = float(heading)
+        if self.position.shape!=(2,) or not np.isfinite(self.position).all() or not np.isfinite(self.heading):
+            raise ValueError('Finite planar position and heading required')
         self.settings = settings
         self.time = 0.
         self.count = 0
@@ -90,6 +103,10 @@ class Observations:
             return None
         if not self.rotate(target): return None
         score = float(self.scorer(self.position, np.array([self.heading]))[0])
+        # +inf explicitly denotes a silent visual code in Scorer. NaN/-inf are
+        # numerical errors, not legitimate low familiarity or navigation failure.
+        if np.isnan(score) or np.isneginf(score):
+            raise ValueError('Invalid familiarity score from visual model')
         self.count += 1
         self.time += self.settings['observation_s']
         value = -score if np.isfinite(score) else 0.

@@ -1,0 +1,51 @@
+{
+  "date": "2026-09-30",
+  "tests_passed": 142,
+  "adapter_sha256": "d88af3f772981ecc2017ecebf2c99a9a2c8f4ed9416fe4c6bbc59a2e6b0c7aea",
+  "serial_equivalence": {
+    "trials": 6,
+    "exact_fields": [
+      "scientific result fields",
+      "trace",
+      "microtrace",
+      "events",
+      "decisions",
+      "sensor",
+      "encoder fingerprint",
+      "memory fingerprint",
+      "training image hash"
+    ],
+    "excluded_fields": [
+      "wall_time_s",
+      "encoding_s",
+      "rendered_positions",
+      "cache_hits",
+      "checkpoint_sha256"
+    ],
+    "protocol_sha256": "8cbeb24604412b533388cf55c03d5badae73a9bdf933a95fa04471d620723d6a",
+    "audit_sha256": "8e3f1fa099704a3d26c11514bc58b69f6d0690c7a691de7aadbebfd833b1f622"
+  },
+  "parallel_interruption_resume": {
+    "passed": true,
+    "interrupted_completed": 0,
+    "resumed_completed": 6,
+    "audit_sha256": "ee91389696c07f2223d49325c6d34881fc726eed114fd305d03db9d4a77e1a8b"
+  },
+  "live_handover": {
+    "output": "apiaviz/output/uv-trials-v1",
+    "workers": 6,
+    "coordinator_pid": 17177,
+    "execution": "apiaviz/output/uv-trials-v1/parallel/20260930T043818523680Z/execution.json",
+    "execution_sha256": "5a8e611350bb0ce500f584b4d2683fbea81067b5f75c82346008851e6920d593",
+    "prior_completed_preserved": 1,
+    "original_scientific_source_hashes_verified": true,
+    "protocol_sha256": "c3ae6ac70bece836c826c63d9d6dfca23cc549e57e89269776dcbdeea31ab377"
+  },
+  "resource_snapshot": {
+    "logical_cpus": 14,
+    "memory_GiB": 36,
+    "process_rss_sum_GiB": 7.49029541015625,
+    "process_cpu_cores": 11.378,
+    "note": "Single live snapshot; summed RSS is not unique physical memory and CPU utilization is not measured end-to-end speedup."
+  }
+}

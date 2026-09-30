@@ -1,0 +1,17 @@
+[workspace]
+name = "apiaviz-spectral-renderer"
+version = "0.1.0"
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "linux-64"]
+
+[dependencies]
+python = "3.12.*"
+numpy = "==1.26.4"
+libllvm20 = "20.*"
+
+[pypi-dependencies]
+mitsuba = "==3.9.1"
+drjit = "==1.5.0"
+
+[tasks]
+render-sensor = "python render_sensor.py"

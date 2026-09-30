@@ -27,6 +27,17 @@ class Settings:
     turn_step_deg: float = 10.
     max_turn_deg: float = 100.
 
+    def __post_init__(self):
+        if any(not np.isfinite(v) or (v<=0 and k!='min_elevation_deg') for k,v in asdict(self).items()):
+            raise ValueError('Avoidance settings must be finite and positive')
+        if self.probe_m>self.stride_m or self.clearance_m>=self.lookahead_m:
+            raise ValueError('Require probe <= stride and clearance < lookahead')
+        if not -90<=self.min_elevation_deg<self.max_elevation_deg<=90:
+            raise ValueError('Invalid flow elevation range')
+        steps=self.max_turn_deg/self.turn_step_deg
+        if self.max_turn_deg>180 or not np.isclose(steps,round(steps),atol=1e-10,rtol=0):
+            raise ValueError('Turn grid must contain the desired heading exactly')
+
 
 def gray(image):
     image = np.asarray(image)
@@ -142,10 +153,11 @@ class VisualAvoidance:
                 self.side = int(np.sign(offsets[target]))
         # Continue sensing at 5 mm in uncertain/blocked directions.
         stride = s.stride_m if clear[target] else s.probe_m
-        record = dict(state='avoid' if target != centre else 'clear',
+        record = dict(state='avoid' if target != centre or not clear[target] else 'clear',
                       desired_heading=float(desired_heading), heading=float(candidates[target]),
                       offset_deg=float(offsets[target]), side=self.side, points=len(self.points),
                       frontal_risk=float(risk[centre]), chosen_risk=float(risk[target]),
+                      visually_clear=bool(clear[target]),
                       stride_m=stride)
         self.decisions.append(record)
         return float(candidates[target]), stride, record
