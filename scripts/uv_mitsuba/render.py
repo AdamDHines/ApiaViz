@@ -97,7 +97,7 @@ def register_camera():
 
 def build_scene(geometry, pose, width, height, sun_az, sun_el, spp, polarized=False,
                 receptor_weights=None, material_lookup=None, elevation=(-20.,90.),
-                polarization_max=.75, response_names=None):
+                polarization_max=.75, response_names=None, surface_detail=False):
     curves = receptor_spectra() if receptor_weights is None else receptor_weights
     material_lookup = material_spectrum if material_lookup is None else material_lookup
     film = dict(type='specfilm', width=width, height=height, component_format='float32',
@@ -119,17 +119,23 @@ def build_scene(geometry, pose, width, height, sun_az, sun_el, spp, polarized=Fa
                             polarization_max=polarization_max)
         scene['integrator'] = dict(type='receptor_stokes', component=0)
     meta = json.loads((geometry/'geometry.json').read_text())
+    if surface_detail:
+        import surface_materials
+        surface_materials.register()
+        if meta.get('surface_schema')!='source-informed-surfaces-v1':raise ValueError('Missing surface provenance')
     materials = {}
     for i, item in enumerate(meta['meshes']):
         data = np.load(geometry/item['file'])
         values = material_lookup(item['material'])
         materials[item['material']] = values.tolist()
         props = mi.Properties()
-        props['bsdf'] = mi.load_dict(dict(type='twosided', nested=dict(type='diffuse', reflectance=spectrum(WAVELENGTHS,values))))
-        mesh = mi.Mesh(item['material'], len(data['vertices']), len(data['faces']), props)
+        props['bsdf'] = (surface_materials.bsdf(values,meta['surface_materials'][item['material']]) if surface_detail
+            else mi.load_dict(dict(type='twosided', nested=dict(type='diffuse', reflectance=spectrum(WAVELENGTHS,values)))))
+        mesh = mi.Mesh(item['material'], len(data['vertices']), len(data['faces']), props,has_vertex_normals=surface_detail)
         params = mi.traverse(mesh)
         params['vertex_positions'] = data['vertices'].ravel()
         params['faces'] = data['faces'].ravel()
+        if surface_detail:params['vertex_normals']=data['normals'].ravel()
         params.update()
         scene[f'mesh_{i:02}'] = mesh
     return mi.load_dict(scene), materials

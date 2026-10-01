@@ -1,0 +1,1398 @@
+{
+  "protocol_sha256": "c3ae6ac70bece836c826c63d9d6dfca23cc549e57e89269776dcbdeea31ab377",
+  "audit_sha256": "dcf1626e8388a706ea467b1133ed3b990053a0fadce9c8299a638dfa0e619c7f",
+  "script_sha256": "efcb7ed6f14e01d3cbc82b4049ad484a4078aebab09ef25804ed900eb9dfe4fd",
+  "completed": 378,
+  "scope": "Post-hoc diagnosis, no new navigation or renderer calls",
+  "groups": [
+    {
+      "method": "apiaviz_uv",
+      "n": 126,
+      "arrivals": 3,
+      "aligned_arrivals": 0,
+      "aligned_n": 18,
+      "terminations": {
+        "uninformative_views": 68,
+        "time_budget": 44,
+        "arrival": 3,
+        "step_budget": 11
+      },
+      "block_reasons": {
+        "rock_contact": 8244,
+        "field_boundary": 22269
+      },
+      "terminal_rule": {
+        "low_contrast": 27,
+        "low_contrast_and_competing": 40,
+        "competing_peak": 1
+      },
+      "unsupported_contrast": {
+        "p10": 0.07651898677475086,
+        "median": 0.10437331238146666,
+        "p90": 0.1429266372525204
+      },
+      "uninformative_final_route_distance_m": {
+        "p10": 0.44804389394696126,
+        "median": 1.0088600562918815,
+        "p90": 2.6643276769137585
+      },
+      "first_cast_step": {
+        "p10": 3.0,
+        "median": 4.0,
+        "p90": 12.0
+      }
+    },
+    {
+      "method": "sobel_colour",
+      "n": 126,
+      "arrivals": 63,
+      "aligned_arrivals": 10,
+      "aligned_n": 18,
+      "terminations": {
+        "arrival": 63,
+        "time_budget": 52,
+        "uninformative_views": 9,
+        "step_budget": 2
+      },
+      "block_reasons": {
+        "field_boundary": 11698,
+        "rock_contact": 7092
+      },
+      "terminal_rule": {
+        "competing_peak": 9
+      },
+      "unsupported_contrast": {
+        "p10": 0.20552996901645415,
+        "median": 0.3437370681301847,
+        "p90": 0.46995438622294405
+      },
+      "uninformative_final_route_distance_m": {
+        "p10": 1.092093361088672,
+        "median": 1.850840557175037,
+        "p90": 2.3585279550192073
+      },
+      "first_cast_step": {
+        "p10": 3.0,
+        "median": 4.0,
+        "p90": 12.0
+      }
+    },
+    {
+      "method": "ardin_input",
+      "n": 126,
+      "arrivals": 27,
+      "aligned_arrivals": 5,
+      "aligned_n": 18,
+      "terminations": {
+        "arrival": 27,
+        "time_budget": 91,
+        "uninformative_views": 6,
+        "step_budget": 2
+      },
+      "block_reasons": {
+        "rock_contact": 13736,
+        "field_boundary": 16337
+      },
+      "terminal_rule": {
+        "competing_peak": 5,
+        "low_contrast_and_competing": 1
+      },
+      "unsupported_contrast": {
+        "p10": 0.1743954342783769,
+        "median": 0.22414570647946538,
+        "p90": 0.3543816886898794
+      },
+      "uninformative_final_route_distance_m": {
+        "p10": 1.9751022199479196,
+        "median": 2.715269966890223,
+        "p90": 3.0327004830254487
+      },
+      "first_cast_step": {
+        "p10": 3.0,
+        "median": 4.0,
+        "p90": 10.0
+      }
+    }
+  ],
+  "representatives": [
+    {
+      "id": "meander-19-apiaviz_uv-aligned-familiarity-1",
+      "termination": "uninformative_views",
+      "steps": 66,
+      "first_block": {
+        "time_s": 46.36111111111107,
+        "reason": "rock_contact",
+        "position": [
+          1.833947757364259,
+          1.6628252246884305
+        ]
+      },
+      "first_12": [
+        {
+          "step": 1,
+          "state": "follow",
+          "familiarity": 0.9999998807907104,
+          "movement_heading": 37.91128038132089,
+          "trend": 0.0
+        },
+        {
+          "step": 2,
+          "state": "follow",
+          "familiarity": 0.946530818939209,
+          "movement_heading": 37.91128038132089,
+          "trend": -0.08086866752298348
+        },
+        {
+          "step": 3,
+          "state": "cast",
+          "familiarity": 0.8384822010993958,
+          "movement_heading": 57.91128038132089,
+          "trend": -0.2038512228902542
+        },
+        {
+          "step": 4,
+          "state": "cast",
+          "familiarity": 0.8612069487571716,
+          "movement_heading": 57.91128038132089,
+          "trend": -0.06755582826126955
+        },
+        {
+          "step": 5,
+          "state": "cast",
+          "familiarity": 0.8144187927246094,
+          "movement_heading": 17.911280381320893,
+          "trend": -0.10454212250068495
+        },
+        {
+          "step": 6,
+          "state": "cast",
+          "familiarity": 0.8281476497650146,
+          "movement_heading": 17.911280381320893,
+          "trend": -0.03150700934768265
+        },
+        {
+          "step": 7,
+          "state": "cast",
+          "familiarity": 0.812949538230896,
+          "movement_heading": 77.91128038132092,
+          "trend": -0.038739713634142144
+        },
+        {
+          "step": 8,
+          "state": "cast",
+          "familiarity": 0.8111421465873718,
+          "movement_heading": -2.0887196186791073,
+          "trend": -0.022103425517227167
+        },
+        {
+          "step": 9,
+          "state": "cast",
+          "familiarity": 0.8106629848480225,
+          "movement_heading": 97.91128038132092,
+          "trend": -0.01177641541931849
+        },
+        {
+          "step": 10,
+          "state": "cast",
+          "familiarity": 0.8154627084732056,
+          "movement_heading": -22.088719618679107,
+          "trend": 0.0013710790742595567
+        },
+        {
+          "step": 11,
+          "state": "follow",
+          "familiarity": 0.8292251825332642,
+          "movement_heading": 37.91128038132089,
+          "trend": 0.0
+        },
+        {
+          "step": 12,
+          "state": "follow",
+          "familiarity": 0.8286571502685547,
+          "movement_heading": 37.91128038132089,
+          "trend": -0.0008591138644754014
+        }
+      ]
+    },
+    {
+      "id": "meander-19-sobel_colour-aligned-familiarity-1",
+      "termination": "arrival",
+      "steps": 78,
+      "first_block": null,
+      "first_12": [
+        {
+          "step": 1,
+          "state": "follow",
+          "familiarity": 1.0,
+          "movement_heading": 37.91128038132089,
+          "trend": 0.0
+        },
+        {
+          "step": 2,
+          "state": "follow",
+          "familiarity": 0.9693379402160645,
+          "movement_heading": 37.91128038132089,
+          "trend": -0.15020234147739953
+        },
+        {
+          "step": 3,
+          "state": "cast",
+          "familiarity": 0.9352322816848755,
+          "movement_heading": 57.91128038132089,
+          "trend": -0.24217245704860182
+        },
+        {
+          "step": 4,
+          "state": "cast",
+          "familiarity": 0.9179142713546753,
+          "movement_heading": 17.911280381320893,
+          "trend": -0.20592089780795697
+        },
+        {
+          "step": 5,
+          "state": "cast",
+          "familiarity": 0.8609142303466797,
+          "movement_heading": 77.91128038132092,
+          "trend": -0.3821830348632652
+        },
+        {
+          "step": 6,
+          "state": "cast",
+          "familiarity": 0.8537043333053589,
+          "movement_heading": -2.0887196186791073,
+          "trend": -0.2264101954672398
+        },
+        {
+          "step": 7,
+          "state": "cast",
+          "familiarity": 0.8542787432670593,
+          "movement_heading": 97.91128038132092,
+          "trend": -0.11039127107542025
+        },
+        {
+          "step": 8,
+          "state": "cast",
+          "familiarity": 0.8009458780288696,
+          "movement_heading": -22.088719618679107,
+          "trend": -0.31645405369106827
+        },
+        {
+          "step": 9,
+          "state": "cast",
+          "familiarity": 0.8214867115020752,
+          "movement_heading": -22.088719618679107,
+          "trend": -0.05760491256770403
+        },
+        {
+          "step": 10,
+          "state": "follow",
+          "familiarity": 0.8301156759262085,
+          "movement_heading": -22.088719618679107,
+          "trend": 0.013467719632674291
+        },
+        {
+          "step": 11,
+          "state": "follow",
+          "familiarity": 0.8250848650932312,
+          "movement_heading": -22.088719618679107,
+          "trend": -0.01791026298453714
+        },
+        {
+          "step": 12,
+          "state": "follow",
+          "familiarity": 0.8011084198951721,
+          "movement_heading": -22.088719618679107,
+          "trend": -0.1264070650684932
+        }
+      ]
+    },
+    {
+      "id": "meander-19-ardin_input-aligned-familiarity-1",
+      "termination": "arrival",
+      "steps": 110,
+      "first_block": {
+        "time_s": 84.62777777777771,
+        "reason": "rock_contact",
+        "position": [
+          3.163890223891894,
+          2.0241494177571617
+        ]
+      },
+      "first_12": [
+        {
+          "step": 1,
+          "state": "follow",
+          "familiarity": 0.9999998807907104,
+          "movement_heading": 37.91128038132089,
+          "trend": 0.0
+        },
+        {
+          "step": 2,
+          "state": "follow",
+          "familiarity": 0.6724125146865845,
+          "movement_heading": 37.91128038132089,
+          "trend": -0.4743885515686915
+        },
+        {
+          "step": 3,
+          "state": "follow",
+          "familiarity": 0.9022012948989868,
+          "movement_heading": 37.91128038132089,
+          "trend": 0.095569371080621
+        },
+        {
+          "step": 4,
+          "state": "follow",
+          "familiarity": 0.871760904788971,
+          "movement_heading": 37.91128038132089,
+          "trend": 0.0
+        },
+        {
+          "step": 5,
+          "state": "follow",
+          "familiarity": 0.7690510153770447,
+          "movement_heading": 37.91128038132089,
+          "trend": -0.14873710256096015
+        },
+        {
+          "step": 6,
+          "state": "follow",
+          "familiarity": 0.8590755462646484,
+          "movement_heading": 37.91128038132089,
+          "trend": 0.05599852398653947
+        },
+        {
+          "step": 7,
+          "state": "follow",
+          "familiarity": 0.8541685938835144,
+          "movement_heading": 37.91128038132089,
+          "trend": 0.0
+        },
+        {
+          "step": 8,
+          "state": "follow",
+          "familiarity": 0.8559454679489136,
+          "movement_heading": 37.91128038132089,
+          "trend": 0.002573141706376899
+        },
+        {
+          "step": 9,
+          "state": "follow",
+          "familiarity": 0.6724849939346313,
+          "movement_heading": 37.91128038132089,
+          "trend": -0.2643877424537457
+        },
+        {
+          "step": 10,
+          "state": "cast",
+          "familiarity": 0.6491608619689941,
+          "movement_heading": 57.91128038132089,
+          "trend": -0.1659702079377906
+        },
+        {
+          "step": 11,
+          "state": "cast",
+          "familiarity": 0.6179400086402893,
+          "movement_heading": 17.911280381320893,
+          "trend": -0.12819690674835635
+        },
+        {
+          "step": 12,
+          "state": "cast",
+          "familiarity": 0.7053372859954834,
+          "movement_heading": 17.911280381320893,
+          "trend": 0.06246402157303722
+        }
+      ]
+    },
+    {
+      "id": "bend-19-apiaviz_uv-aligned-familiarity-1",
+      "termination": "uninformative_views",
+      "steps": 50,
+      "first_block": {
+        "time_s": 56.81111111111109,
+        "reason": "rock_contact",
+        "position": [
+          2.806887433112006,
+          0.04550662261884927
+        ]
+      },
+      "first_12": [
+        {
+          "step": 1,
+          "state": "follow",
+          "familiarity": 1.0000001192092896,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 2,
+          "state": "follow",
+          "familiarity": 0.9999997615814209,
+          "movement_heading": 0.0,
+          "trend": -4.0421011228627456e-07
+        },
+        {
+          "step": 3,
+          "state": "follow",
+          "familiarity": 0.9593321084976196,
+          "movement_heading": 0.0,
+          "trend": -0.04596495502368985
+        },
+        {
+          "step": 4,
+          "state": "cast",
+          "familiarity": 0.9512887001037598,
+          "movement_heading": 20.0,
+          "trend": -0.03207356714727552
+        },
+        {
+          "step": 5,
+          "state": "cast",
+          "familiarity": 0.9138721227645874,
+          "movement_heading": -20.0,
+          "trend": -0.058326997098181045
+        },
+        {
+          "step": 6,
+          "state": "cast",
+          "familiarity": 0.9209215641021729,
+          "movement_heading": 40.0,
+          "trend": -0.021195843552407573
+        },
+        {
+          "step": 7,
+          "state": "cast",
+          "familiarity": 0.8271833658218384,
+          "movement_heading": -40.0,
+          "trend": -0.1165458385176715
+        },
+        {
+          "step": 8,
+          "state": "cast",
+          "familiarity": 0.8593457341194153,
+          "movement_heading": -40.0,
+          "trend": -0.021921293335650363
+        },
+        {
+          "step": 9,
+          "state": "cast",
+          "familiarity": 0.8615741729736328,
+          "movement_heading": 60.0,
+          "trend": -0.008441946089817357
+        },
+        {
+          "step": 10,
+          "state": "cast",
+          "familiarity": 0.88370680809021,
+          "movement_heading": 60.0,
+          "trend": 0.020794512910856093
+        },
+        {
+          "step": 11,
+          "state": "cast",
+          "familiarity": 0.8509535193443298,
+          "movement_heading": -60.0,
+          "trend": -0.026622259309958363
+        },
+        {
+          "step": 12,
+          "state": "follow",
+          "familiarity": 0.8742175102233887,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        }
+      ]
+    },
+    {
+      "id": "bend-19-sobel_colour-aligned-familiarity-1",
+      "termination": "time_budget",
+      "steps": 177,
+      "first_block": {
+        "time_s": 179.16666666666737,
+        "reason": "field_boundary",
+        "position": [
+          5.962508813512677,
+          3.9937975975861053
+        ]
+      },
+      "first_12": [
+        {
+          "step": 1,
+          "state": "follow",
+          "familiarity": 0.9999999403953552,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 2,
+          "state": "follow",
+          "familiarity": 1.0000004768371582,
+          "movement_heading": 0.0,
+          "trend": 2.0571262175444477e-06
+        },
+        {
+          "step": 3,
+          "state": "follow",
+          "familiarity": 0.9695888757705688,
+          "movement_heading": 0.0,
+          "trend": -0.1166201995444427
+        },
+        {
+          "step": 4,
+          "state": "follow",
+          "familiarity": 0.9852221012115479,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 5,
+          "state": "follow",
+          "familiarity": 0.9819660186767578,
+          "movement_heading": 0.0,
+          "trend": -0.012486299001335343
+        },
+        {
+          "step": 6,
+          "state": "follow",
+          "familiarity": 0.9777856469154358,
+          "movement_heading": 0.0,
+          "trend": -0.0222738769748321
+        },
+        {
+          "step": 7,
+          "state": "follow",
+          "familiarity": 0.9798409342765808,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 8,
+          "state": "follow",
+          "familiarity": 0.9765241742134094,
+          "movement_heading": 0.0,
+          "trend": -0.012718982833497592
+        },
+        {
+          "step": 9,
+          "state": "follow",
+          "familiarity": 0.9747734069824219,
+          "movement_heading": 0.0,
+          "trend": -0.013073265682074692
+        },
+        {
+          "step": 10,
+          "state": "follow",
+          "familiarity": 0.9818627834320068,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 11,
+          "state": "follow",
+          "familiarity": 0.9768849015235901,
+          "movement_heading": 0.0,
+          "trend": -0.01908898845091384
+        },
+        {
+          "step": 12,
+          "state": "cast",
+          "familiarity": 0.979671061038971,
+          "movement_heading": 20.0,
+          "trend": 0.0011397622093094872
+        }
+      ]
+    },
+    {
+      "id": "bend-19-ardin_input-aligned-familiarity-1",
+      "termination": "time_budget",
+      "steps": 136,
+      "first_block": {
+        "time_s": 54.03333333333329,
+        "reason": "rock_contact",
+        "position": [
+          2.845794792676426,
+          0.15359643651713134
+        ]
+      },
+      "first_12": [
+        {
+          "step": 1,
+          "state": "follow",
+          "familiarity": 1.0000001192092896,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 2,
+          "state": "follow",
+          "familiarity": 0.9999998807907104,
+          "movement_heading": 0.0,
+          "trend": -3.111833040438547e-07
+        },
+        {
+          "step": 3,
+          "state": "follow",
+          "familiarity": 0.9656690955162048,
+          "movement_heading": 0.0,
+          "trend": -0.044808606478316824
+        },
+        {
+          "step": 4,
+          "state": "cast",
+          "familiarity": 0.8481747508049011,
+          "movement_heading": 20.0,
+          "trend": -0.1757576137550983
+        },
+        {
+          "step": 5,
+          "state": "cast",
+          "familiarity": 0.9486522674560547,
+          "movement_heading": 20.0,
+          "trend": 0.04326418429139067
+        },
+        {
+          "step": 6,
+          "state": "cast",
+          "familiarity": 0.8330826759338379,
+          "movement_heading": -20.0,
+          "trend": -0.12920903555669852
+        },
+        {
+          "step": 7,
+          "state": "cast",
+          "familiarity": 0.7603330612182617,
+          "movement_heading": 40.0,
+          "trend": -0.15955712407446682
+        },
+        {
+          "step": 8,
+          "state": "cast",
+          "familiarity": 0.8277180790901184,
+          "movement_heading": 40.0,
+          "trend": 0.008172186530419387
+        },
+        {
+          "step": 9,
+          "state": "cast",
+          "familiarity": 0.7408877015113831,
+          "movement_heading": -40.0,
+          "trend": -0.10924468778443389
+        },
+        {
+          "step": 10,
+          "state": "cast",
+          "familiarity": 0.7193878889083862,
+          "movement_heading": 60.0,
+          "trend": -0.08268384290515363
+        },
+        {
+          "step": 11,
+          "state": "cast",
+          "familiarity": 0.7191013693809509,
+          "movement_heading": -60.0,
+          "trend": -0.041715885988211514
+        },
+        {
+          "step": 12,
+          "state": "follow",
+          "familiarity": 0.8940044641494751,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        }
+      ]
+    },
+    {
+      "id": "hairpin-19-apiaviz_uv-aligned-familiarity-1",
+      "termination": "uninformative_views",
+      "steps": 66,
+      "first_block": {
+        "time_s": 89.89999999999986,
+        "reason": "rock_contact",
+        "position": [
+          4.051008765633174,
+          0.4301084781973351
+        ]
+      },
+      "first_12": [
+        {
+          "step": 1,
+          "state": "follow",
+          "familiarity": 1.0,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 2,
+          "state": "follow",
+          "familiarity": 1.0000001192092896,
+          "movement_heading": 0.0,
+          "trend": 1.419322328929595e-07
+        },
+        {
+          "step": 3,
+          "state": "follow",
+          "familiarity": 0.9650353193283081,
+          "movement_heading": 0.0,
+          "trend": -0.04162950453478593
+        },
+        {
+          "step": 4,
+          "state": "cast",
+          "familiarity": 0.9396791458129883,
+          "movement_heading": 20.0,
+          "trend": -0.051004164000424124
+        },
+        {
+          "step": 5,
+          "state": "cast",
+          "familiarity": 0.9131900072097778,
+          "movement_heading": -20.0,
+          "trend": -0.05704041767465791
+        },
+        {
+          "step": 6,
+          "state": "cast",
+          "familiarity": 0.8824828863143921,
+          "movement_heading": 40.0,
+          "trend": -0.06508053270822639
+        },
+        {
+          "step": 7,
+          "state": "cast",
+          "familiarity": 0.836707353591919,
+          "movement_heading": -40.0,
+          "trend": -0.0870412502593794
+        },
+        {
+          "step": 8,
+          "state": "cast",
+          "familiarity": 0.873066782951355,
+          "movement_heading": -40.0,
+          "trend": -0.00023058443617259006
+        },
+        {
+          "step": 9,
+          "state": "cast",
+          "familiarity": 0.8793997764587402,
+          "movement_heading": 60.0,
+          "trend": 0.0074248576543521775
+        },
+        {
+          "step": 10,
+          "state": "cast",
+          "familiarity": 0.8813157081604004,
+          "movement_heading": -60.0,
+          "trend": 0.005993563674231733
+        },
+        {
+          "step": 11,
+          "state": "cast",
+          "familiarity": 0.8842402100563049,
+          "movement_heading": 60.0,
+          "trend": 0.006478734340562396
+        },
+        {
+          "step": 12,
+          "state": "follow",
+          "familiarity": 0.895916759967804,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        }
+      ]
+    },
+    {
+      "id": "hairpin-19-sobel_colour-aligned-familiarity-1",
+      "termination": "arrival",
+      "steps": 100,
+      "first_block": null,
+      "first_12": [
+        {
+          "step": 1,
+          "state": "follow",
+          "familiarity": 0.9999998807907104,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 2,
+          "state": "follow",
+          "familiarity": 0.9999998807907104,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 3,
+          "state": "follow",
+          "familiarity": 0.9792327880859375,
+          "movement_heading": 0.0,
+          "trend": -0.05789325303276848
+        },
+        {
+          "step": 4,
+          "state": "follow",
+          "familiarity": 0.9820492267608643,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 5,
+          "state": "follow",
+          "familiarity": 0.9750292301177979,
+          "movement_heading": 0.0,
+          "trend": -0.019569924771069305
+        },
+        {
+          "step": 6,
+          "state": "follow",
+          "familiarity": 0.9814026355743408,
+          "movement_heading": 0.0,
+          "trend": 0.007982434332989485
+        },
+        {
+          "step": 7,
+          "state": "follow",
+          "familiarity": 0.9815596342086792,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 8,
+          "state": "follow",
+          "familiarity": 0.9819590449333191,
+          "movement_heading": 0.0,
+          "trend": 0.0011134532153489285
+        },
+        {
+          "step": 9,
+          "state": "follow",
+          "familiarity": 0.9294559955596924,
+          "movement_heading": 0.0,
+          "trend": -0.14580811923715173
+        },
+        {
+          "step": 10,
+          "state": "follow",
+          "familiarity": 0.976049542427063,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 11,
+          "state": "follow",
+          "familiarity": 0.9295880198478699,
+          "movement_heading": 0.0,
+          "trend": -0.12952264051610402
+        },
+        {
+          "step": 12,
+          "state": "cast",
+          "familiarity": 0.9741112589836121,
+          "movement_heading": 20.0,
+          "trend": 0.0593578901565848
+        }
+      ]
+    },
+    {
+      "id": "hairpin-19-ardin_input-aligned-familiarity-1",
+      "termination": "time_budget",
+      "steps": 175,
+      "first_block": {
+        "time_s": 42.02777777777773,
+        "reason": "rock_contact",
+        "position": [
+          1.7331446081079354,
+          0.44258594065227186
+        ]
+      },
+      "first_12": [
+        {
+          "step": 1,
+          "state": "follow",
+          "familiarity": 1.0,
+          "movement_heading": 0.0,
+          "trend": 0.0
+        },
+        {
+          "step": 2,
+          "state": "follow",
+          "familiarity": 1.000000238418579,
+          "movement_heading": 0.0,
+          "trend": 3.5590222856835057e-07
+        },
+        {
+          "step": 3,
+          "state": "follow",
+          "familiarity": 0.9510045647621155,
+          "movement_heading": 0.0,
+          "trend": -0.07313870875081031
+        },
+        {
+          "step": 4,
+          "state": "cast",
+          "familiarity": 0.829126238822937,
+          "movement_heading": 20.0,
+          "trend": -0.21850470513284598
+        },
+        {
+          "step": 5,
+          "state": "cast",
+          "familiarity": 0.9620503187179565,
+          "movement_heading": 20.0,
+          "trend": 0.08917168151391808
+        },
+        {
+          "step": 6,
+          "state": "cast",
+          "familiarity": 0.836591362953186,
+          "movement_heading": -20.0,
+          "trend": -0.1426945386446784
+        },
+        {
+          "step": 7,
+          "state": "cast",
+          "familiarity": 0.7954174280166626,
+          "movement_heading": 40.0,
+          "trend": -0.13281016058717907
+        },
+        {
+          "step": 8,
+          "state": "cast",
+          "familiarity": 0.7361835837364197,
+          "movement_heading": -40.0,
+          "trend": -0.15482712049469624
+        },
+        {
+          "step": 9,
+          "state": "cast",
+          "familiarity": 0.7905047535896301,
+          "movement_heading": -40.0,
+          "trend": 0.003675025558550593
+        },
+        {
+          "step": 10,
+          "state": "cast",
+          "familiarity": 0.695775032043457,
+          "movement_heading": 60.0,
+          "trend": -0.13957142916220172
+        },
+        {
+          "step": 11,
+          "state": "cast",
+          "familiarity": 0.8238543272018433,
+          "movement_heading": 60.0,
+          "trend": 0.12140620826361706
+        },
+        {
+          "step": 12,
+          "state": "follow",
+          "familiarity": 0.8430418968200684,
+          "movement_heading": 60.0,
+          "trend": 0.08934558163364653
+        }
+      ]
+    }
+  ],
+  "features": [
+    {
+      "world": "meander",
+      "raw_receptor_quantiles": [
+        [
+          0.07120882719755173,
+          0.10331360250711441,
+          0.08967594057321548
+        ],
+        [
+          0.10228122174739838,
+          0.18972993493080145,
+          0.1822407066822052
+        ],
+        [
+          0.12751375669240922,
+          0.2731904636621464,
+          0.3713305150866496
+        ],
+        [
+          1087.8592529296875,
+          3050.8466796875,
+          4838.603515625
+        ]
+      ],
+      "pixels_any_channel_over_one_fraction": 0.0002690076653379947,
+      "streams": {
+        "raw_form": {
+          "p10": 0.3213939547538757,
+          "median": 0.33637019991874695,
+          "p90": 0.37227681875228885
+        },
+        "raw_colour": {
+          "p10": 0.9944189429283142,
+          "median": 0.9993027448654175,
+          "p90": 0.9997673988342285
+        },
+        "raw_uv": {
+          "p10": 0.9145778059959412,
+          "median": 0.9863636493682861,
+          "p90": 0.9952044486999512
+        },
+        "compressed_diagnostic_form": {
+          "p10": 0.10667822808027268,
+          "median": 0.12413433194160461,
+          "p90": 0.1509938806295395
+        },
+        "compressed_diagnostic_colour": {
+          "p10": 0.025900189578533173,
+          "median": 0.029411815106868744,
+          "p90": 0.03613828048110009
+        },
+        "compressed_diagnostic_uv": {
+          "p10": 0.0901261255145073,
+          "median": 0.09854819625616074,
+          "p90": 0.11263337731361389
+        }
+      },
+      "calibration": {
+        "apiaviz_uv": {
+          "scale": 0.3305919553843592,
+          "low": 0.32524844470078657,
+          "high": 0.6558404000851458,
+          "familiar": 0.7739581100980933,
+          "degenerate": false,
+          "views": 63,
+          "additional_observations": 0,
+          "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+        },
+        "sobel_colour": {
+          "scale": 0.10206918042136237,
+          "low": 0.648650760634237,
+          "high": 0.7507199410555994,
+          "familiar": 0.8355039009229996,
+          "degenerate": false,
+          "views": 63,
+          "additional_observations": 0,
+          "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+        },
+        "ardin_input": {
+          "scale": 0.3452732628357825,
+          "low": 0.2456449650318153,
+          "high": 0.5909182278675978,
+          "familiar": 0.7241692437531274,
+          "degenerate": false,
+          "views": 63,
+          "additional_observations": 0,
+          "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+        }
+      }
+    },
+    {
+      "world": "bend",
+      "raw_receptor_quantiles": [
+        [
+          0.06978390365839005,
+          0.10068655759096146,
+          0.08891180902719498
+        ],
+        [
+          0.10153491795063019,
+          0.18561014533042908,
+          0.1768726035952568
+        ],
+        [
+          0.12720922142267224,
+          0.2697309638559815,
+          0.3618343412876128
+        ],
+        [
+          718.030517578125,
+          2188.693359375,
+          3202.140869140625
+        ]
+      ],
+      "pixels_any_channel_over_one_fraction": 0.0003171494754496962,
+      "streams": {
+        "raw_form": {
+          "p10": 0.33756912052631377,
+          "median": 0.3535732477903366,
+          "p90": 0.3722679942846298
+        },
+        "raw_colour": {
+          "p10": 0.9979068577289582,
+          "median": 0.998979389667511,
+          "p90": 0.9994916498661042
+        },
+        "raw_uv": {
+          "p10": 0.96154625415802,
+          "median": 0.9793946444988251,
+          "p90": 0.9901477098464966
+        },
+        "compressed_diagnostic_form": {
+          "p10": 0.10450495406985283,
+          "median": 0.12134143337607384,
+          "p90": 0.1393354207277298
+        },
+        "compressed_diagnostic_colour": {
+          "p10": 0.02530448082834482,
+          "median": 0.028234470635652542,
+          "p90": 0.03096429817378521
+        },
+        "compressed_diagnostic_uv": {
+          "p10": 0.09006755724549294,
+          "median": 0.0991438664495945,
+          "p90": 0.11544033214449882
+        }
+      },
+      "calibration": {
+        "apiaviz_uv": {
+          "scale": 0.44237867606718884,
+          "low": 0.3426357819472865,
+          "high": 0.7850144580144753,
+          "familiar": 0.8260351478719383,
+          "degenerate": false,
+          "views": 64,
+          "additional_observations": 0,
+          "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+        },
+        "sobel_colour": {
+          "scale": 0.1303862151003199,
+          "low": 0.5841309007861173,
+          "high": 0.7145171158864372,
+          "familiar": 0.825903764533662,
+          "degenerate": false,
+          "views": 64,
+          "additional_observations": 0,
+          "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+        },
+        "ardin_input": {
+          "scale": 0.38308382230552196,
+          "low": 0.3473882147003893,
+          "high": 0.7304720370059112,
+          "familiar": 0.8354901035172202,
+          "degenerate": false,
+          "views": 64,
+          "additional_observations": 0,
+          "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+        }
+      }
+    },
+    {
+      "world": "hairpin",
+      "raw_receptor_quantiles": [
+        [
+          0.06886186450719833,
+          0.09897329658269882,
+          0.08825551345944405
+        ],
+        [
+          0.09838900566101075,
+          0.18088020980358127,
+          0.171810282766819
+        ],
+        [
+          0.12721038734912876,
+          0.2720729804039002,
+          0.36832219126820676
+        ],
+        [
+          966.1334228515625,
+          2602.558349609375,
+          3996.49755859375
+        ]
+      ],
+      "pixels_any_channel_over_one_fraction": 0.00028117632609792054,
+      "streams": {
+        "raw_form": {
+          "p10": 0.3388514369726181,
+          "median": 0.35677625238895416,
+          "p90": 0.37948209643363956
+        },
+        "raw_colour": {
+          "p10": 0.9982916235923767,
+          "median": 0.9994548261165619,
+          "p90": 0.9997829914093017
+        },
+        "raw_uv": {
+          "p10": 0.9644147872924804,
+          "median": 0.9906266331672668,
+          "p90": 0.9967558443546295
+        },
+        "compressed_diagnostic_form": {
+          "p10": 0.10308326184749603,
+          "median": 0.11798837780952454,
+          "p90": 0.1456827908754349
+        },
+        "compressed_diagnostic_colour": {
+          "p10": 0.02547673210501671,
+          "median": 0.030043388716876507,
+          "p90": 0.03644566424190998
+        },
+        "compressed_diagnostic_uv": {
+          "p10": 0.08299434706568717,
+          "median": 0.09254766255617142,
+          "p90": 0.10924320295453072
+        }
+      },
+      "calibration": {
+        "apiaviz_uv": {
+          "scale": 0.41995143429007026,
+          "low": 0.34011138217554954,
+          "high": 0.7600628164656198,
+          "familiar": 0.8095232397362144,
+          "degenerate": false,
+          "views": 82,
+          "additional_observations": 0,
+          "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+        },
+        "sobel_colour": {
+          "scale": 0.17935676108076404,
+          "low": 0.5606491589902767,
+          "high": 0.7400059200710407,
+          "familiar": 0.839192262610042,
+          "degenerate": false,
+          "views": 82,
+          "additional_observations": 0,
+          "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+        },
+        "ardin_input": {
+          "scale": 0.33494954507678015,
+          "low": 0.2730427707634953,
+          "high": 0.6079923158402755,
+          "familiar": 0.7850440184750076,
+          "degenerate": false,
+          "views": 82,
+          "additional_observations": 0,
+          "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+        }
+      }
+    }
+  ],
+  "repeatability": [
+    {
+      "world": "bend",
+      "station": 2,
+      "position_difference_m": 2.7755575615628914e-17,
+      "teaching_key": "07af39a8707db8e541a442afda5a44c8042da25b17530523e4feca6282832a2c",
+      "query_key": "21e4cb0453aa8158d223e0282970e521ad3e340aa2f181689dca4c3ef66696e1",
+      "raw_similarity": {
+        "all": 0.9593321084976196,
+        "uv_off": 0.9564600586891174,
+        "form": 0.952724039554596,
+        "colour": 0.9596558809280396,
+        "uv": 0.9729679822921753
+      },
+      "compressed_diagnostic_similarity": {
+        "all": 0.9710209369659424,
+        "uv_off": 0.9704440832138062,
+        "form": 0.9565955996513367,
+        "colour": 0.981042742729187,
+        "uv": 0.9740215539932251
+      },
+      "recorded_familiarity": 0.9593321084976196,
+      "query_max": [
+        153.3504638671875,
+        508.2040100097656,
+        746.766845703125
+      ],
+      "teaching_max": [
+        261.87261962890625,
+        742.6564331054688,
+        1127.6318359375
+      ]
+    },
+    {
+      "world": "bend",
+      "station": 3,
+      "position_difference_m": 5.551115123125783e-17,
+      "teaching_key": "b25c866aad64b31f54838c3b18ef1f34205f36085c6ddd6387cf28733c22ef60",
+      "query_key": "6bae3ed3c76b111436c6fd3eff5766a2e0159aee9503b4364391f5e7cf29debd",
+      "raw_similarity": {
+        "all": 0.9512888193130493,
+        "uv_off": 0.9485077261924744,
+        "form": 0.9602859020233154,
+        "colour": 0.9402204155921936,
+        "uv": 0.965247392654419
+      },
+      "compressed_diagnostic_similarity": {
+        "all": 0.9696976542472839,
+        "uv_off": 0.9640883803367615,
+        "form": 0.9542688131332397,
+        "colour": 0.9713029861450195,
+        "uv": 0.9940297603607178
+      },
+      "recorded_familiarity": 0.9512887001037598,
+      "query_max": [
+        215.67123413085938,
+        575.99658203125,
+        984.0352172851562
+      ],
+      "teaching_max": [
+        289.8395080566406,
+        637.5737915039062,
+        1149.53955078125
+      ]
+    },
+    {
+      "world": "hairpin",
+      "station": 2,
+      "position_difference_m": 2.7755575615628914e-17,
+      "teaching_key": "07af39a8707db8e541a442afda5a44c8042da25b17530523e4feca6282832a2c",
+      "query_key": "21e4cb0453aa8158d223e0282970e521ad3e340aa2f181689dca4c3ef66696e1",
+      "raw_similarity": {
+        "all": 0.9650356769561768,
+        "uv_off": 0.9632903337478638,
+        "form": 0.9600045084953308,
+        "colour": 0.9663073420524597,
+        "uv": 0.9733285903930664
+      },
+      "compressed_diagnostic_similarity": {
+        "all": 0.9708250761032104,
+        "uv_off": 0.9713575839996338,
+        "form": 0.9663654565811157,
+        "colour": 0.9750592708587646,
+        "uv": 0.9683297276496887
+      },
+      "recorded_familiarity": 0.9650353193283081,
+      "query_max": [
+        153.3504638671875,
+        508.2040100097656,
+        746.766845703125
+      ],
+      "teaching_max": [
+        261.87261962890625,
+        742.6564331054688,
+        1127.6318359375
+      ]
+    },
+    {
+      "world": "hairpin",
+      "station": 3,
+      "position_difference_m": 5.551115123125783e-17,
+      "teaching_key": "b25c866aad64b31f54838c3b18ef1f34205f36085c6ddd6387cf28733c22ef60",
+      "query_key": "6bae3ed3c76b111436c6fd3eff5766a2e0159aee9503b4364391f5e7cf29debd",
+      "raw_similarity": {
+        "all": 0.9396792650222778,
+        "uv_off": 0.9336247444152832,
+        "form": 0.9610590934753418,
+        "colour": 0.9114652872085571,
+        "uv": 0.9714227914810181
+      },
+      "compressed_diagnostic_similarity": {
+        "all": 0.9771044254302979,
+        "uv_off": 0.9768072366714478,
+        "form": 0.9671685695648193,
+        "colour": 0.984149694442749,
+        "uv": 0.9787481427192688
+      },
+      "recorded_familiarity": 0.9396791458129883,
+      "query_max": [
+        215.67123413085938,
+        575.99658203125,
+        984.0352172851562
+      ],
+      "teaching_max": [
+        289.8395080566406,
+        637.5737915039062,
+        1149.53955078125
+      ]
+    }
+  ]
+}

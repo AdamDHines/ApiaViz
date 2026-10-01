@@ -31,9 +31,13 @@ def build(out):
             x,y=rng.uniform(xmin+.2,xmax-.2),rng.uniform(ymin+.2,ymax-.2)
             if distance(x,y)>clearance: return x,y
         raise RuntimeError('Cannot place landmark outside teaching corridor')
-    soil=material('Grassland earth','A49475','776A51',bump=0)
-    stone=material('Limestone','AAA796','827F73',bump=0)
-    grass=[material(f'Grass {i}',c,bump=0) for i,c in enumerate(('798653','AFA779','536347','C2AE7B'))]
+    detailed=p.get('surface_detail')=='source-informed-surfaces-v1'
+    if p.get('surface_detail') and not detailed:raise ValueError('Unknown surface detail version')
+    soil=material('Grassland earth','A49475','776A51',scale=4 if detailed else 8,bump=.00065 if detailed else 0)
+    stone=material('Limestone','AAA796','827F73',scale=17 if detailed else 8,bump=.0005 if detailed else 0)
+    grass=[material(f'Grass {i}',c,scale=25 if detailed else 8,roughness=.62 if detailed else .85,
+                    bump=.00004 if detailed else 0,leaf=detailed)
+           for i,c in enumerate(('798653','AFA779','536347','C2AE7B'))]
     bpy.ops.mesh.primitive_plane_add(size=80)
     bpy.context.object.name='Walkable terrain'; bpy.context.object.data.materials.append(soil)
     obstacles=[]

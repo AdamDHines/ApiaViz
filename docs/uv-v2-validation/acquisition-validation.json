@@ -1,0 +1,367 @@
+{
+  "schema": "apiaviz-acquisition-validation-v2",
+  "source_protocol_sha256": "c3ae6ac70bece836c826c63d9d6dfca23cc549e57e89269776dcbdeea31ab377",
+  "response_half": 1.0,
+  "pose_decimals": 8,
+  "seed_policy": "common-v2",
+  "conditions": [
+    {
+      "world": "meander",
+      "spp": 64,
+      "method": "apiaviz_uv",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9746835827827454,
+        0.9788733720779419,
+        0.9875797629356384
+      ],
+      "ten_micron_translation_similarity": [
+        1.0,
+        1.0000001192092896,
+        1.000000238418579
+      ],
+      "thirty_degree_heading_similarity": [
+        0.5729355216026306,
+        0.5809281468391418,
+        0.5804280042648315,
+        0.5824655294418335,
+        0.5962746143341064,
+        0.6048232913017273
+      ]
+    },
+    {
+      "world": "meander",
+      "spp": 64,
+      "method": "sobel_colour",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9800019264221191,
+        0.9753327965736389,
+        0.9839535355567932
+      ]
+    },
+    {
+      "world": "meander",
+      "spp": 64,
+      "method": "ardin_input",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.8553239703178406,
+        0.9635030627250671,
+        0.7386336326599121
+      ]
+    },
+    {
+      "world": "meander",
+      "spp": 256,
+      "method": "apiaviz_uv",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9830888509750366,
+        0.9734959006309509,
+        0.9896242618560791
+      ],
+      "ten_micron_translation_similarity": [
+        0.9999998807907104,
+        1.0,
+        1.0000001192092896
+      ],
+      "thirty_degree_heading_similarity": [
+        0.5775957703590393,
+        0.595377504825592,
+        0.576839804649353,
+        0.5870978236198425,
+        0.5943952798843384,
+        0.5948215126991272
+      ]
+    },
+    {
+      "world": "meander",
+      "spp": 256,
+      "method": "sobel_colour",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9929934740066528,
+        0.9802391529083252,
+        0.9939879775047302
+      ]
+    },
+    {
+      "world": "meander",
+      "spp": 256,
+      "method": "ardin_input",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9162184596061707,
+        0.9529438018798828,
+        0.9556369781494141
+      ]
+    },
+    {
+      "world": "bend",
+      "spp": 64,
+      "method": "apiaviz_uv",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9821850657463074,
+        0.9752908945083618,
+        0.9806867837905884
+      ],
+      "ten_micron_translation_similarity": [
+        1.0,
+        1.0000001192092896,
+        1.0000001192092896
+      ],
+      "thirty_degree_heading_similarity": [
+        0.5861600041389465,
+        0.5766441226005554,
+        0.5881756544113159,
+        0.5912438631057739,
+        0.5980021953582764,
+        0.5534239411354065
+      ]
+    },
+    {
+      "world": "bend",
+      "spp": 64,
+      "method": "sobel_colour",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9847537875175476,
+        0.9873534440994263,
+        0.9739499092102051
+      ]
+    },
+    {
+      "world": "bend",
+      "spp": 64,
+      "method": "ardin_input",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9757381081581116,
+        0.9078223705291748,
+        0.9739292860031128
+      ]
+    },
+    {
+      "world": "bend",
+      "spp": 256,
+      "method": "apiaviz_uv",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9955946207046509,
+        0.9690383076667786,
+        0.9914369583129883
+      ],
+      "ten_micron_translation_similarity": [
+        0.9999998807907104,
+        0.9988337755203247,
+        0.9999999403953552
+      ],
+      "thirty_degree_heading_similarity": [
+        0.5857254862785339,
+        0.5796557664871216,
+        0.5927417874336243,
+        0.5978604555130005,
+        0.5967229604721069,
+        0.5570973753929138
+      ]
+    },
+    {
+      "world": "bend",
+      "spp": 256,
+      "method": "sobel_colour",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9892489314079285,
+        0.9931445121765137,
+        0.988418698310852
+      ]
+    },
+    {
+      "world": "bend",
+      "spp": 256,
+      "method": "ardin_input",
+      "stations": [
+        2,
+        3,
+        32
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9758435487747192,
+        0.8135625123977661,
+        0.9241585731506348
+      ]
+    },
+    {
+      "world": "hairpin",
+      "spp": 64,
+      "method": "apiaviz_uv",
+      "stations": [
+        2,
+        3,
+        41
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9709415435791016,
+        0.9814618825912476,
+        0.9690741300582886
+      ],
+      "ten_micron_translation_similarity": [
+        0.9999997615814209,
+        0.9999998807907104,
+        1.0000001192092896
+      ],
+      "thirty_degree_heading_similarity": [
+        0.6416518688201904,
+        0.6328292489051819,
+        0.6212872862815857,
+        0.657177746295929,
+        0.5838521718978882,
+        0.5524477958679199
+      ]
+    },
+    {
+      "world": "hairpin",
+      "spp": 64,
+      "method": "sobel_colour",
+      "stations": [
+        2,
+        3,
+        41
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9769774675369263,
+        0.9850492477416992,
+        0.976604700088501
+      ]
+    },
+    {
+      "world": "hairpin",
+      "spp": 64,
+      "method": "ardin_input",
+      "stations": [
+        2,
+        3,
+        41
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.8296923637390137,
+        0.7726575136184692,
+        0.9575620889663696
+      ]
+    },
+    {
+      "world": "hairpin",
+      "spp": 256,
+      "method": "apiaviz_uv",
+      "stations": [
+        2,
+        3,
+        41
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9839919805526733,
+        0.9881598949432373,
+        0.9856638312339783
+      ],
+      "ten_micron_translation_similarity": [
+        0.9989333152770996,
+        1.0000001192092896,
+        0.9999997615814209
+      ],
+      "thirty_degree_heading_similarity": [
+        0.6430591940879822,
+        0.6311314702033997,
+        0.6263778209686279,
+        0.6595063805580139,
+        0.5786018371582031,
+        0.5455214977264404
+      ]
+    },
+    {
+      "world": "hairpin",
+      "spp": 256,
+      "method": "sobel_colour",
+      "stations": [
+        2,
+        3,
+        41
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.9880971312522888,
+        0.9920792579650879,
+        0.9896911382675171
+      ]
+    },
+    {
+      "world": "hairpin",
+      "spp": 256,
+      "method": "ardin_input",
+      "stations": [
+        2,
+        3,
+        41
+      ],
+      "same_pose_independent_seed_similarity": [
+        0.984729528427124,
+        0.7953970432281494,
+        0.9609252214431763
+      ]
+    }
+  ],
+  "roundoff_equal": true,
+  "interpretation": "Independent seeds measure repeatability; a cache hit alone is not a convergence test.",
+  "source_sha256": {
+    "apiaviz/src/uv.py": "ec617b96b23c75885794a5aa3b953cb072f43a5f730fb367e1d7145cc088b5da",
+    "apiaviz/research/uv_encoder.py": "3a1d4cbb229f07e3a7194d85f46eaa4de8c4c1f88c9f161369587455c2f578cb",
+    "apiaviz/research/dual_camera.py": "a1f29c569180087d402f8d02f35983ae8b940fa6cba2048df756352da266778b",
+    "scripts/uv_mitsuba/trial_camera.py": "e6925374c869c4deaedaddb3ea1c0f306f82bc55c40501fabe970c041f01a50c",
+    "scripts/validate_uv_acquisition_v2.py": "026d9f2c2244d32b6da7e3685bcd80108c74268fd315ee9bbb3d49997b44dc94"
+  },
+  "complete": true
+}

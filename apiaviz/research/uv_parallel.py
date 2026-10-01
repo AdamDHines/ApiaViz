@@ -41,7 +41,7 @@ def file_lock(path):
 class SharedCamera(DualCamera):
     """One writer per exact pose, with the original renderer/cache validation."""
     def frame(self,position):
-        key=position_key(position)
+        key=self.key(position)
         if key in self.frames:
             return super().frame(position)
         with file_lock(self.cache/f'{key}.lock'):
@@ -80,6 +80,7 @@ def worker(out,execution,index):
     if record['adapter_sha256']!=file_sha(Path(__file__)):
         raise ValueError('Parallel adapter changed after launch')
     p=json.loads((out/'protocol.json').read_text()); verify_sources(p)
+    controller_class,evaluate_trial=base.navigation_components(p,FamiliarityController,evaluate)
     if record['protocol_sha256']!=file_sha(out/'protocol.json'):
         raise ValueError('Execution protocol changed')
     assigned=set(record['batches'][index]); jobs=[c for c in cases(p) if c[0] in assigned]
@@ -95,19 +96,15 @@ def worker(out,execution,index):
     status_path=execution.parent/f'worker-{index:02d}.json'; finished=[]
     atomic_json(status_path,dict(status='teaching',completed=0,pid=os.getpid()))
     with SharedCamera(env,render) as camera:
-        teaching=[]
-        for position,heading in tqdm(list(zip(world['route'][:-1],world['headings'][:-1])),desc=f'{world["name"]}: teaching views',leave=False):
-            teaching.append((camera.scan(position,[heading],uv=True),camera.scan(position,[heading])))
-        uv_images=torch.cat([v[0] for v in teaching]); rgb_images=torch.cat([v[1] for v in teaching])
+        uv_images,rgb_images=base.teaching_views(env,world,camera,p)
         save_teaching(env,uv_images,rgb_images)
         loaded=None
         for key,_,seed,method,scenario,phase in jobs:
             if loaded!=(seed,method):
-                model=ApiaVizUVEncoder(UVEncoderConfig(seed=seed)) if method=='apiaviz_uv' else RefinementEncoder(method,seed=seed,code_dim=p['encoder']['baseline_code_dim'])
+                model=base.make_model(p,method,seed)
                 images=uv_images if method=='apiaviz_uv' else rgb_images
-                codes=encode(model,images); memory=SpikeOverlapMemory(codes)
+                codes=encode(model,images); memory,calibration=base.make_memory(model,codes)
                 model_hash,memory_hash=fingerprint(model),fingerprint(memory)
-                calibration=acquisition_calibration(codes.numpy())
                 training_hash=hashlib.sha256(images.numpy().tobytes()).hexdigest()
                 checkpoint=env/f'encoder-{method}-{seed}.pt'
                 state=dict(encoder=model.state_dict(),memory=memory.state_dict(),calibration=calibration,
@@ -123,25 +120,26 @@ def worker(out,execution,index):
                     temporary=checkpoint.with_suffix('.pt.tmp'); torch.save(state,temporary); temporary.replace(checkpoint)
                 loaded=(seed,method)
             scorer=TrialScorer(camera,model,memory,method)
-            factory=lambda:ControllerAdapter(FamiliarityController(calibration,Settings(**p['controller_settings']),phase))
+            factory=lambda:ControllerAdapter(controller_class(calibration,Settings(**p['controller_settings']),phase))
             begin=time.perf_counter(); before_renders=camera.renders; before_hits=camera.cache_hits
             with tqdm(total=p['evaluation']['max_steps'],desc=key,unit='move',leave=False) as movement:
                 def update(step,seconds,views):
                     movement.update(max(0,step-movement.n)); movement.set_postfix(sim_s=f'{seconds:.1f}',views=views,rendered=camera.renders-before_renders)
                     atomic_json(status_path,dict(status='running',trial=key,step=step,sim_s=seconds,views=views,completed=len(finished),pid=os.getpid()))
-                result=evaluate(world['route'],world['headings'],scorer,factory,scenario,p['sensor_settings'],p['evaluation'],world['world_bounds_m'],geometry,
+                result=evaluate_trial(world['route'],world['headings'],scorer,factory,scenario,p['sensor_settings'],p['evaluation'],world['world_bounds_m'],geometry,
                     AvoidanceSettings(**p['avoidance_settings']),phase=phase,safety=EvaluationSafety(**p['evaluation_safety']),progress=update)
             assert fingerprint(model)==model_hash and fingerprint(memory)==memory_hash
             detail={k:result.pop(k) for k in ('trace','microtrace','events','decisions')}
             row=dict(id=key,world=world['name'],seed=seed,method=method,scenario=scenario['name'],phase=phase,controller='familiarity',
                 trace=f'trials/{key}.json',**result,wall_time_s=time.perf_counter()-begin,
                 encoding_s=scorer.encoding_s,active_spikes=scorer.active_spikes,encoded_views=scorer.encoded_views,
+                active_response_components=scorer.active_response_components,
                 rendered_positions=camera.renders-before_renders,cache_hits=camera.cache_hits-before_hits,
                 encoder_fingerprint=model_hash,memory_fingerprint=memory_hash,training_images_sha256=training_hash,
                 checkpoint_sha256=file_sha(checkpoint))
             detail['sensor']=scorer.decisions
             audit_trial(row,detail,p,world,geometry)
-            frame_keys={position_key(e['position']) for e in detail['events'] if e['kind'] in ('observation','avoidance_observation')}
+            frame_keys={camera.key(e['position']) for e in detail['events'] if e['kind'] in ('observation','avoidance_observation')}
             atomic_json(out/row['trace'],dict(protocol_sha256=file_sha(out/'protocol.json'),execution_sha256=file_sha(execution),result=row,
                 camera_frames={key:camera.references[key] for key in sorted(frame_keys)},**detail))
             finished.append(key)

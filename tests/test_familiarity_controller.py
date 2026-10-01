@@ -30,6 +30,18 @@ def useful_field(p, h):
 
 
 class FamiliarityTests(unittest.TestCase):
+    def test_broad_heading_contrast_is_independent_of_scan_span_and_spacing(self):
+        policy = FamiliarityController(dict(scale=.3))
+        for base in (0., 175., -178.):
+            for extent in (10., 20., 60.):
+                for spacing in (5., 10.):
+                    samples = {(base+d+180)%360-180: .6+.3*np.cos(np.radians(d))
+                               for d in np.arange(-extent, extent+.1, spacing)}
+                    target, contrast, supported = policy._peak(samples, base)
+                    self.assertAlmostEqual(contrast, 1., places=10)
+                    self.assertTrue(supported)
+                    self.assertAlmostEqual((target-base+180)%360-180, 0.)
+
     def test_calibration_is_acquisition_only_and_handles_identical_codes(self):
         calibration = acquisition_calibration(np.ones((5, 8)))
         self.assertTrue(calibration['degenerate'])
@@ -122,14 +134,14 @@ class FamiliarityTests(unittest.TestCase):
         self.assertLess(after_kick['comparison']['normalized_change'], 0.)
 
     def test_opposite_equal_peaks_are_treated_as_ambiguous(self):
-        result, policy = trial(lambda p,h: .6+.3*np.cos(2*np.radians(h)),
-                              settings=replace(Settings(),scan_extents=(180.,)))
-        self.assertEqual(result['termination'], 'uninformative_views')
-        self.assertFalse(any(t['reason']=='supported_direction' for t in policy.transitions))
+        policy=FamiliarityController(dict(scale=.3))
+        _,_,supported=policy._peak({-30.:.9,0.:.3,30.:.9},0.)
+        self.assertFalse(supported)
 
     def test_settings_reject_invalid_thresholds_and_angles(self):
         for changes in (dict(trend_alpha=0),dict(cast_angle=0),dict(scan_extents=(60,20)),
-                        dict(improvement=-.1),dict(check_every=1.5)):
+                        dict(improvement=-.1),dict(check_every=1.5),dict(scan_extents=(180.,)),
+                        dict(scan_extents=(20.,60.,180.)),dict(scan_extents=(90.,))):
             with self.assertRaises(ValueError): replace(Settings(), **changes)
 
 

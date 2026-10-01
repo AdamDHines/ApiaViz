@@ -1,0 +1,1150 @@
+{
+  "protocol_sha256": "875569176bccc3194841a753359c289ef8c4200530bf5fd7d440c74cb674a3cc",
+  "source_archive_sha256": "0b837f08f7fa93c308dd4c1ac6c3d5292eb884568d0de04fcaabe568325f7fe1",
+  "script_sha256": "f734b414b5d9dea1f14536db17e556492b0cda7f5714594e51f70abb2c1d2550",
+  "groups": [
+    {
+      "method": "apiaviz_uv",
+      "n": 3,
+      "arrivals": 2,
+      "terminations": {
+        "arrival": 2,
+        "uninformative_views": 1
+      },
+      "blocked_by_reason": {},
+      "median_time_s": 155.57777777777451,
+      "median_encoding_s": 8.3729653749906
+    },
+    {
+      "method": "sobel_colour",
+      "n": 3,
+      "arrivals": 3,
+      "terminations": {
+        "arrival": 3
+      },
+      "blocked_by_reason": {},
+      "median_time_s": 187.26111111110882,
+      "median_encoding_s": 2.6583452060294803
+    },
+    {
+      "method": "ardin_input",
+      "n": 3,
+      "arrivals": 1,
+      "terminations": {
+        "arrival": 1,
+        "observation_budget": 1,
+        "uninformative_views": 1
+      },
+      "blocked_by_reason": {},
+      "median_time_s": 217.23333333333426,
+      "median_encoding_s": 5.348049841370084
+    }
+  ],
+  "rows": [
+    {
+      "id": "bend-19-apiaviz_uv-aligned-familiarity-1",
+      "world": "bend",
+      "seed": 19,
+      "method": "apiaviz_uv",
+      "scenario": "aligned",
+      "phase": 1,
+      "controller": "familiarity",
+      "trace": "trials/bend-19-apiaviz_uv-aligned-familiarity-1.json",
+      "reached_nest": true,
+      "termination": "arrival",
+      "final_nest_distance_m": 0.18276756550270726,
+      "steps": 62,
+      "path_length_m": 6.139999999999957,
+      "time_s": 138.95555555555282,
+      "observations": 1120,
+      "commanded_path_m": 6.139999999999957,
+      "blocked_proposals": 0,
+      "avoidance_observations": 318,
+      "scan_bouts": 23,
+      "rotation_deg": 3880.0,
+      "motor_state_resets": 0,
+      "corrective_resets": 0,
+      "route_reacquisitions": 0,
+      "detour_episodes": 0,
+      "detour_completions": 0,
+      "detour_transitions": [],
+      "polyline_mean_m": 0.04108829689263816,
+      "recovered": false,
+      "recovery_applicable": false,
+      "recovery_path_m": null,
+      "recovery_time_s": null,
+      "disturbance_applied": false,
+      "disturbance_attempted": false,
+      "initial_position": [
+        0.0,
+        0.0
+      ],
+      "evaluation_safety": {
+        "schema": "navigation-safety-v1",
+        "placement_margin_m": 1e-05
+      },
+      "release": {
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "requested_displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_position": [
+          0.0,
+          0.0
+        ],
+        "position": [
+          0.0,
+          0.0
+        ],
+        "displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_distance_m": 0.0,
+        "applied_distance_m": 0.0,
+        "fraction": 1.0,
+        "adjusted": false,
+        "constraint": null,
+        "schema": "navigation-safety-v1"
+      },
+      "displacement": null,
+      "perturbation_adjusted": false,
+      "wall_time_s": 246.94857200000843,
+      "encoding_s": 6.390110440173885,
+      "active_spikes": null,
+      "encoded_views": 802,
+      "active_response_components": 4026904,
+      "rendered_positions": 207,
+      "cache_hits": 913,
+      "encoder_fingerprint": "c3fdb09779d2d89c358c82952d2606ed3cd9644141bf620d4d6bdc585051bc96",
+      "memory_fingerprint": "25e0b227cad4584179a0e14268f5f1beca48556687b9926e36cf1bc5a8bdbaca",
+      "training_images_sha256": "aae12f7a3fd938347b03db85ca907a662cf197a7dff74b30f417e5a79dceb4af",
+      "checkpoint_sha256": "34d982e38b327a8a8b44f93d1669b745aa8af102943258bf1a36ab6edbbe2224"
+    },
+    {
+      "id": "bend-19-ardin_input-aligned-familiarity-1",
+      "world": "bend",
+      "seed": 19,
+      "method": "ardin_input",
+      "scenario": "aligned",
+      "phase": 1,
+      "controller": "familiarity",
+      "trace": "trials/bend-19-ardin_input-aligned-familiarity-1.json",
+      "reached_nest": true,
+      "termination": "arrival",
+      "final_nest_distance_m": 0.19934313162617223,
+      "steps": 61,
+      "path_length_m": 6.099999999999958,
+      "time_s": 198.0944444444434,
+      "observations": 1898,
+      "commanded_path_m": 6.099999999999958,
+      "blocked_proposals": 0,
+      "avoidance_observations": 330,
+      "scan_bouts": 28,
+      "rotation_deg": 7595.0,
+      "motor_state_resets": 0,
+      "corrective_resets": 0,
+      "route_reacquisitions": 0,
+      "detour_episodes": 0,
+      "detour_completions": 0,
+      "detour_transitions": [],
+      "polyline_mean_m": 0.03295799174245435,
+      "recovered": false,
+      "recovery_applicable": false,
+      "recovery_path_m": null,
+      "recovery_time_s": null,
+      "disturbance_applied": false,
+      "disturbance_attempted": false,
+      "initial_position": [
+        0.0,
+        0.0
+      ],
+      "evaluation_safety": {
+        "schema": "navigation-safety-v1",
+        "placement_margin_m": 1e-05
+      },
+      "release": {
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "requested_displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_position": [
+          0.0,
+          0.0
+        ],
+        "position": [
+          0.0,
+          0.0
+        ],
+        "displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_distance_m": 0.0,
+        "applied_distance_m": 0.0,
+        "fraction": 1.0,
+        "adjusted": false,
+        "constraint": null,
+        "schema": "navigation-safety-v1"
+      },
+      "displacement": null,
+      "perturbation_adjusted": false,
+      "wall_time_s": 341.45030199999746,
+      "encoding_s": 5.348049841370084,
+      "active_spikes": 813666,
+      "encoded_views": 1568,
+      "active_response_components": 813666,
+      "rendered_positions": 295,
+      "cache_hits": 1603,
+      "encoder_fingerprint": "cf1e9ee57d301a9ee9c4592e831daf2b2f92f0c3c24c23086587bd82bef32920",
+      "memory_fingerprint": "3b6760ece70012e53e9c9edad3d12a51e2c52371aab96b68a17e792886fcadc4",
+      "training_images_sha256": "e1c05ac8fe8a33bdf73de5b5c6ec7c0e79a798c4b424101644ad64084625ffdc",
+      "checkpoint_sha256": "513d5949408ac8f46239fa92a8909e5d946485f42fd61ab9b80020759a8b804c"
+    },
+    {
+      "id": "bend-19-sobel_colour-aligned-familiarity-1",
+      "world": "bend",
+      "seed": 19,
+      "method": "sobel_colour",
+      "scenario": "aligned",
+      "phase": 1,
+      "controller": "familiarity",
+      "trace": "trials/bend-19-sobel_colour-aligned-familiarity-1.json",
+      "reached_nest": true,
+      "termination": "arrival",
+      "final_nest_distance_m": 0.18121927457694917,
+      "steps": 62,
+      "path_length_m": 6.139999999999957,
+      "time_s": 154.96111111110778,
+      "observations": 1329,
+      "commanded_path_m": 6.139999999999957,
+      "blocked_proposals": 0,
+      "avoidance_observations": 320,
+      "scan_bouts": 24,
+      "rotation_deg": 4880.0,
+      "motor_state_resets": 0,
+      "corrective_resets": 0,
+      "route_reacquisitions": 0,
+      "detour_episodes": 0,
+      "detour_completions": 0,
+      "detour_transitions": [],
+      "polyline_mean_m": 0.03654058284898103,
+      "recovered": false,
+      "recovery_applicable": false,
+      "recovery_path_m": null,
+      "recovery_time_s": null,
+      "disturbance_applied": false,
+      "disturbance_attempted": false,
+      "initial_position": [
+        0.0,
+        0.0
+      ],
+      "evaluation_safety": {
+        "schema": "navigation-safety-v1",
+        "placement_margin_m": 1e-05
+      },
+      "release": {
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "requested_displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_position": [
+          0.0,
+          0.0
+        ],
+        "position": [
+          0.0,
+          0.0
+        ],
+        "displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_distance_m": 0.0,
+        "applied_distance_m": 0.0,
+        "fraction": 1.0,
+        "adjusted": false,
+        "constraint": null,
+        "schema": "navigation-safety-v1"
+      },
+      "displacement": null,
+      "perturbation_adjusted": false,
+      "wall_time_s": 238.36036104199593,
+      "encoding_s": 2.5214165078359656,
+      "active_spikes": 527813,
+      "encoded_views": 1009,
+      "active_response_components": 527813,
+      "rendered_positions": 202,
+      "cache_hits": 1127,
+      "encoder_fingerprint": "cf1e9ee57d301a9ee9c4592e831daf2b2f92f0c3c24c23086587bd82bef32920",
+      "memory_fingerprint": "96228823a89a55dcab4445f3f811a1104153283af14e44c4f0fd94fb0777f736",
+      "training_images_sha256": "e1c05ac8fe8a33bdf73de5b5c6ec7c0e79a798c4b424101644ad64084625ffdc",
+      "checkpoint_sha256": "a36d379a9ee4be63efb7397c0f8962b0791b1d6afb938d7bf8e9ce26813bb2c0"
+    },
+    {
+      "id": "hairpin-19-apiaviz_uv-aligned-familiarity-1",
+      "world": "hairpin",
+      "seed": 19,
+      "method": "apiaviz_uv",
+      "scenario": "aligned",
+      "phase": 1,
+      "controller": "familiarity",
+      "trace": "trials/hairpin-19-apiaviz_uv-aligned-familiarity-1.json",
+      "reached_nest": false,
+      "termination": "uninformative_views",
+      "final_nest_distance_m": 3.820958675913925,
+      "steps": 52,
+      "path_length_m": 5.199999999999977,
+      "time_s": 155.57777777777451,
+      "observations": 1346,
+      "commanded_path_m": 5.199999999999977,
+      "blocked_proposals": 0,
+      "avoidance_observations": 282,
+      "scan_bouts": 25,
+      "rotation_deg": 6530.0,
+      "motor_state_resets": 0,
+      "corrective_resets": 0,
+      "route_reacquisitions": 0,
+      "detour_episodes": 1,
+      "detour_completions": 1,
+      "detour_transitions": [
+        {
+          "kind": "steering_start",
+          "path_m": 4.539999999999991,
+          "heading": 4425.0
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 4.779999999999986,
+          "heading": 4425.0
+        }
+      ],
+      "polyline_mean_m": 0.09779682014910816,
+      "recovered": false,
+      "recovery_applicable": false,
+      "recovery_path_m": null,
+      "recovery_time_s": null,
+      "disturbance_applied": false,
+      "disturbance_attempted": false,
+      "initial_position": [
+        0.0,
+        0.0
+      ],
+      "evaluation_safety": {
+        "schema": "navigation-safety-v1",
+        "placement_margin_m": 1e-05
+      },
+      "release": {
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "requested_displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_position": [
+          0.0,
+          0.0
+        ],
+        "position": [
+          0.0,
+          0.0
+        ],
+        "displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_distance_m": 0.0,
+        "applied_distance_m": 0.0,
+        "fraction": 1.0,
+        "adjusted": false,
+        "constraint": null,
+        "schema": "navigation-safety-v1"
+      },
+      "displacement": null,
+      "perturbation_adjusted": false,
+      "wall_time_s": 147.60848354100017,
+      "encoding_s": 8.3729653749906,
+      "active_spikes": null,
+      "encoded_views": 1064,
+      "active_response_components": 5345940,
+      "rendered_positions": 105,
+      "cache_hits": 1241,
+      "encoder_fingerprint": "c3fdb09779d2d89c358c82952d2606ed3cd9644141bf620d4d6bdc585051bc96",
+      "memory_fingerprint": "b426c541d35facaf7566dba36f8b8b8179e2013a491c4935c924c26da45a9acb",
+      "training_images_sha256": "3bdda78786b0478334ce12a0b1352ccd8617c338bf4ae3165acb1a36528894c4",
+      "checkpoint_sha256": "4cb6c0df0e6673f514a0e737069c58779d86f417f7a49a43a13a54b55c6edb08"
+    },
+    {
+      "id": "hairpin-19-ardin_input-aligned-familiarity-1",
+      "world": "hairpin",
+      "seed": 19,
+      "method": "ardin_input",
+      "scenario": "aligned",
+      "phase": 1,
+      "controller": "familiarity",
+      "trace": "trials/hairpin-19-ardin_input-aligned-familiarity-1.json",
+      "reached_nest": false,
+      "termination": "observation_budget",
+      "final_nest_distance_m": 2.293538856934251,
+      "steps": 75,
+      "path_length_m": 7.499999999999928,
+      "time_s": 274.9722222222238,
+      "observations": 2600,
+      "commanded_path_m": 7.499999999999928,
+      "blocked_proposals": 0,
+      "avoidance_observations": 406,
+      "scan_bouts": 36,
+      "rotation_deg": 12595.0,
+      "motor_state_resets": 0,
+      "corrective_resets": 0,
+      "route_reacquisitions": 0,
+      "detour_episodes": 0,
+      "detour_completions": 0,
+      "detour_transitions": [],
+      "polyline_mean_m": 0.05245076935303686,
+      "recovered": false,
+      "recovery_applicable": false,
+      "recovery_path_m": null,
+      "recovery_time_s": null,
+      "disturbance_applied": false,
+      "disturbance_attempted": false,
+      "initial_position": [
+        0.0,
+        0.0
+      ],
+      "evaluation_safety": {
+        "schema": "navigation-safety-v1",
+        "placement_margin_m": 1e-05
+      },
+      "release": {
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "requested_displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_position": [
+          0.0,
+          0.0
+        ],
+        "position": [
+          0.0,
+          0.0
+        ],
+        "displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_distance_m": 0.0,
+        "applied_distance_m": 0.0,
+        "fraction": 1.0,
+        "adjusted": false,
+        "constraint": null,
+        "schema": "navigation-safety-v1"
+      },
+      "displacement": null,
+      "perturbation_adjusted": false,
+      "wall_time_s": 313.5106903750129,
+      "encoding_s": 7.484187540161656,
+      "active_spikes": 1122265,
+      "encoded_views": 2194,
+      "active_response_components": 1122265,
+      "rendered_positions": 270,
+      "cache_hits": 2330,
+      "encoder_fingerprint": "cf1e9ee57d301a9ee9c4592e831daf2b2f92f0c3c24c23086587bd82bef32920",
+      "memory_fingerprint": "0b2f85aa1e89d550234b48fc6c384828bfe67e50151b896e173c96655f07f043",
+      "training_images_sha256": "4c3b7c5b8b636bd3719b85ecff7943183968a50bf6ba1d2aa9ccba69165ee8ec",
+      "checkpoint_sha256": "68d6d8df22a05f2e8b70f71dbb995dc6d4f6831e51f01a6e31919b7c2a1f69c4"
+    },
+    {
+      "id": "hairpin-19-sobel_colour-aligned-familiarity-1",
+      "world": "hairpin",
+      "seed": 19,
+      "method": "sobel_colour",
+      "scenario": "aligned",
+      "phase": 1,
+      "controller": "familiarity",
+      "trace": "trials/hairpin-19-sobel_colour-aligned-familiarity-1.json",
+      "reached_nest": true,
+      "termination": "arrival",
+      "final_nest_distance_m": 0.1886309024678225,
+      "steps": 82,
+      "path_length_m": 8.179999999999914,
+      "time_s": 187.26111111110882,
+      "observations": 1497,
+      "commanded_path_m": 8.179999999999914,
+      "blocked_proposals": 0,
+      "avoidance_observations": 422,
+      "scan_bouts": 32,
+      "rotation_deg": 5510.0,
+      "motor_state_resets": 0,
+      "corrective_resets": 0,
+      "route_reacquisitions": 0,
+      "detour_episodes": 0,
+      "detour_completions": 0,
+      "detour_transitions": [],
+      "polyline_mean_m": 0.03974718665403762,
+      "recovered": false,
+      "recovery_applicable": false,
+      "recovery_path_m": null,
+      "recovery_time_s": null,
+      "disturbance_applied": false,
+      "disturbance_attempted": false,
+      "initial_position": [
+        0.0,
+        0.0
+      ],
+      "evaluation_safety": {
+        "schema": "navigation-safety-v1",
+        "placement_margin_m": 1e-05
+      },
+      "release": {
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "requested_displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_position": [
+          0.0,
+          0.0
+        ],
+        "position": [
+          0.0,
+          0.0
+        ],
+        "displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_distance_m": 0.0,
+        "applied_distance_m": 0.0,
+        "fraction": 1.0,
+        "adjusted": false,
+        "constraint": null,
+        "schema": "navigation-safety-v1"
+      },
+      "displacement": null,
+      "perturbation_adjusted": false,
+      "wall_time_s": 227.90234091599996,
+      "encoding_s": 2.6583452060294803,
+      "active_spikes": 563183,
+      "encoded_views": 1075,
+      "active_response_components": 563183,
+      "rendered_positions": 204,
+      "cache_hits": 1293,
+      "encoder_fingerprint": "cf1e9ee57d301a9ee9c4592e831daf2b2f92f0c3c24c23086587bd82bef32920",
+      "memory_fingerprint": "edf6035b341ae06e68ac8860aaf0ca1dc42a7235357b33c769620ce30d109586",
+      "training_images_sha256": "4c3b7c5b8b636bd3719b85ecff7943183968a50bf6ba1d2aa9ccba69165ee8ec",
+      "checkpoint_sha256": "0c1ddc29f97a9470cec04db0e34b67838a2ac86a61f094cecaa5d6defdf976e6"
+    },
+    {
+      "id": "meander-19-apiaviz_uv-aligned-familiarity-1",
+      "world": "meander",
+      "seed": 19,
+      "method": "apiaviz_uv",
+      "scenario": "aligned",
+      "phase": 1,
+      "controller": "familiarity",
+      "trace": "trials/meander-19-apiaviz_uv-aligned-familiarity-1.json",
+      "reached_nest": true,
+      "termination": "arrival",
+      "final_nest_distance_m": 0.1850790791772491,
+      "steps": 62,
+      "path_length_m": 6.1199999999999575,
+      "time_s": 204.29999999999902,
+      "observations": 1982,
+      "commanded_path_m": 6.1199999999999575,
+      "blocked_proposals": 0,
+      "avoidance_observations": 330,
+      "scan_bouts": 29,
+      "rotation_deg": 7920.0,
+      "motor_state_resets": 0,
+      "corrective_resets": 0,
+      "route_reacquisitions": 0,
+      "detour_episodes": 0,
+      "detour_completions": 0,
+      "detour_transitions": [],
+      "polyline_mean_m": 0.04850366116857508,
+      "recovered": false,
+      "recovery_applicable": false,
+      "recovery_path_m": null,
+      "recovery_time_s": null,
+      "disturbance_applied": false,
+      "disturbance_attempted": false,
+      "initial_position": [
+        0.0,
+        0.0
+      ],
+      "evaluation_safety": {
+        "schema": "navigation-safety-v1",
+        "placement_margin_m": 1e-05
+      },
+      "release": {
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "requested_displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_position": [
+          0.0,
+          0.0
+        ],
+        "position": [
+          0.0,
+          0.0
+        ],
+        "displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_distance_m": 0.0,
+        "applied_distance_m": 0.0,
+        "fraction": 1.0,
+        "adjusted": false,
+        "constraint": null,
+        "schema": "navigation-safety-v1"
+      },
+      "displacement": null,
+      "perturbation_adjusted": false,
+      "wall_time_s": 305.92388783300703,
+      "encoding_s": 12.892137341827038,
+      "active_spikes": null,
+      "encoded_views": 1652,
+      "active_response_components": 8315417,
+      "rendered_positions": 276,
+      "cache_hits": 1706,
+      "encoder_fingerprint": "c3fdb09779d2d89c358c82952d2606ed3cd9644141bf620d4d6bdc585051bc96",
+      "memory_fingerprint": "b8c4c584ead6a6cd887eac4d7646519b5b8c3de40c645c3b62c0e953f01b0a94",
+      "training_images_sha256": "5755aeb27224a4512c730dc7211f0674991dc9ca6c84178c58f1270040d8554d",
+      "checkpoint_sha256": "40cff559dc850e92c6c370b646272b68e28e387d4a04389b0578bedb4796c4f9"
+    },
+    {
+      "id": "meander-19-ardin_input-aligned-familiarity-1",
+      "world": "meander",
+      "seed": 19,
+      "method": "ardin_input",
+      "scenario": "aligned",
+      "phase": 1,
+      "controller": "familiarity",
+      "trace": "trials/meander-19-ardin_input-aligned-familiarity-1.json",
+      "reached_nest": false,
+      "termination": "uninformative_views",
+      "final_nest_distance_m": 3.2417728889119033,
+      "steps": 62,
+      "path_length_m": 6.199999999999956,
+      "time_s": 217.23333333333426,
+      "observations": 1893,
+      "commanded_path_m": 6.199999999999956,
+      "blocked_proposals": 0,
+      "avoidance_observations": 349,
+      "scan_bouts": 23,
+      "rotation_deg": 10905.0,
+      "motor_state_resets": 0,
+      "corrective_resets": 0,
+      "route_reacquisitions": 0,
+      "detour_episodes": 2,
+      "detour_completions": 2,
+      "detour_transitions": [
+        {
+          "kind": "steering_start",
+          "path_m": 2.4400000000000017,
+          "heading": 2917.911280381321
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 2.760000000000002,
+          "heading": 3422.911280381321
+        },
+        {
+          "kind": "steering_start",
+          "path_m": 5.99999999999996,
+          "heading": 7617.9112803813205
+        },
+        {
+          "kind": "steering_end",
+          "path_m": 6.079999999999958,
+          "heading": 7617.9112803813205
+        }
+      ],
+      "polyline_mean_m": 0.3410721036674214,
+      "recovered": false,
+      "recovery_applicable": false,
+      "recovery_path_m": null,
+      "recovery_time_s": null,
+      "disturbance_applied": false,
+      "disturbance_attempted": false,
+      "initial_position": [
+        0.0,
+        0.0
+      ],
+      "evaluation_safety": {
+        "schema": "navigation-safety-v1",
+        "placement_margin_m": 1e-05
+      },
+      "release": {
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "requested_displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_position": [
+          0.0,
+          0.0
+        ],
+        "position": [
+          0.0,
+          0.0
+        ],
+        "displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_distance_m": 0.0,
+        "applied_distance_m": 0.0,
+        "fraction": 1.0,
+        "adjusted": false,
+        "constraint": null,
+        "schema": "navigation-safety-v1"
+      },
+      "displacement": null,
+      "perturbation_adjusted": false,
+      "wall_time_s": 345.8075079169939,
+      "encoding_s": 5.277818317903439,
+      "active_spikes": 806685,
+      "encoded_views": 1544,
+      "active_response_components": 806685,
+      "rendered_positions": 311,
+      "cache_hits": 1582,
+      "encoder_fingerprint": "cf1e9ee57d301a9ee9c4592e831daf2b2f92f0c3c24c23086587bd82bef32920",
+      "memory_fingerprint": "c457f90175e5883ea85c0587a1083635fbbefd53a48863ae1fceeb5010555b1c",
+      "training_images_sha256": "5fe6ef5cc4e62b557bf5b4ebce927d85dc88d9c3cf2e0ecb0e0553f5a5b0a3f1",
+      "checkpoint_sha256": "ff93b4b39860d35e04795e16e4569c8cabc1a9366ede4caeb7330bd0657dae3f"
+    },
+    {
+      "id": "meander-19-sobel_colour-aligned-familiarity-1",
+      "world": "meander",
+      "seed": 19,
+      "method": "sobel_colour",
+      "scenario": "aligned",
+      "phase": 1,
+      "controller": "familiarity",
+      "trace": "trials/meander-19-sobel_colour-aligned-familiarity-1.json",
+      "reached_nest": true,
+      "termination": "arrival",
+      "final_nest_distance_m": 0.18213820006447706,
+      "steps": 62,
+      "path_length_m": 6.159999999999957,
+      "time_s": 230.78888888888935,
+      "observations": 2326,
+      "commanded_path_m": 6.159999999999957,
+      "blocked_proposals": 0,
+      "avoidance_observations": 335,
+      "scan_bouts": 29,
+      "rotation_deg": 9520.0,
+      "motor_state_resets": 0,
+      "corrective_resets": 0,
+      "route_reacquisitions": 0,
+      "detour_episodes": 0,
+      "detour_completions": 0,
+      "detour_transitions": [],
+      "polyline_mean_m": 0.040016440541312356,
+      "recovered": false,
+      "recovery_applicable": false,
+      "recovery_path_m": null,
+      "recovery_time_s": null,
+      "disturbance_applied": false,
+      "disturbance_attempted": false,
+      "initial_position": [
+        0.0,
+        0.0
+      ],
+      "evaluation_safety": {
+        "schema": "navigation-safety-v1",
+        "placement_margin_m": 1e-05
+      },
+      "release": {
+        "origin": [
+          0.0,
+          0.0
+        ],
+        "requested_displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_position": [
+          0.0,
+          0.0
+        ],
+        "position": [
+          0.0,
+          0.0
+        ],
+        "displacement": [
+          -0.0,
+          0.0
+        ],
+        "requested_distance_m": 0.0,
+        "applied_distance_m": 0.0,
+        "fraction": 1.0,
+        "adjusted": false,
+        "constraint": null,
+        "schema": "navigation-safety-v1"
+      },
+      "displacement": null,
+      "perturbation_adjusted": false,
+      "wall_time_s": 226.4773901659937,
+      "encoding_s": 4.769406795850955,
+      "active_spikes": 1032054,
+      "encoded_views": 1991,
+      "active_response_components": 1032054,
+      "rendered_positions": 213,
+      "cache_hits": 2113,
+      "encoder_fingerprint": "cf1e9ee57d301a9ee9c4592e831daf2b2f92f0c3c24c23086587bd82bef32920",
+      "memory_fingerprint": "f515224e0b6d96ce2e7633071851bd6b96162d9fd79ce48dc507a28f4137f264",
+      "training_images_sha256": "5fe6ef5cc4e62b557bf5b4ebce927d85dc88d9c3cf2e0ecb0e0553f5a5b0a3f1",
+      "checkpoint_sha256": "8251aa934862aae52f9c659ca984d14986126b171480540325a03132b547757f"
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "meander-19-apiaviz_uv-aligned-familiarity-1",
+      "closest_nest_distance_m": 0.1850790791772491,
+      "blocked_by_reason": {},
+      "longest_blocked_sequence": 0,
+      "turning_s": 44.00000000000002,
+      "observation_s": 99.10000000000001,
+      "commanded_translation_s": 61.19999999999957,
+      "scans": 28,
+      "casts": 0,
+      "calibration": {
+        "scale": 0.06678288486105044,
+        "low": 0.8860294120615976,
+        "high": 0.952812296922648,
+        "familiar": 0.9797523813411291,
+        "degenerate": false,
+        "views": 63,
+        "additional_observations": 0,
+        "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02",
+        "representation": "graded_cosine"
+      },
+      "checkpoint_reconstructed": true,
+      "baseline_identical_to_parent": false
+    },
+    {
+      "id": "meander-19-ardin_input-aligned-familiarity-1",
+      "closest_nest_distance_m": 3.2417728889119033,
+      "blocked_by_reason": {},
+      "longest_blocked_sequence": 0,
+      "turning_s": 60.58333333333333,
+      "observation_s": 94.65,
+      "commanded_translation_s": 61.99999999999955,
+      "scans": 21,
+      "casts": 20,
+      "calibration": {
+        "scale": 0.27969632963908486,
+        "low": 0.3664548582412346,
+        "high": 0.6461511878803194,
+        "familiar": 0.7767390973068918,
+        "degenerate": false,
+        "views": 63,
+        "additional_observations": 0,
+        "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+      },
+      "checkpoint_reconstructed": true,
+      "baseline_identical_to_parent": true
+    },
+    {
+      "id": "meander-19-sobel_colour-aligned-familiarity-1",
+      "closest_nest_distance_m": 0.18213820006447706,
+      "blocked_by_reason": {},
+      "longest_blocked_sequence": 0,
+      "turning_s": 52.88888888888891,
+      "observation_s": 116.30000000000001,
+      "commanded_translation_s": 61.59999999999956,
+      "scans": 29,
+      "casts": 0,
+      "calibration": {
+        "scale": 0.13505858121332093,
+        "low": 0.5964996350813676,
+        "high": 0.7315582162946885,
+        "familiar": 0.825030167718705,
+        "degenerate": false,
+        "views": 63,
+        "additional_observations": 0,
+        "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+      },
+      "checkpoint_reconstructed": true,
+      "baseline_identical_to_parent": true
+    },
+    {
+      "id": "bend-19-apiaviz_uv-aligned-familiarity-1",
+      "closest_nest_distance_m": 0.18276756550270726,
+      "blocked_by_reason": {},
+      "longest_blocked_sequence": 0,
+      "turning_s": 21.555555555555554,
+      "observation_s": 56.0,
+      "commanded_translation_s": 61.399999999999565,
+      "scans": 23,
+      "casts": 0,
+      "calibration": {
+        "scale": 0.09315942832681257,
+        "low": 0.8392834932798107,
+        "high": 0.9324429216066232,
+        "familiar": 0.9730206612151882,
+        "degenerate": false,
+        "views": 64,
+        "additional_observations": 0,
+        "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02",
+        "representation": "graded_cosine"
+      },
+      "checkpoint_reconstructed": true,
+      "baseline_identical_to_parent": false
+    },
+    {
+      "id": "bend-19-ardin_input-aligned-familiarity-1",
+      "closest_nest_distance_m": 0.19934313162617223,
+      "blocked_by_reason": {},
+      "longest_blocked_sequence": 0,
+      "turning_s": 42.19444444444444,
+      "observation_s": 94.9,
+      "commanded_translation_s": 60.999999999999574,
+      "scans": 28,
+      "casts": 0,
+      "calibration": {
+        "scale": 0.23757762070761967,
+        "low": 0.3267660830858421,
+        "high": 0.5643437037934618,
+        "familiar": 0.7438892486683448,
+        "degenerate": false,
+        "views": 64,
+        "additional_observations": 0,
+        "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+      },
+      "checkpoint_reconstructed": true,
+      "baseline_identical_to_parent": true
+    },
+    {
+      "id": "bend-19-sobel_colour-aligned-familiarity-1",
+      "closest_nest_distance_m": 0.18121927457694917,
+      "blocked_by_reason": {},
+      "longest_blocked_sequence": 0,
+      "turning_s": 27.11111111111111,
+      "observation_s": 66.45,
+      "commanded_translation_s": 61.399999999999565,
+      "scans": 24,
+      "casts": 0,
+      "calibration": {
+        "scale": 0.19423728597792955,
+        "low": 0.5501397667456172,
+        "high": 0.7443770527235467,
+        "familiar": 0.8368947303638683,
+        "degenerate": false,
+        "views": 64,
+        "additional_observations": 0,
+        "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+      },
+      "checkpoint_reconstructed": true,
+      "baseline_identical_to_parent": true
+    },
+    {
+      "id": "hairpin-19-apiaviz_uv-aligned-familiarity-1",
+      "closest_nest_distance_m": 1.5,
+      "blocked_by_reason": {},
+      "longest_blocked_sequence": 0,
+      "turning_s": 36.27777777777778,
+      "observation_s": 67.3,
+      "commanded_translation_s": 51.999999999999766,
+      "scans": 17,
+      "casts": 8,
+      "calibration": {
+        "scale": 0.15230267085775728,
+        "low": 0.7868492130296468,
+        "high": 0.9391518838874041,
+        "familiar": 0.9781826092715391,
+        "degenerate": false,
+        "views": 82,
+        "additional_observations": 0,
+        "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02",
+        "representation": "graded_cosine"
+      },
+      "checkpoint_reconstructed": true,
+      "baseline_identical_to_parent": false
+    },
+    {
+      "id": "hairpin-19-ardin_input-aligned-familiarity-1",
+      "closest_nest_distance_m": 1.5,
+      "blocked_by_reason": {},
+      "longest_blocked_sequence": 0,
+      "turning_s": 69.97222222222221,
+      "observation_s": 130.0,
+      "commanded_translation_s": 74.99999999999928,
+      "scans": 35,
+      "casts": 0,
+      "calibration": {
+        "scale": 0.26532215333709175,
+        "low": 0.3149855589516043,
+        "high": 0.580307712288696,
+        "familiar": 0.757743547545124,
+        "degenerate": false,
+        "views": 82,
+        "additional_observations": 0,
+        "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+      },
+      "checkpoint_reconstructed": true,
+      "baseline_identical_to_parent": true
+    },
+    {
+      "id": "hairpin-19-sobel_colour-aligned-familiarity-1",
+      "closest_nest_distance_m": 0.1886309024678225,
+      "blocked_by_reason": {},
+      "longest_blocked_sequence": 0,
+      "turning_s": 30.61111111111111,
+      "observation_s": 74.85000000000001,
+      "commanded_translation_s": 81.79999999999914,
+      "scans": 30,
+      "casts": 2,
+      "calibration": {
+        "scale": 0.2374756290412401,
+        "low": 0.515380884042714,
+        "high": 0.7528565130839541,
+        "familiar": 0.8473149588834572,
+        "degenerate": false,
+        "views": 82,
+        "additional_observations": 0,
+        "procedure": "teaching_pairwise_q90_minus_q10_floor_0.02"
+      },
+      "checkpoint_reconstructed": true,
+      "baseline_identical_to_parent": true
+    }
+  ],
+  "movies": [
+    {
+      "path": "apiaviz/output/graded-navigation-smoke-v1/report/movies/bend-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "d8956a01c23cbb6de4b69288cf66b728475de1defc2d57a6d693069e099af802",
+      "decoded": true,
+      "width": 1200,
+      "height": 700,
+      "nb_read_frames": "104"
+    },
+    {
+      "path": "apiaviz/output/graded-navigation-smoke-v1/report/movies/bend-19-ardin_input-aligned-familiarity-1.mp4",
+      "sha256": "f5d60259a9e79e7ffc888d2ad6b053570f5ce594eb22fe1ae513f7b157ef5746",
+      "decoded": true,
+      "width": 1200,
+      "height": 700,
+      "nb_read_frames": "104"
+    },
+    {
+      "path": "apiaviz/output/graded-navigation-smoke-v1/report/movies/bend-19-sobel_colour-aligned-familiarity-1.mp4",
+      "sha256": "fdb64192a6e0689ae4921074f8ea6b5423a62e51d650c9bef28ba71036d59767",
+      "decoded": true,
+      "width": 1200,
+      "height": 700,
+      "nb_read_frames": "104"
+    },
+    {
+      "path": "apiaviz/output/graded-navigation-smoke-v1/report/movies/hairpin-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "46b619051f47b0d4f49321a3a48cdf82b0b0981a80025e4a354a6817783d3aea",
+      "decoded": true,
+      "width": 1200,
+      "height": 700,
+      "nb_read_frames": "104"
+    },
+    {
+      "path": "apiaviz/output/graded-navigation-smoke-v1/report/movies/hairpin-19-ardin_input-aligned-familiarity-1.mp4",
+      "sha256": "b1507f89de21d089ab453de334c4109920c83358fb5954d266dd859ad742843f",
+      "decoded": true,
+      "width": 1200,
+      "height": 700,
+      "nb_read_frames": "104"
+    },
+    {
+      "path": "apiaviz/output/graded-navigation-smoke-v1/report/movies/hairpin-19-sobel_colour-aligned-familiarity-1.mp4",
+      "sha256": "b629d6cec2afc46995caac362ad622eb7d0212c5372625cf8af8da898c456cb2",
+      "decoded": true,
+      "width": 1200,
+      "height": 700,
+      "nb_read_frames": "104"
+    },
+    {
+      "path": "apiaviz/output/graded-navigation-smoke-v1/report/movies/meander-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "d0986d145714997f2c0338a13b580015a7c56e6663f25b460b87d657f25c3849",
+      "decoded": true,
+      "width": 1200,
+      "height": 700,
+      "nb_read_frames": "104"
+    },
+    {
+      "path": "apiaviz/output/graded-navigation-smoke-v1/report/movies/meander-19-ardin_input-aligned-familiarity-1.mp4",
+      "sha256": "bb64ff13ba69f72ed26bdc8034093de041322e280146360ba467c95f47c2f55c",
+      "decoded": true,
+      "width": 1200,
+      "height": 700,
+      "nb_read_frames": "104"
+    },
+    {
+      "path": "apiaviz/output/graded-navigation-smoke-v1/report/movies/meander-19-sobel_colour-aligned-familiarity-1.mp4",
+      "sha256": "652f6613feb2fceedd16c528dba0e4cfd21c8d85d716a6d9d520d5aab5b3fbac",
+      "decoded": true,
+      "width": 1200,
+      "height": 700,
+      "nb_read_frames": "104"
+    }
+  ],
+  "audit": {
+    "passed": true,
+    "trials": 9,
+    "movies": 9
+  },
+  "readiness": {
+    "results": [
+      {
+        "method": "apiaviz_uv",
+        "arrivals": 2,
+        "n": 3,
+        "blocked": 0
+      },
+      {
+        "method": "sobel_colour",
+        "arrivals": 3,
+        "n": 3,
+        "blocked": 0
+      },
+      {
+        "method": "ardin_input",
+        "arrivals": 1,
+        "n": 3,
+        "blocked": 0
+      }
+    ],
+    "aligned_gate_passed": false,
+    "ready_for_larger_study": false,
+    "reason": "User review required; nine development trials do not validate displacement recovery or independent worlds."
+  },
+  "limitation": "One trial per model per previously inspected world. No held-out, displacement-recovery, isolated UV-effect or statistical superiority claim. Exact route retracing is not required. No exhaustive run is authorized by this command."
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "world": "meander",
+    "stream": "all",
+    "teaching_sha256": "b77a400a14679ff235d2d29b29ee21e1f834bd4b84c7f69dde7915c65dbb4167",
+    "far_station_similarity_median": 0.6049052476882935,
+    "far_station_similarity_q90": 0.6586502194404602
+  },
+  {
+    "world": "meander",
+    "stream": "form",
+    "teaching_sha256": "b77a400a14679ff235d2d29b29ee21e1f834bd4b84c7f69dde7915c65dbb4167",
+    "far_station_similarity_median": 0.44829702377319336,
+    "far_station_similarity_q90": 0.5114177763462067
+  },
+  {
+    "world": "meander",
+    "stream": "colour",
+    "teaching_sha256": "b77a400a14679ff235d2d29b29ee21e1f834bd4b84c7f69dde7915c65dbb4167",
+    "far_station_similarity_median": 0.7301830053329468,
+    "far_station_similarity_q90": 0.8115217983722687
+  },
+  {
+    "world": "meander",
+    "stream": "uv",
+    "teaching_sha256": "b77a400a14679ff235d2d29b29ee21e1f834bd4b84c7f69dde7915c65dbb4167",
+    "far_station_similarity_median": 0.5978474617004395,
+    "far_station_similarity_q90": 0.6593926250934601
+  },
+  {
+    "world": "bend",
+    "stream": "all",
+    "teaching_sha256": "35326e84cfda33ee13e31c2d9b524e0205bbc85c17b7edbf289350d9943e7662",
+    "far_station_similarity_median": 0.5745139122009277,
+    "far_station_similarity_q90": 0.6556305885314941
+  },
+  {
+    "world": "bend",
+    "stream": "form",
+    "teaching_sha256": "35326e84cfda33ee13e31c2d9b524e0205bbc85c17b7edbf289350d9943e7662",
+    "far_station_similarity_median": 0.4083983898162842,
+    "far_station_similarity_q90": 0.4834197461605072
+  },
+  {
+    "world": "bend",
+    "stream": "colour",
+    "teaching_sha256": "35326e84cfda33ee13e31c2d9b524e0205bbc85c17b7edbf289350d9943e7662",
+    "far_station_similarity_median": 0.7226280570030212,
+    "far_station_similarity_q90": 0.8203549981117249
+  },
+  {
+    "world": "bend",
+    "stream": "uv",
+    "teaching_sha256": "35326e84cfda33ee13e31c2d9b524e0205bbc85c17b7edbf289350d9943e7662",
+    "far_station_similarity_median": 0.5348382592201233,
+    "far_station_similarity_q90": 0.6389220952987671
+  },
+  {
+    "world": "hairpin",
+    "stream": "all",
+    "teaching_sha256": "e3b2aa474a1542bca40b28dcf1061c20afb822913f66f04cba47ae72826dc7d6",
+    "far_station_similarity_median": 0.5554667711257935,
+    "far_station_similarity_q90": 0.6410924911499024
+  },
+  {
+    "world": "hairpin",
+    "stream": "form",
+    "teaching_sha256": "e3b2aa474a1542bca40b28dcf1061c20afb822913f66f04cba47ae72826dc7d6",
+    "far_station_similarity_median": 0.3821442425251007,
+    "far_station_similarity_q90": 0.4587354600429537
+  },
+  {
+    "world": "hairpin",
+    "stream": "colour",
+    "teaching_sha256": "e3b2aa474a1542bca40b28dcf1061c20afb822913f66f04cba47ae72826dc7d6",
+    "far_station_similarity_median": 0.6884338855743408,
+    "far_station_similarity_q90": 0.8158550262451172
+  },
+  {
+    "world": "hairpin",
+    "stream": "uv",
+    "teaching_sha256": "e3b2aa474a1542bca40b28dcf1061c20afb822913f66f04cba47ae72826dc7d6",
+    "far_station_similarity_median": 0.5558566451072693,
+    "far_station_similarity_q90": 0.6424272119998933
+  }
+]

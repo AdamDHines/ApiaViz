@@ -1,0 +1,475 @@
+{
+  "groups": [
+    {
+      "model": "apiaviz_uv",
+      "n": 12,
+      "arrivals": 4,
+      "aligned_arrivals": 2,
+      "kick_arrivals": 2,
+      "terminations": {
+        "time_budget": 6,
+        "arrival": 4,
+        "uninformative_views": 2
+      },
+      "median_final_distance_m": 2.7028608486725396,
+      "median_encoding_s": 4.113623088524037,
+      "blocks": {
+        "rock_contact": 2915,
+        "field_boundary": 846,
+        "blocked_without_supported_flow": 3761
+      }
+    },
+    {
+      "model": "sobel_colour",
+      "n": 12,
+      "arrivals": 5,
+      "aligned_arrivals": 2,
+      "kick_arrivals": 3,
+      "terminations": {
+        "arrival": 5,
+        "uninformative_views": 2,
+        "time_budget": 5
+      },
+      "median_final_distance_m": 1.3353897971087318,
+      "median_encoding_s": 1.1987769389234018,
+      "blocks": {
+        "rock_contact": 794,
+        "blocked_without_supported_flow": 1924,
+        "field_boundary": 1130
+      }
+    },
+    {
+      "model": "ardin_input",
+      "n": 12,
+      "arrivals": 2,
+      "aligned_arrivals": 1,
+      "kick_arrivals": 1,
+      "terminations": {
+        "arrival": 2,
+        "step_budget": 1,
+        "time_budget": 7,
+        "uninformative_views": 2
+      },
+      "median_final_distance_m": 2.489903265075856,
+      "median_encoding_s": 2.339422291464871,
+      "blocks": {
+        "blocked_without_supported_flow": 2935,
+        "rock_contact": 1055,
+        "field_boundary": 1880
+      }
+    },
+    {
+      "model": "apiaviz_uv_off",
+      "n": 12,
+      "arrivals": 4,
+      "aligned_arrivals": 2,
+      "kick_arrivals": 2,
+      "terminations": {
+        "time_budget": 8,
+        "arrival": 4
+      },
+      "median_final_distance_m": 1.8828949930216758,
+      "median_encoding_s": 1.838837594994402,
+      "blocks": {
+        "rock_contact": 355,
+        "field_boundary": 2668,
+        "blocked_without_supported_flow": 3023
+      }
+    }
+  ],
+  "paired_uv": [
+    {
+      "world": "bend",
+      "scenario": "aligned",
+      "phase": -1,
+      "uv_on_arrival": false,
+      "uv_off_arrival": false,
+      "on_final_distance_m": 1.532099838991371,
+      "off_final_distance_m": 2.796038701058989,
+      "on_full_kick": false,
+      "off_full_kick": false
+    },
+    {
+      "world": "bend",
+      "scenario": "aligned",
+      "phase": 1,
+      "uv_on_arrival": false,
+      "uv_off_arrival": true,
+      "on_final_distance_m": 3.332681878251594,
+      "off_final_distance_m": 0.19978615549957948,
+      "on_full_kick": false,
+      "off_full_kick": false
+    },
+    {
+      "world": "bend",
+      "scenario": "kick_right50",
+      "phase": -1,
+      "uv_on_arrival": false,
+      "uv_off_arrival": false,
+      "on_final_distance_m": 3.1210562875453456,
+      "off_final_distance_m": 2.461534966446235,
+      "on_full_kick": false,
+      "off_full_kick": true
+    },
+    {
+      "world": "bend",
+      "scenario": "kick_right50",
+      "phase": 1,
+      "uv_on_arrival": false,
+      "uv_off_arrival": false,
+      "on_final_distance_m": 3.332661237120291,
+      "off_final_distance_m": 2.1048009902367784,
+      "on_full_kick": false,
+      "off_full_kick": true
+    },
+    {
+      "world": "hairpin",
+      "scenario": "aligned",
+      "phase": -1,
+      "uv_on_arrival": true,
+      "uv_off_arrival": false,
+      "on_final_distance_m": 0.1905542704308327,
+      "off_final_distance_m": 3.0318291623733615,
+      "on_full_kick": false,
+      "off_full_kick": false
+    },
+    {
+      "world": "hairpin",
+      "scenario": "aligned",
+      "phase": 1,
+      "uv_on_arrival": true,
+      "uv_off_arrival": false,
+      "on_final_distance_m": 0.19639029353198317,
+      "off_final_distance_m": 1.6609889958065736,
+      "on_full_kick": false,
+      "off_full_kick": false
+    },
+    {
+      "world": "hairpin",
+      "scenario": "kick_right50",
+      "phase": -1,
+      "uv_on_arrival": true,
+      "uv_off_arrival": false,
+      "on_final_distance_m": 0.19307795968542488,
+      "off_final_distance_m": 7.85963471128407,
+      "on_full_kick": true,
+      "off_full_kick": true
+    },
+    {
+      "world": "hairpin",
+      "scenario": "kick_right50",
+      "phase": 1,
+      "uv_on_arrival": false,
+      "uv_off_arrival": true,
+      "on_final_distance_m": 5.540431737933516,
+      "off_final_distance_m": 0.1951824096626712,
+      "on_full_kick": true,
+      "off_full_kick": true
+    },
+    {
+      "world": "meander",
+      "scenario": "aligned",
+      "phase": -1,
+      "uv_on_arrival": false,
+      "uv_off_arrival": false,
+      "on_final_distance_m": 3.471553560727716,
+      "off_final_distance_m": 2.8760134707470417,
+      "on_full_kick": false,
+      "off_full_kick": false
+    },
+    {
+      "world": "meander",
+      "scenario": "aligned",
+      "phase": 1,
+      "uv_on_arrival": false,
+      "uv_off_arrival": true,
+      "on_final_distance_m": 2.284665409799734,
+      "off_final_distance_m": 0.1878441686713844,
+      "on_full_kick": false,
+      "off_full_kick": false
+    },
+    {
+      "world": "meander",
+      "scenario": "kick_right50",
+      "phase": -1,
+      "uv_on_arrival": true,
+      "uv_off_arrival": false,
+      "on_final_distance_m": 0.19826186880613744,
+      "off_final_distance_m": 1.6219024588190123,
+      "on_full_kick": true,
+      "off_full_kick": true
+    },
+    {
+      "world": "meander",
+      "scenario": "kick_right50",
+      "phase": 1,
+      "uv_on_arrival": false,
+      "uv_off_arrival": true,
+      "on_final_distance_m": 4.068903544637297,
+      "off_final_distance_m": 0.1931463721619569,
+      "on_full_kick": false,
+      "off_full_kick": true
+    }
+  ],
+  "ablation_checks": [
+    {
+      "world": "meander",
+      "passed": true,
+      "identical_encoder_weights": true,
+      "identical_visible_teaching_spike_patterns": true,
+      "identical_visible_recall_codes": true,
+      "uv_off_teaching_and_recall_silent": true
+    },
+    {
+      "world": "bend",
+      "passed": true,
+      "identical_encoder_weights": true,
+      "identical_visible_teaching_spike_patterns": true,
+      "identical_visible_recall_codes": true,
+      "uv_off_teaching_and_recall_silent": true
+    },
+    {
+      "world": "hairpin",
+      "passed": true,
+      "identical_encoder_weights": true,
+      "identical_visible_teaching_spike_patterns": true,
+      "identical_visible_recall_codes": true,
+      "uv_off_teaching_and_recall_silent": true
+    }
+  ],
+  "matched_historical_subset": {
+    "protocol_sha256": "c3ae6ac70bece836c826c63d9d6dfca23cc549e57e89269776dcbdeea31ab377",
+    "groups": [
+      {
+        "model": "apiaviz_uv",
+        "n": 12,
+        "arrivals": 0
+      },
+      {
+        "model": "sobel_colour",
+        "n": 12,
+        "arrivals": 6
+      },
+      {
+        "model": "ardin_input",
+        "n": 12,
+        "arrivals": 2
+      }
+    ],
+    "note": "Same worlds, wiring seed, phases and scheduled scenarios. Receptor response and acquisition both changed; descriptive combined-change comparison only."
+  },
+  "primary_readiness": {
+    "protocol_sha256": "4c86bc2e4b784ef7bab0b84e044cac02e274dfe583075d4fed07e6f4ffbe7702",
+    "complete": true,
+    "methods": [
+      {
+        "method": "apiaviz_uv",
+        "aligned_arrivals": 2,
+        "aligned_n": 6,
+        "full_kick_arrivals": 2,
+        "kick_n": 6,
+        "full_kicks_applied": 3,
+        "passed": false
+      },
+      {
+        "method": "sobel_colour",
+        "aligned_arrivals": 2,
+        "aligned_n": 6,
+        "full_kick_arrivals": 2,
+        "kick_n": 6,
+        "full_kicks_applied": 4,
+        "passed": false
+      },
+      {
+        "method": "ardin_input",
+        "aligned_arrivals": 1,
+        "aligned_n": 6,
+        "full_kick_arrivals": 1,
+        "kick_n": 6,
+        "full_kicks_applied": 4,
+        "passed": false
+      }
+    ],
+    "ready_for_larger_study": false,
+    "rule": {
+      "aligned_arrivals_per_model": 4,
+      "aligned_trials_per_model": 6,
+      "kick_arrivals_per_model": 2,
+      "kick_trials_per_model": 6,
+      "require_complete": true,
+      "require_audit": true,
+      "selection": "Frozen before corrected route outcomes; same thresholds for every model. No automatic full-study launch."
+    },
+    "note": "A failed gate is preserved, not tuned away. Passing is an engineering development check, not generalization evidence."
+  },
+  "uv_off_readiness": {
+    "protocol_sha256": "ffe811062072cca52a28f5841255b8f98b21e0796f8ae0c8ab1e1819c753a46c",
+    "complete": true,
+    "methods": [
+      {
+        "method": "apiaviz_uv",
+        "aligned_arrivals": 2,
+        "aligned_n": 6,
+        "full_kick_arrivals": 2,
+        "kick_n": 6,
+        "full_kicks_applied": 6,
+        "passed": false
+      }
+    ],
+    "ready_for_larger_study": false,
+    "rule": {
+      "aligned_arrivals_per_model": 4,
+      "aligned_trials_per_model": 6,
+      "kick_arrivals_per_model": 2,
+      "kick_trials_per_model": 6,
+      "require_complete": true,
+      "require_audit": true,
+      "selection": "Frozen before corrected route outcomes; same thresholds for every model. No automatic full-study launch."
+    },
+    "note": "A failed gate is preserved, not tuned away. Passing is an engineering development check, not generalization evidence."
+  },
+  "movies": [
+    {
+      "name": "bend-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "caf5361365732074ca39708a3a0e2e88ad2b473d81dec129d2e94e8d94792f84",
+      "decoded": true
+    },
+    {
+      "name": "bend-19-apiaviz_uv-kick_right50-familiarity-1.mp4",
+      "sha256": "4babe072b6db461a77dc6e407a5354fb9840d0fb23c06d234c621afbb0b9436b",
+      "decoded": true
+    },
+    {
+      "name": "bend-19-ardin_input-aligned-familiarity-1.mp4",
+      "sha256": "e484c1f582d41e89e3ead2fd03fa5f2fb4a895dc17f99d6237ae8fb3950e1b16",
+      "decoded": true
+    },
+    {
+      "name": "bend-19-ardin_input-kick_right50-familiarity-1.mp4",
+      "sha256": "acf2a2939dc8e143379a368daeae6604a0e8bb0c7fe0318ae33ab04e2b5a7365",
+      "decoded": true
+    },
+    {
+      "name": "bend-19-sobel_colour-aligned-familiarity-1.mp4",
+      "sha256": "e545a7d48e3dd759f9a69c5cbed901ff224a41d67045ed4ad1c68237a5a4a6e1",
+      "decoded": true
+    },
+    {
+      "name": "bend-19-sobel_colour-kick_right50-familiarity-1.mp4",
+      "sha256": "358862e4da51116e3bd95b4218380f1b8758c69842f66250162aa14b23ef41a3",
+      "decoded": true
+    },
+    {
+      "name": "hairpin-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "85799ead9a5f6556db137bdb19b6589da88569f7dbf7c35979411e1cbf2a61ec",
+      "decoded": true
+    },
+    {
+      "name": "hairpin-19-apiaviz_uv-kick_right50-familiarity-1.mp4",
+      "sha256": "fa4bd93c1fd90092915fcfb2f50c66facd58e7772e688237e55f57b1b6c0c8a2",
+      "decoded": true
+    },
+    {
+      "name": "hairpin-19-ardin_input-aligned-familiarity-1.mp4",
+      "sha256": "8e13d0f98772365ce1499936da44cf81f4f0f449c21906bd0420445bc3152f3d",
+      "decoded": true
+    },
+    {
+      "name": "hairpin-19-ardin_input-kick_right50-familiarity-1.mp4",
+      "sha256": "632ce4c914306b4447ebafd644c166e584b56b4d09c574577eaf22b378d5f963",
+      "decoded": true
+    },
+    {
+      "name": "hairpin-19-sobel_colour-aligned-familiarity-1.mp4",
+      "sha256": "ae3d502be418362f1181e144e4e7620ffe942d69bc2ec0c61c2c5c725ddeab8b",
+      "decoded": true
+    },
+    {
+      "name": "hairpin-19-sobel_colour-kick_right50-familiarity-1.mp4",
+      "sha256": "916d8d8ddd6a6c8a55e1273509b869f1c78b7db3afa1c75b25a070760a33a9c1",
+      "decoded": true
+    },
+    {
+      "name": "meander-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "81f8f3e2b69fee6ef764a20fbd9751a3de7845b85bab6b1f7fdbb5ec1a6bd4fb",
+      "decoded": true
+    },
+    {
+      "name": "meander-19-apiaviz_uv-kick_right50-familiarity-1.mp4",
+      "sha256": "b7d1ed11816e67e1b6bbf97cbe871c40426b5a7bae61e12b413a02ac849751fa",
+      "decoded": true
+    },
+    {
+      "name": "meander-19-ardin_input-aligned-familiarity-1.mp4",
+      "sha256": "4aed181e24e18e81c81ccb8cdaeb7dbf0492fdb88b9cac96a12306ad501446f0",
+      "decoded": true
+    },
+    {
+      "name": "meander-19-ardin_input-kick_right50-familiarity-1.mp4",
+      "sha256": "badf8aab084dd72b1ea825c63d22dd74dfb20730fef9663db26c2dd76ed73aef",
+      "decoded": true
+    },
+    {
+      "name": "meander-19-sobel_colour-aligned-familiarity-1.mp4",
+      "sha256": "5ed0cf51d64eccbb35d94238476ab49e193c8e72ee2bb6dea5e15ff5373775b9",
+      "decoded": true
+    },
+    {
+      "name": "meander-19-sobel_colour-kick_right50-familiarity-1.mp4",
+      "sha256": "b25d8facbefca5d6bad9cef04ce976b5ddefbddd9b8d5680633d8d0ea0142fc5",
+      "decoded": true
+    }
+  ],
+  "uv_off_movies": [
+    {
+      "name": "bend-19-apiaviz_uv-aligned-familiarity--1.mp4",
+      "sha256": "c473bc8d3c0a2dcf7d6b5a61a4db944db0886534ba1b315dfe4d692b0775bea0",
+      "decoded": true
+    },
+    {
+      "name": "bend-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "9f1d1ee50033050898e91f60b8919135fef3626e0130dde9883631c12d83c63a",
+      "decoded": true
+    },
+    {
+      "name": "bend-19-apiaviz_uv-kick_right50-familiarity-1.mp4",
+      "sha256": "08e45a3d9fb59c583c4763fbcad7af089296db6cf259cfff84b34414455f6c58",
+      "decoded": true
+    },
+    {
+      "name": "hairpin-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "60af3f2b0cf80b7e2f255911c2ad7bc809f3f08d8ec612da5e0158873b86b733",
+      "decoded": true
+    },
+    {
+      "name": "hairpin-19-apiaviz_uv-kick_right50-familiarity-1.mp4",
+      "sha256": "4f496b2d0c4f37fb63fa88c283c7aa31bdf2d957d1e7848baa05245e2669db1b",
+      "decoded": true
+    },
+    {
+      "name": "meander-19-apiaviz_uv-aligned-familiarity--1.mp4",
+      "sha256": "c7e00af5903ec16e521d7a09d8f1927604b1900f5b164c72a92d86966b946b86",
+      "decoded": true
+    },
+    {
+      "name": "meander-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "c16b28d84549eef19103df19db04ede3eda8eb2eea2ac452b9dc79b60d31aa15",
+      "decoded": true
+    },
+    {
+      "name": "meander-19-apiaviz_uv-kick_right50-familiarity-1.mp4",
+      "sha256": "dd29e6b4e4daff39faed6df4458cab717e7f1c89f8eccd3a2b5a94ee4142090b",
+      "decoded": true
+    }
+  ],
+  "script_sha256": "664b9d97a156fe0fb6cc2f6b2f8ba548993bdec7cb9b2a88064135e6510f0c0d",
+  "report_checksums": {
+    "primary": "dca62a910b9fbf0d99a8557c11b103f3d472fca615bf6fa80378efcd907c1980",
+    "uv_off": "de99a547de0a4cf34028f5e071fc15117df50fd93ec7fc2524bbae3ca5c4fadc"
+  },
+  "audit_checksums": {
+    "primary": "09f39de2daef4b6b37ee82f2945aa37949ab078d02b3be8dea4b6b6c3e758408",
+    "uv_off": "dd75d433ce3418d499b33bad2721d4921f30c57b37dbed68538086673d81b028"
+  },
+  "limitation": "Development worlds; one wiring seed; phases are not independent worlds. Input and acquisition changed together versus v1; no isolated causal attribution from the historical comparison."
+}

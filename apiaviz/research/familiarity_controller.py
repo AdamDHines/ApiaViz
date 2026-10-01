@@ -32,7 +32,8 @@ class Settings:
     explore_every: int = 12
     check_angle: float = 10.
     scan_step: float = 10.
-    scan_extents: tuple = (20., 60., 180.)
+    # Full-circle scanning was withdrawn after excessive stationary rotations.
+    scan_extents: tuple = (20., 60.)
     contrast_threshold: float = .15
     ambiguity_tolerance: float = .03
     improvement: float = .025
@@ -65,8 +66,8 @@ class Settings:
         if not 0 < self.check_angle <= 60 or not 0 < self.scan_step <= 60:
             raise ValueError('Invalid sampling angles')
         if (not self.scan_extents or tuple(sorted(set(self.scan_extents))) != tuple(self.scan_extents)
-                or not 0 < self.scan_extents[0] <= self.scan_extents[-1] <= 180):
-            raise ValueError('Invalid scan extents')
+                or not 0 < self.scan_extents[0] <= self.scan_extents[-1] <= 60):
+            raise ValueError('Scan extents must increase within (0, 60] degrees; full-circle scanning is withdrawn')
         if self.contrast_threshold < 0 or self.ambiguity_tolerance < 0:
             raise ValueError('Invalid contrast thresholds')
 
@@ -131,7 +132,14 @@ class FamiliarityController:
         target = min(samples, key=lambda h: (-samples[h], abs(wrap(h-base)),
                                              -self.phase * wrap(h-base)))
         best = samples[target]
-        contrast = (best - float(np.median(list(samples.values())))) / self.scale
+        # Express contrast per unit angular modulation, rather than per scan.
+        # For f(h)=a+b*cos(h-target), this is b/scale for both a small tracking
+        # check and a wider search. The old raw median difference falsely made
+        # a useful broad heading cue disappear when the scan was shortened.
+        angular_span = float(np.median([1-math.cos(math.radians(wrap(h-target)))
+                                        for h in samples]))
+        contrast = ((best - float(np.median(list(samples.values())))) /
+                    (self.scale * angular_span)) if angular_span > 1e-12 else 0.
         competing = any(abs(wrap(h-target)) > 40 and
                         best-v <= self.settings.ambiguity_tolerance*self.scale
                         for h, v in samples.items())
@@ -143,7 +151,7 @@ class FamiliarityController:
     def _scan(self, sensor, base, wide):
         sensor.start_scan()
         samples = {}
-        extents = self.settings.scan_extents if wide else (self.settings.check_angle,)
+        extents = (self.settings.scan_extents[-1],) if wide else (self.settings.check_angle,)
         for extent in extents:
             offsets = list(np.arange(-extent, extent + 1e-6, self.settings.scan_step)) + [0.]
             # Visit nearest unseen heading first; no hypothetical scores.
@@ -156,10 +164,13 @@ class FamiliarityController:
                     return None
                 samples[target] = value
             target, contrast, supported = self._peak(samples, base)
-            interior = abs(wrap(target-base)) < extent - 1e-6 or extent == 180
-            if supported and interior:
-                break
+            interior = abs(wrap(target-base)) < extent - 1e-6
+            # A local maximum is not evidence that a corner is absent farther
+            # into the permitted sector. Reorientation completes that sector;
+            # ordinary tracking still uses only +/-check_angle. Never extend
+            # this into a circular search.
         return dict(target=target, contrast=contrast, supported=bool(supported and interior),
+                    contrast_schema='angular-modulation-v1',
                     samples=[dict(heading=h, familiarity=v) for h, v in samples.items()])
 
     def _start_cast(self, step, reason):

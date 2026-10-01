@@ -1,0 +1,793 @@
+{
+  "source_protocols": {
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-validation-v2": "4c86bc2e4b784ef7bab0b84e044cac02e274dfe583075d4fed07e6f4ffbe7702",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/coherent-validation-v3": "253f8d20cb18f885f59e3a93138c8b1e5d40012b72d3446d88e875a96f54b62c"
+  },
+  "audit_hashes": {
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-pipeline-audit-v3/audit.json": "0d32b5e6a37135cae3cbd8708c0a723a0496f710deeb18390932b7a2617ba946",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-failed-views-v3/audit.json": "4e49722972f2d43863ed3fb6ebf4ddaa13c3e0bafbae18ac67992403b15121b9",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-precision-v3/validation.json": "c5818bd083a611952fb8f614b82ea79052d7ba781d41ee75ee624e5b4c176151"
+  },
+  "pairs": [
+    {
+      "id": "bend-19-apiaviz_uv-aligned-familiarity--1",
+      "world": "bend",
+      "method": "apiaviz_uv",
+      "phase": -1,
+      "old": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 503,
+        "rock_blocks": 17,
+        "field_blocks": 486,
+        "movement_reversals_over_90_deg": 40,
+        "views": 1561,
+        "time_s": 359.99444444444686,
+        "path_m": 9.439999999999888,
+        "final_nest_distance_m": 1.532099838991371
+      },
+      "new": {
+        "arrived": false,
+        "termination": "uninformative_views",
+        "blocked_proposals": 0,
+        "rock_blocks": 0,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 3,
+        "views": 352,
+        "time_s": 73.98888888888871,
+        "path_m": 3.700000000000003,
+        "final_nest_distance_m": 3.427393825567179
+      },
+      "old_sha256": "0b1219a3b510b96e4c09b8cb8ec40282e54d3e2be11833fd7e90218eb0a0dc0c",
+      "new_sha256": "2d65b283feda4ab78e8493d58f644576c4c2e166da5c2fa6c2cde57e6ca7d228"
+    },
+    {
+      "id": "bend-19-apiaviz_uv-aligned-familiarity-1",
+      "world": "bend",
+      "method": "apiaviz_uv",
+      "phase": 1,
+      "old": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 742,
+        "rock_blocks": 742,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 52,
+        "views": 1614,
+        "time_s": 359.7000000000023,
+        "path_m": 3.2600000000000025,
+        "final_nest_distance_m": 3.332681878251594
+      },
+      "new": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 24,
+        "rock_blocks": 24,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 32,
+        "views": 1642,
+        "time_s": 359.8888888888904,
+        "path_m": 15.259999999999767,
+        "final_nest_distance_m": 1.3643446679477405
+      },
+      "old_sha256": "2d52e5d0162afd9a2f0ae15f87b66bba35fb30d36fdfe02702633a49abe4a942",
+      "new_sha256": "34127c3dc3e813baaa16029ac6ec7ec5c19ea71454d41ee13bf9d9fcc7c68fc8"
+    },
+    {
+      "id": "bend-19-ardin_input-aligned-familiarity--1",
+      "world": "bend",
+      "method": "ardin_input",
+      "phase": -1,
+      "old": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 0,
+        "rock_blocks": 0,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 9,
+        "views": 586,
+        "time_s": 138.8111111111111,
+        "path_m": 7.539999999999927,
+        "final_nest_distance_m": 0.18828447614033383
+      },
+      "new": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 36,
+        "rock_blocks": 36,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 39,
+        "views": 1577,
+        "time_s": 359.9833333333368,
+        "path_m": 13.269999999999875,
+        "final_nest_distance_m": 0.24533932853920393
+      },
+      "old_sha256": "8deb00d1a25137c8b6b6a9ec35399c70ec0c613c1dfef3ee584950a10046ac84",
+      "new_sha256": "cb1e255ccd63cb48c69dd4bc81604692de37a14750dde5de0c7519039e451e04"
+    },
+    {
+      "id": "bend-19-ardin_input-aligned-familiarity-1",
+      "world": "bend",
+      "method": "ardin_input",
+      "phase": 1,
+      "old": {
+        "arrived": false,
+        "termination": "step_budget",
+        "blocked_proposals": 463,
+        "rock_blocks": 16,
+        "field_blocks": 447,
+        "movement_reversals_over_90_deg": 43,
+        "views": 1548,
+        "time_s": 358.288888888891,
+        "path_m": 10.73999999999986,
+        "final_nest_distance_m": 2.4842592521511566
+      },
+      "new": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 22,
+        "rock_blocks": 22,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 22,
+        "views": 938,
+        "time_s": 205.68888888888958,
+        "path_m": 8.399999999999904,
+        "final_nest_distance_m": 0.18904805055778517
+      },
+      "old_sha256": "ec6fccfbc122c65a4d95c991768c1038b9e450d0f1b22b584260da40686c7918",
+      "new_sha256": "ca8f0ccd6c4b34edd2e62da01b3d0af253dd93339fe7470ca0175933757495d7"
+    },
+    {
+      "id": "bend-19-sobel_colour-aligned-familiarity--1",
+      "world": "bend",
+      "method": "sobel_colour",
+      "phase": -1,
+      "old": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 32,
+        "rock_blocks": 32,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 10,
+        "views": 647,
+        "time_s": 147.52777777777766,
+        "path_m": 7.099999999999937,
+        "final_nest_distance_m": 0.1961567723663512
+      },
+      "new": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 0,
+        "rock_blocks": 0,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 6,
+        "views": 624,
+        "time_s": 132.82222222222214,
+        "path_m": 7.139999999999936,
+        "final_nest_distance_m": 0.19371326749447323
+      },
+      "old_sha256": "c73b36222a7b3c9a90c553ae48541ef58a3a22fbf1594d8ae336d1913fae08ba",
+      "new_sha256": "ffefe854b7511a2455eba03908c2fbdaabc9e1206b406e633f1733add3339a16"
+    },
+    {
+      "id": "bend-19-sobel_colour-aligned-familiarity-1",
+      "world": "bend",
+      "method": "sobel_colour",
+      "phase": 1,
+      "old": {
+        "arrived": false,
+        "termination": "uninformative_views",
+        "blocked_proposals": 22,
+        "rock_blocks": 0,
+        "field_blocks": 22,
+        "movement_reversals_over_90_deg": 14,
+        "views": 1032,
+        "time_s": 223.7666666666677,
+        "path_m": 10.559999999999864,
+        "final_nest_distance_m": 2.377141065996033
+      },
+      "new": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 95,
+        "rock_blocks": 0,
+        "field_blocks": 95,
+        "movement_reversals_over_90_deg": 35,
+        "views": 1661,
+        "time_s": 359.93888888890217,
+        "path_m": 12.800000000000212,
+        "final_nest_distance_m": 2.376607636676004
+      },
+      "old_sha256": "a8109c60b587983234d7a88c7cbe5c6b2874ea95d5651151a21305ea35c96b05",
+      "new_sha256": "c90252b4d3290501459593f3e09d22c356b407de617df2453e8c4f0d13e5c79a"
+    },
+    {
+      "id": "hairpin-19-apiaviz_uv-aligned-familiarity--1",
+      "world": "hairpin",
+      "method": "apiaviz_uv",
+      "phase": -1,
+      "old": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 2,
+        "rock_blocks": 2,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 11,
+        "views": 975,
+        "time_s": 219.7722222222234,
+        "path_m": 12.339999999999826,
+        "final_nest_distance_m": 0.1905542704308327
+      },
+      "new": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 0,
+        "rock_blocks": 0,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 5,
+        "views": 902,
+        "time_s": 182.77777777777806,
+        "path_m": 9.039999999999896,
+        "final_nest_distance_m": 0.1856186100515802
+      },
+      "old_sha256": "941934f667c79a50d4a2a9b968b974ea14b9624e7dcd17f4a4ff691f7758e619",
+      "new_sha256": "04d8458b679527cfe88f251a68646d5233af57ac3b6d2d174ec801f241d06094"
+    },
+    {
+      "id": "hairpin-19-apiaviz_uv-aligned-familiarity-1",
+      "world": "hairpin",
+      "method": "apiaviz_uv",
+      "phase": 1,
+      "old": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 0,
+        "rock_blocks": 0,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 12,
+        "views": 877,
+        "time_s": 188.45000000000053,
+        "path_m": 9.75999999999988,
+        "final_nest_distance_m": 0.19639029353198317
+      },
+      "new": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 0,
+        "rock_blocks": 0,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 8,
+        "views": 1216,
+        "time_s": 253.62222222222357,
+        "path_m": 12.859999999999815,
+        "final_nest_distance_m": 0.18227852225687663
+      },
+      "old_sha256": "a7a2b204dff2c1182eb023ebb2d3a421dddf5d180528dbd49b3baa6eedf31d93",
+      "new_sha256": "02c60947b44cf76d871a5b6c0601463763b5112f62ccbf9c87ad46e11058a6fe"
+    },
+    {
+      "id": "hairpin-19-ardin_input-aligned-familiarity--1",
+      "world": "hairpin",
+      "method": "ardin_input",
+      "phase": -1,
+      "old": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 150,
+        "rock_blocks": 114,
+        "field_blocks": 36,
+        "movement_reversals_over_90_deg": 26,
+        "views": 1601,
+        "time_s": 359.99444444444606,
+        "path_m": 15.799999999999752,
+        "final_nest_distance_m": 2.495547278000555
+      },
+      "new": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 82,
+        "rock_blocks": 82,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 24,
+        "views": 1684,
+        "time_s": 359.81111111111926,
+        "path_m": 12.709999999999832,
+        "final_nest_distance_m": 5.5070172201097565
+      },
+      "old_sha256": "2f061de9ae828733c5b308e45adae5963b5206a4099698344b9bc44639e36fe5",
+      "new_sha256": "ce2e13dceccf15eb4684b795f20653a54046f30131425f2d138454167824cba3"
+    },
+    {
+      "id": "hairpin-19-ardin_input-aligned-familiarity-1",
+      "world": "hairpin",
+      "method": "ardin_input",
+      "phase": 1,
+      "old": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 466,
+        "rock_blocks": 466,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 57,
+        "views": 1533,
+        "time_s": 359.97222222222456,
+        "path_m": 7.439999999999929,
+        "final_nest_distance_m": 4.6039462868500785
+      },
+      "new": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 15,
+        "rock_blocks": 11,
+        "field_blocks": 4,
+        "movement_reversals_over_90_deg": 19,
+        "views": 1615,
+        "time_s": 359.8611111111143,
+        "path_m": 14.859999999999788,
+        "final_nest_distance_m": 7.562845506270457
+      },
+      "old_sha256": "a51223a2cd8ecc6f0f3e70b5460c3f5bb45f684e53a13127f9604f70d1aec16e",
+      "new_sha256": "6deb0b92d32bc6d220e14d525de021d49908f09c378dcfa2336f03a6e9e45565"
+    },
+    {
+      "id": "hairpin-19-sobel_colour-aligned-familiarity--1",
+      "world": "hairpin",
+      "method": "sobel_colour",
+      "phase": -1,
+      "old": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 471,
+        "rock_blocks": 0,
+        "field_blocks": 471,
+        "movement_reversals_over_90_deg": 44,
+        "views": 1562,
+        "time_s": 359.93333333333527,
+        "path_m": 9.879999999999878,
+        "final_nest_distance_m": 7.1192026653817395
+      },
+      "new": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 0,
+        "rock_blocks": 0,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 5,
+        "views": 874,
+        "time_s": 187.1777777777784,
+        "path_m": 9.919999999999877,
+        "final_nest_distance_m": 0.18632786587223066
+      },
+      "old_sha256": "2ccf62f506885e9da3624b13559f395dba445b8fcfff72ed0bfc3dab95432fd9",
+      "new_sha256": "face2737913e2fafa72951b8c53d55026bc8e8a15a186b41bf99094389a0c3f4"
+    },
+    {
+      "id": "hairpin-19-sobel_colour-aligned-familiarity-1",
+      "world": "hairpin",
+      "method": "sobel_colour",
+      "phase": 1,
+      "old": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 633,
+        "rock_blocks": 633,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 63,
+        "views": 1525,
+        "time_s": 359.8833333333357,
+        "path_m": 5.949999999999961,
+        "final_nest_distance_m": 4.678635600980743
+      },
+      "new": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 22,
+        "rock_blocks": 22,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 28,
+        "views": 1666,
+        "time_s": 359.9666666666707,
+        "path_m": 13.904999999999907,
+        "final_nest_distance_m": 5.148748272861559
+      },
+      "old_sha256": "83d68df5808703883bba6e839f5cb4690d63e657b918d54437ed6ecf3fd7b48e",
+      "new_sha256": "b14e5a7a8f51e47b7ceec5ccedfa4bd4373acc5e41f622549f4a05c363c6b25b"
+    },
+    {
+      "id": "meander-19-apiaviz_uv-aligned-familiarity--1",
+      "world": "meander",
+      "method": "apiaviz_uv",
+      "phase": -1,
+      "old": {
+        "arrived": false,
+        "termination": "uninformative_views",
+        "blocked_proposals": 94,
+        "rock_blocks": 0,
+        "field_blocks": 94,
+        "movement_reversals_over_90_deg": 16,
+        "views": 1144,
+        "time_s": 259.14444444444615,
+        "path_m": 10.919999999999856,
+        "final_nest_distance_m": 3.471553560727716
+      },
+      "new": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 75,
+        "rock_blocks": 0,
+        "field_blocks": 75,
+        "movement_reversals_over_90_deg": 27,
+        "views": 1710,
+        "time_s": 359.97222222223314,
+        "path_m": 12.785000000000142,
+        "final_nest_distance_m": 2.892413784732969
+      },
+      "old_sha256": "21a1e18d5d1be2a3a00a6d39f64afbbbc98a1482f85eb10874cae3c81a91f1e7",
+      "new_sha256": "cb883686d76cdec4df5bef20f95653e41ba9f4456c3d140535cbe9e2e9c43a20"
+    },
+    {
+      "id": "meander-19-apiaviz_uv-aligned-familiarity-1",
+      "world": "meander",
+      "method": "apiaviz_uv",
+      "phase": 1,
+      "old": {
+        "arrived": false,
+        "termination": "uninformative_views",
+        "blocked_proposals": 37,
+        "rock_blocks": 37,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 15,
+        "views": 862,
+        "time_s": 194.32222222222262,
+        "path_m": 8.159999999999915,
+        "final_nest_distance_m": 2.284665409799734
+      },
+      "new": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 92,
+        "rock_blocks": 0,
+        "field_blocks": 92,
+        "movement_reversals_over_90_deg": 32,
+        "views": 1622,
+        "time_s": 359.9777777777896,
+        "path_m": 12.700000000000154,
+        "final_nest_distance_m": 1.500506267223659
+      },
+      "old_sha256": "fa9dd7145947bb03abf8a3874c717903f5568f94c5f1120b5fdf4bc0ce747784",
+      "new_sha256": "be36827af8e926d31e2b81e14bb11fb7c030f3764b716260b996bc5a755a3b7b"
+    },
+    {
+      "id": "meander-19-ardin_input-aligned-familiarity--1",
+      "world": "meander",
+      "method": "ardin_input",
+      "phase": -1,
+      "old": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 177,
+        "rock_blocks": 92,
+        "field_blocks": 85,
+        "movement_reversals_over_90_deg": 32,
+        "views": 1612,
+        "time_s": 359.90000000000185,
+        "path_m": 13.739999999999796,
+        "final_nest_distance_m": 3.494996106363454
+      },
+      "new": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 0,
+        "rock_blocks": 0,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 14,
+        "views": 1664,
+        "time_s": 359.92222222222375,
+        "path_m": 17.79999999999971,
+        "final_nest_distance_m": 1.56189210087639
+      },
+      "old_sha256": "20d79c74946393436414a4019a5ee8a00f37b3bd8f15d794eb4820687068552f",
+      "new_sha256": "ef4e98291f59c8094b5feafe9c012424d4f5bdd9e78ffa2657dc301024b6fb94"
+    },
+    {
+      "id": "meander-19-ardin_input-aligned-familiarity-1",
+      "world": "meander",
+      "method": "ardin_input",
+      "phase": 1,
+      "old": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 5,
+        "rock_blocks": 0,
+        "field_blocks": 5,
+        "movement_reversals_over_90_deg": 17,
+        "views": 1586,
+        "time_s": 359.7555555555577,
+        "path_m": 18.63999999999969,
+        "final_nest_distance_m": 2.2679260144085327
+      },
+      "new": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 74,
+        "rock_blocks": 8,
+        "field_blocks": 66,
+        "movement_reversals_over_90_deg": 30,
+        "views": 1669,
+        "time_s": 359.8111111111201,
+        "path_m": 12.625000000000057,
+        "final_nest_distance_m": 3.456830392784437
+      },
+      "old_sha256": "6304eaabcdc75b989294e41b5713d98419a6ce869249c7503046c9e4db52534e",
+      "new_sha256": "87e9732536c9913c0b8da0916a3d921040ee02537230c4f3fb8a2713c671d077"
+    },
+    {
+      "id": "meander-19-sobel_colour-aligned-familiarity--1",
+      "world": "meander",
+      "method": "sobel_colour",
+      "phase": -1,
+      "old": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 0,
+        "rock_blocks": 0,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 10,
+        "views": 628,
+        "time_s": 145.97777777777787,
+        "path_m": 7.779999999999922,
+        "final_nest_distance_m": 0.1901795245780253
+      },
+      "new": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 0,
+        "rock_blocks": 0,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 2,
+        "views": 574,
+        "time_s": 116.83333333333316,
+        "path_m": 6.579999999999948,
+        "final_nest_distance_m": 0.19577876366808525
+      },
+      "old_sha256": "ddfc231c5b587ff55bc60a7f0a179f15d07044cce3270d9ba363f542b66a8df5",
+      "new_sha256": "285d92efc76b087be8b2181a51735df192e63bc9ebc39588f54cc4427160943f"
+    },
+    {
+      "id": "meander-19-sobel_colour-aligned-familiarity-1",
+      "world": "meander",
+      "method": "sobel_colour",
+      "phase": 1,
+      "old": {
+        "arrived": false,
+        "termination": "time_budget",
+        "blocked_proposals": 69,
+        "rock_blocks": 69,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 27,
+        "views": 1592,
+        "time_s": 359.98888888889024,
+        "path_m": 16.219999999999743,
+        "final_nest_distance_m": 2.761650544634618
+      },
+      "new": {
+        "arrived": true,
+        "termination": "arrival",
+        "blocked_proposals": 0,
+        "rock_blocks": 0,
+        "field_blocks": 0,
+        "movement_reversals_over_90_deg": 8,
+        "views": 700,
+        "time_s": 155.77777777777803,
+        "path_m": 7.8999999999999195,
+        "final_nest_distance_m": 0.19843527890513254
+      },
+      "old_sha256": "e296239b924e300780fb674ac681dcd5421170c7e8bbec411fde5d8d202a89d9",
+      "new_sha256": "7e7db988e888dbf226fe9f39410b54d5a1df86504207c7b028b0a52769209c21"
+    }
+  ],
+  "decoded_movies": [
+    {
+      "file": "report/movies/bend-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "6259bb7afca922b10234211c8f9f05236632aa0a986929ec9113779dc6f76671"
+    },
+    {
+      "file": "report/movies/bend-19-ardin_input-aligned-familiarity--1.mp4",
+      "sha256": "1fadcab46b21b232157118ef0b0b1cbb45484d30fb6ce073cdad1eb4127a3368"
+    },
+    {
+      "file": "report/movies/bend-19-ardin_input-aligned-familiarity-1.mp4",
+      "sha256": "5dd76322fdfae1bf2b905beeaa1c21b2a48e4de19002437fe14140c30f01acdd"
+    },
+    {
+      "file": "report/movies/bend-19-sobel_colour-aligned-familiarity-1.mp4",
+      "sha256": "6e85e9d402b5220be600b2d3ac30ec04168760cf350ffc275a2d0a71829ec12f"
+    },
+    {
+      "file": "report/movies/hairpin-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "98097a3891ded761a82aae4775e63ac90933465bc0a2d3643b4cfe6df522a0b0"
+    },
+    {
+      "file": "report/movies/hairpin-19-ardin_input-aligned-familiarity-1.mp4",
+      "sha256": "269f91ece2518102e1570fc477ee0fe27c4cd914e025dac984151fdbe4f2a6eb"
+    },
+    {
+      "file": "report/movies/hairpin-19-sobel_colour-aligned-familiarity-1.mp4",
+      "sha256": "85e831806508b8bb31b3fc765f820783ee7d5e91665f43f6ca89bddad404bd58"
+    },
+    {
+      "file": "report/movies/meander-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "ba78f73ea2c5e8c099f6ecbf6d0f38670cf298d4658715c69e346ba0471e5b34"
+    },
+    {
+      "file": "report/movies/meander-19-ardin_input-aligned-familiarity-1.mp4",
+      "sha256": "1b7110773539a25c490f14f0a4c2529f3f0e38633acf54d096e27e3e0a910136"
+    },
+    {
+      "file": "report/movies/meander-19-sobel_colour-aligned-familiarity-1.mp4",
+      "sha256": "ab642065e08dc8ee859ec3c0cc2bc0df248ec8c6a713eb71ff11d6a0e8adcea2"
+    }
+  ],
+  "all_motion_audits_passed": true,
+  "flat_fields": [
+    {
+      "radiance": 0.0,
+      "v2_spikes": [
+        0,
+        0,
+        0
+      ],
+      "v3_spikes": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "radiance": 0.01,
+      "v2_spikes": [
+        0,
+        0,
+        0
+      ],
+      "v3_spikes": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "radiance": 0.1,
+      "v2_spikes": [
+        249,
+        0,
+        94
+      ],
+      "v3_spikes": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "radiance": 0.5,
+      "v2_spikes": [
+        217,
+        0,
+        94
+      ],
+      "v3_spikes": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "radiance": 1.0,
+      "v2_spikes": [
+        0,
+        0,
+        0
+      ],
+      "v3_spikes": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "radiance": 10.0,
+      "v2_spikes": [
+        178,
+        0,
+        78
+      ],
+      "v3_spikes": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "radiance": 1000.0,
+      "v2_spikes": [
+        189,
+        0,
+        92
+      ],
+      "v3_spikes": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "changed_acquisition_spike_bits": 0,
+  "acquisition_spike_bits": 1440000,
+  "route_retrieval": [
+    {
+      "within_5cm": true,
+      "n": 63,
+      "all": 63,
+      "visible": 63,
+      "uv": 59
+    },
+    {
+      "within_5cm": false,
+      "n": 69,
+      "all": 37,
+      "visible": 24,
+      "uv": 28
+    }
+  ],
+  "methods": [
+    {
+      "method": "apiaviz_uv",
+      "n": 6,
+      "old": {
+        "arrivals": 2,
+        "blocked_proposals": 1378,
+        "rock_blocks": 798,
+        "movement_reversals_over_90_deg": 146
+      },
+      "new": {
+        "arrivals": 2,
+        "blocked_proposals": 191,
+        "rock_blocks": 24,
+        "movement_reversals_over_90_deg": 107
+      }
+    },
+    {
+      "method": "sobel_colour",
+      "n": 6,
+      "old": {
+        "arrivals": 2,
+        "blocked_proposals": 1227,
+        "rock_blocks": 734,
+        "movement_reversals_over_90_deg": 168
+      },
+      "new": {
+        "arrivals": 4,
+        "blocked_proposals": 117,
+        "rock_blocks": 22,
+        "movement_reversals_over_90_deg": 84
+      }
+    },
+    {
+      "method": "ardin_input",
+      "n": 6,
+      "old": {
+        "arrivals": 1,
+        "blocked_proposals": 1261,
+        "rock_blocks": 688,
+        "movement_reversals_over_90_deg": 184
+      },
+      "new": {
+        "arrivals": 1,
+        "blocked_proposals": 229,
+        "rock_blocks": 159,
+        "movement_reversals_over_90_deg": 148
+      }
+    }
+  ]
+}

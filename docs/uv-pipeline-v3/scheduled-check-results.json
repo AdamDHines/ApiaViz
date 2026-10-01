@@ -1,0 +1,44 @@
+{
+  "protocol_sha256": "4abc8824dfbc08950cdb08577b79daa41689acef89dd6ee4c913650b3526f8dc",
+  "audit_sha256": "51c9d53bace427c4e686db869cd183f51e787eb8e8c34439a6f323cfeaa3b365",
+  "cases": [
+    {
+      "id": "meander-19-apiaviz_uv-aligned-familiarity--1",
+      "phase": -1,
+      "termination": "arrival",
+      "blocked_proposals": 0,
+      "steps": 62,
+      "time_s": 105.7388888888886,
+      "observations": 589,
+      "path_length_m": 6.139999999999957,
+      "final_nest_distance_m": 0.19922222296489922,
+      "encoder_fingerprint": "f18df84712f3d75097387cd68789fe8042d6fe907b366c42b2ffceb9efd172ab",
+      "memory_fingerprint": "46cda08cacb75d05c1b4e34465e301358374befe95bbdb549bb55f2a9d3dbdb6",
+      "training_images_sha256": "fc5a97c7fdbf32f1babe80780a615222a63e806f10851ec6cc0f7f77a7a71328",
+      "trace_sha256": "34f9599555448d58d729f31af2dd0cd3d5bf2e825b6b4690d9f0196b59e3463f",
+      "max_macro_route_error_m": 0.0585957622637633
+    },
+    {
+      "id": "meander-19-apiaviz_uv-aligned-familiarity-1",
+      "phase": 1,
+      "termination": "arrival",
+      "blocked_proposals": 0,
+      "steps": 62,
+      "time_s": 102.98333333333312,
+      "observations": 565,
+      "path_length_m": 6.139999999999957,
+      "final_nest_distance_m": 0.18347888452916783,
+      "encoder_fingerprint": "f18df84712f3d75097387cd68789fe8042d6fe907b366c42b2ffceb9efd172ab",
+      "memory_fingerprint": "46cda08cacb75d05c1b4e34465e301358374befe95bbdb549bb55f2a9d3dbdb6",
+      "training_images_sha256": "fc5a97c7fdbf32f1babe80780a615222a63e806f10851ec6cc0f7f77a7a71328",
+      "trace_sha256": "97850bcea3d7d8dc9a92d8fdb35bbc341eda077926a81136a6f88339147d1629",
+      "max_macro_route_error_m": 0.06651490043730365
+    }
+  ],
+  "movies": [
+    {
+      "file": "apiaviz/output/confirmed-exploration-v4/report/movies/meander-19-apiaviz_uv-aligned-familiarity-1.mp4",
+      "sha256": "33333460d2c6ec035b11d289ced2f9d59cb4eb7e9de9735b87fb6be2ed0e0925"
+    }
+  ]
+}

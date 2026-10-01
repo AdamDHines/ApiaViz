@@ -26,9 +26,15 @@ class UVEncoderConfig:
     fan_in: int = 10
     sparsity: float = .02825
     radiance_scale: float = 1.
+    response_half: float | None = None
+    uv_enabled: bool = True
 
     def __post_init__(self):
-        if self.schema!='apiaviz-uv-v1': raise ValueError('Unknown UV encoder schema')
+        if self.schema not in ('apiaviz-uv-v1','apiaviz-uv-v2'): raise ValueError('Unknown UV encoder schema')
+        if self.schema=='apiaviz-uv-v1' and self.response_half is not None:
+            raise ValueError('Bounded receptor response requires v2')
+        if self.schema=='apiaviz-uv-v2' and (self.response_half is None or not math.isfinite(self.response_half) or self.response_half<=0):
+            raise ValueError('v2 requires a positive fixed half-response')
         if (self.visible_code_dim<2 or self.visible_code_dim%2 or self.uv_code_dim<1
                 or int(self.uv_code_dim)!=self.uv_code_dim or int(self.visible_code_dim)!=self.visible_code_dim):
             raise ValueError('Require positive integer populations and even visible population')
@@ -51,7 +57,7 @@ class ApiaVizUVEncoder(nn.Module):
         self.config=config or UVEncoderConfig()
         self.circuit_config=circuit or LatencyConfig(current_gain=.1,time_bin_ms=1.,inhibition_delay_ms=1.)
         c=self.config
-        self.backbone=UVVisionBackbone(c.radiance_scale)
+        self.backbone=UVVisionBackbone(c.radiance_scale,c.response_half)
         self.projections=nn.ModuleList([
             RetinotopicKCProjection(channels,pool_hw=c.pool_hw,code_dim=units,
                 fan_in=c.fan_in,sparsity=c.sparsity,seed=c.seed+offset)
@@ -61,7 +67,8 @@ class ApiaVizUVEncoder(nn.Module):
         self.eval()
 
     @torch.no_grad()
-    def currents(self,receptors,*,uv_enabled=True):
+    def currents(self,receptors,*,uv_enabled=None):
+        uv_enabled=self.config.uv_enabled if uv_enabled is None else uv_enabled
         maps=self.backbone(receptors)
         result=[]
         for name,projection in zip(self.stream_names,self.projections):
@@ -74,12 +81,12 @@ class ApiaVizUVEncoder(nn.Module):
         return result
 
     @torch.no_grad()
-    def diagnostics(self,receptors,*,uv_enabled=True):
+    def diagnostics(self,receptors,*,uv_enabled=None):
         streams=[latency_race(drive,projection.active_units,self.circuit_config)
             for drive,projection in zip(self.currents(receptors,uv_enabled=uv_enabled),self.projections)]
         return dict(codes=torch.cat([F.normalize(s['codes'],dim=1) for s in streams],1),streams=streams)
 
-    def forward(self,receptors,*,uv_enabled=True):
+    def forward(self,receptors,*,uv_enabled=None):
         return self.diagnostics(receptors,uv_enabled=uv_enabled)['codes']
 
     def metadata(self):

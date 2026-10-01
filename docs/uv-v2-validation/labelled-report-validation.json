@@ -1,0 +1,13 @@
+{
+  "kind": "Presentation export only; not an experiment execution directory",
+  "source_study": "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-validation-v2-uv-off",
+  "protocol_sha256": "ffe811062072cca52a28f5841255b8f98b21e0796f8ae0c8ab1e1819c753a46c",
+  "original_artifacts_sha256": "de99a547de0a4cf34028f5e071fc15117df50fd93ec7fc2524bbae3ca5c4fadc",
+  "labelled_artifacts_sha256": "d7de759fc5e3911031307e8702ddd8bbf07a66e7e9dbc8d1565030084920c152",
+  "labels": {
+    "apiaviz_uv": "ApiaViz UV off"
+  },
+  "numerical_results_identical": true,
+  "movies_decoded": 8,
+  "script_sha256": "38f8dfbc84c221fa941301d0b5db635d32b6361b57ffe027f26c34d3fbfbda65"
+}

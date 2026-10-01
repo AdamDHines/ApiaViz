@@ -1,0 +1,62 @@
+{
+  "protocol_sha256": "f7dbed96480e2920c0e9d69de9490d29c752494f72dfce2d67424fd9fe0d0611",
+  "results": [
+    {
+      "policy": "VisualAvoidance",
+      "phase": -1,
+      "distance_from_start_m": 0.0,
+      "escaped": false,
+      "path_m": 0.0,
+      "commanded_path_m": 1.0000000000000004,
+      "blocked_proposals": 50,
+      "observations": 51,
+      "time_s": 12.55,
+      "termination": null,
+      "safety_passed": true,
+      "trace": "VisualAvoidance--1.json"
+    },
+    {
+      "policy": "VisualAvoidance",
+      "phase": 1,
+      "distance_from_start_m": 0.0,
+      "escaped": false,
+      "path_m": 0.0,
+      "commanded_path_m": 1.0000000000000004,
+      "blocked_proposals": 50,
+      "observations": 51,
+      "time_s": 12.55,
+      "termination": null,
+      "safety_passed": true,
+      "trace": "VisualAvoidance-1.json"
+    },
+    {
+      "policy": "VisualStallRecovery",
+      "phase": -1,
+      "distance_from_start_m": 0.5669276835510543,
+      "escaped": true,
+      "path_m": 0.7800000000000005,
+      "commanded_path_m": 1.0000000000000007,
+      "blocked_proposals": 14,
+      "observations": 150,
+      "time_s": 25.83333333333345,
+      "termination": null,
+      "safety_passed": true,
+      "trace": "VisualStallRecovery--1.json"
+    },
+    {
+      "policy": "VisualStallRecovery",
+      "phase": 1,
+      "distance_from_start_m": 0.4138139623459928,
+      "escaped": true,
+      "path_m": 0.8700000000000006,
+      "commanded_path_m": 1.0000000000000007,
+      "blocked_proposals": 10,
+      "observations": 105,
+      "time_s": 23.416666666666693,
+      "termination": null,
+      "safety_passed": true,
+      "trace": "VisualStallRecovery-1.json"
+    }
+  ],
+  "limitations": "One selected failure pose, fixed desired heading, static deterministic camera; not route arrival or generalization evidence."
+}

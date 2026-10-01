@@ -1,0 +1,2518 @@
+{
+  "protocol_sha256": "104ea0885d28aba279c08e05a490c9c421fedf31faf5de173af70d3189f29750",
+  "script_sha256": "9d09cb7d6064e9324ade4dd03e4fb2f7ab66a799953f5eea337c3523bde3ecd7",
+  "controller_sha256": "7bd28c64cb1ed3c79efe8d117cdc00644a74add85d9ee2d17e274f95e18936a2",
+  "inputs": {
+    "trials/bend-19-apiaviz_uv-aligned-familiarity--1.json": "5791b945876d3a899d54ce0ced1ea1927de4ea9e46b5e43d693121948a33c672",
+    "worlds/bend/camera/4c27d8bcbd3dae5364f3eef40f1b498b4d51eae16ab8ae68a9b999874e475aa6.json": "f77c770dbdb6184aae922596115681da5fc7ac9849cc7477620907effb67c979",
+    "trials/hairpin-19-apiaviz_uv-aligned-familiarity--1.json": "afc43470080b7dd3e44af3fbdb15de30f73762ebf238c28c4a8e6959b359b24e",
+    "worlds/hairpin/camera/1aaa760d5006270a7bcb55a7e2beeb858da1dd6eea6df0ee51822df33f9c445c.json": "767792ea552ebbc5b2a578dd5e2c155a3e16bc4329700fb10d48c1628bb571f2"
+  },
+  "records": [
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "apiaviz_uv",
+      "phase": -1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 10.0,
+        "contrast": 0.15536170044565212,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.6135855913162231
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6324998140335083
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.5988575220108032
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6457208395004272
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.6203636527061462
+          }
+        ]
+      },
+      "observations": 5,
+      "time_s": 0.5833333333333334,
+      "rotation_deg": 60.0
+    },
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "apiaviz_uv",
+      "phase": -1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 50.0,
+        "contrast": 0.7471571664398006,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.6135855913162231
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6324998140335083
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.5988575220108032
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.5802979469299316
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.5758237838745117
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.5645068883895874
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.5537960529327393
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.5470136404037476
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.5729684829711914
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.5600029230117798
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.562427282333374
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.5276566743850708
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.5283960103988647
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.5627003908157349
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.5454750061035156
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.5517265796661377
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.5523916482925415
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.5600032806396484
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.5632300972938538
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.545244574546814
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.5275418162345886
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.5241475105285645
+          },
+          {
+            "heading": 140.0,
+            "familiarity": 0.5196254253387451
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.5581446886062622
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.5364118218421936
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.5612533092498779
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.58240807056427
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.5905274152755737
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.6194586753845215
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.6338326930999756
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.6590449810028076
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.6849116683006287
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.6398317813873291
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.6170531511306763
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.6203636527061462
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6457208395004272
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    },
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "apiaviz_uv",
+      "phase": 1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 10.0,
+        "contrast": 0.15536170044565212,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.6135855913162231
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6457208395004272
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.6203636527061462
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6324998140335083
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.5988575220108032
+          }
+        ]
+      },
+      "observations": 5,
+      "time_s": 0.5833333333333334,
+      "rotation_deg": 60.0
+    },
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "apiaviz_uv",
+      "phase": 1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 50.0,
+        "contrast": 0.7471571664398006,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.6135855913162231
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6457208395004272
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.6203636527061462
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.6170531511306763
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.6398317813873291
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.6849116683006287
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.6590449810028076
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.6338326930999756
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.6194586753845215
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.5905274152755737
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.58240807056427
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.5612533092498779
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.5364118218421936
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.5581446886062622
+          },
+          {
+            "heading": 140.0,
+            "familiarity": 0.5196254253387451
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.5241475105285645
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.5275418162345886
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.545244574546814
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.5632300972938538
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.5600032806396484
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.5523916482925415
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.5517265796661377
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.5454750061035156
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.5627003908157349
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.5283960103988647
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.5276566743850708
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.562427282333374
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.5600029230117798
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.5729684829711914
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.5470136404037476
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.5537960529327393
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.5645068883895874
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.5758237838745117
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.5802979469299316
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.5988575220108032
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6324998140335083
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    },
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "sobel_colour",
+      "phase": -1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 0.0,
+        "contrast": 0.4201001672493005,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.7464604377746582
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6664501428604126
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.645066499710083
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6648613214492798
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.6589784622192383
+          }
+        ]
+      },
+      "observations": 5,
+      "time_s": 0.5833333333333334,
+      "rotation_deg": 60.0
+    },
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "sobel_colour",
+      "phase": -1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 50.0,
+        "contrast": 0.7171204240513952,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.7464604377746582
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6664501428604126
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.645066499710083
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.5995445251464844
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.6015108823776245
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.6023147106170654
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.6117645502090454
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.5996580123901367
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.5910001993179321
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.580898642539978
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.5717957019805908
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.569991946220398
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.5943641662597656
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.6252554059028625
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.6124694347381592
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.6370072364807129
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.614762544631958
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.6123566627502441
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.616919755935669
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.5972663164138794
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.5808759331703186
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.58314049243927
+          },
+          {
+            "heading": 140.0,
+            "familiarity": 0.5868974924087524
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.5980541706085205
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.6231515407562256
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.6273107528686523
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.6228452920913696
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.6448123455047607
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.6476675271987915
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.6521894335746765
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.6681027412414551
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.7551326751708984
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.7077577114105225
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.6752128601074219
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.6589784622192383
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6648613214492798
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    },
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "sobel_colour",
+      "phase": 1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 0.0,
+        "contrast": 0.4201001672493005,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.7464604377746582
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6648613214492798
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.6589784622192383
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6664501428604126
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.645066499710083
+          }
+        ]
+      },
+      "observations": 5,
+      "time_s": 0.5833333333333334,
+      "rotation_deg": 60.0
+    },
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "sobel_colour",
+      "phase": 1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 50.0,
+        "contrast": 0.7171204240513952,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.7464604377746582
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6648613214492798
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.6589784622192383
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.6752128601074219
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.7077577114105225
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.7551326751708984
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.6681027412414551
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.6521894335746765
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.6476675271987915
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.6448123455047607
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.6228452920913696
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.6273107528686523
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.6231515407562256
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.5980541706085205
+          },
+          {
+            "heading": 140.0,
+            "familiarity": 0.5868974924087524
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.58314049243927
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.5808759331703186
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.5972663164138794
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.616919755935669
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.6123566627502441
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.614762544631958
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.6370072364807129
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.6124694347381592
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.6252554059028625
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.5943641662597656
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.569991946220398
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.5717957019805908
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.580898642539978
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.5910001993179321
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.5996580123901367
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.6117645502090454
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.6023147106170654
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.6015108823776245
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.5995445251464844
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.645066499710083
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6664501428604126
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    },
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "ardin_input",
+      "phase": -1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 0.0,
+        "contrast": 0.18883356037269386,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.649408757686615
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6045461297035217
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.5269556641578674
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6332827806472778
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.5797011256217957
+          }
+        ]
+      },
+      "observations": 5,
+      "time_s": 0.5833333333333334,
+      "rotation_deg": 60.0
+    },
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "ardin_input",
+      "phase": -1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 50.0,
+        "contrast": 0.7688958263897961,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.649408757686615
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6045461297035217
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.5269556641578674
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.598193883895874
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.5875606536865234
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.5226245522499084
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.52223801612854
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.5324681997299194
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.5536981225013733
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.5458166003227234
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.6485627889633179
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.500436007976532
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.41456276178359985
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.49128586053848267
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.5200203657150269
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.4845525622367859
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.49910953640937805
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.501356840133667
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.6318156123161316
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.6415330767631531
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.5588077306747437
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.5837370157241821
+          },
+          {
+            "heading": 140.0,
+            "familiarity": 0.5536726117134094
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.5298128724098206
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.4743574261665344
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.5946931838989258
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.6228785514831543
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.5680797696113586
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.5972375273704529
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.6210247874259949
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.7210506200790405
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.7565628886222839
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.6655937433242798
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.6457812786102295
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.5797011256217957
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6332827806472778
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    },
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "ardin_input",
+      "phase": 1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 0.0,
+        "contrast": 0.18883356037269386,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.649408757686615
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6332827806472778
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.5797011256217957
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6045461297035217
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.5269556641578674
+          }
+        ]
+      },
+      "observations": 5,
+      "time_s": 0.5833333333333334,
+      "rotation_deg": 60.0
+    },
+    {
+      "world": "bend",
+      "recorded_step": 24,
+      "method": "ardin_input",
+      "phase": 1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 50.0,
+        "contrast": 0.7688958263897961,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 0.0,
+            "familiarity": 0.649408757686615
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6332827806472778
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.5797011256217957
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.6457812786102295
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.6655937433242798
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.7565628886222839
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.7210506200790405
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.6210247874259949
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.5972375273704529
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.5680797696113586
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.6228785514831543
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.5946931838989258
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.4743574261665344
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.5298128724098206
+          },
+          {
+            "heading": 140.0,
+            "familiarity": 0.5536726117134094
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.5837370157241821
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.5588077306747437
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.6415330767631531
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.6318156123161316
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.501356840133667
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.49910953640937805
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.4845525622367859
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.5200203657150269
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.49128586053848267
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.41456276178359985
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.500436007976532
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.6485627889633179
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.5458166003227234
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.5536981225013733
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.5324681997299194
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.52223801612854
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.5226245522499084
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.5875606536865234
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.598193883895874
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.5269556641578674
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.6045461297035217
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "apiaviz_uv",
+      "phase": -1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 140.0,
+        "contrast": 0.16114323216080303,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.6976749897003174
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.6245020627975464
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.6453760862350464
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.6604390144348145
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.6621126532554626
+          }
+        ]
+      },
+      "observations": 5,
+      "time_s": 0.5833333333333334,
+      "rotation_deg": 60.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "apiaviz_uv",
+      "phase": -1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 170.0,
+        "contrast": 0.8351300447233138,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.6976749897003174
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.6245020627975464
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.6453760862350464
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.6198676824569702
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.5884913206100464
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.5831873416900635
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.6218459606170654
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.5915750861167908
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.5742148160934448
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.61652010679245
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.6261184215545654
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.5831407308578491
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.5979770421981812
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6255749464035034
+          },
+          {
+            "heading": 0.0,
+            "familiarity": 0.6605321168899536
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.665951132774353
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.6339991092681885
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.6191126108169556
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.6116091012954712
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.5877635478973389
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.5470350980758667
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.5475627779960632
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.5577120780944824
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.5481408834457397
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.5549015402793884
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.5639067888259888
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.6000652313232422
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.6240555047988892
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.6323777437210083
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.6438337564468384
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.670333981513977
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.7214244604110718
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.7566993236541748
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.813833475112915
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.6621126532554626
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.6604390144348145
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "apiaviz_uv",
+      "phase": 1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 140.0,
+        "contrast": 0.16114323216080303,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.6976749897003174
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.6604390144348145
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.6621126532554626
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.6245020627975464
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.6453760862350464
+          }
+        ]
+      },
+      "observations": 5,
+      "time_s": 0.5833333333333334,
+      "rotation_deg": 60.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "apiaviz_uv",
+      "phase": 1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 170.0,
+        "contrast": 0.8351300447233138,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.6976749897003174
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.6604390144348145
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.6621126532554626
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.813833475112915
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.7566993236541748
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.7214244604110718
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.670333981513977
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.6438337564468384
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.6323777437210083
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.6240555047988892
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.6000652313232422
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.5639067888259888
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.5549015402793884
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.5481408834457397
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.5577120780944824
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.5475627779960632
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.5470350980758667
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.5877635478973389
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.6116091012954712
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.6191126108169556
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.6339991092681885
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.665951132774353
+          },
+          {
+            "heading": 0.0,
+            "familiarity": 0.6605321168899536
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6255749464035034
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.5979770421981812
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.5831407308578491
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.6261184215545654
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.61652010679245
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.5742148160934448
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.5915750861167908
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.6218459606170654
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.5831873416900635
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.5884913206100464
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.6198676824569702
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.6453760862350464
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.6245020627975464
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "sobel_colour",
+      "phase": -1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 170.0,
+        "contrast": 0.580961463749288,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.7452893257141113
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.725629985332489
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.6956524848937988
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.6936103701591492
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.7215156555175781
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.8635941743850708
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.8553332090377808
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.7501169443130493
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.7493942975997925
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.6967737674713135
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.7025642395019531
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.6773280501365662
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.7349632978439331
+          }
+        ]
+      },
+      "observations": 13,
+      "time_s": 1.8722222222222227,
+      "rotation_deg": 220.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "sobel_colour",
+      "phase": -1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 170.0,
+        "contrast": 0.7340656186229151,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.7452893257141113
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.725629985332489
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.6956524848937988
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.6967737674713135
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.7025642395019531
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.6773280501365662
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.7349632978439331
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.6569384336471558
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.6520393490791321
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.6851164102554321
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.6934265494346619
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.6365981101989746
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.6569098234176636
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6608306169509888
+          },
+          {
+            "heading": 0.0,
+            "familiarity": 0.74355149269104
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.7076435089111328
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.6642864942550659
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.6647619605064392
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.6386280059814453
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.6098582744598389
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.6153640747070312
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.6305954456329346
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.6405166983604431
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.6227607727050781
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.643710732460022
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.6519219279289246
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.6695377826690674
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.7563018202781677
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.7238298654556274
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.7652525901794434
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.7493942975997925
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.7501169443130493
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.8553332090377808
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.8635941743850708
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.7215156555175781
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.6936103701591492
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "sobel_colour",
+      "phase": 1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 170.0,
+        "contrast": 0.580961463749288,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.7452893257141113
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.6936103701591492
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.7215156555175781
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.725629985332489
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.6956524848937988
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.6967737674713135
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.7025642395019531
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.6773280501365662
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.7349632978439331
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.8635941743850708
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.8553332090377808
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.7501169443130493
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.7493942975997925
+          }
+        ]
+      },
+      "observations": 13,
+      "time_s": 1.8722222222222227,
+      "rotation_deg": 220.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "sobel_colour",
+      "phase": 1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 170.0,
+        "contrast": 0.7340656186229151,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.7452893257141113
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.6936103701591492
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.7215156555175781
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.8635941743850708
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.8553332090377808
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.7501169443130493
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.7493942975997925
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.7652525901794434
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.7238298654556274
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.7563018202781677
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.6695377826690674
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.6519219279289246
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.643710732460022
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.6227607727050781
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.6405166983604431
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.6305954456329346
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.6153640747070312
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.6098582744598389
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.6386280059814453
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.6647619605064392
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.6642864942550659
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.7076435089111328
+          },
+          {
+            "heading": 0.0,
+            "familiarity": 0.74355149269104
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.6608306169509888
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.6569098234176636
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.6365981101989746
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.6934265494346619
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.6851164102554321
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.6520393490791321
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.6569384336471558
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.7349632978439331
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.6773280501365662
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.7025642395019531
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.6967737674713135
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.6956524848937988
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.725629985332489
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "ardin_input",
+      "phase": -1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 160.0,
+        "contrast": 0.4598286245544686,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.6689126491546631
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.7047743797302246
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.552155613899231
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.5225824117660522
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.7308019399642944
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.6906262636184692
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.7124552726745605
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.501721203327179
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.4788419306278229
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.5455418825149536
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.6521457433700562
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.6087992191314697
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.5230770111083984
+          }
+        ]
+      },
+      "observations": 13,
+      "time_s": 1.8722222222222227,
+      "rotation_deg": 220.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "ardin_input",
+      "phase": -1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 160.0,
+        "contrast": 0.6522912962122877,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.6689126491546631
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.7047743797302246
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.552155613899231
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.5455418825149536
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.6521457433700562
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.6087992191314697
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.5230770111083984
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.5588817596435547
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.6112838387489319
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.5822635293006897
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.5506324768066406
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.5869263410568237
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.5637757182121277
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.5565874576568604
+          },
+          {
+            "heading": 0.0,
+            "familiarity": 0.532993733882904
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.5768800377845764
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.6492758393287659
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.5267787575721741
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.5849160552024841
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.6141877174377441
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.6591060161590576
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.5417844653129578
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.53789883852005
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.5356446504592896
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.5556672811508179
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.5807912945747375
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.4506779909133911
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.44312798976898193
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.5031811594963074
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.4746741056442261
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.4788419306278229
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.501721203327179
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.7124552726745605
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.6906262636184692
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.7308019399642944
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.5225824117660522
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "ardin_input",
+      "phase": 1,
+      "controller": "ConfirmedExplorationController",
+      "scan": {
+        "target": 160.0,
+        "contrast": 0.4598286245544686,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.6689126491546631
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.5225824117660522
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.7308019399642944
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.7047743797302246
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.552155613899231
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.5455418825149536
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.6521457433700562
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.6087992191314697
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.5230770111083984
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.6906262636184692
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.7124552726745605
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.501721203327179
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.4788419306278229
+          }
+        ]
+      },
+      "observations": 13,
+      "time_s": 1.8722222222222227,
+      "rotation_deg": 220.0
+    },
+    {
+      "world": "hairpin",
+      "recorded_step": 54,
+      "method": "ardin_input",
+      "phase": 1,
+      "controller": "PanoramicConfirmationController",
+      "scan": {
+        "target": 160.0,
+        "contrast": 0.6522912962122877,
+        "supported": true,
+        "samples": [
+          {
+            "heading": 140.0,
+            "familiarity": 0.6689126491546631
+          },
+          {
+            "heading": 150.0,
+            "familiarity": 0.5225824117660522
+          },
+          {
+            "heading": 160.0,
+            "familiarity": 0.7308019399642944
+          },
+          {
+            "heading": 170.0,
+            "familiarity": 0.6906262636184692
+          },
+          {
+            "heading": -180.0,
+            "familiarity": 0.7124552726745605
+          },
+          {
+            "heading": -170.0,
+            "familiarity": 0.501721203327179
+          },
+          {
+            "heading": -160.0,
+            "familiarity": 0.4788419306278229
+          },
+          {
+            "heading": -150.0,
+            "familiarity": 0.4746741056442261
+          },
+          {
+            "heading": -140.0,
+            "familiarity": 0.5031811594963074
+          },
+          {
+            "heading": -130.0,
+            "familiarity": 0.44312798976898193
+          },
+          {
+            "heading": -120.0,
+            "familiarity": 0.4506779909133911
+          },
+          {
+            "heading": -110.0,
+            "familiarity": 0.5807912945747375
+          },
+          {
+            "heading": -100.0,
+            "familiarity": 0.5556672811508179
+          },
+          {
+            "heading": -90.0,
+            "familiarity": 0.5356446504592896
+          },
+          {
+            "heading": -80.0,
+            "familiarity": 0.53789883852005
+          },
+          {
+            "heading": -70.0,
+            "familiarity": 0.5417844653129578
+          },
+          {
+            "heading": -60.0,
+            "familiarity": 0.6591060161590576
+          },
+          {
+            "heading": -50.0,
+            "familiarity": 0.6141877174377441
+          },
+          {
+            "heading": -40.0,
+            "familiarity": 0.5849160552024841
+          },
+          {
+            "heading": -30.0,
+            "familiarity": 0.5267787575721741
+          },
+          {
+            "heading": -20.0,
+            "familiarity": 0.6492758393287659
+          },
+          {
+            "heading": -10.0,
+            "familiarity": 0.5768800377845764
+          },
+          {
+            "heading": 0.0,
+            "familiarity": 0.532993733882904
+          },
+          {
+            "heading": 10.0,
+            "familiarity": 0.5565874576568604
+          },
+          {
+            "heading": 20.0,
+            "familiarity": 0.5637757182121277
+          },
+          {
+            "heading": 30.0,
+            "familiarity": 0.5869263410568237
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.5506324768066406
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.5822635293006897
+          },
+          {
+            "heading": 60.0,
+            "familiarity": 0.6112838387489319
+          },
+          {
+            "heading": 70.0,
+            "familiarity": 0.5588817596435547
+          },
+          {
+            "heading": 80.0,
+            "familiarity": 0.5230770111083984
+          },
+          {
+            "heading": 90.0,
+            "familiarity": 0.6087992191314697
+          },
+          {
+            "heading": 100.0,
+            "familiarity": 0.6521457433700562
+          },
+          {
+            "heading": 110.0,
+            "familiarity": 0.5455418825149536
+          },
+          {
+            "heading": 120.0,
+            "familiarity": 0.552155613899231
+          },
+          {
+            "heading": 130.0,
+            "familiarity": 0.7047743797302246
+          }
+        ]
+      },
+      "observations": 36,
+      "time_s": 3.744444444444439,
+      "rotation_deg": 350.0
+    }
+  ],
+  "limitation": "Retrospective scan-only diagnostic at two selected failed-trial poses. No movement or new arrival result; full-route cost/benefit remains unvalidated."
+}

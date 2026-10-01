@@ -25,10 +25,24 @@ def digest(value):
     return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
 
 
-def position_key(position):
+def canonical_position(position,decimals=None):
     p=np.asarray(position,dtype=float)
     if p.shape!=(2,) or not np.isfinite(p).all(): raise ValueError('Finite XY required')
-    return digest([float(v)+0. for v in p])
+    if decimals is not None:
+        if decimals!=8: raise ValueError('Only the versioned 10nm camera grid is supported')
+        p=np.round(p,decimals)
+    return [float(v)+0. for v in p]
+
+
+def position_key(position,decimals=None):
+    return digest(canonical_position(position,decimals))
+
+
+def render_seed(key,config):
+    policy=config.get('seed_policy','position-v1')
+    if policy=='position-v1': return (config['seed']+int(key[:8],16))%(2**32)
+    if policy=='common-v2': return config['seed']%(2**32)
+    raise ValueError('Unknown camera seed policy')
 
 
 def visible_weights(wavelengths):
@@ -48,13 +62,30 @@ def visible_image(raw,white=1.):
     return raw/(raw+white)
 
 
+def sensor_views(raw,headings,config,*,uv=False):
+    """Shared acquisition contract for teaching, recall, avoidance and reports."""
+    from .uv_input import sample_receptors
+    revision=config.get('retinal_sampling','bilinear-legacy')
+    if revision=='solid-angle-box-before-response-v1':
+        from .retinal_camera import integrate_receptors
+        linear=integrate_receptors(raw[:,:,:3] if uv else raw[:,:,3:],headings,
+            elevation=config['elevation_deg'],shape=tuple(config['retina_shape']))
+        return linear if uv else visible_image(linear,config['visible_white'])
+    if revision!='bilinear-legacy':raise ValueError('Unknown retinal acquisition revision')
+    data=raw[:,:,:3] if uv else visible_image(raw[:,:,3:],config['visible_white'])
+    return sample_receptors(data,headings,elevation=config['elevation_deg'],shape=tuple(config['retina_shape']))
+
+
 def load_cached(cache,key,render_hash):
     path=Path(cache)/f'{key}.json'
     record=json.loads(path.read_text())
-    if (record.get('schema')!='apiaviz-dual-frame-v1' or record.get('linear') is not True
+    if (record.get('schema') not in ('apiaviz-dual-frame-v1','apiaviz-dual-frame-v2') or record.get('linear') is not True
             or record['render_hash']!=render_hash or record['channels']!=BANDS):
         raise ValueError('Camera cache protocol/channel mismatch')
-    if position_key(record['position'])!=key: raise ValueError('Camera pose hash mismatch')
+    decimals=record.get('pose_decimals')
+    if record['schema']=='apiaviz-dual-frame-v2' and decimals!=8:
+        raise ValueError('Missing canonical camera pose convention')
+    if position_key(record['position'],decimals)!=key: raise ValueError('Camera pose hash mismatch')
     array=path.with_suffix('.npz')
     if file_sha(array)!=record['array_sha256']: raise ValueError('Camera cache checksum mismatch')
     with np.load(array,allow_pickle=False) as archive:
@@ -109,7 +140,8 @@ class DualCamera:
         raise TimeoutError('Spectral worker timed out; inspect spectral-worker.log')
 
     def frame(self,position):
-        key=position_key(position)
+        position=canonical_position(position,self.config.get('pose_decimals'))
+        key=self.key(position)
         if key in self.frames:
             self.cache_hits+=1; self.frames.move_to_end(key)
             return self.frames[key]
@@ -127,11 +159,11 @@ class DualCamera:
         if self.progress: self.progress(self.renders,self.cache_hits)
         return data
 
+    def key(self,position):
+        return position_key(position,self.config.get('pose_decimals'))
+
     def scan(self,position,headings,*,uv=False):
-        from .uv_input import sample_receptors
-        raw=self.frame(position)
-        data=raw[:,:,:3] if uv else visible_image(raw[:,:,3:],self.config['visible_white'])
-        return sample_receptors(data,headings,elevation=self.config['elevation_deg'],shape=tuple(self.config['retina_shape']))
+        return sensor_views(self.frame(position),headings,self.config,uv=uv)
 
     def __exit__(self,*unused):
         if self.process is not None:

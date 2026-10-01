@@ -199,17 +199,47 @@ class TrialScorer:
     """Visible camera for the shared reflex; spectral input only inside ApiaViz."""
     def __init__(self,camera,model,memory,method):
         self.world=camera; self.model=model; self.memory=memory; self.method=method
-        self.decisions=[]; self.encoding_s=0.; self.active_spikes=0; self.encoded_views=0
+        self.decisions=[]; self.encoding_s=0.; self.active_spikes=None if getattr(model,'response_format',None)=='graded' else 0; self.encoded_views=0
+        self.active_response_components=0
 
     def __call__(self,position,headings):
         images=self.world.scan(position,headings,uv=self.method=='apiaviz_uv')
         start=time.perf_counter(); codes=encode(self.model,images)
         values=self.memory(codes); self.encoding_s+=time.perf_counter()-start
-        active=(codes>0); self.active_spikes+=int(active.sum()); self.encoded_views+=len(images)
+        active=(codes>0); self.active_response_components+=int(active.sum()); self.encoded_views+=len(images)
+        if self.active_spikes is not None:self.active_spikes+=int(active.sum())
         values=torch.where(codes.abs().sum(1)>0,values,float('inf'))
         self.decisions.append(dict(position=np.asarray(position).tolist(),headings=np.asarray(headings).tolist(),
             scores=[float(v) if torch.isfinite(v) else None for v in values],active_fraction=float(active.float().mean())))
         return values.numpy()
+
+
+def make_model(p,method,seed):
+    if method=='apiaviz_uv':
+        if p['encoder'].get('representation')=='graded-angular-combined-v1':
+            from .graded_navigation import GradedNavigationEncoder
+            return GradedNavigationEncoder(seed=seed)
+        return ApiaVizUVEncoder(UVEncoderConfig(seed=seed,**p['encoder'].get('uv_config',{})))
+    return RefinementEncoder(method,seed=seed,code_dim=p['encoder']['baseline_code_dim'])
+
+
+def make_memory(model,codes):
+    from .graded_navigation import memory_and_calibration
+    return memory_and_calibration(model,codes)
+
+
+def teaching_views(env,world,camera,p):
+    if p.get('acquisition')=='independent-teaching-recall-v2':
+        # Prepared with a separate Monte Carlo seed and frozen in complete.json.
+        manifest=json.loads((env/'complete.json').read_text())
+        if file_sha(env/'teaching.pt')!=manifest['assets']['teaching.pt']:
+            raise ValueError('Independent teaching images changed')
+        bank=torch.load(env/'teaching.pt',weights_only=True,map_location='cpu')
+        return bank['uv'],bank['rgb']
+    teaching=[]
+    for position,heading in tqdm(list(zip(world['route'][:-1],world['headings'][:-1])),desc=f'{world["name"]}: teaching views',leave=False):
+        teaching.append((camera.scan(position,[heading],uv=True),camera.scan(position,[heading])))
+    return torch.cat([v[0] for v in teaching]),torch.cat([v[1] for v in teaching])
 
 
 def load_completed(out,p):
@@ -251,9 +281,21 @@ def audit_trial(row,detail,p,world,geometry):
     assert len(detail['sensor'])==sum(e['kind']=='observation' for e in detail['events'])
 
 
+def navigation_components(p,controller=None,evaluator=None):
+    controller=FamiliarityController if controller is None else controller
+    evaluator=evaluate if evaluator is None else evaluator
+    if p.get('navigation_revision')=='direction-before-cast-v1':
+        from .confirmed_exploration import ConfirmedExplorationController
+        from .coherent_navigation import evaluate as coherent_evaluate
+        return ConfirmedExplorationController,coherent_evaluate
+    if p.get('navigation_revision') is not None:raise ValueError('Unknown navigation revision')
+    return controller,evaluator
+
+
 def trials(out,movies=True):
     with owned_lock(out):
         p=json.loads((out/'protocol.json').read_text()); verify_sources(p)
+        controller_class,evaluate_trial=navigation_components(p)
         environment_manifest=json.loads((out/'environments.json').read_text())
         if environment_manifest['status']!='complete' or environment_manifest['protocol_sha256']!=file_sha(out/'protocol.json'):
             raise ValueError('Run pixi run environments to completion first')
@@ -274,19 +316,16 @@ def trials(out,movies=True):
                     if not jobs: continue
                     render=json.loads((env/'render.json').read_text())
                     with DualCamera(env,render) as camera:
-                        teaching=[]
-                        for position,heading in tqdm(list(zip(world['route'][:-1],world['headings'][:-1])),desc=f'{world["name"]}: teaching views',leave=False):
-                            teaching.append((camera.scan(position,[heading],uv=True),camera.scan(position,[heading])))
-                        uv_images=torch.cat([v[0] for v in teaching]); rgb_images=torch.cat([v[1] for v in teaching])
-                        torch.save(dict(uv=uv_images,rgb=rgb_images),env/'teaching.pt')
+                        uv_images,rgb_images=teaching_views(env,world,camera,p)
+                        if p.get('acquisition')!='independent-teaching-recall-v2':
+                            torch.save(dict(uv=uv_images,rgb=rgb_images),env/'teaching.pt')
                         loaded=None
                         for key,_,seed,method,scenario,phase in jobs:
                             if loaded!=(seed,method):
-                                model=ApiaVizUVEncoder(UVEncoderConfig(seed=seed)) if method=='apiaviz_uv' else RefinementEncoder(method,seed=seed,code_dim=p['encoder']['baseline_code_dim'])
+                                model=make_model(p,method,seed)
                                 images=uv_images if method=='apiaviz_uv' else rgb_images
-                                codes=encode(model,images); memory=SpikeOverlapMemory(codes)
+                                codes=encode(model,images); memory,calibration=make_memory(model,codes)
                                 model_hash,memory_hash=fingerprint(model),fingerprint(memory)
-                                calibration=acquisition_calibration(codes.numpy())
                                 training_hash=hashlib.sha256(images.numpy().tobytes()).hexdigest()
                                 checkpoint=env/f'encoder-{method}-{seed}.pt'
                                 state=dict(encoder=model.state_dict(),memory=memory.state_dict(),calibration=calibration,
@@ -302,24 +341,25 @@ def trials(out,movies=True):
                                     temporary=checkpoint.with_suffix('.pt.tmp'); torch.save(state,temporary); temporary.replace(checkpoint)
                                 loaded=(seed,method)
                             scorer=TrialScorer(camera,model,memory,method)
-                            factory=lambda:ControllerAdapter(FamiliarityController(calibration,Settings(**p['controller_settings']),phase))
+                            factory=lambda:ControllerAdapter(controller_class(calibration,Settings(**p['controller_settings']),phase))
                             begin=time.perf_counter(); before_renders=camera.renders; before_hits=camera.cache_hits
                             with tqdm(total=p['evaluation']['max_steps'],desc=key,unit='move',leave=False) as movement:
                                 def update(step,seconds,views):
                                     movement.update(max(0,step-movement.n)); movement.set_postfix(sim_s=f'{seconds:.1f}',views=views,rendered=camera.renders-before_renders)
-                                result=evaluate(world['route'],world['headings'],scorer,factory,scenario,p['sensor_settings'],p['evaluation'],world['world_bounds_m'],geometry,
+                                result=evaluate_trial(world['route'],world['headings'],scorer,factory,scenario,p['sensor_settings'],p['evaluation'],world['world_bounds_m'],geometry,
                                     AvoidanceSettings(**p['avoidance_settings']),phase=phase,safety=EvaluationSafety(**p['evaluation_safety']),progress=update)
                             assert fingerprint(model)==model_hash and fingerprint(memory)==memory_hash
                             detail={k:result.pop(k) for k in ('trace','microtrace','events','decisions')}
                             row=dict(id=key,world=world['name'],seed=seed,method=method,scenario=scenario['name'],phase=phase,controller='familiarity',
                                 trace=f'trials/{key}.json',**result,wall_time_s=time.perf_counter()-begin,
                                 encoding_s=scorer.encoding_s,active_spikes=scorer.active_spikes,encoded_views=scorer.encoded_views,
+                                active_response_components=scorer.active_response_components,
                                 rendered_positions=camera.renders-before_renders,cache_hits=camera.cache_hits-before_hits,
                                 encoder_fingerprint=model_hash,memory_fingerprint=memory_hash,training_images_sha256=training_hash,
                                 checkpoint_sha256=file_sha(checkpoint))
                             detail['sensor']=scorer.decisions
                             audit_trial(row,detail,p,world,geometry)
-                            frame_keys={position_key(e['position']) for e in detail['events'] if e['kind'] in ('observation','avoidance_observation')}
+                            frame_keys={camera.key(e['position']) for e in detail['events'] if e['kind'] in ('observation','avoidance_observation')}
                             atomic_json(out/row['trace'],dict(protocol_sha256=file_sha(out/'protocol.json'),result=row,
                                 camera_frames={key:camera.references[key] for key in sorted(frame_keys)},**detail))
                             completed[key]=row; total.update(1); total.set_postfix(last=row['termination'])

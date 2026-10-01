@@ -1,0 +1,98 @@
+{
+  "protocol_revision": "uv-validation-v2",
+  "variant": "uv-v2-complete-route-validation",
+  "acquisition": "independent-teaching-recall-v2",
+  "seeds": [
+    19
+  ],
+  "controllers": [
+    {
+      "name": "familiarity",
+      "phase": 1
+    },
+    {
+      "name": "familiarity",
+      "phase": -1
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "aligned",
+      "lateral": 0.0,
+      "heading": 0.0,
+      "kick": 0.0
+    },
+    {
+      "name": "kick_right50",
+      "lateral": 0.0,
+      "heading": 0.0,
+      "kick": -0.5
+    }
+  ],
+  "evaluation": {
+    "max_steps": 200,
+    "kick_before_step": 36,
+    "recovery_radius_m": 0.1,
+    "recovery_consecutive_steps": 3
+  },
+  "sensor_settings": {
+    "speed_m_s": 0.1,
+    "yaw_speed_deg_s": 180.0,
+    "observation_s": 0.05,
+    "time_budget_s": 360.0,
+    "observation_budget": 2600
+  },
+  "encoder": {
+    "visible_code_dim": 8000,
+    "uv_code_dim": 2000,
+    "baseline_code_dim": 10000,
+    "uv_config": {
+      "schema": "apiaviz-uv-v2",
+      "response_half": 1.0,
+      "uv_enabled": true
+    }
+  },
+  "render": {
+    "width": 480,
+    "height": 144,
+    "spp": 64,
+    "threads": 2,
+    "seed": 20261002,
+    "sun_azimuth": 35.0,
+    "sun_elevation": 38.0,
+    "elevation_deg": [
+      90.0,
+      -20.0
+    ],
+    "retina_shape": [
+      51,
+      199
+    ],
+    "visible_white": 1.0,
+    "cache": "Lossless compressed float32 six-band NPZ; all acquired scientific inputs retained",
+    "visible_response": "Analytical unit-area photon-weighted Gaussian RGB: peaks 610/540/460nm, widths 35/30/25nm; exactly zero below 400nm; 320-700nm transport",
+    "visible_mapping": "RGB=linear/(linear+1); no UV channel, gamma or per-image gain",
+    "uv_response": "Raw empirical receptor radiance input; encoder applies fixed x/(x+1) receptor response before spatial/opponent features.",
+    "polarization": false,
+    "eye_height_m": 0.01,
+    "pose_decimals": 8,
+    "seed_policy": "common-v2"
+  },
+  "teaching_seed": 20261001,
+  "readiness_rule": {
+    "aligned_arrivals_per_model": 4,
+    "aligned_trials_per_model": 6,
+    "kick_arrivals_per_model": 2,
+    "kick_trials_per_model": 6,
+    "require_complete": true,
+    "require_audit": true,
+    "selection": "Frozen before corrected route outcomes; same thresholds for every model. No automatic full-study launch."
+  },
+  "trials": 36,
+  "comparison": "Same geometry, independent-seed teaching/recall, fixed controller, memory, seeds and budgets for all models. ApiaViz alone receives UV with bounded receptor response; visible-only baselines unchanged.",
+  "limitation": "Three previously inspected development worlds, one wiring seed, two phases. Validation is not an independent comparative study.",
+  "parent_study": {
+    "path": "/Users/hinesa/repo/apiaviz/apiaviz/output/uv-trials-v1",
+    "protocol_sha256": "c3ae6ac70bece836c826c63d9d6dfca23cc549e57e89269776dcbdeea31ab377"
+  }
+}

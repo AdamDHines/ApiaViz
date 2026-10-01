@@ -18,6 +18,8 @@ study = {cmd = "python -m apiaviz.research"}
 test = {cmd = "python -m unittest discover -s tests -v"}
 environments = {cmd = "python -m apiaviz.research.uv_trials environments"}
 trials = {cmd = "python -m apiaviz.research.uv_trials trials"}
+validate-uv = {cmd = "python -m apiaviz.research.uv_validation"}
+validate-fidelity = {cmd = "python -m apiaviz.research.navigation_fidelity"}
 
 [dependencies]
 python = "*"

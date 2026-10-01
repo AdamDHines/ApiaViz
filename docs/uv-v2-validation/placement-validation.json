@@ -1,0 +1,58 @@
+{
+  "passed": true,
+  "purpose": "Evaluator geometry regression; no navigation or policy feedback",
+  "study_protocol_sha256": "4c86bc2e4b784ef7bab0b84e044cac02e274dfe583075d4fed07e6f4ffbe7702",
+  "worlds": [
+    {
+      "world": "meander",
+      "tested": 3968,
+      "invalid_anchors_excluded": 54,
+      "constraints": {
+        "field_boundary": 226,
+        "rock_contact": 1351
+      },
+      "clear_endpoints_with_blocked_sweeps": 470,
+      "geometry": {
+        "schema": "rock-mesh-projection-v1",
+        "geometry_sha256": "d7c0e68d40f6f308b75b7bef35d869569af51b4c564125b872e2d95e255c48bd",
+        "scene_sha256": "d285e4e063d1e1529a95c2cb38b560e6db618122f5254a4b3e1731a549e516b9"
+      }
+    },
+    {
+      "world": "bend",
+      "tested": 3760,
+      "invalid_anchors_excluded": 67,
+      "constraints": {
+        "field_boundary": 214,
+        "rock_contact": 1204
+      },
+      "clear_endpoints_with_blocked_sweeps": 423,
+      "geometry": {
+        "schema": "rock-mesh-projection-v1",
+        "geometry_sha256": "452eac5b45d2a194bd51f74d687574af7b1f599bfd3c7a7640fe8ccce35ab2e4",
+        "scene_sha256": "bb6d3dbae9ec313255d135af1cbca86584f194b48d792396410e73d18d4cbff7"
+      }
+    },
+    {
+      "world": "hairpin",
+      "tested": 4224,
+      "invalid_anchors_excluded": 42,
+      "constraints": {
+        "field_boundary": 221,
+        "rock_contact": 1462
+      },
+      "clear_endpoints_with_blocked_sweeps": 569,
+      "geometry": {
+        "schema": "rock-mesh-projection-v1",
+        "geometry_sha256": "9e7f8a13819eb4d79eeea36f93c079b18327a5227bdc3d311482c4f61fd6c8f4",
+        "scene_sha256": "d013a573b528a37b5ed15036f5912bb4cf80a4957e732d513b039d1a9c481051"
+      }
+    }
+  ],
+  "sources": {
+    "scripts/validate_trial_placements.py": "c0e5627f1cffe1ab4bb627c83e75d2ab0742724cc0af18371782c515271f6b1d",
+    "apiaviz/research/collision_geometry.py": "834756e22cec8b726f950e8a2804ea231b983298e8a40f141905f9b39aaa8aac",
+    "apiaviz/research/evaluation_safety.py": "ee82c5fd1d1b1cc686d46ac7050ba6a1cc8c076d629950a97cb1831c3f21e0ff",
+    "apiaviz/research/active_navigation.py": "921040237cf60df4f6d97ae32efdbb225c6290e982cf0b5104bcc6b88094b666"
+  }
+}

@@ -9,7 +9,7 @@ import traceback
 import render as base
 sys.path.insert(0,str(base.ROOT))
 from apiaviz.research.spectral_input import Calibration,file_sha
-from apiaviz.research.dual_camera import BANDS,digest,position_key,visible_weights
+from apiaviz.research.dual_camera import BANDS,digest,position_key,visible_weights,canonical_position,render_seed
 
 
 def send(value): print('APIAVIZ '+json.dumps(value,allow_nan=False),flush=True)
@@ -27,14 +27,16 @@ def run(env):
         config['width'],config['height'],config['sun_azimuth'],config['sun_elevation'],config['spp'],
         receptor_weights=weights,material_lookup=calibration.material,
         elevation=tuple(reversed(config['elevation_deg'])),
-        response_names=[f'band{i+1}_{name}' for i,name in enumerate(BANDS)])
+        response_names=[f'band{i+1}_{name}' for i,name in enumerate(BANDS)],
+        surface_detail=config.get('surface_detail')=='source-informed-surfaces-v1')
     cache=env/'camera'; cache.mkdir(exist_ok=True)
     send(dict(ok=True,render_hash=render_hash))
     for line in sys.stdin:
         request=json.loads(line)
         if request.get('stop'): break
         try:
-            position=request['position']; key=position_key(position)
+            decimals=config.get('pose_decimals')
+            position=canonical_position(request['position'],decimals); key=position_key(position,decimals)
             target=cache/f'{key}.json'
             if target.exists(): raise FileExistsError('Parent requested an already completed cache frame')
             # Runtime parameter, not a new compile-time constant at every pose.
@@ -42,7 +44,7 @@ def run(env):
             ray,_=scene.sensors()[0].sample_ray(0.,.5,base.mi.Point2f(.5,.5),base.mi.Point2f(0.,0.))
             if not base.np.allclose(base.np.array(ray.o).reshape(3),[*position,.01],atol=1e-6,rtol=0):
                 raise AssertionError('Camera origin did not update')
-            seed=(config['seed']+int(key[:8],16))%(2**32)
+            seed=render_seed(key,config)
             started=time.perf_counter()
             data=base.np.array(base.mi.render(scene,seed=seed,spp=config['spp']))
             elapsed=time.perf_counter()-started
@@ -55,6 +57,8 @@ def run(env):
                 position=position,camera_xyz=[*position,.01],heading=0.,seed=seed,shape=list(data.shape),
                 array_sha256=file_sha(array),linear=True,units='relative unit-area photon-weighted band radiance',
                 render_wall_s=elapsed,versions=dict(mitsuba=base.mi.__version__,drjit=base.dr.__version__))
+            if decimals is not None:
+                record.update(schema='apiaviz-dual-frame-v2',pose_decimals=decimals,seed_policy=config['seed_policy'])
             temporary=target.with_suffix('.json.tmp'); temporary.write_text(json.dumps(record,indent=2)+'\n'); temporary.replace(target)
             send(dict(ok=True,key=key))
         except Exception:

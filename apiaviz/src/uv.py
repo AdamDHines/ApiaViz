@@ -16,11 +16,15 @@ class UVVisionBackbone(nn.Module):
     uv_planes = ('uv_on', 'uv_off', 'uv_lowpass', 'uv_minus_blue',
                  'blue_minus_uv', 'uv_minus_green', 'green_minus_uv')
 
-    def __init__(self, radiance_scale=1.):
+    def __init__(self, radiance_scale=1., response_half=None):
         super().__init__()
         if not math.isfinite(radiance_scale) or radiance_scale<=0:
             raise ValueError('Require a finite positive common radiance scale')
         self.register_buffer('radiance_scale',torch.tensor(float(radiance_scale)))
+        if response_half is not None:
+            if not math.isfinite(response_half) or response_half<=0:
+                raise ValueError('Require a finite positive receptor half-response')
+            self.register_buffer('response_half',torch.tensor(float(response_half)))
         self.visible=load_vision_backbone()
         self.uv_sampler=HexRouting2d(channels=1)
         self.uv_adapter=LocalLuminanceAdapter()
@@ -36,6 +40,11 @@ class UVVisionBackbone(nn.Module):
         # One frozen scale for every channel/view. No clipping, gamma, independent
         # channel normalization or statistics fitted on test views.
         x=receptors/self.radiance_scale
+        # Versioned engineering receptor response, not a display transform or
+        # an empirically fitted honeybee adaptation law. One fixed half-response
+        # is shared by all receptors and acquisitions; raw arrays stay linear.
+        if hasattr(self,'response_half'):
+            x=x/(x+self.response_half)
         gb=x[:,[2,1]]
         visible=self.visible(gb*2-1,return_maps=True)
         sampled_gb=self.visible.spatial_sampler(gb*2-1)

@@ -1,0 +1,1864 @@
+{
+  "protocol_sha256": "104ea0885d28aba279c08e05a490c9c421fedf31faf5de173af70d3189f29750",
+  "poses_sha256": "f41b68259e921fe20886537eae68e225ec2f9c714115a759b21d10d3ca292ab9",
+  "script_sha256": "1b7fd91d47bdd4fef84f8c7dbf505c96bbcad32d7856bd67ddae1fce58f0a1ab",
+  "limitation": "One failed development trajectory, evaluated retrospectively. Projected 10 cm headings are geometric labels, not executed movements or collision checks. No arrival or UV causal claim.",
+  "records": [
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 1,
+      "position": [
+        0.0,
+        0.0
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.9827067255973816,
+      "matched_station": 0,
+      "nearest_station": 0,
+      "tangent_error_deg": 0.0,
+      "distance_before_m": 0.0,
+      "distance_after_m": 1.031327387380181e-10
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 3,
+      "position": [
+        0.1577926258396292,
+        0.12288810858107789
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.9216153025627136,
+      "matched_station": 2,
+      "nearest_station": 2,
+      "tangent_error_deg": 0.7539015433458189,
+      "distance_before_m": 0.00043755135960774636,
+      "distance_after_m": 0.001753296477104239
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 5,
+      "position": [
+        0.31558525167925827,
+        0.24577621716215578
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.8194912672042847,
+      "matched_station": 4,
+      "nearest_station": 4,
+      "tangent_error_deg": 2.597382423366838,
+      "distance_before_m": 0.0044340593003418406,
+      "distance_after_m": 0.008963710578558355
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 7,
+      "position": [
+        0.4733778775188872,
+        0.36866432574323366
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.7929593920707703,
+      "matched_station": 7,
+      "nearest_station": 6,
+      "tangent_error_deg": 4.2978340745666515,
+      "distance_before_m": 0.015891172583255023,
+      "distance_after_m": 0.008368568598894245
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 10,
+      "position": [
+        0.7384799236294796,
+        0.509095465979214
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.7886782288551331,
+      "matched_station": 8,
+      "nearest_station": 9,
+      "tangent_error_deg": 3.3891347245046006,
+      "distance_before_m": 0.00507097153774695,
+      "distance_after_m": 0.010868823024673614
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 11,
+      "position": [
+        0.8268472723330104,
+        0.5559058460578741
+      ],
+      "heading": 17.9112803813209,
+      "score": 0.780022919178009,
+      "matched_station": 10,
+      "nearest_station": 10,
+      "tangent_error_deg": 3.0741022703778924,
+      "distance_before_m": 0.010868823024673614,
+      "distance_after_m": 0.005334198950800215
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 12,
+      "position": [
+        0.9220006596459366,
+        0.5866602422131605
+      ],
+      "heading": 17.9112803813209,
+      "score": 0.89525306224823,
+      "matched_station": 11,
+      "nearest_station": 11,
+      "tangent_error_deg": 0.9843517420401042,
+      "distance_before_m": 0.0053341989508001115,
+      "distance_after_m": 0.006809390302436351
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 14,
+      "position": [
+        1.112307434271789,
+        0.6481690345237333
+      ],
+      "heading": 7.9112803813209,
+      "score": 0.9183935523033142,
+      "matched_station": 13,
+      "nearest_station": 13,
+      "tangent_error_deg": 0.5367473743008588,
+      "distance_before_m": 0.01614246455972816,
+      "distance_after_m": 0.016619548446824905
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 16,
+      "position": [
+        1.3104039110693002,
+        0.6756969454581528
+      ],
+      "heading": -2.0887196186791,
+      "score": 0.9018970727920532,
+      "matched_station": 15,
+      "nearest_station": 15,
+      "tangent_error_deg": 1.1225455888882436,
+      "distance_before_m": 0.026088801549095576,
+      "distance_after_m": 0.02720080395662082
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 18,
+      "position": [
+        1.5102710288326306,
+        0.6684075533724719
+      ],
+      "heading": -12.0887196186791,
+      "score": 0.8152381181716919,
+      "matched_station": 17,
+      "nearest_station": 17,
+      "tangent_error_deg": 1.2436348375834712,
+      "distance_before_m": 0.037223892241652734,
+      "distance_after_m": 0.038127389392424396
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 20,
+      "position": [
+        1.7058359263261849,
+        0.6265223427566023
+      ],
+      "heading": -22.0887196186791,
+      "score": 0.8820333480834961,
+      "matched_station": 19,
+      "nearest_station": 19,
+      "tangent_error_deg": 0.3311194078480071,
+      "distance_before_m": 0.046675224364456515,
+      "distance_after_m": 0.044617216688543106
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 22,
+      "position": [
+        1.8911564631002344,
+        0.5513139745401695
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.7650449872016907,
+      "matched_station": 22,
+      "nearest_station": 21,
+      "tangent_error_deg": 3.97583222330087,
+      "distance_before_m": 0.04856563236821421,
+      "distance_after_m": 0.040254889098397015
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 24,
+      "position": [
+        2.0606017684216145,
+        0.4450676169341585
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.8174535036087036,
+      "matched_station": 23,
+      "nearest_station": 23,
+      "tangent_error_deg": 0.4923357795893537,
+      "distance_before_m": 0.03633960498122618,
+      "distance_after_m": 0.036114886311437944
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 26,
+      "position": [
+        2.230047073742993,
+        0.3388212593281478
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.7475938200950623,
+      "matched_station": 24,
+      "nearest_station": 25,
+      "tangent_error_deg": 3.462780100242412,
+      "distance_before_m": 0.03896098658249235,
+      "distance_after_m": 0.04425505387837746
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 28,
+      "position": [
+        2.3994923790643714,
+        0.23257490172213702
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.7293519377708435,
+      "matched_station": 7,
+      "nearest_station": 27,
+      "tangent_error_deg": 65.19128865793016,
+      "distance_before_m": 0.051457754525283034,
+      "distance_after_m": 0.1417921417420277
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 31,
+      "position": [
+        2.664594425174964,
+        0.3730060419581174
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.6589752435684204,
+      "matched_station": 22,
+      "nearest_station": 28,
+      "tangent_error_deg": 5.643216304281452,
+      "distance_before_m": 0.3233348805169174,
+      "distance_after_m": 0.3330841534570449
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 33,
+      "position": [
+        2.8413291225820254,
+        0.4666268021154376
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.706485390663147,
+      "matched_station": 22,
+      "nearest_station": 29,
+      "tangent_error_deg": 5.843595605740404,
+      "distance_before_m": 0.5054497981015822,
+      "distance_after_m": 0.5155250342010189
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 36,
+      "position": [
+        3.095497080564093,
+        0.3072572657064215
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.7067573666572571,
+      "matched_station": 51,
+      "nearest_station": 32,
+      "tangent_error_deg": 64.92959438755435,
+      "distance_before_m": 0.5353722666166848,
+      "distance_after_m": 0.6262140127322638
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 38,
+      "position": [
+        3.2722317779711547,
+        0.4008780258637417
+      ],
+      "heading": -12.0887196186791,
+      "score": 0.7010541558265686,
+      "matched_station": 42,
+      "nearest_station": 33,
+      "tangent_error_deg": 24.092009589907946,
+      "distance_before_m": 0.7167927912799587,
+      "distance_after_m": 0.7581137455655768
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 41,
+      "position": [
+        3.5089207167305965,
+        0.5852101887353589
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.6526280641555786,
+      "matched_station": 23,
+      "nearest_station": 34,
+      "tangent_error_deg": 2.9760258501964074,
+      "distance_before_m": 1.005804358453793,
+      "distance_after_m": 1.0117164031974766
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 43,
+      "position": [
+        3.678366022051975,
+        0.4789638311293477
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.6674183011054993,
+      "matched_station": 7,
+      "nearest_station": 36,
+      "tangent_error_deg": 59.722839513742514,
+      "distance_before_m": 1.0142731076291684,
+      "distance_after_m": 1.100562679338314
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 45,
+      "position": [
+        3.8456296836753197,
+        0.587218265498547
+      ],
+      "heading": 17.9112803813209,
+      "score": 0.6095666885375977,
+      "matched_station": 49,
+      "nearest_station": 38,
+      "tangent_error_deg": 44.86992223389919,
+      "distance_before_m": 1.192961356093,
+      "distance_after_m": 1.2513786937362268
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 48,
+      "position": [
+        4.079519567721914,
+        0.7516331163073875
+      ],
+      "heading": 117.91128038132089,
+      "score": 0.5633886456489563,
+      "matched_station": 54,
+      "nearest_station": 54,
+      "tangent_error_deg": 83.371084418956,
+      "distance_before_m": 1.294987683455268,
+      "distance_after_m": 1.394319146808008
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 50,
+      "position": [
+        3.9858988075645954,
+        0.928367813714448
+      ],
+      "heading": -42.0887196186791,
+      "score": 0.6450238227844238,
+      "matched_station": 23,
+      "nearest_station": 55,
+      "tangent_error_deg": 77.87373330680686,
+      "distance_before_m": 1.4936506101607474,
+      "distance_after_m": 1.3963613390583274
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 52,
+      "position": [
+        4.054297816985272,
+        1.1083729173535566
+      ],
+      "heading": -52.0887196186791,
+      "score": 0.5921088457107544,
+      "matched_station": 20,
+      "nearest_station": 57,
+      "tangent_error_deg": 89.48119008335635,
+      "distance_before_m": 1.599282391919008,
+      "distance_after_m": 1.4993035385407278
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 54,
+      "position": [
+        4.190690267483322,
+        1.0305184638823681
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.4580742418766022,
+      "matched_station": 0,
+      "nearest_station": 58,
+      "tangent_error_deg": 9.883167415336345,
+      "distance_before_m": 1.4547845994657291,
+      "distance_after_m": 1.4379056439390503
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 56,
+      "position": [
+        4.339111831493308,
+        0.896462358699387
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.4255431294441223,
+      "matched_station": 42,
+      "nearest_station": 58,
+      "tangent_error_deg": 9.883167415336345,
+      "distance_before_m": 1.2581455939515525,
+      "distance_after_m": 1.24101532042966
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 58,
+      "position": [
+        4.46055719845768,
+        0.9017884207109103
+      ],
+      "heading": 87.91128038132089,
+      "score": 0.4005604386329651,
+      "matched_station": 60,
+      "nearest_station": 59,
+      "tangent_error_deg": 49.96948922561131,
+      "distance_before_m": 1.1879616446414953,
+      "distance_after_m": 1.2645318487875497
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": true,
+      "step": 60,
+      "position": [
+        4.5243702585941445,
+        0.9049181038138474
+      ],
+      "heading": -42.0887196186791,
+      "score": 0.39677926898002625,
+      "matched_station": 27,
+      "nearest_station": 60,
+      "tangent_error_deg": 79.92792684551654,
+      "distance_before_m": 1.1511936890820618,
+      "distance_after_m": 1.0527036807450314
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 1,
+      "position": [
+        0.0,
+        0.0
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.9812278747558594,
+      "matched_station": 0,
+      "nearest_station": 0,
+      "tangent_error_deg": 0.0,
+      "distance_before_m": 0.0,
+      "distance_after_m": 1.031327387380181e-10
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 3,
+      "position": [
+        0.1577926258396292,
+        0.12288810858107789
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.9308541417121887,
+      "matched_station": 2,
+      "nearest_station": 2,
+      "tangent_error_deg": 0.7539015433458189,
+      "distance_before_m": 0.00043755135960774636,
+      "distance_after_m": 0.001753296477104239
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 5,
+      "position": [
+        0.31558525167925827,
+        0.24577621716215578
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.8263190388679504,
+      "matched_station": 4,
+      "nearest_station": 4,
+      "tangent_error_deg": 2.597382423366838,
+      "distance_before_m": 0.0044340593003418406,
+      "distance_after_m": 0.008963710578558355
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 7,
+      "position": [
+        0.4733778775188872,
+        0.36866432574323366
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.8005550503730774,
+      "matched_station": 7,
+      "nearest_station": 6,
+      "tangent_error_deg": 4.2978340745666515,
+      "distance_before_m": 0.015891172583255023,
+      "distance_after_m": 0.008368568598894245
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 10,
+      "position": [
+        0.7384799236294796,
+        0.509095465979214
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.8010570406913757,
+      "matched_station": 8,
+      "nearest_station": 9,
+      "tangent_error_deg": 3.3891347245046006,
+      "distance_before_m": 0.00507097153774695,
+      "distance_after_m": 0.010868823024673614
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 11,
+      "position": [
+        0.8268472723330104,
+        0.5559058460578741
+      ],
+      "heading": 17.9112803813209,
+      "score": 0.7849090695381165,
+      "matched_station": 10,
+      "nearest_station": 10,
+      "tangent_error_deg": 3.0741022703778924,
+      "distance_before_m": 0.010868823024673614,
+      "distance_after_m": 0.005334198950800215
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 12,
+      "position": [
+        0.9220006596459366,
+        0.5866602422131605
+      ],
+      "heading": 17.9112803813209,
+      "score": 0.9000121355056763,
+      "matched_station": 11,
+      "nearest_station": 11,
+      "tangent_error_deg": 0.9843517420401042,
+      "distance_before_m": 0.0053341989508001115,
+      "distance_after_m": 0.006809390302436351
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 14,
+      "position": [
+        1.112307434271789,
+        0.6481690345237333
+      ],
+      "heading": 7.9112803813209,
+      "score": 0.9161683917045593,
+      "matched_station": 13,
+      "nearest_station": 13,
+      "tangent_error_deg": 0.5367473743008588,
+      "distance_before_m": 0.01614246455972816,
+      "distance_after_m": 0.016619548446824905
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 16,
+      "position": [
+        1.3104039110693002,
+        0.6756969454581528
+      ],
+      "heading": -2.0887196186791,
+      "score": 0.9093384146690369,
+      "matched_station": 15,
+      "nearest_station": 15,
+      "tangent_error_deg": 1.1225455888882436,
+      "distance_before_m": 0.026088801549095576,
+      "distance_after_m": 0.02720080395662082
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 18,
+      "position": [
+        1.5102710288326306,
+        0.6684075533724719
+      ],
+      "heading": -12.0887196186791,
+      "score": 0.8268238306045532,
+      "matched_station": 17,
+      "nearest_station": 17,
+      "tangent_error_deg": 1.2436348375834712,
+      "distance_before_m": 0.037223892241652734,
+      "distance_after_m": 0.038127389392424396
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 20,
+      "position": [
+        1.7058359263261849,
+        0.6265223427566023
+      ],
+      "heading": -22.0887196186791,
+      "score": 0.889500617980957,
+      "matched_station": 19,
+      "nearest_station": 19,
+      "tangent_error_deg": 0.3311194078480071,
+      "distance_before_m": 0.046675224364456515,
+      "distance_after_m": 0.044617216688543106
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 22,
+      "position": [
+        1.8911564631002344,
+        0.5513139745401695
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.784011721611023,
+      "matched_station": 22,
+      "nearest_station": 21,
+      "tangent_error_deg": 3.97583222330087,
+      "distance_before_m": 0.04856563236821421,
+      "distance_after_m": 0.040254889098397015
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 24,
+      "position": [
+        2.0606017684216145,
+        0.4450676169341585
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.8371343612670898,
+      "matched_station": 23,
+      "nearest_station": 23,
+      "tangent_error_deg": 0.4923357795893537,
+      "distance_before_m": 0.03633960498122618,
+      "distance_after_m": 0.036114886311437944
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 26,
+      "position": [
+        2.230047073742993,
+        0.3388212593281478
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.7604642510414124,
+      "matched_station": 25,
+      "nearest_station": 25,
+      "tangent_error_deg": 3.462780100242412,
+      "distance_before_m": 0.03896098658249235,
+      "distance_after_m": 0.04425505387837746
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 28,
+      "position": [
+        2.3994923790643714,
+        0.23257490172213702
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.7324578166007996,
+      "matched_station": 25,
+      "nearest_station": 27,
+      "tangent_error_deg": 5.1912886579301585,
+      "distance_before_m": 0.051457754525283034,
+      "distance_after_m": 0.060068888683787194
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 31,
+      "position": [
+        2.664594425174964,
+        0.3730060419581174
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.6977397203445435,
+      "matched_station": 22,
+      "nearest_station": 28,
+      "tangent_error_deg": 5.643216304281452,
+      "distance_before_m": 0.3233348805169174,
+      "distance_after_m": 0.3330841534570449
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 33,
+      "position": [
+        2.8413291225820254,
+        0.4666268021154376
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.7282073497772217,
+      "matched_station": 22,
+      "nearest_station": 29,
+      "tangent_error_deg": 5.843595605740404,
+      "distance_before_m": 0.5054497981015822,
+      "distance_after_m": 0.5155250342010189
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 36,
+      "position": [
+        3.095497080564093,
+        0.3072572657064215
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.7166457176208496,
+      "matched_station": 51,
+      "nearest_station": 32,
+      "tangent_error_deg": 64.92959438755435,
+      "distance_before_m": 0.5353722666166848,
+      "distance_after_m": 0.6262140127322638
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 38,
+      "position": [
+        3.2722317779711547,
+        0.4008780258637417
+      ],
+      "heading": -2.0887196186791,
+      "score": 0.714109480381012,
+      "matched_station": 15,
+      "nearest_station": 33,
+      "tangent_error_deg": 34.092009589907946,
+      "distance_before_m": 0.7167927912799587,
+      "distance_after_m": 0.77334578108288
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 41,
+      "position": [
+        3.5089207167305965,
+        0.5852101887353589
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.6722032427787781,
+      "matched_station": 20,
+      "nearest_station": 34,
+      "tangent_error_deg": 2.9760258501964074,
+      "distance_before_m": 1.005804358453793,
+      "distance_after_m": 1.0117164031974766
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 43,
+      "position": [
+        3.678366022051975,
+        0.4789638311293477
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.6879445910453796,
+      "matched_station": 7,
+      "nearest_station": 36,
+      "tangent_error_deg": 59.722839513742514,
+      "distance_before_m": 1.0142731076291684,
+      "distance_after_m": 1.100562679338314
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 45,
+      "position": [
+        3.8456296836753197,
+        0.587218265498547
+      ],
+      "heading": -2.0887196186791,
+      "score": 0.6388440132141113,
+      "matched_station": 42,
+      "nearest_station": 38,
+      "tangent_error_deg": 24.86992223389919,
+      "distance_before_m": 1.192961356093,
+      "distance_after_m": 1.2183316787377432
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 48,
+      "position": [
+        4.079519567721914,
+        0.7516331163073875
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.5956435203552246,
+      "matched_station": 20,
+      "nearest_station": 54,
+      "tangent_error_deg": 66.62891558104403,
+      "distance_before_m": 1.294987683455268,
+      "distance_after_m": 1.203192189629274
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 50,
+      "position": [
+        3.9858988075645954,
+        0.928367813714448
+      ],
+      "heading": -42.0887196186791,
+      "score": 0.6877295970916748,
+      "matched_station": 23,
+      "nearest_station": 55,
+      "tangent_error_deg": 77.87373330680686,
+      "distance_before_m": 1.4936506101607474,
+      "distance_after_m": 1.3963613390583274
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 52,
+      "position": [
+        4.054297816985272,
+        1.1083729173535566
+      ],
+      "heading": -52.0887196186791,
+      "score": 0.6366246938705444,
+      "matched_station": 23,
+      "nearest_station": 57,
+      "tangent_error_deg": 89.48119008335635,
+      "distance_before_m": 1.599282391919008,
+      "distance_after_m": 1.4993035385407278
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 54,
+      "position": [
+        4.190690267483322,
+        1.0305184638823681
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.4707756042480469,
+      "matched_station": 0,
+      "nearest_station": 58,
+      "tangent_error_deg": 9.883167415336345,
+      "distance_before_m": 1.4547845994657291,
+      "distance_after_m": 1.4379056439390503
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 56,
+      "position": [
+        4.339111831493308,
+        0.896462358699387
+      ],
+      "heading": 57.9112803813209,
+      "score": 0.4176129698753357,
+      "matched_station": 0,
+      "nearest_station": 58,
+      "tangent_error_deg": 20.116832584663655,
+      "distance_before_m": 1.2581455939515525,
+      "distance_after_m": 1.292572845841821
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 58,
+      "position": [
+        4.46055719845768,
+        0.9017884207109103
+      ],
+      "heading": 87.91128038132089,
+      "score": 0.3838689923286438,
+      "matched_station": 60,
+      "nearest_station": 59,
+      "tangent_error_deg": 49.96948922561131,
+      "distance_before_m": 1.1879616446414953,
+      "distance_after_m": 1.2645318487875497
+    },
+    {
+      "method": "apiaviz_uv",
+      "uv_enabled": false,
+      "step": 60,
+      "position": [
+        4.5243702585941445,
+        0.9049181038138474
+      ],
+      "heading": -42.0887196186791,
+      "score": 0.38427016139030457,
+      "matched_station": 28,
+      "nearest_station": 60,
+      "tangent_error_deg": 79.92792684551654,
+      "distance_before_m": 1.1511936890820618,
+      "distance_after_m": 1.0527036807450314
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 1,
+      "position": [
+        0.0,
+        0.0
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.9928717017173767,
+      "matched_station": 0,
+      "nearest_station": 0,
+      "tangent_error_deg": 0.0,
+      "distance_before_m": 0.0,
+      "distance_after_m": 1.031327387380181e-10
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 3,
+      "position": [
+        0.1577926258396292,
+        0.12288810858107789
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.9523628950119019,
+      "matched_station": 2,
+      "nearest_station": 2,
+      "tangent_error_deg": 0.7539015433458189,
+      "distance_before_m": 0.00043755135960774636,
+      "distance_after_m": 0.001753296477104239
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 5,
+      "position": [
+        0.31558525167925827,
+        0.24577621716215578
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.896961510181427,
+      "matched_station": 4,
+      "nearest_station": 4,
+      "tangent_error_deg": 2.597382423366838,
+      "distance_before_m": 0.0044340593003418406,
+      "distance_after_m": 0.008963710578558355
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 7,
+      "position": [
+        0.4733778775188872,
+        0.36866432574323366
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.838785707950592,
+      "matched_station": 7,
+      "nearest_station": 6,
+      "tangent_error_deg": 4.2978340745666515,
+      "distance_before_m": 0.015891172583255023,
+      "distance_after_m": 0.008368568598894245
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 10,
+      "position": [
+        0.7384799236294796,
+        0.509095465979214
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.8669776916503906,
+      "matched_station": 8,
+      "nearest_station": 9,
+      "tangent_error_deg": 3.3891347245046006,
+      "distance_before_m": 0.00507097153774695,
+      "distance_after_m": 0.010868823024673614
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 11,
+      "position": [
+        0.8268472723330104,
+        0.5559058460578741
+      ],
+      "heading": 17.9112803813209,
+      "score": 0.8478690385818481,
+      "matched_station": 11,
+      "nearest_station": 10,
+      "tangent_error_deg": 3.0741022703778924,
+      "distance_before_m": 0.010868823024673614,
+      "distance_after_m": 0.005334198950800215
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 12,
+      "position": [
+        0.9220006596459366,
+        0.5866602422131605
+      ],
+      "heading": 17.9112803813209,
+      "score": 0.9451241493225098,
+      "matched_station": 11,
+      "nearest_station": 11,
+      "tangent_error_deg": 0.9843517420401042,
+      "distance_before_m": 0.0053341989508001115,
+      "distance_after_m": 0.006809390302436351
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 14,
+      "position": [
+        1.112307434271789,
+        0.6481690345237333
+      ],
+      "heading": 7.9112803813209,
+      "score": 0.9623424410820007,
+      "matched_station": 13,
+      "nearest_station": 13,
+      "tangent_error_deg": 0.5367473743008588,
+      "distance_before_m": 0.01614246455972816,
+      "distance_after_m": 0.016619548446824905
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 16,
+      "position": [
+        1.3104039110693002,
+        0.6756969454581528
+      ],
+      "heading": -2.0887196186791,
+      "score": 0.9258221983909607,
+      "matched_station": 15,
+      "nearest_station": 15,
+      "tangent_error_deg": 1.1225455888882436,
+      "distance_before_m": 0.026088801549095576,
+      "distance_after_m": 0.02720080395662082
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 18,
+      "position": [
+        1.5102710288326306,
+        0.6684075533724719
+      ],
+      "heading": -12.0887196186791,
+      "score": 0.8853771686553955,
+      "matched_station": 17,
+      "nearest_station": 17,
+      "tangent_error_deg": 1.2436348375834712,
+      "distance_before_m": 0.037223892241652734,
+      "distance_after_m": 0.038127389392424396
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 20,
+      "position": [
+        1.7058359263261849,
+        0.6265223427566023
+      ],
+      "heading": -22.0887196186791,
+      "score": 0.9196774959564209,
+      "matched_station": 19,
+      "nearest_station": 19,
+      "tangent_error_deg": 0.3311194078480071,
+      "distance_before_m": 0.046675224364456515,
+      "distance_after_m": 0.044617216688543106
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 22,
+      "position": [
+        1.8911564631002344,
+        0.5513139745401695
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.8310953974723816,
+      "matched_station": 21,
+      "nearest_station": 21,
+      "tangent_error_deg": 3.97583222330087,
+      "distance_before_m": 0.04856563236821421,
+      "distance_after_m": 0.040254889098397015
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 24,
+      "position": [
+        2.0606017684216145,
+        0.4450676169341585
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.8761664032936096,
+      "matched_station": 23,
+      "nearest_station": 23,
+      "tangent_error_deg": 0.4923357795893537,
+      "distance_before_m": 0.03633960498122618,
+      "distance_after_m": 0.036114886311437944
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 26,
+      "position": [
+        2.230047073742993,
+        0.3388212593281478
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.8425012826919556,
+      "matched_station": 24,
+      "nearest_station": 25,
+      "tangent_error_deg": 3.462780100242412,
+      "distance_before_m": 0.03896098658249235,
+      "distance_after_m": 0.04425505387837746
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 28,
+      "position": [
+        2.3994923790643714,
+        0.23257490172213702
+      ],
+      "heading": -42.0887196186791,
+      "score": 0.8002164959907532,
+      "matched_station": 27,
+      "nearest_station": 27,
+      "tangent_error_deg": 4.8087113420698415,
+      "distance_before_m": 0.051457754525283034,
+      "distance_after_m": 0.042637837281117995
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 31,
+      "position": [
+        2.664594425174964,
+        0.3730060419581174
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.7272640466690063,
+      "matched_station": 22,
+      "nearest_station": 28,
+      "tangent_error_deg": 5.643216304281452,
+      "distance_before_m": 0.3233348805169174,
+      "distance_after_m": 0.3330841534570449
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 33,
+      "position": [
+        2.8413291225820254,
+        0.4666268021154376
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.7787798643112183,
+      "matched_station": 22,
+      "nearest_station": 29,
+      "tangent_error_deg": 5.843595605740404,
+      "distance_before_m": 0.5054497981015822,
+      "distance_after_m": 0.5155250342010189
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 36,
+      "position": [
+        3.095497080564093,
+        0.3072572657064215
+      ],
+      "heading": 7.9112803813209,
+      "score": 0.7751332521438599,
+      "matched_station": 13,
+      "nearest_station": 32,
+      "tangent_error_deg": 44.929594387554346,
+      "distance_before_m": 0.5353722666166848,
+      "distance_after_m": 0.6062589689688411
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 38,
+      "position": [
+        3.2722317779711547,
+        0.4008780258637417
+      ],
+      "heading": -2.0887196186791,
+      "score": 0.7842897176742554,
+      "matched_station": 15,
+      "nearest_station": 33,
+      "tangent_error_deg": 34.092009589907946,
+      "distance_before_m": 0.7167927912799587,
+      "distance_after_m": 0.77334578108288
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 41,
+      "position": [
+        3.5089207167305965,
+        0.5852101887353589
+      ],
+      "heading": 7.9112803813209,
+      "score": 0.7885797023773193,
+      "matched_station": 13,
+      "nearest_station": 34,
+      "tangent_error_deg": 42.97602585019641,
+      "distance_before_m": 1.005804358453793,
+      "distance_after_m": 1.0746938216321889
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 43,
+      "position": [
+        3.678366022051975,
+        0.4789638311293477
+      ],
+      "heading": 17.9112803813209,
+      "score": 0.74638831615448,
+      "matched_station": 11,
+      "nearest_station": 36,
+      "tangent_error_deg": 49.722839513742514,
+      "distance_before_m": 1.0142731076291684,
+      "distance_after_m": 1.089955145327144
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 45,
+      "position": [
+        3.8456296836753197,
+        0.587218265498547
+      ],
+      "heading": 17.9112803813209,
+      "score": 0.7168881893157959,
+      "matched_station": 48,
+      "nearest_station": 38,
+      "tangent_error_deg": 44.86992223389919,
+      "distance_before_m": 1.192961356093,
+      "distance_after_m": 1.2513786937362268
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 48,
+      "position": [
+        4.079519567721914,
+        0.7516331163073875
+      ],
+      "heading": 7.9112803813209,
+      "score": 0.6510501503944397,
+      "matched_station": 13,
+      "nearest_station": 54,
+      "tangent_error_deg": 26.628915581044026,
+      "distance_before_m": 1.294987683455268,
+      "distance_after_m": 1.2494065252204403
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 50,
+      "position": [
+        3.9858988075645954,
+        0.928367813714448
+      ],
+      "heading": 17.9112803813209,
+      "score": 0.6839128732681274,
+      "matched_station": 11,
+      "nearest_station": 55,
+      "tangent_error_deg": 17.873733306806855,
+      "distance_before_m": 1.4936506101607474,
+      "distance_after_m": 1.463581426576408
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 52,
+      "position": [
+        4.054297816985272,
+        1.1083729173535566
+      ],
+      "heading": 197.9112803813209,
+      "score": 0.6263620257377625,
+      "matched_station": 52,
+      "nearest_station": 57,
+      "tangent_error_deg": 160.51880991664365,
+      "distance_before_m": 1.599282391919008,
+      "distance_after_m": 1.630992642912575
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 54,
+      "position": [
+        4.190690267483322,
+        1.0305184638823681
+      ],
+      "heading": 197.9112803813209,
+      "score": 0.6009215116500854,
+      "matched_station": 47,
+      "nearest_station": 58,
+      "tangent_error_deg": 160.11683258466365,
+      "distance_before_m": 1.4547845994657291,
+      "distance_after_m": 1.4875752931778863
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 56,
+      "position": [
+        4.339111831493308,
+        0.896462358699387
+      ],
+      "heading": -142.0887196186791,
+      "score": 0.6075459718704224,
+      "matched_station": 0,
+      "nearest_station": 58,
+      "tangent_error_deg": 179.88316741533635,
+      "distance_before_m": 1.2581455939515525,
+      "distance_after_m": 1.257050782371055
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 58,
+      "position": [
+        4.46055719845768,
+        0.9017884207109103
+      ],
+      "heading": -142.0887196186791,
+      "score": 0.5529077649116516,
+      "matched_station": 60,
+      "nearest_station": 59,
+      "tangent_error_deg": 179.9694892256113,
+      "distance_before_m": 1.1879616446414953,
+      "distance_after_m": 1.1877213363818382
+    },
+    {
+      "method": "sobel_colour",
+      "uv_enabled": null,
+      "step": 60,
+      "position": [
+        4.5243702585941445,
+        0.9049181038138474
+      ],
+      "heading": -122.08871961867911,
+      "score": 0.5061667561531067,
+      "matched_station": 60,
+      "nearest_station": 60,
+      "tangent_error_deg": 159.92792684551654,
+      "distance_before_m": 1.1511936890820618,
+      "distance_after_m": 1.116935572216572
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 1,
+      "position": [
+        0.0,
+        0.0
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.7682647109031677,
+      "matched_station": 0,
+      "nearest_station": 0,
+      "tangent_error_deg": 0.0,
+      "distance_before_m": 0.0,
+      "distance_after_m": 1.031327387380181e-10
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 3,
+      "position": [
+        0.1577926258396292,
+        0.12288810858107789
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.9322784543037415,
+      "matched_station": 2,
+      "nearest_station": 2,
+      "tangent_error_deg": 0.7539015433458189,
+      "distance_before_m": 0.00043755135960774636,
+      "distance_after_m": 0.001753296477104239
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 5,
+      "position": [
+        0.31558525167925827,
+        0.24577621716215578
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.828637421131134,
+      "matched_station": 5,
+      "nearest_station": 4,
+      "tangent_error_deg": 7.402617576633162,
+      "distance_before_m": 0.0044340593003418406,
+      "distance_after_m": 0.008452114526364437
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 7,
+      "position": [
+        0.4733778775188872,
+        0.36866432574323366
+      ],
+      "heading": 37.9112803813209,
+      "score": 0.8072327375411987,
+      "matched_station": 5,
+      "nearest_station": 6,
+      "tangent_error_deg": 5.7021659254333485,
+      "distance_before_m": 0.015891172583255023,
+      "distance_after_m": 0.025798408193147892
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 10,
+      "position": [
+        0.7384799236294796,
+        0.509095465979214
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.8538154363632202,
+      "matched_station": 9,
+      "nearest_station": 9,
+      "tangent_error_deg": 3.3891347245046006,
+      "distance_before_m": 0.00507097153774695,
+      "distance_after_m": 0.010868823024673614
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 11,
+      "position": [
+        0.8268472723330104,
+        0.5559058460578741
+      ],
+      "heading": 27.9112803813209,
+      "score": 0.8529070615768433,
+      "matched_station": 8,
+      "nearest_station": 10,
+      "tangent_error_deg": 6.925897729622108,
+      "distance_before_m": 0.010868823024673614,
+      "distance_after_m": 0.022755501127078994
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 12,
+      "position": [
+        0.9220006596459366,
+        0.5866602422131605
+      ],
+      "heading": 17.9112803813209,
+      "score": 0.9303345680236816,
+      "matched_station": 11,
+      "nearest_station": 11,
+      "tangent_error_deg": 0.9843517420401042,
+      "distance_before_m": 0.0053341989508001115,
+      "distance_after_m": 0.006809390302436351
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 14,
+      "position": [
+        1.112307434271789,
+        0.6481690345237333
+      ],
+      "heading": 7.9112803813209,
+      "score": 0.9332308769226074,
+      "matched_station": 13,
+      "nearest_station": 13,
+      "tangent_error_deg": 0.5367473743008588,
+      "distance_before_m": 0.01614246455972816,
+      "distance_after_m": 0.016619548446824905
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 16,
+      "position": [
+        1.3104039110693002,
+        0.6756969454581528
+      ],
+      "heading": -2.0887196186791,
+      "score": 0.9413159489631653,
+      "matched_station": 15,
+      "nearest_station": 15,
+      "tangent_error_deg": 1.1225455888882436,
+      "distance_before_m": 0.026088801549095576,
+      "distance_after_m": 0.02720080395662082
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 18,
+      "position": [
+        1.5102710288326306,
+        0.6684075533724719
+      ],
+      "heading": -42.0887196186791,
+      "score": 0.7809475660324097,
+      "matched_station": 21,
+      "nearest_station": 17,
+      "tangent_error_deg": 28.75636516241653,
+      "distance_before_m": 0.037223892241652734,
+      "distance_after_m": 0.012151608856449536
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 20,
+      "position": [
+        1.7058359263261849,
+        0.6265223427566023
+      ],
+      "heading": 87.91128038132089,
+      "score": 0.7913578748703003,
+      "matched_station": 13,
+      "nearest_station": 19,
+      "tangent_error_deg": 109.668880592152,
+      "distance_before_m": 0.046675224364456515,
+      "distance_after_m": 0.1429425217179324
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 22,
+      "position": [
+        1.8911564631002344,
+        0.5513139745401695
+      ],
+      "heading": -12.0887196186791,
+      "score": 0.770429253578186,
+      "matched_station": 13,
+      "nearest_station": 21,
+      "tangent_error_deg": 16.02416777669913,
+      "distance_before_m": 0.04856563236821421,
+      "distance_after_m": 0.0747927377221877
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 24,
+      "position": [
+        2.0606017684216145,
+        0.4450676169341585
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.6968240141868591,
+      "matched_station": 23,
+      "nearest_station": 23,
+      "tangent_error_deg": 0.4923357795893537,
+      "distance_before_m": 0.03633960498122618,
+      "distance_after_m": 0.036114886311437944
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 26,
+      "position": [
+        2.230047073742993,
+        0.3388212593281478
+      ],
+      "heading": -42.0887196186791,
+      "score": 0.7899692058563232,
+      "matched_station": 25,
+      "nearest_station": 25,
+      "tangent_error_deg": 6.537219899757588,
+      "distance_before_m": 0.03896098658249235,
+      "distance_after_m": 0.026830178637961413
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 28,
+      "position": [
+        2.3994923790643714,
+        0.23257490172213702
+      ],
+      "heading": -22.0887196186791,
+      "score": 0.8458356261253357,
+      "matched_station": 21,
+      "nearest_station": 27,
+      "tangent_error_deg": 15.191288657930158,
+      "distance_before_m": 0.051457754525283034,
+      "distance_after_m": 0.07722501765036068
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 31,
+      "position": [
+        2.664594425174964,
+        0.3730060419581174
+      ],
+      "heading": -82.08871961867911,
+      "score": 0.7390501499176025,
+      "matched_station": 5,
+      "nearest_station": 28,
+      "tangent_error_deg": 44.35678369571855,
+      "distance_before_m": 0.3233348805169174,
+      "distance_after_m": 0.2533383757137459
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 33,
+      "position": [
+        2.8413291225820254,
+        0.4666268021154376
+      ],
+      "heading": -112.08871961867911,
+      "score": 0.7003607153892517,
+      "matched_station": 54,
+      "nearest_station": 29,
+      "tangent_error_deg": 74.1564043942596,
+      "distance_before_m": 0.5054497981015822,
+      "distance_after_m": 0.40915385254719977
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 36,
+      "position": [
+        3.095497080564093,
+        0.3072572657064215
+      ],
+      "heading": 7.9112803813209,
+      "score": 0.7764841318130493,
+      "matched_station": 13,
+      "nearest_station": 32,
+      "tangent_error_deg": 44.929594387554346,
+      "distance_before_m": 0.5353722666166848,
+      "distance_after_m": 0.6062589689688411
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 38,
+      "position": [
+        3.2722317779711547,
+        0.4008780258637417
+      ],
+      "heading": 7.9112803813209,
+      "score": 0.761944591999054,
+      "matched_station": 13,
+      "nearest_station": 33,
+      "tangent_error_deg": 44.092009589907946,
+      "distance_before_m": 0.7167927912799587,
+      "distance_after_m": 0.7868746942829329
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 41,
+      "position": [
+        3.5089207167305965,
+        0.5852101887353589
+      ],
+      "heading": -62.0887196186791,
+      "score": 0.711898922920227,
+      "matched_station": 5,
+      "nearest_station": 34,
+      "tangent_error_deg": 27.023974149803593,
+      "distance_before_m": 1.005804358453793,
+      "distance_after_m": 0.961088265278011
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 43,
+      "position": [
+        3.678366022051975,
+        0.4789638311293477
+      ],
+      "heading": 177.9112803813209,
+      "score": 0.6936070919036865,
+      "matched_station": 57,
+      "nearest_station": 36,
+      "tangent_error_deg": 150.27716048625746,
+      "distance_before_m": 1.0142731076291684,
+      "distance_after_m": 0.9624546732005855
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 45,
+      "position": [
+        3.8456296836753197,
+        0.587218265498547
+      ],
+      "heading": -92.08871961867911,
+      "score": 0.6804829835891724,
+      "matched_station": 4,
+      "nearest_station": 38,
+      "tangent_error_deg": 65.13007776610083,
+      "distance_before_m": 1.192961356093,
+      "distance_after_m": 1.1027510262167166
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 48,
+      "position": [
+        4.079519567721914,
+        0.7516331163073875
+      ],
+      "heading": -62.0887196186791,
+      "score": 0.6357086896896362,
+      "matched_station": 29,
+      "nearest_station": 54,
+      "tangent_error_deg": 96.62891558104403,
+      "distance_before_m": 1.294987683455268,
+      "distance_after_m": 1.1956562201025283
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 50,
+      "position": [
+        3.9858988075645954,
+        0.928367813714448
+      ],
+      "heading": 157.9112803813209,
+      "score": 0.6553290486335754,
+      "matched_station": 31,
+      "nearest_station": 55,
+      "tangent_error_deg": 122.12626669319314,
+      "distance_before_m": 1.4936506101607474,
+      "distance_after_m": 1.5389706701367722
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 52,
+      "position": [
+        4.054297816985272,
+        1.1083729173535566
+      ],
+      "heading": -52.0887196186791,
+      "score": 0.6456332802772522,
+      "matched_station": 25,
+      "nearest_station": 57,
+      "tangent_error_deg": 89.48119008335635,
+      "distance_before_m": 1.599282391919008,
+      "distance_after_m": 1.4993035385407278
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 54,
+      "position": [
+        4.190690267483322,
+        1.0305184638823681
+      ],
+      "heading": 207.9112803813209,
+      "score": 0.47947633266448975,
+      "matched_station": 56,
+      "nearest_station": 58,
+      "tangent_error_deg": 170.11683258466365,
+      "distance_before_m": 1.4547845994657291,
+      "distance_after_m": 1.4706488812970657
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 56,
+      "position": [
+        4.339111831493308,
+        0.896462358699387
+      ],
+      "heading": 207.9112803813209,
+      "score": 0.4973166584968567,
+      "matched_station": 6,
+      "nearest_station": 58,
+      "tangent_error_deg": 170.11683258466365,
+      "distance_before_m": 1.2581455939515525,
+      "distance_after_m": 1.2744431697574952
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 58,
+      "position": [
+        4.46055719845768,
+        0.9017884207109103
+      ],
+      "heading": -82.08871961867911,
+      "score": 0.5270161032676697,
+      "matched_station": 0,
+      "nearest_station": 59,
+      "tangent_error_deg": 120.03051077438869,
+      "distance_before_m": 1.1879616446414953,
+      "distance_after_m": 1.1012582810571965
+    },
+    {
+      "method": "ardin_input",
+      "uv_enabled": null,
+      "step": 60,
+      "position": [
+        4.5243702585941445,
+        0.9049181038138474
+      ],
+      "heading": -32.0887196186791,
+      "score": 0.5271024703979492,
+      "matched_station": 45,
+      "nearest_station": 60,
+      "tangent_error_deg": 69.92792684551654,
+      "distance_before_m": 1.1511936890820618,
+      "distance_after_m": 1.0572062272944436
+    }
+  ]
+}

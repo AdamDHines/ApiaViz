@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "protocol_sha256": "4c86bc2e4b784ef7bab0b84e044cac02e274dfe583075d4fed07e6f4ffbe7702",
+  "check": "Every complete taught route segment swept with the 5mm body against the exported mesh and field bounds",
+  "worlds": [
+    {
+      "world": "meander",
+      "segments": 63,
+      "invalid": [],
+      "geometry": {
+        "schema": "rock-mesh-projection-v1",
+        "geometry_sha256": "d7c0e68d40f6f308b75b7bef35d869569af51b4c564125b872e2d95e255c48bd",
+        "scene_sha256": "d285e4e063d1e1529a95c2cb38b560e6db618122f5254a4b3e1731a549e516b9"
+      }
+    },
+    {
+      "world": "bend",
+      "segments": 64,
+      "invalid": [],
+      "geometry": {
+        "schema": "rock-mesh-projection-v1",
+        "geometry_sha256": "452eac5b45d2a194bd51f74d687574af7b1f599bfd3c7a7640fe8ccce35ab2e4",
+        "scene_sha256": "bb6d3dbae9ec313255d135af1cbca86584f194b48d792396410e73d18d4cbff7"
+      }
+    },
+    {
+      "world": "hairpin",
+      "segments": 82,
+      "invalid": [],
+      "geometry": {
+        "schema": "rock-mesh-projection-v1",
+        "geometry_sha256": "9e7f8a13819eb4d79eeea36f93c079b18327a5227bdc3d311482c4f61fd6c8f4",
+        "scene_sha256": "d013a573b528a37b5ed15036f5912bb4cf80a4957e732d513b039d1a9c481051"
+      }
+    }
+  ]
+}

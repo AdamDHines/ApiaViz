@@ -11,13 +11,26 @@ import numpy as np
 from tqdm import tqdm
 
 from .controller_full_report import paired_effect,retention
-from .dual_camera import digest,load_cached,position_key,visible_image
+from .dual_camera import digest,load_cached,position_key,visible_image,sensor_views
 from .route_full import cases,perturbation_analysis
 from .spectral_input import file_sha
 from .uv_input import sample_receptors
 
 NAMES=dict(apiaviz_uv='ApiaViz + UV',sobel_colour='Sobel + colour',ardin_input='Ardin-style')
 COLORS=dict(apiaviz_uv='#168e88',sobel_colour='#cc8735',ardin_input='#7978b9')
+
+
+def display_response(image):
+    """Fixed display-only transfer, never returned to a policy."""
+    return np.where(image<=.0031308,12.92*image,1.055*image**(1/2.4)-.055)
+
+
+def frame_display(raw,heading,render):
+    spectral=sensor_views(raw,[heading],render,uv=True)[0].permute(1,2,0).numpy()[:,::-1]
+    visible=sensor_views(raw,[heading],render)[0].permute(1,2,0).numpy()[:,::-1]
+    if render.get('retinal_sampling')=='solid-angle-box-before-response-v1':
+        return display_response(spectral/(spectral+1)),display_response(visible)
+    return spectral/(spectral+.2),visible
 
 
 def environment_preview(env,world,camera):
@@ -34,10 +47,11 @@ def environment_preview(env,world,camera):
         position=world['route'][index]; heading=world['headings'][index]
         uv=camera.scan(position,[heading],uv=True)[0].permute(1,2,0).numpy()[:,::-1]
         rgb=camera.scan(position,[heading])[0].permute(1,2,0).numpy()[:,::-1]
-        axes[row,0].imshow(uv/(uv+.2),aspect='auto'); axes[row,0].axis('off')
+        modern=camera.config.get('retinal_sampling')=='solid-angle-box-before-response-v1'
+        axes[row,0].imshow(display_response(uv/(uv+1)) if modern else uv/(uv+.2),aspect='auto'); axes[row,0].axis('off')
         axes[row,0].set_title(f'Station {index}: UV/B/G false colours',fontsize=10)
-        axes[row,1].imshow(rgb,aspect='auto'); axes[row,1].axis('off')
-        axes[row,1].set_title('Visible-only camera response',fontsize=10)
+        axes[row,1].imshow(display_response(rgb) if modern else rgb,aspect='auto'); axes[row,1].axis('off')
+        axes[row,1].set_title('Visible camera · fixed display transfer' if modern else 'Visible-only camera response',fontsize=10)
         ax=axes[row,2]
         for rock in geometry['rocks']: ax.add_collection(PolyCollection(rock['triangles_xy_m'],facecolor='#969b91',edgecolor='none'))
         ax.plot(*route.T,':',color='#397f9a'); ax.scatter(*position,color='#d38424')
@@ -68,7 +82,7 @@ def statistics(rows,p):
         paired_arrival_effects=comparisons,perturbations=perturbation_analysis(rows,p,primary='apiaviz_uv'),
         comparison=p['comparison'],limitation=p['limitation'],
         denominator='All completed scheduled trials, including all failures. Pending trials are listed separately; a partial report is not a final result.',
-        cost_note='Wall time includes cache misses/rendering and depends on method order. Encoding time, camera counts and spikes are reported separately; equal KC count does not imply equal compute/spike cost.')
+        cost_note='Wall time includes cache misses/rendering and depends on execution order/concurrency. Encoding time, camera counts and spike counts are separate. Graded representations have no spike count (null); their nonzero response components are recorded separately and are not spikes. Equal KC count does not imply equal compute cost.')
 
 
 def movie_selection(rows,p):
@@ -115,11 +129,16 @@ def make_movie(out,p,row):
     fig=plt.figure(figsize=(12,7),layout='constrained')
     grid=fig.add_gridspec(2,2,height_ratios=[.8,1.5]); uv=fig.add_subplot(grid[0,0]); rgb=fig.add_subplot(grid[0,1])
     overhead=fig.add_subplot(grid[1,0]); signal=fig.add_subplot(grid[1,1])
-    fig.suptitle(f'{NAMES[row["method"]]} · {row["world"]} · {row["scenario"]} · seed {row["seed"]}, phase {row["phase"]}')
+    fig.suptitle(f'{NAMES[row["method"]]} · {p.get('variant','original')} · {row["world"]} · {row["scenario"]} · seed {row["seed"]}, phase {row["phase"]}')
     uv_picture=uv.imshow(np.zeros((51,199,3)),aspect='auto'); uv.axis('off')
     uv.set_title('UV / blue / green · false-colour display only',fontsize=10)
     rgb_picture=rgb.imshow(np.zeros((51,199,3)),aspect='auto'); rgb.axis('off')
     rgb.set_title('Visible camera · shared avoidance; Sobel/Ardin input',fontsize=10)
+    modern=render.get('retinal_sampling')=='solid-angle-box-before-response-v1'
+    if modern:
+        uv.set_title('UV / blue / green · false colours · fixed display transfer',fontsize=9)
+        rgb.set_title('Visible camera · fixed display transfer · sun position marked',fontsize=9)
+    sun_markers=[ax.plot([],[],'o',mfc='none',mec='#ffb44d',ms=10,lw=1)[0] for ax in (uv,rgb)]
     for rock in geometry['rocks']:
         overhead.add_collection(PolyCollection(rock['triangles_xy_m'],facecolor='#8f968e',edgecolor='none'))
     route=np.array(world['route']); overhead.plot(*route.T,':',color='#55768b',label='Taught route')
@@ -136,9 +155,7 @@ def make_movie(out,p,row):
     @lru_cache(maxsize=64)
     def image(key,heading):
         raw,_=load_cached(env/'camera',key,digest(render))
-        spectral=sample_receptors(raw[:,:,:3],[heading],elevation=render['elevation_deg'])[0].permute(1,2,0).numpy()[:,::-1]
-        visible=sample_receptors(visible_image(raw[:,:,3:],render['visible_white']),[heading],elevation=render['elevation_deg'])[0].permute(1,2,0).numpy()[:,::-1]
-        return spectral/(spectral+.2),visible
+        return frame_display(raw,heading,render)
     fps=p['movies']['fps']; duration=min(p['movies']['max_seconds'],max(1.,row['time_s']/8))
     frames=np.linspace(0,row['time_s'],max(2,int(duration*fps)))
     temporary=target.with_suffix('.tmp.mp4')
@@ -148,7 +165,12 @@ def make_movie(out,p,row):
             for t in tqdm(frames,desc='Movie frames',leave=False,unit='frame'):
                 vi=int(np.searchsorted(viewtimes,t,side='right')-1)
                 if vi>=0:
-                    view=views[vi]; a,b=image(position_key(view['position']),view['heading']); uv_picture.set_data(a); rgb_picture.set_data(b)
+                    view=views[vi]; a,b=image(position_key(view['position'],render.get('pose_decimals')),view['heading']); uv_picture.set_data(a); rgb_picture.set_data(b)
+                    if modern:
+                        relative=(render['sun_azimuth']-view['heading']+180)%360-180
+                        inside=abs(relative)<=148 and -15<=render['sun_elevation']<=60
+                        for marker in sun_markers:
+                            marker.set_data([(148-relative)/296*198] if inside else [],[(60-render['sun_elevation'])/75*50] if inside else [])
                 index=int(np.searchsorted(times,t,side='right')); shown=path[:index]
                 line.set_data(shown[:,0],shown[:,1]); pos=shown[np.isfinite(shown).all(1)][-1]
                 angle=np.deg2rad(views[vi]['heading'] if vi>=0 else world['headings'][0])
@@ -164,7 +186,8 @@ def make_movie(out,p,row):
     finally: plt.close(fig)
     sidecar.write_text(json.dumps(dict(trace_sha256=trace_hash,video_sha256=file_sha(target),fps=fps,
         frames=len(frames)+fps,simulated_seconds=row['time_s'],movie_seconds=(len(frames)+fps)/fps,
-        selection=p['movies']['selection']),indent=2)+'\n')
+        selection=p['movies']['selection'],retinal_sampling=render.get('retinal_sampling','bilinear-legacy'),
+        display='fixed response then sRGB transfer; solar marker annotation only' if modern else 'historical display'),indent=2)+'\n')
     return target
 
 
@@ -195,22 +218,23 @@ def report(out,p,rows,*,movies=True):
     atomic_json(dest/'trials.json',rows)
     atomic_json(dest/'pending.json',[key for key in ordered if key not in {r['id'] for r in rows}])
     pictures=[]
+    nmethods=len(p['methods'])
     with PdfPages(dest/'figures.pdf') as pdf,tqdm(total=4,desc='Summary figures',unit='figure') as progress:
         def save(fig,name):
             fig.savefig(dest/f'{name}.png',dpi=150); fig.savefig(dest/f'{name}.svg'); pdf.savefig(fig)
             pictures.append(name); plt.close(fig); progress.update(1)
         fig,axes=plt.subplots(len(p['worlds']),1,figsize=(11,3*len(p['worlds'])),squeeze=False,layout='constrained')
         for ax,world in zip(axes[:,0],p['worlds']):
-            values=np.zeros((3,len(p['scenarios'])))
+            values=np.zeros((nmethods,len(p['scenarios'])))
             for i,method in enumerate(p['methods']):
                 for j,scenario in enumerate(p['scenarios']):
                     selected=[r for r in rows if (r['world'],r['method'],r['scenario'])==(world['name'],method,scenario['name'])]
                     hits=sum(r['reached_nest'] for r in selected); values[i,j]=hits/len(selected) if selected else 0
                     ax.text(j,i,f'{hits}/{len(selected)}',ha='center',va='center')
             ax.imshow(values,vmin=0,vmax=1,cmap='Blues',alpha=.6,aspect='auto')
-            ax.set(title=world['name'],xticks=range(len(p['scenarios'])),xticklabels=[s['name'] for s in p['scenarios']],yticks=range(3),yticklabels=[NAMES[m] for m in p['methods']])
+            ax.set(title=world['name'],xticks=range(len(p['scenarios'])),xticklabels=[s['name'] for s in p['scenarios']],yticks=range(nmethods),yticklabels=[NAMES[m] for m in p['methods']])
         fig.suptitle(f'Arrivals · {len(rows)}/{p["trials"]} scheduled trials complete'); save(fig,'arrivals')
-        fig,axes=plt.subplots(1,3,figsize=(13,4),layout='constrained')
+        fig,axes=plt.subplots(1,nmethods,figsize=(max(5,4*nmethods),4),squeeze=False,layout='constrained'); axes=axes[0]
         outcomes=sorted({r['termination'] for r in rows})
         for ax,method in zip(axes,p['methods']):
             selected=[r for r in rows if r['method']==method]; counts=Counter(r['termination'] for r in selected)
@@ -223,9 +247,9 @@ def report(out,p,rows,*,movies=True):
                 values=[r[key] for r in rows if r['method']==method and r.get(key) is not None]
                 ax.scatter(np.full(len(values),i),values,s=9,alpha=.25,color=COLORS[method])
                 if values: ax.plot([i-.2,i+.2],[np.median(values)]*2,color='black',lw=2)
-            ax.set(xticks=range(3),xticklabels=['Apia+UV','Sobel','Ardin'],ylabel=label)
+            ax.set(xticks=range(nmethods),xticklabels=[NAMES[m] for m in p['methods']],ylabel=label)
         fig.suptitle('All completed trials · early failures affect costs · black line is median'); save(fig,'costs')
-        fig,axes=plt.subplots(len(p['worlds']),3,figsize=(12,3.5*len(p['worlds'])),squeeze=False,layout='constrained')
+        fig,axes=plt.subplots(len(p['worlds']),nmethods,figsize=(max(5,4*nmethods),3.5*len(p['worlds'])),squeeze=False,layout='constrained')
         for i,world in enumerate(p['worlds']):
             route=np.array(world['route'])
             for j,method in enumerate(p['methods']):
@@ -242,7 +266,7 @@ def report(out,p,rows,*,movies=True):
             target=make_movie(out,p,row); videos.append((row,str(target.relative_to(dest))))
     summary['movies']=[dict(id=r['id'],path=path) for r,path in videos]; atomic_json(dest/'summary.json',summary)
     def esc(value): return html.escape(str(value))
-    intro=f'<h1>UV / visible navigation results</h1><p>{len(rows)} of {p["trials"]} scheduled trials completed. '+('Complete run.' if summary['complete'] else '<b>Partial report — pending trials remain.</b>')+'</p>'
+    intro=f'<h1>UV / visible navigation results</h1><p>{esc(p.get("variant","original"))}</p><p>{len(rows)} of {p["trials"]} scheduled trials completed. '+('Complete run.' if summary['complete'] else '<b>Partial report — pending trials remain.</b>')+'</p>'
     body=[intro,f'<p>{esc(p["comparison"])}</p>',f'<p>{esc(p["limitation"])}</p>',f'<p>{esc(summary["cost_note"])}</p>',
         '<p><a href="summary.json">Statistics + dose strata</a> · <a href="trials.csv">Trial CSV</a> · <a href="trials.json">Trial JSON</a> · <a href="figures.pdf">Figures PDF</a> · <a href="../protocol.json">Frozen protocol</a></p>',
         '<h2>Outcomes and costs</h2><table><tr><th>Model</th><th>Arrivals</th><th>Recovered / applicable</th><th>Blocked trials</th><th>Adjusted dose</th><th>Median seconds / views</th></tr>']
@@ -253,7 +277,7 @@ def report(out,p,rows,*,movies=True):
         if c['mean'] is not None: body.append(f'<li>ApiaViz + UV minus {NAMES[c["right"][1]]}: {100*c["mean"]:+.1f} percentage points; descriptive 95% world-bootstrap interval [{100*c["low"]:+.1f}, {100*c["high"]:+.1f}]; {c["paired_cases"]} paired cases, {c["worlds"]} worlds.</li>')
     body+=['</ul><p>Shortened/skipped/missed perturbations remain in primary results. See dose strata and the trajectory-dependent, whole-block full-dose sensitivity analysis in summary.json.</p>']
     body += [f'<h2>{name.replace("_"," ").title()}</h2><img src="{name}.png" alt="{name}">' for name in pictures]
-    body += ['<h2>Movies</h2><p>Prespecified first-seed/positive-phase aligned and kick-right cases, plus the first scheduled failure for each world/model. All outcomes retained; playback is accelerated. Spectral false colours are display-only.</p>']
+    body += [f'<h2>Movies</h2><p>{esc(p["movies"]["selection"])}. All outcomes retained; playback is accelerated. Spectral false colours are display-only; only ApiaViz receives UV.</p>']
     for row,path in videos: body.append(f'<details><summary>{esc(row["id"])} — {esc(row["termination"])}</summary><video controls preload="none" src="{esc(path)}"></video></details>')
     body += ['<h2>Every completed trial</h2><table><tr><th>Trial / trace</th><th>Outcome</th><th>Time</th><th>Walked</th><th>Blocked</th><th>Adjusted</th></tr>']
     for r in rows: body.append(f'<tr><td><a href="../{esc(r["trace"])}">{esc(r["id"])}</a></td><td>{esc(r["termination"])}</td><td>{r["time_s"]:.1f}</td><td>{r["path_length_m"]:.2f}</td><td>{r["blocked_proposals"]}</td><td>{r["perturbation_adjusted"]}</td></tr>')

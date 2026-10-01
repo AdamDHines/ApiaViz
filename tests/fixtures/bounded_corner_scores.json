@@ -1,0 +1,565 @@
+{
+  "description": "Recorded same-pose corner scores. Only camera familiarity and commanded heading enter the controller; expected headings are regression assertions.",
+  "records": [
+    {
+      "world": "bend",
+      "method": "apiaviz_uv",
+      "step": 22,
+      "base": 0.0,
+      "expected_heading": 45.0,
+      "scale": 0.09315942832681257,
+      "samples": [
+        {
+          "heading": -5.0,
+          "familiarity": 0.9386299848556519
+        },
+        {
+          "heading": 0.0,
+          "familiarity": 0.948078989982605
+        },
+        {
+          "heading": 5.0,
+          "familiarity": 0.9495540261268616
+        },
+        {
+          "heading": 10.0,
+          "familiarity": 0.9465376734733582
+        },
+        {
+          "heading": 15.0,
+          "familiarity": 0.9348639249801636
+        },
+        {
+          "heading": 20.0,
+          "familiarity": 0.9198060035705566
+        },
+        {
+          "heading": 25.0,
+          "familiarity": 0.9097836017608643
+        },
+        {
+          "heading": 30.0,
+          "familiarity": 0.9223323464393616
+        },
+        {
+          "heading": 35.0,
+          "familiarity": 0.9485734105110168
+        },
+        {
+          "heading": 40.0,
+          "familiarity": 0.9729423522949219
+        },
+        {
+          "heading": 45.0,
+          "familiarity": 0.9942692518234253
+        },
+        {
+          "heading": 50.0,
+          "familiarity": 0.9823966026306152
+        },
+        {
+          "heading": 55.0,
+          "familiarity": 0.9492244124412537
+        },
+        {
+          "heading": 60.0,
+          "familiarity": 0.9380699396133423
+        },
+        {
+          "heading": -60.0,
+          "familiarity": 0.8846516609191895
+        },
+        {
+          "heading": -55.0,
+          "familiarity": 0.892835259437561
+        },
+        {
+          "heading": -50.0,
+          "familiarity": 0.8904469013214111
+        },
+        {
+          "heading": -45.0,
+          "familiarity": 0.8978451490402222
+        },
+        {
+          "heading": -40.0,
+          "familiarity": 0.900199294090271
+        },
+        {
+          "heading": -35.0,
+          "familiarity": 0.8966947793960571
+        },
+        {
+          "heading": -30.0,
+          "familiarity": 0.895064115524292
+        },
+        {
+          "heading": -25.0,
+          "familiarity": 0.9032465219497681
+        },
+        {
+          "heading": -20.0,
+          "familiarity": 0.9176269769668579
+        },
+        {
+          "heading": -15.0,
+          "familiarity": 0.9285970330238342
+        },
+        {
+          "heading": -10.0,
+          "familiarity": 0.9332495331764221
+        }
+      ],
+      "trace_sha256": "ecf497cd711f0901c73a938b43cee1c647c08b631426b775d155693fb71e9c75",
+      "checkpoint_sha256": "34d982e38b327a8a8b44f93d1669b745aa8af102943258bf1a36ab6edbbe2224"
+    },
+    {
+      "world": "bend",
+      "method": "sobel_colour",
+      "step": 22,
+      "base": 0.0,
+      "expected_heading": 45.0,
+      "scale": 0.19423728597792955,
+      "samples": [
+        {
+          "heading": 0.0,
+          "familiarity": 0.8112282156944275
+        },
+        {
+          "heading": 5.0,
+          "familiarity": 0.7366930246353149
+        },
+        {
+          "heading": 10.0,
+          "familiarity": 0.6986232995986938
+        },
+        {
+          "heading": 15.0,
+          "familiarity": 0.695368230342865
+        },
+        {
+          "heading": 20.0,
+          "familiarity": 0.6799453496932983
+        },
+        {
+          "heading": 25.0,
+          "familiarity": 0.6677714586257935
+        },
+        {
+          "heading": 30.0,
+          "familiarity": 0.6767948865890503
+        },
+        {
+          "heading": 35.0,
+          "familiarity": 0.7200525999069214
+        },
+        {
+          "heading": 40.0,
+          "familiarity": 0.7768599987030029
+        },
+        {
+          "heading": 45.0,
+          "familiarity": 0.8913302421569824
+        },
+        {
+          "heading": 50.0,
+          "familiarity": 0.8104361295700073
+        },
+        {
+          "heading": 55.0,
+          "familiarity": 0.7289643883705139
+        },
+        {
+          "heading": 60.0,
+          "familiarity": 0.7116074562072754
+        },
+        {
+          "heading": -60.0,
+          "familiarity": 0.6381378769874573
+        },
+        {
+          "heading": -55.0,
+          "familiarity": 0.6403512358665466
+        },
+        {
+          "heading": -50.0,
+          "familiarity": 0.6305538415908813
+        },
+        {
+          "heading": -45.0,
+          "familiarity": 0.6388580799102783
+        },
+        {
+          "heading": -40.0,
+          "familiarity": 0.6441012024879456
+        },
+        {
+          "heading": -35.0,
+          "familiarity": 0.6272101998329163
+        },
+        {
+          "heading": -30.0,
+          "familiarity": 0.6154237985610962
+        },
+        {
+          "heading": -25.0,
+          "familiarity": 0.6335271596908569
+        },
+        {
+          "heading": -20.0,
+          "familiarity": 0.6385099291801453
+        },
+        {
+          "heading": -15.0,
+          "familiarity": 0.6593930721282959
+        },
+        {
+          "heading": -10.0,
+          "familiarity": 0.7103514671325684
+        },
+        {
+          "heading": -5.0,
+          "familiarity": 0.7204549312591553
+        }
+      ],
+      "trace_sha256": "8af9712a685080f6acd3201c2953f89227fbe94f6bc169fbebe3d28bccaa192d",
+      "checkpoint_sha256": "a36d379a9ee4be63efb7397c0f8962b0791b1d6afb938d7bf8e9ce26813bb2c0"
+    },
+    {
+      "world": "bend",
+      "method": "ardin_input",
+      "step": 22,
+      "base": 0.0,
+      "expected_heading": 45.0,
+      "scale": 0.23757762070761967,
+      "samples": [
+        {
+          "heading": 0.0,
+          "familiarity": 0.720086932182312
+        },
+        {
+          "heading": 5.0,
+          "familiarity": 0.7470935583114624
+        },
+        {
+          "heading": 10.0,
+          "familiarity": 0.6325305104255676
+        },
+        {
+          "heading": 15.0,
+          "familiarity": 0.7069135904312134
+        },
+        {
+          "heading": 20.0,
+          "familiarity": 0.6619354486465454
+        },
+        {
+          "heading": 25.0,
+          "familiarity": 0.5701805353164673
+        },
+        {
+          "heading": 30.0,
+          "familiarity": 0.5628665685653687
+        },
+        {
+          "heading": 35.0,
+          "familiarity": 0.5920678377151489
+        },
+        {
+          "heading": 40.0,
+          "familiarity": 0.6321151852607727
+        },
+        {
+          "heading": 45.0,
+          "familiarity": 0.9489974975585938
+        },
+        {
+          "heading": 50.0,
+          "familiarity": 0.775001049041748
+        },
+        {
+          "heading": 55.0,
+          "familiarity": 0.7017318606376648
+        },
+        {
+          "heading": 60.0,
+          "familiarity": 0.7106691598892212
+        },
+        {
+          "heading": -60.0,
+          "familiarity": 0.5120013952255249
+        },
+        {
+          "heading": -55.0,
+          "familiarity": 0.5284636616706848
+        },
+        {
+          "heading": -50.0,
+          "familiarity": 0.5582488775253296
+        },
+        {
+          "heading": -45.0,
+          "familiarity": 0.5561220049858093
+        },
+        {
+          "heading": -40.0,
+          "familiarity": 0.5735810995101929
+        },
+        {
+          "heading": -35.0,
+          "familiarity": 0.6302905082702637
+        },
+        {
+          "heading": -30.0,
+          "familiarity": 0.5924026966094971
+        },
+        {
+          "heading": -25.0,
+          "familiarity": 0.5790401697158813
+        },
+        {
+          "heading": -20.0,
+          "familiarity": 0.6320347189903259
+        },
+        {
+          "heading": -15.0,
+          "familiarity": 0.6175743341445923
+        },
+        {
+          "heading": -10.0,
+          "familiarity": 0.6146489381790161
+        },
+        {
+          "heading": -5.0,
+          "familiarity": 0.6297651529312134
+        }
+      ],
+      "trace_sha256": "8b691c257e0a9a2216b9571d1c55e0e37f8aba47d3d39e348fb9b539f93d7ff6",
+      "checkpoint_sha256": "513d5949408ac8f46239fa92a8909e5d946485f42fd61ab9b80020759a8b804c"
+    },
+    {
+      "world": "hairpin",
+      "method": "apiaviz_uv",
+      "step": 32,
+      "base": 0.0,
+      "expected_heading": 45.0,
+      "scale": 0.15230267085775728,
+      "samples": [
+        {
+          "heading": 0.0,
+          "familiarity": 0.8933985233306885
+        },
+        {
+          "heading": 5.0,
+          "familiarity": 0.8854309320449829
+        },
+        {
+          "heading": 10.0,
+          "familiarity": 0.8810198903083801
+        },
+        {
+          "heading": 15.0,
+          "familiarity": 0.8808294534683228
+        },
+        {
+          "heading": 20.0,
+          "familiarity": 0.8763200044631958
+        },
+        {
+          "heading": 25.0,
+          "familiarity": 0.901046097278595
+        },
+        {
+          "heading": 30.0,
+          "familiarity": 0.9275738000869751
+        },
+        {
+          "heading": 35.0,
+          "familiarity": 0.9474428296089172
+        },
+        {
+          "heading": 40.0,
+          "familiarity": 0.9740789532661438
+        },
+        {
+          "heading": 45.0,
+          "familiarity": 0.9937018156051636
+        },
+        {
+          "heading": 50.0,
+          "familiarity": 0.9804576635360718
+        },
+        {
+          "heading": 55.0,
+          "familiarity": 0.9387755393981934
+        },
+        {
+          "heading": 60.0,
+          "familiarity": 0.9196357727050781
+        },
+        {
+          "heading": -60.0,
+          "familiarity": 0.8673607110977173
+        },
+        {
+          "heading": -55.0,
+          "familiarity": 0.8623619079589844
+        },
+        {
+          "heading": -50.0,
+          "familiarity": 0.8694957494735718
+        },
+        {
+          "heading": -45.0,
+          "familiarity": 0.8722178936004639
+        },
+        {
+          "heading": -40.0,
+          "familiarity": 0.8673096895217896
+        },
+        {
+          "heading": -35.0,
+          "familiarity": 0.8786996603012085
+        },
+        {
+          "heading": -30.0,
+          "familiarity": 0.8891400098800659
+        },
+        {
+          "heading": -25.0,
+          "familiarity": 0.8952502012252808
+        },
+        {
+          "heading": -20.0,
+          "familiarity": 0.9119249582290649
+        },
+        {
+          "heading": -15.0,
+          "familiarity": 0.916923463344574
+        },
+        {
+          "heading": -10.0,
+          "familiarity": 0.907744288444519
+        },
+        {
+          "heading": -5.0,
+          "familiarity": 0.8949025273323059
+        }
+      ],
+      "trace_sha256": "6ac2d1ee3fe6e13b236f113b37e6daa0b753a8f7827567dc3a5a10c294b1570a",
+      "checkpoint_sha256": "4cb6c0df0e6673f514a0e737069c58779d86f417f7a49a43a13a54b55c6edb08"
+    },
+    {
+      "world": "hairpin",
+      "method": "sobel_colour",
+      "step": 32,
+      "base": 0.0,
+      "expected_heading": 45.0,
+      "scale": 0.2374756290412401,
+      "samples": [
+        {
+          "heading": 0.0,
+          "familiarity": 0.714622437953949
+        },
+        {
+          "heading": 5.0,
+          "familiarity": 0.6708643436431885
+        },
+        {
+          "heading": 10.0,
+          "familiarity": 0.6207871437072754
+        },
+        {
+          "heading": 15.0,
+          "familiarity": 0.62397301197052
+        },
+        {
+          "heading": 20.0,
+          "familiarity": 0.6118753552436829
+        },
+        {
+          "heading": 25.0,
+          "familiarity": 0.6335744857788086
+        },
+        {
+          "heading": 30.0,
+          "familiarity": 0.678675651550293
+        },
+        {
+          "heading": 35.0,
+          "familiarity": 0.71274733543396
+        },
+        {
+          "heading": 40.0,
+          "familiarity": 0.7548973560333252
+        },
+        {
+          "heading": 45.0,
+          "familiarity": 0.881702184677124
+        },
+        {
+          "heading": 50.0,
+          "familiarity": 0.8062788248062134
+        },
+        {
+          "heading": 55.0,
+          "familiarity": 0.6999952793121338
+        },
+        {
+          "heading": 60.0,
+          "familiarity": 0.6517448425292969
+        },
+        {
+          "heading": -60.0,
+          "familiarity": 0.5743629932403564
+        },
+        {
+          "heading": -55.0,
+          "familiarity": 0.5751175284385681
+        },
+        {
+          "heading": -50.0,
+          "familiarity": 0.5706828832626343
+        },
+        {
+          "heading": -45.0,
+          "familiarity": 0.5688298940658569
+        },
+        {
+          "heading": -40.0,
+          "familiarity": 0.5793184638023376
+        },
+        {
+          "heading": -35.0,
+          "familiarity": 0.6026363968849182
+        },
+        {
+          "heading": -30.0,
+          "familiarity": 0.6292037963867188
+        },
+        {
+          "heading": -25.0,
+          "familiarity": 0.6246498227119446
+        },
+        {
+          "heading": -20.0,
+          "familiarity": 0.6572265028953552
+        },
+        {
+          "heading": -15.0,
+          "familiarity": 0.6754496097564697
+        },
+        {
+          "heading": -10.0,
+          "familiarity": 0.6578960418701172
+        },
+        {
+          "heading": -5.0,
+          "familiarity": 0.6593145132064819
+        }
+      ],
+      "trace_sha256": "027c4eaa50f8054892d42a35f66ec0452be6589c2be5a2ddf3ba3e72683e5568",
+      "checkpoint_sha256": "0c1ddc29f97a9470cec04db0e34b67838a2ac86a61f094cecaa5d6defdf976e6"
+    }
+  ]
+}

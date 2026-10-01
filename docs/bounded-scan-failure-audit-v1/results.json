@@ -1,0 +1,1151 @@
+{
+  "schema": "bounded-scan-failure-audit-v1",
+  "script_sha256": "48289467d52e27d501d6e52d89fd5ffd67848515460e4133618d3ce861593997",
+  "input_sha256": {
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/protocol.json": "5b839a753a450e25cd912b489151615fb797a7ddcc289a2c9913c7da6937fcf3",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/source.zip": "d1241eb9ec2ba4a735f632730c39d9031547bb9bc41f200dd73c2e6cb117e207",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v1/protocol.json": "875569176bccc3194841a753359c289ef8c4200530bf5fd7d440c74cb674a3cc",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v1/source.zip": "0b837f08f7fa93c308dd4c1ac6c3d5292eb884568d0de04fcaabe568325f7fe1",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/trials/bend-19-apiaviz_uv-aligned-familiarity-1.json": "6a05f628ec4ae52b578144623652b73fa6ca535b6dfe68b2a004de08086e5ca7",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v1/trials/bend-19-apiaviz_uv-aligned-familiarity-1.json": "ecf497cd711f0901c73a938b43cee1c647c08b631426b775d155693fb71e9c75",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/worlds/bend/encoder-apiaviz_uv-19.pt": "34d982e38b327a8a8b44f93d1669b745aa8af102943258bf1a36ab6edbbe2224",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/trials/bend-19-ardin_input-aligned-familiarity-1.json": "1139b5fc88860188b51221a62a7b834a72d7d6d86ae1e8bb804d49744f812374",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v1/trials/bend-19-ardin_input-aligned-familiarity-1.json": "8b691c257e0a9a2216b9571d1c55e0e37f8aba47d3d39e348fb9b539f93d7ff6",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/worlds/bend/encoder-ardin_input-19.pt": "513d5949408ac8f46239fa92a8909e5d946485f42fd61ab9b80020759a8b804c",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/trials/bend-19-sobel_colour-aligned-familiarity-1.json": "5cce3810493afa48bee52722320b7a07307814ddc0585e8de9a6f3ab782bf116",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v1/trials/bend-19-sobel_colour-aligned-familiarity-1.json": "8af9712a685080f6acd3201c2953f89227fbe94f6bc169fbebe3d28bccaa192d",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/worlds/bend/encoder-sobel_colour-19.pt": "a36d379a9ee4be63efb7397c0f8962b0791b1d6afb938d7bf8e9ce26813bb2c0",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/trials/hairpin-19-apiaviz_uv-aligned-familiarity-1.json": "cb656c1c91fe34a40a56a1b1d8a94df71f6bc46eaecd0a6df5df68cf00cf18ca",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v1/trials/hairpin-19-apiaviz_uv-aligned-familiarity-1.json": "6ac2d1ee3fe6e13b236f113b37e6daa0b753a8f7827567dc3a5a10c294b1570a",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/worlds/hairpin/encoder-apiaviz_uv-19.pt": "4cb6c0df0e6673f514a0e737069c58779d86f417f7a49a43a13a54b55c6edb08",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/trials/hairpin-19-ardin_input-aligned-familiarity-1.json": "769afdcd55730136a1de9fb72c63d23747bb4541b7fa18afe071a7ab3ddc6795",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v1/trials/hairpin-19-ardin_input-aligned-familiarity-1.json": "5f1eb956e7155ba80adb1870357983bf66629da8ee92c027286eb94a8b812f89",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/worlds/hairpin/encoder-ardin_input-19.pt": "68d6d8df22a05f2e8b70f71dbb995dc6d4f6831e51f01a6e31919b7c2a1f69c4",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/trials/hairpin-19-sobel_colour-aligned-familiarity-1.json": "d80ed9d440897c5115590f89e8ae9ad00609ef6c1e0cdffd0a11d7707f3a6185",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v1/trials/hairpin-19-sobel_colour-aligned-familiarity-1.json": "027c4eaa50f8054892d42a35f66ec0452be6589c2be5a2ddf3ba3e72683e5568",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/worlds/hairpin/encoder-sobel_colour-19.pt": "0c1ddc29f97a9470cec04db0e34b67838a2ac86a61f094cecaa5d6defdf976e6",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/trials/meander-19-apiaviz_uv-aligned-familiarity-1.json": "802a187e92dba4c80b2a7c5deb3b84c4acf93b8e189f234204a58eb984fc01fe",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v1/trials/meander-19-apiaviz_uv-aligned-familiarity-1.json": "8b11e103df65a940bb5cb898dd1ac388e5318050a7a9186d182b36bb1458c26f",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/worlds/meander/encoder-apiaviz_uv-19.pt": "40cff559dc850e92c6c370b646272b68e28e387d4a04389b0578bedb4796c4f9",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/trials/meander-19-ardin_input-aligned-familiarity-1.json": "474201553aa66aa6a78250e673ecc6dbf9c1500b9b813b063283dc7842b971cd",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v1/trials/meander-19-ardin_input-aligned-familiarity-1.json": "12b505fb0b34ae262760745c7fdf2bb9221b1d4c2fb35971c32392df60d1e5ab",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/worlds/meander/encoder-ardin_input-19.pt": "ff93b4b39860d35e04795e16e4569c8cabc1a9366ede4caeb7330bd0657dae3f",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/trials/meander-19-sobel_colour-aligned-familiarity-1.json": "f7660800f8b74c81e9f53fecf496f1c7d9d6f9f7d87b683b8c8a02696033af76",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v1/trials/meander-19-sobel_colour-aligned-familiarity-1.json": "e566fd87e6b1367f7f3aa9b900555145403f4fde3bb129a3e80aab855898c8ca",
+    "/Users/hinesa/repo/apiaviz/apiaviz/output/graded-navigation-smoke-v2-bounded/worlds/meander/encoder-sobel_colour-19.pt": "8251aa934862aae52f9c659ca984d14986126b171480540325a03132b547757f"
+  },
+  "changed_archived_sources": [
+    "apiaviz/research/familiarity_controller.py",
+    "apiaviz/research/graded_smoke.py",
+    "apiaviz/research/panoramic_confirmation.py",
+    "scripts/audit_graded_smoke_ambiguity.py",
+    "scripts/audit_scanning_regression.py",
+    "scripts/replay_scan_timing.py",
+    "scripts/summarize_graded_navigation.py"
+  ],
+  "trials": [
+    {
+      "id": "bend-19-apiaviz_uv-aligned-familiarity-1",
+      "unchanged_fingerprints": {
+        "encoder_fingerprint": true,
+        "memory_fingerprint": true,
+        "training_images_sha256": true
+      },
+      "previous_termination": "arrival",
+      "termination": "uninformative_views",
+      "final_nest_distance_m": 1.0439527757153793,
+      "time_s": 113.38888888888785,
+      "rotation_deg": 3040.0,
+      "previous_rotation_deg": 3880.0,
+      "blocked_reasons": {},
+      "turn_commands_at_least_90": 0,
+      "max_turn_command_deg": 85.0,
+      "consecutive_motor_heading_changes_at_least_90": {},
+      "first_different_decision": {
+        "step": 22,
+        "position": [
+          2.099619469809175,
+          -0.008715574274765818
+        ],
+        "same_pose": true,
+        "bounded_movement": 5.0,
+        "previous_movement": 45.0,
+        "shared_scores_equal": true,
+        "bounded_scan": {
+          "target": 5.0,
+          "contrast": 0.1576877553945872,
+          "supported": true,
+          "samples": [
+            {
+              "heading": -5.0,
+              "familiarity": 0.9386299848556519
+            },
+            {
+              "heading": 0.0,
+              "familiarity": 0.948078989982605
+            },
+            {
+              "heading": 5.0,
+              "familiarity": 0.9495540261268616
+            },
+            {
+              "heading": 10.0,
+              "familiarity": 0.9465376734733582
+            },
+            {
+              "heading": 15.0,
+              "familiarity": 0.9348639249801636
+            },
+            {
+              "heading": -10.0,
+              "familiarity": 0.9332495331764221
+            },
+            {
+              "heading": -15.0,
+              "familiarity": 0.9285970330238342
+            },
+            {
+              "heading": -20.0,
+              "familiarity": 0.9176269769668579
+            },
+            {
+              "heading": -25.0,
+              "familiarity": 0.9032465219497681
+            }
+          ]
+        },
+        "previous_scan_top": [
+          {
+            "heading": 45.0,
+            "familiarity": 0.9942692518234253
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.9823966026306152
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.9729423522949219
+          },
+          {
+            "heading": 5.0,
+            "familiarity": 0.9495540261268616
+          }
+        ],
+        "complete_bounded_control": {
+          "target": 45.0,
+          "supported": true,
+          "contrast": 0.7721913570755489,
+          "views": 25,
+          "headings": [
+            -5.0,
+            0.0,
+            5.0,
+            10.0,
+            15.0,
+            20.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            45.0,
+            50.0,
+            55.0,
+            -10.0,
+            -15.0,
+            -20.0,
+            -25.0,
+            -30.0,
+            -35.0,
+            -40.0,
+            -45.0,
+            -50.0,
+            -55.0,
+            -60.0,
+            -65.0
+          ],
+          "limitation": "Fixed-pose search control only; not a new route outcome or a recommended every-step scan."
+        }
+      },
+      "rejected_scans": [
+        {
+          "step": 57,
+          "target": -10.0,
+          "contrast": 0.2462692721849061,
+          "low_contrast": false,
+          "competing_peak": false,
+          "edge_of_scan": true,
+          "termination": null
+        },
+        {
+          "step": 65,
+          "target": 15.0,
+          "contrast": 0.10438554604468452,
+          "low_contrast": true,
+          "competing_peak": true,
+          "edge_of_scan": false,
+          "termination": "uninformative_views"
+        }
+      ]
+    },
+    {
+      "id": "bend-19-ardin_input-aligned-familiarity-1",
+      "unchanged_fingerprints": {
+        "encoder_fingerprint": true,
+        "memory_fingerprint": true,
+        "training_images_sha256": true
+      },
+      "previous_termination": "arrival",
+      "termination": "arrival",
+      "final_nest_distance_m": 0.1993482513457057,
+      "time_s": 122.3833333333316,
+      "rotation_deg": 3615.0,
+      "previous_rotation_deg": 7595.0,
+      "blocked_reasons": {},
+      "turn_commands_at_least_90": 2,
+      "max_turn_command_deg": 115.0,
+      "consecutive_motor_heading_changes_at_least_90": {},
+      "first_different_decision": {
+        "step": 22,
+        "position": [
+          2.0977168188550483,
+          0.05229344564859488
+        ],
+        "same_pose": true,
+        "bounded_movement": 5.0,
+        "previous_movement": 45.0,
+        "shared_scores_equal": true,
+        "bounded_scan": {
+          "target": 5.0,
+          "contrast": 0.4822131291014334,
+          "supported": true,
+          "samples": [
+            {
+              "heading": 0.0,
+              "familiarity": 0.720086932182312
+            },
+            {
+              "heading": 5.0,
+              "familiarity": 0.7470935583114624
+            },
+            {
+              "heading": 10.0,
+              "familiarity": 0.6325305104255676
+            },
+            {
+              "heading": 15.0,
+              "familiarity": 0.7069135904312134
+            },
+            {
+              "heading": 20.0,
+              "familiarity": 0.6619354486465454
+            },
+            {
+              "heading": -5.0,
+              "familiarity": 0.6297651529312134
+            },
+            {
+              "heading": -10.0,
+              "familiarity": 0.6146489381790161
+            },
+            {
+              "heading": -15.0,
+              "familiarity": 0.6175743341445923
+            },
+            {
+              "heading": -20.0,
+              "familiarity": 0.6320347189903259
+            }
+          ]
+        },
+        "previous_scan_top": [
+          {
+            "heading": 45.0,
+            "familiarity": 0.9489974975585938
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.775001049041748
+          },
+          {
+            "heading": 5.0,
+            "familiarity": 0.7470935583114624
+          },
+          {
+            "heading": 0.0,
+            "familiarity": 0.720086932182312
+          }
+        ],
+        "complete_bounded_control": {
+          "target": 45.0,
+          "supported": true,
+          "contrast": 1.3436970354217452,
+          "views": 25,
+          "headings": [
+            0.0,
+            5.0,
+            10.0,
+            15.0,
+            20.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            45.0,
+            50.0,
+            55.0,
+            60.0,
+            -5.0,
+            -10.0,
+            -15.0,
+            -20.0,
+            -25.0,
+            -30.0,
+            -35.0,
+            -40.0,
+            -45.0,
+            -50.0,
+            -55.0,
+            -60.0
+          ],
+          "limitation": "Fixed-pose search control only; not a new route outcome or a recommended every-step scan."
+        }
+      },
+      "rejected_scans": []
+    },
+    {
+      "id": "bend-19-sobel_colour-aligned-familiarity-1",
+      "unchanged_fingerprints": {
+        "encoder_fingerprint": true,
+        "memory_fingerprint": true,
+        "training_images_sha256": true
+      },
+      "previous_termination": "arrival",
+      "termination": "time_budget",
+      "final_nest_distance_m": 2.4674844429904463,
+      "time_s": 359.91666666668135,
+      "rotation_deg": 23610.0,
+      "previous_rotation_deg": 4880.0,
+      "blocked_reasons": {
+        "rock_contact": 2,
+        "field_boundary": 118
+      },
+      "turn_commands_at_least_90": 179,
+      "max_turn_command_deg": 180.0,
+      "consecutive_motor_heading_changes_at_least_90": {
+        "avoid -> avoid": 17,
+        "clear -> avoid": 43,
+        "avoid -> clear": 42
+      },
+      "first_different_decision": {
+        "step": 22,
+        "position": [
+          2.1000000000000014,
+          0.0
+        ],
+        "same_pose": true,
+        "bounded_movement": 0.0,
+        "previous_movement": 45.0,
+        "shared_scores_equal": true,
+        "bounded_scan": {
+          "target": 0.0,
+          "contrast": 0.5797286320636117,
+          "supported": true,
+          "samples": [
+            {
+              "heading": 0.0,
+              "familiarity": 0.8112282156944275
+            },
+            {
+              "heading": 5.0,
+              "familiarity": 0.7366930246353149
+            },
+            {
+              "heading": 10.0,
+              "familiarity": 0.6986232995986938
+            },
+            {
+              "heading": 15.0,
+              "familiarity": 0.695368230342865
+            },
+            {
+              "heading": 20.0,
+              "familiarity": 0.6799453496932983
+            },
+            {
+              "heading": -5.0,
+              "familiarity": 0.7204549312591553
+            },
+            {
+              "heading": -10.0,
+              "familiarity": 0.7103514671325684
+            },
+            {
+              "heading": -15.0,
+              "familiarity": 0.6593930721282959
+            },
+            {
+              "heading": -20.0,
+              "familiarity": 0.6385099291801453
+            }
+          ]
+        },
+        "previous_scan_top": [
+          {
+            "heading": 45.0,
+            "familiarity": 0.8913302421569824
+          },
+          {
+            "heading": 0.0,
+            "familiarity": 0.8112282156944275
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.8104361295700073
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.7768599987030029
+          }
+        ],
+        "complete_bounded_control": {
+          "target": 45.0,
+          "supported": true,
+          "contrast": 1.0882817446682351,
+          "views": 25,
+          "headings": [
+            0.0,
+            5.0,
+            10.0,
+            15.0,
+            20.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            45.0,
+            50.0,
+            55.0,
+            60.0,
+            -5.0,
+            -10.0,
+            -15.0,
+            -20.0,
+            -25.0,
+            -30.0,
+            -35.0,
+            -40.0,
+            -45.0,
+            -50.0,
+            -55.0,
+            -60.0
+          ],
+          "limitation": "Fixed-pose search control only; not a new route outcome or a recommended every-step scan."
+        }
+      },
+      "rejected_scans": []
+    },
+    {
+      "id": "hairpin-19-apiaviz_uv-aligned-familiarity-1",
+      "unchanged_fingerprints": {
+        "encoder_fingerprint": true,
+        "memory_fingerprint": true,
+        "training_images_sha256": true
+      },
+      "previous_termination": "uninformative_views",
+      "termination": "uninformative_views",
+      "final_nest_distance_m": 3.6323767568644247,
+      "time_s": 107.97777777777635,
+      "rotation_deg": 3785.0,
+      "previous_rotation_deg": 6530.0,
+      "blocked_reasons": {},
+      "turn_commands_at_least_90": 0,
+      "max_turn_command_deg": 85.0,
+      "consecutive_motor_heading_changes_at_least_90": {
+        "clear -> clear": 3
+      },
+      "first_different_decision": {
+        "step": 32,
+        "position": [
+          3.1000000000000023,
+          0.0
+        ],
+        "same_pose": true,
+        "bounded_movement": -15.0,
+        "previous_movement": 45.0,
+        "shared_scores_equal": true,
+        "bounded_scan": {
+          "target": -15.0,
+          "contrast": 0.15446176932679376,
+          "supported": true,
+          "samples": [
+            {
+              "heading": 0.0,
+              "familiarity": 0.8933985233306885
+            },
+            {
+              "heading": 5.0,
+              "familiarity": 0.8854309320449829
+            },
+            {
+              "heading": 10.0,
+              "familiarity": 0.8810198903083801
+            },
+            {
+              "heading": 15.0,
+              "familiarity": 0.8808294534683228
+            },
+            {
+              "heading": 20.0,
+              "familiarity": 0.8763200044631958
+            },
+            {
+              "heading": -5.0,
+              "familiarity": 0.8949025273323059
+            },
+            {
+              "heading": -10.0,
+              "familiarity": 0.907744288444519
+            },
+            {
+              "heading": -15.0,
+              "familiarity": 0.916923463344574
+            },
+            {
+              "heading": -20.0,
+              "familiarity": 0.9119249582290649
+            }
+          ]
+        },
+        "previous_scan_top": [
+          {
+            "heading": 45.0,
+            "familiarity": 0.9937018156051636
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.9804576635360718
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.9740789532661438
+          },
+          {
+            "heading": 35.0,
+            "familiarity": 0.9474428296089172
+          }
+        ],
+        "complete_bounded_control": {
+          "target": 45.0,
+          "supported": true,
+          "contrast": 0.6487035829143865,
+          "views": 25,
+          "headings": [
+            0.0,
+            5.0,
+            10.0,
+            15.0,
+            20.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            45.0,
+            50.0,
+            55.0,
+            60.0,
+            -5.0,
+            -10.0,
+            -15.0,
+            -20.0,
+            -25.0,
+            -30.0,
+            -35.0,
+            -40.0,
+            -45.0,
+            -50.0,
+            -55.0,
+            -60.0
+          ],
+          "limitation": "Fixed-pose search control only; not a new route outcome or a recommended every-step scan."
+        }
+      },
+      "rejected_scans": [
+        {
+          "step": 34,
+          "target": 45.0,
+          "contrast": 0.5236186001549048,
+          "low_contrast": false,
+          "competing_peak": false,
+          "edge_of_scan": true,
+          "termination": null
+        },
+        {
+          "step": 50,
+          "target": -165.0,
+          "contrast": 0.1892384932949341,
+          "low_contrast": false,
+          "competing_peak": false,
+          "edge_of_scan": true,
+          "termination": null
+        },
+        {
+          "step": 55,
+          "target": 75.0,
+          "contrast": 0.1025573268235578,
+          "low_contrast": true,
+          "competing_peak": true,
+          "edge_of_scan": true,
+          "termination": "uninformative_views"
+        }
+      ]
+    },
+    {
+      "id": "hairpin-19-ardin_input-aligned-familiarity-1",
+      "unchanged_fingerprints": {
+        "encoder_fingerprint": true,
+        "memory_fingerprint": true,
+        "training_images_sha256": true
+      },
+      "previous_termination": "observation_budget",
+      "termination": "time_budget",
+      "final_nest_distance_m": 5.524612752038308,
+      "time_s": 359.98333333334097,
+      "rotation_deg": 26430.0,
+      "previous_rotation_deg": 12595.0,
+      "blocked_reasons": {
+        "rock_contact": 59
+      },
+      "turn_commands_at_least_90": 116,
+      "max_turn_command_deg": 180.0,
+      "consecutive_motor_heading_changes_at_least_90": {
+        "avoid -> avoid": 80
+      },
+      "first_different_decision": {
+        "step": 12,
+        "position": [
+          1.0992389396183495,
+          -0.01743114854953164
+        ],
+        "same_pose": true,
+        "bounded_movement": 5.0,
+        "previous_movement": -180.0,
+        "shared_scores_equal": true,
+        "bounded_scan": {
+          "target": 5.0,
+          "contrast": 0.4297598843874318,
+          "supported": true,
+          "samples": [
+            {
+              "heading": 0.0,
+              "familiarity": 0.748576283454895
+            },
+            {
+              "heading": 5.0,
+              "familiarity": 0.7587841749191284
+            },
+            {
+              "heading": 10.0,
+              "familiarity": 0.6410574316978455
+            },
+            {
+              "heading": 15.0,
+              "familiarity": 0.6357215046882629
+            },
+            {
+              "heading": 20.0,
+              "familiarity": 0.6261975765228271
+            },
+            {
+              "heading": -5.0,
+              "familiarity": 0.6547256708145142
+            },
+            {
+              "heading": -10.0,
+              "familiarity": 0.6447593569755554
+            },
+            {
+              "heading": -15.0,
+              "familiarity": 0.6468446850776672
+            },
+            {
+              "heading": -20.0,
+              "familiarity": 0.6336085796356201
+            }
+          ]
+        },
+        "previous_scan_top": [
+          {
+            "heading": -180.0,
+            "familiarity": 0.803211510181427
+          },
+          {
+            "heading": 5.0,
+            "familiarity": 0.7587841749191284
+          },
+          {
+            "heading": 0.0,
+            "familiarity": 0.748576283454895
+          },
+          {
+            "heading": 175.0,
+            "familiarity": 0.7287027835845947
+          }
+        ],
+        "complete_bounded_control": {
+          "target": 5.0,
+          "supported": true,
+          "contrast": 0.47178719797465507,
+          "views": 25,
+          "headings": [
+            0.0,
+            5.0,
+            10.0,
+            15.0,
+            20.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            45.0,
+            50.0,
+            55.0,
+            60.0,
+            -5.0,
+            -10.0,
+            -15.0,
+            -20.0,
+            -25.0,
+            -30.0,
+            -35.0,
+            -40.0,
+            -45.0,
+            -50.0,
+            -55.0,
+            -60.0
+          ],
+          "limitation": "Fixed-pose search control only; not a new route outcome or a recommended every-step scan."
+        }
+      },
+      "rejected_scans": [
+        {
+          "step": 26,
+          "target": -30.0,
+          "contrast": 0.35508372438634944,
+          "low_contrast": false,
+          "competing_peak": false,
+          "edge_of_scan": true,
+          "termination": null
+        },
+        {
+          "step": 37,
+          "target": -40.0,
+          "contrast": 0.2386098431867466,
+          "low_contrast": false,
+          "competing_peak": false,
+          "edge_of_scan": true,
+          "termination": null
+        },
+        {
+          "step": 47,
+          "target": 75.0,
+          "contrast": 0.3314571624332437,
+          "low_contrast": false,
+          "competing_peak": true,
+          "edge_of_scan": false,
+          "termination": null
+        },
+        {
+          "step": 71,
+          "target": 45.0,
+          "contrast": 0.48820305376690953,
+          "low_contrast": false,
+          "competing_peak": false,
+          "edge_of_scan": true,
+          "termination": null
+        },
+        {
+          "step": 83,
+          "target": 25.0,
+          "contrast": 0.13973847570036269,
+          "low_contrast": true,
+          "competing_peak": false,
+          "edge_of_scan": false,
+          "termination": null
+        },
+        {
+          "step": 95,
+          "target": 5.0,
+          "contrast": 0.6752819860947247,
+          "low_contrast": false,
+          "competing_peak": false,
+          "edge_of_scan": true,
+          "termination": null
+        },
+        {
+          "step": 123,
+          "target": -25.0,
+          "contrast": 0.28583713233297686,
+          "low_contrast": false,
+          "competing_peak": true,
+          "edge_of_scan": false,
+          "termination": null
+        }
+      ]
+    },
+    {
+      "id": "hairpin-19-sobel_colour-aligned-familiarity-1",
+      "unchanged_fingerprints": {
+        "encoder_fingerprint": true,
+        "memory_fingerprint": true,
+        "training_images_sha256": true
+      },
+      "previous_termination": "arrival",
+      "termination": "uninformative_views",
+      "final_nest_distance_m": 2.0398217572750803,
+      "time_s": 181.82222222222225,
+      "rotation_deg": 7240.0,
+      "previous_rotation_deg": 5510.0,
+      "blocked_reasons": {
+        "rock_contact": 3
+      },
+      "turn_commands_at_least_90": 1,
+      "max_turn_command_deg": 105.0,
+      "consecutive_motor_heading_changes_at_least_90": {
+        "clear -> clear": 2,
+        "clear -> avoid": 1
+      },
+      "first_different_decision": {
+        "step": 32,
+        "position": [
+          3.1000000000000023,
+          0.0
+        ],
+        "same_pose": true,
+        "bounded_movement": 0.0,
+        "previous_movement": 45.0,
+        "shared_scores_equal": true,
+        "bounded_scan": {
+          "target": 0.0,
+          "contrast": 0.23887249530763707,
+          "supported": true,
+          "samples": [
+            {
+              "heading": 0.0,
+              "familiarity": 0.714622437953949
+            },
+            {
+              "heading": 5.0,
+              "familiarity": 0.6708643436431885
+            },
+            {
+              "heading": 10.0,
+              "familiarity": 0.6207871437072754
+            },
+            {
+              "heading": 15.0,
+              "familiarity": 0.62397301197052
+            },
+            {
+              "heading": 20.0,
+              "familiarity": 0.6118753552436829
+            },
+            {
+              "heading": -5.0,
+              "familiarity": 0.6593145132064819
+            },
+            {
+              "heading": -10.0,
+              "familiarity": 0.6578960418701172
+            },
+            {
+              "heading": -15.0,
+              "familiarity": 0.6754496097564697
+            },
+            {
+              "heading": -20.0,
+              "familiarity": 0.6572265028953552
+            }
+          ]
+        },
+        "previous_scan_top": [
+          {
+            "heading": 45.0,
+            "familiarity": 0.881702184677124
+          },
+          {
+            "heading": 50.0,
+            "familiarity": 0.8062788248062134
+          },
+          {
+            "heading": 40.0,
+            "familiarity": 0.7548973560333252
+          },
+          {
+            "heading": 0.0,
+            "familiarity": 0.714622437953949
+          }
+        ],
+        "complete_bounded_control": {
+          "target": 45.0,
+          "supported": true,
+          "contrast": 0.9683408064913166,
+          "views": 25,
+          "headings": [
+            0.0,
+            5.0,
+            10.0,
+            15.0,
+            20.0,
+            25.0,
+            30.0,
+            35.0,
+            40.0,
+            45.0,
+            50.0,
+            55.0,
+            60.0,
+            -5.0,
+            -10.0,
+            -15.0,
+            -20.0,
+            -25.0,
+            -30.0,
+            -35.0,
+            -40.0,
+            -45.0,
+            -50.0,
+            -55.0,
+            -60.0
+          ],
+          "limitation": "Fixed-pose search control only; not a new route outcome or a recommended every-step scan."
+        }
+      },
+      "rejected_scans": [
+        {
+          "step": 37,
+          "target": 80.0,
+          "contrast": 0.24171699535998642,
+          "low_contrast": false,
+          "competing_peak": true,
+          "edge_of_scan": false,
+          "termination": null
+        },
+        {
+          "step": 60,
+          "target": -180.0,
+          "contrast": 0.1607020798127158,
+          "low_contrast": false,
+          "competing_peak": true,
+          "edge_of_scan": false,
+          "termination": null
+        },
+        {
+          "step": 70,
+          "target": -165.0,
+          "contrast": 0.3474421403393398,
+          "low_contrast": false,
+          "competing_peak": false,
+          "edge_of_scan": true,
+          "termination": null
+        },
+        {
+          "step": 82,
+          "target": 135.0,
+          "contrast": 0.14353367845554646,
+          "low_contrast": true,
+          "competing_peak": false,
+          "edge_of_scan": false,
+          "termination": null
+        },
+        {
+          "step": 92,
+          "target": -155.0,
+          "contrast": 0.12119922024428019,
+          "low_contrast": true,
+          "competing_peak": false,
+          "edge_of_scan": false,
+          "termination": "uninformative_views"
+        }
+      ]
+    },
+    {
+      "id": "meander-19-apiaviz_uv-aligned-familiarity-1",
+      "unchanged_fingerprints": {
+        "encoder_fingerprint": true,
+        "memory_fingerprint": true,
+        "training_images_sha256": true
+      },
+      "previous_termination": "arrival",
+      "termination": "arrival",
+      "final_nest_distance_m": 0.18507907917723,
+      "time_s": 104.61111111111015,
+      "rotation_deg": 2000.0,
+      "previous_rotation_deg": 7920.0,
+      "blocked_reasons": {},
+      "turn_commands_at_least_90": 0,
+      "max_turn_command_deg": 35.0,
+      "consecutive_motor_heading_changes_at_least_90": {},
+      "first_different_decision": null,
+      "rejected_scans": []
+    },
+    {
+      "id": "meander-19-ardin_input-aligned-familiarity-1",
+      "unchanged_fingerprints": {
+        "encoder_fingerprint": true,
+        "memory_fingerprint": true,
+        "training_images_sha256": true
+      },
+      "previous_termination": "uninformative_views",
+      "termination": "time_budget",
+      "final_nest_distance_m": 1.9947992617659545,
+      "time_s": 359.98888888890355,
+      "rotation_deg": 22030.0,
+      "previous_rotation_deg": 10905.0,
+      "blocked_reasons": {
+        "field_boundary": 104,
+        "rock_contact": 2
+      },
+      "turn_commands_at_least_90": 125,
+      "max_turn_command_deg": 180.0,
+      "consecutive_motor_heading_changes_at_least_90": {
+        "clear -> avoid": 35,
+        "avoid -> avoid": 18,
+        "avoid -> clear": 30
+      },
+      "first_different_decision": {
+        "step": 1,
+        "position": [
+          0.0,
+          0.0
+        ],
+        "same_pose": true,
+        "bounded_movement": 42.91128038132089,
+        "previous_movement": 57.91128038132089,
+        "shared_scores_equal": true,
+        "bounded_scan": {
+          "target": 42.91128038132089,
+          "contrast": 0.5272761704035431,
+          "supported": true,
+          "samples": [
+            {
+              "heading": 37.91128038132089,
+              "familiarity": 0.7682647705078125
+            },
+            {
+              "heading": 42.91128038132089,
+              "familiarity": 0.7708482146263123
+            },
+            {
+              "heading": 47.91128038132089,
+              "familiarity": 0.6163523197174072
+            },
+            {
+              "heading": 52.91128038132089,
+              "familiarity": 0.6012160778045654
+            },
+            {
+              "heading": 57.91128038132089,
+              "familiarity": 0.5864347219467163
+            },
+            {
+              "heading": 32.91128038132089,
+              "familiarity": 0.718021035194397
+            },
+            {
+              "heading": 27.911280381320893,
+              "familiarity": 0.7358475923538208
+            },
+            {
+              "heading": 22.911280381320893,
+              "familiarity": 0.6233710050582886
+            },
+            {
+              "heading": 17.911280381320893,
+              "familiarity": 0.5993282794952393
+            }
+          ]
+        },
+        "previous_scan_top": [
+          {
+            "heading": -47.08871961867911,
+            "familiarity": 0.7730839252471924
+          },
+          {
+            "heading": 42.91128038132089,
+            "familiarity": 0.7708482146263123
+          },
+          {
+            "heading": 37.91128038132089,
+            "familiarity": 0.7682647705078125
+          },
+          {
+            "heading": 27.911280381320893,
+            "familiarity": 0.7358475923538208
+          }
+        ],
+        "complete_bounded_control": {
+          "target": 42.91128038132089,
+          "supported": true,
+          "contrast": 0.5523701190797311,
+          "views": 25,
+          "headings": [
+            37.91128038132089,
+            42.91128038132089,
+            47.91128038132089,
+            52.91128038132089,
+            57.91128038132089,
+            62.91128038132089,
+            67.91128038132089,
+            72.91128038132089,
+            77.91128038132092,
+            82.91128038132092,
+            87.91128038132092,
+            92.91128038132092,
+            97.91128038132092,
+            32.91128038132089,
+            27.911280381320893,
+            22.911280381320893,
+            17.911280381320893,
+            12.911280381320893,
+            7.911280381320893,
+            2.9112803813208927,
+            -2.0887196186791073,
+            -7.088719618679107,
+            -12.088719618679107,
+            -17.088719618679107,
+            -22.088719618679107
+          ],
+          "limitation": "Fixed-pose search control only; not a new route outcome or a recommended every-step scan."
+        }
+      },
+      "rejected_scans": []
+    },
+    {
+      "id": "meander-19-sobel_colour-aligned-familiarity-1",
+      "unchanged_fingerprints": {
+        "encoder_fingerprint": true,
+        "memory_fingerprint": true,
+        "training_images_sha256": true
+      },
+      "previous_termination": "arrival",
+      "termination": "arrival",
+      "final_nest_distance_m": 0.18213820006444897,
+      "time_s": 108.96111111110993,
+      "rotation_deg": 2360.0,
+      "previous_rotation_deg": 9520.0,
+      "blocked_reasons": {},
+      "turn_commands_at_least_90": 0,
+      "max_turn_command_deg": 85.0,
+      "consecutive_motor_heading_changes_at_least_90": {},
+      "first_different_decision": null,
+      "rejected_scans": []
+    }
+  ],
+  "limitations": [
+    "Retrospective diagnosis of nine development trials; no new route outcomes.",
+    "Only fixed-pose decisions can be counterfactually replayed from these scores.",
+    "Historical full-circle tables supply measured scores; active replay stays within +/-60 degrees.",
+    "No exact pre-UV historical trajectory reconstruction is claimed."
+  ]
+}

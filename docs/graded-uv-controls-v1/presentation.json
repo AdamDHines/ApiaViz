@@ -1,0 +1,8 @@
+{
+  "script_sha256": "9f55d7e250ea541aa47e71896d4294b98e86252a6f67df24897c76ad7ecaa129",
+  "results_sha256": "411eaad073ee0b8da7c44c8a53710ef8fda63f28ba0584310602c628593eee8f",
+  "figures": {
+    "factorial-comparison.png": "f5362e02ec83887eb39aea00b5a1b4344d8870ecbafa3a5da42a6d6de6b1e83d",
+    "scan-stability.png": "31f413ee031256aa4473bb151be37a45c51909a130c7bdd86f227c7e717712fd"
+  }
+}
